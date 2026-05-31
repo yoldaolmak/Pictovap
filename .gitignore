@@ -31,3 +31,6 @@ service-account-key.json
 # Temp
 tmp_rome_*.txt
 tmp_rome_*.jpg
+# CV cache
+*.cv_cache.json
+.cv_cache.json
