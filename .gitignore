@@ -1,0 +1,33 @@
+# Runtime
+data/
+visual_memory/
+ops_backups/
+ops_logs/
+exports/
+luts/
+tmp/
+__pycache__/
+*.pyc
+*.pyo
+
+# Venv
+.venv/
+venv/
+
+# DB & Index
+*.db
+*.sqlite
+
+# Secrets
+.env
+*credentials*.json
+service-account-key.json
+
+# Logs & PID
+*.log
+*.pid
+*.txt.bak
+
+# Temp
+tmp_rome_*.txt
+tmp_rome_*.jpg

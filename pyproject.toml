@@ -1,0 +1,12 @@
+[project]
+name = "photo-ai-visual-memory"
+version = "0.1.0"
+description = "Reusable visual memory component for content generation systems."
+requires-python = ">=3.11"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
