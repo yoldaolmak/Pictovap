@@ -33,7 +33,7 @@ class YOImageProcessor:
     }
 
     LANDSCAPE_SIZE = (1200, 750)
-    PORTRAIT_SIZE = (1200, 1600)
+    PORTRAIT_SIZE = (900, 1200)
     SQUARE_SIZE = (1200, 1200)
 
     def __init__(self, work_dir: Path = None):
@@ -109,7 +109,7 @@ class YOImageProcessor:
         return center_x, center_y
 
     def apply_yo_filter(self, img: Image.Image, saturation_mod: float = 0) -> tuple:
-        """Apply YO Blue/Teal adaptive filter (intelligent per-image adjustment)
+        """Apply selected YO image filter profile.
 
         Args:
             img: PIL Image (RGB)
@@ -118,13 +118,21 @@ class YOImageProcessor:
         Returns:
             tuple (filtered_image, params_dict)
         """
-        # Use adaptive filter that analyzes image and adjusts parameters automatically
+        profile = os.getenv("YO_IMAGE_FILTER_PROFILE", "adaptive").strip().lower()
+        if profile in {"yoldaolmak", "yo-yoldaolmak"}:
+            from yo_yoldaolmak_filter import YOYoldaOlmakFilter
+
+            filter_obj = YOYoldaOlmakFilter()
+            img_filtered = filter_obj.apply_filter(img)
+            print("  ✓ YO Yoldaolmak Filter applied")
+            return img_filtered, {"profile": "yoldaolmak", **filter_obj.analyze_image(img_filtered)}
+
         from yo_adaptive_filter import YOAdaptiveFilter
 
         filter_obj = YOAdaptiveFilter()
         img_filtered = filter_obj.apply_cinematic_grade(img)
 
-        print(f"  ✓ YO Adaptive Filter applied")
+        print("  ✓ YO Adaptive Filter applied")
         return img_filtered, filter_obj.params
 
     def analyze_saturation_need(self, img: Image.Image) -> float:
