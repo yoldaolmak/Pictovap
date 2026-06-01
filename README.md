@@ -1,146 +1,96 @@
-# Visual Memory Core
+# YOOS-VIL
 
-This package builds the core visual memory system for a content generation workflow.
+> **Visual Intelligence Layer** — AI-powered photo indexing, semantic tagging, and media publishing for [yoldaolmak.com](https://yoldaolmak.com)
 
-Scope:
+A system that transforms 200,000+ raw travel photos into a structured, searchable media library — enriched with semantic metadata and published directly to WordPress.
 
-- scan Apple Photos originals
-- scan an external HDD archive
-- extract file metadata, folder context, and available EXIF-like fields
-- enrich every image with AI-style searchable descriptors
-- store everything in one structured SQLite database
+---
 
-Out of scope:
+## What This Is
 
-- Google Drive
-- export derivatives
-- UI
+YOOS-VIL is the visual asset backbone of a travel publication running since 2011. It is not a generic image gallery or photo management tool.
+
+It is a two-pass AI pipeline that:
+
+1. **Indexes** photos from local archives and external HDD (200,000+ assets)
+2. **Enriches** each photo with semantic tags, location context, and activity inference
+3. **Identifies** the author (face recognition via custom-trained model)
+4. **Selects** best candidates per article section using semantic slot planning
+5. **Publishes** optimized images directly to WordPress with correct metadata
+
+---
 
 ## Architecture
 
-- `visual_memory.sources`: visible-file discovery from Apple Photos and external disks
-- `visual_memory.analyzer`: metadata and EXIF-like extraction
-- `visual_memory.enrich`: AI-style enrichment for `scene`, `location`, `activity`, `objects`, `story_tags`, `keywords`
-- `visual_memory.db`: single SQLite asset index plus FTS search
-- `visual_memory.indexer`: end-to-end scan and indexing pipeline
-- `visual_memory.article`: article heading and section parsing
-- `visual_memory.planner`: slot planning layer that can consume the index
-- `visual_memory.service`: embeddable API surface
-- `visual_memory.stock`: stock fallback provider clients
- - `visual_memory.seo`: SEO metadata helpers
-
-## Indexed Data
-
-Each asset stores:
-
-- source type
-- full path
-- folder path
-- filename and extension
-- checksum
-- dimensions
-- capture date
-- camera / lens / focal / f-number / exposure / ISO when available
-- place metadata
-- album and keyword metadata
-- raw metadata snapshots
-- AI-style enrichment:
-  - `summary`
-  - `scene`
-  - `location`
-  - `activity`
-  - `objects`
-  - `story_tags`
-  - `keywords`
-  - `quality_score`
-  - `orientation`
-  - `capture_context`
-
-## Source Rules
-
-- Apple Photos is treated as read-only source data.
-- Apple Photos can be used for indexing from locally visible originals and available metadata.
-- If a later workflow needs final full-quality processing, the iCloud original must be downloaded first.
-- Hidden files and hidden folders are skipped during scanning.
-
-## Example
-
-```python
-from pathlib import Path
-
-from visual_memory import VisualMemoryComponent, VisualMemoryConfig
-
-component = VisualMemoryComponent(
-    VisualMemoryConfig(
-        database_path=Path("~/Library/Application Support/photo_ai/visual_memory.db").expanduser(),
-        external_roots=[Path("/Volumes/TravelArchive")],
-    )
-)
-
-indexed = component.rebuild_index()
-print(indexed)
-
-rows = component.search_assets("roma kolezyum ayse kemal", limit=10)
-for row in rows:
-    print(row["source_path"], row["scene"], row["activity"], row["quality_score"])
+```
+YOOS-VIL/
+├── yo_phase1_quick_tagger.py     # Fast local pass: location, color, face detection
+├── extract_kemal_kaya_faces.py   # Face recognition model training + scan
+├── yo_semantic_tagger.py         # Deep semantic tagging via Claude Vision
+├── yo_image_processor.py         # Crop, resize, format conversion
+├── yo_wp_uploader.py             # WordPress media library upload
+├── yo_orchestrator.py            # End-to-end pipeline runner
+├── index_memory_daily.py         # Incremental daily index update
+├── run_deposit.py                # Depositphotos licensed asset fetcher
+└── data/
+    └── visual_memory.db          # SQLite asset index (semantic + EXIF)
 ```
 
-## Slot Planning
+---
 
-The planner layer remains available on top of the core index:
+## Pipeline
 
-- parse article sections
-- map sections to visual slots
-- propose candidate images per heading
-
-This uses the core database; it does not require any export system.
-
-## Depositphotos Fallback
-
-For missing slots, the component can query Depositphotos as a stock fallback provider.
-
-Configuration:
-
-```python
-from pathlib import Path
-
-from visual_memory import VisualMemoryComponent, VisualMemoryConfig
-
-component = VisualMemoryComponent(
-    VisualMemoryConfig(
-        database_path=Path("~/Library/Application Support/photo_ai/visual_memory.db").expanduser(),
-        depositphotos_search_url="https://partner-api.example.com/search",
-        depositphotos_api_key="YOUR_KEY",
-        depositphotos_api_secret="YOUR_SECRET",
-        depositphotos_affiliate_id="YOUR_AFFILIATE_ID",
-    )
-)
-
-results = component.search_depositphotos("rome trastevere restaurant ivy", limit=5)
-for item in results:
-    print(item.asset_id, item.title, item.preview_url, item.landing_url)
+```
+HDD Archive (200,000+ photos)
+    ↓
+Phase 1 — Quick Pass (local, CPU)
+    ├── Path-based location extraction
+    ├── Dominant color detection (OpenCV)
+    ├── Face detection + Kemal Kaya identification
+    └── Perceptual hash deduplication
+    ↓
+Phase 2 — Deep Pass (async, Claude Vision)
+    ├── Scene and activity inference
+    ├── Landmark identification
+    └── Story narrative tags
+    ↓
+Slot Planning
+    ├── Match photos to article H2/H3 sections
+    └── Select best candidate per slot
+    ↓
+WordPress Upload
+    ├── WebP conversion + crop
+    ├── Alt text and caption generation
+    └── REST API publish
 ```
 
+---
 
-Notes:
-- This layer is intended for search and fallback selection.
-- Depositphotos Partner API access requires approved credentials and endpoint details.
+## Key Capabilities
 
-Credentials are stored in `depositphotos_credentials.json` at the repo root. The component now reads that file automatically, so updating the JSON is all that is needed when the key/secret change (or pass `deposit_config_path=Path(...)` to `VisualMemoryComponent` if you keep the file elsewhere). Then `component.search_depositphotos(...)` works without manual wiring.
+| Capability | Details |
+|---|---|
+| **Face recognition** | Custom-trained model identifies the author across 200,000+ photos |
+| **Semantic tagging** | Location, scene, activity, landmark, and story tags per image |
+| **Slot planning** | Matches images to article sections by semantic relevance |
+| **Deduplication** | Perceptual hash with configurable Hamming threshold |
+| **Licensed assets** | Depositphotos API integration for gap-filling |
+| **Daily indexing** | Incremental scan keeps the library current |
 
-Reference sources used for this integration design:
+---
 
-- https://depositphotos.com/api-program/signup.html
-- https://depositphotos.com/api-agreement.html
-## SEO Metadata
+## Stack
 
-Every asset exported via the workflow can be annotated before it reaches WordPress. Call `seo_fields_for(slot_label, target_text)` to get alt/title/caption/description/keywords/credit strings that stay short and descriptive, and run `embed_image_metadata(path, seo_fields)` with `exiftool` (it's tolerant if the tool is missing). These embedded IPTC/XMP fields populate the WordPress `alt`, `title`, `caption`, and `description` fields, while `ImageObject` JSON-LD can reuse the same values so Google sees consistent attribution.
+- **Python 3.10** — core engine
+- **OpenCV + dlib** — local face detection and recognition
+- **Claude Vision** — deep semantic enrichment
+- **SQLite** — visual memory database (FTS search enabled)
+- **WordPress REST API** — media publishing
+- **Depositphotos API** — licensed stock asset fallback
 
-Text conventions:
-- sentences never end with a full stop
-- `alt` and `title` stay concise and focus on the landmark
-- `caption` echoes the short description
-- `description` ends with `kaynak: 📷 Depositphotos` so the source is visible only there
-- keywords remain limited to 4–6 tokens tied to the location/topic
+---
 
-Call `annotate_exported_image(path, slot_label, target_description)` from `visual_memory.stock` whenever you finalize a downloaded asset so the metadata rule set is applied automatically.
+## Related
+
+- **[YOOS-APP](https://github.com/yoldaolmak/YOOS-APP)** — editorial content engine
+- **[yoldaolmak.com](https://yoldaolmak.com)** — live publication
