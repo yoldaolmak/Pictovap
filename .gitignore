@@ -1,36 +1,59 @@
-# Runtime
-data/
-visual_memory/
-ops_backups/
-ops_logs/
-exports/
-luts/
-tmp/
+```
+# Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Venv
-.venv/
+# Virtual environments
 venv/
+.venv/
+ENV/
 
-# DB & Index
-*.db
-*.sqlite
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Secrets
-.env
-*credentials*.json
-service-account-key.json
-
-# Logs & PID
+# Logs
 *.log
-*.pid
-*.txt.bak
 
-# Temp
-tmp_rome_*.txt
-tmp_rome_*.jpg
-# CV cache
-*.cv_cache.json
-.cv_cache.json
+# Environment
+.env
+.env.local
+*.env.*
+
+# Coverage
+.coverage
+htmlcov/
+.coverage.*
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+
+# Distribution
+.tar.gz
+.zip
+
+# OS
+.DS_Store
+Thumbs.db
+```
