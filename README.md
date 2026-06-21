@@ -6,6 +6,7 @@ Bu repo şu an iki yüzey sunuyor:
 
 - `vil` CLI
 - minimal HTTP app surface
+- Mac Photos tabanlı visual memory index
 
 ## Çalışan Yüzey
 
@@ -54,6 +55,37 @@ curl -s -X POST http://127.0.0.1:8040/jobs/attach \
 
 `POST /jobs/attach` senkron cevap yerine job kaydı döner. Sonra `GET /jobs/{job_id}` ile durum sorgulanır.
 
+## Mac Photos Akışı
+
+YOOS-VIL artık Mac Photos originals havuzunu indexleyip semantic seçimde kullanabiliyor.
+
+Pratik akış:
+
+```bash
+# 1. Çalışan visual memory runtime içinde Photos index kur
+cd /Users/yoldaolmak/Downloads/YO_OS_VIL
+./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 0
+
+# 2. Apple Photos ML metadata işle
+./.venv/bin/python extract_apple_photos_ml.py
+```
+
+Canonical repo, local `.env` içinde `YO_VISUAL_MEMORY_DB` verilirse bu indexi kullanır.
+
+Semantic arama artık sadece `source_path` değil, şu alanlarda da eşleşme arar:
+
+- `filename`
+- `title`
+- `description`
+- `summary`
+- `location`
+- `city`
+- `country`
+- `activity`
+- `scene`
+
+Bu sayede Mac Photos içindeki yer etiketli görseller post bağlamına göre seçilebilir.
+
 ## Native ve Legacy
 
 - `legacy`: mevcut orkestratörü sarar, bugün en tam davranış burada
@@ -94,16 +126,19 @@ python3 -m src.vil.app.cli attach --help
 python3 -m src.vil.app.cli plan --help
 python3 -m src.vil.app.cli process --help
 python3 -m src.vil.app.cli serve --help
+python3 - <<'PY'
+from src.main import search_semantic_assets
+print(search_semantic_assets('Sinop', count=5))
+PY
 ```
 
 Son test durumu:
 
-- `18 passed, 1 warning`
+- `19 passed, 1 warning`
 
 ## Eksik Olanlar
 
 - native hattın legacy kadar zengin semantic metadata üretmesi
-- gerçek job state / queue / progress yüzeyi
 - HTTP surface için auth
 - persisted job store
 - structured logging

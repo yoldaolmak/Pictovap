@@ -1,100 +1,76 @@
 # VIL Architecture
 
-## Overview
+## Çalışan Yapı
 
-Visual Intelligence Layer (VIL) is a premium-grade image processing and publishing pipeline designed for WordPress-based content management systems. It provides intelligent image selection, metadata generation, optimization, and seamless integration with WordPress media libraries.
+Repo bugün iki katmanlı çalışıyor: canonical uygulama yüzeyi `src/vil/*` altında, mevcut seçim ve publish çekirdeğinin bir kısmı ise hâlâ legacy modüller üzerinden sarılıyor.
 
-## System Components
+## Uygulama Yüzeyi
 
-### Core Pipeline (`src/core/`)
+`src/vil/app/` altında üç ana giriş var:
 
-1. **Orchestrator** (`yo_orchestrator.py`)
-   - Main command handler
-   - Parses user commands and orchestrates full pipeline
-   - Manages workflow between different modules
+- `cli.py`: `vil` komutları
+- `api.py`: Python-callable ince yüzey
+- `server.py`: minimal HTTP surface
 
-2. **Image Processor** (`yo_image_processor.py`)
-   - Image loading and validation
-   - Format conversion and optimization
-   - Quality assessment
+Bunların üstünde `state.py` ile job kaydı tutulur.
 
-3. **Metadata Generator** (`yo_metadata_generator.py`)
-   - EXIF data extraction
-   - AI-powered tagging
-   - SEO optimization
+## Engine Katmanı
 
-4. **WordPress Uploader** (`yo_wp_uploader.py`)
-   - REST API integration
-   - Batch upload handling
-   - Media library management
+`src/vil/engine/` seçimi, işleme, metadata, kalite kapısı ve publish akışını parçalara ayırır.
 
-5. **Media Publish** (`media_publish.py`)
-   - Content embedding
-   - Slug generation
-   - Path management
+Ana modüller:
 
-6. **Cloud Vision** (`yo_cloud_vision.py`)
-   - Google Cloud Vision integration
-   - Image recognition
-   - Automatic tagging
+- `attach.py`
+- `selector.py`
+- `processor.py`
+- `metadata.py`
+- `quality.py`
+- `publisher.py`
 
-### Visual Memory (`src/visual_memory/`)
+## Legacy Bağımlılık
 
-- Persistent image metadata storage
-- Semantic search capabilities
-- Image relationship tracking
-- Deposit management
+Bugünkü canonical seçim hattı hâlâ bazı noktalarda `src/main.py` ve `src/core/*` içindeki mevcut davranışı kullanır. Özellikle semantic seçim ve bazı publish davranışları tamamen native hale gelmiş değildir.
 
-### Utilities (`src/utils/`)
+## Visual Memory Akışı
 
-- Deep verification tools
-- Image distribution helpers
-- Repair utilities
+Mac Photos tarafı doğrudan canonical repo içinde indexlenmiyor. Çalışan index runtime şu anda `/Users/yoldaolmak/Downloads/YO_OS_VIL` altında.
 
-## Data Flow
+Bu runtime:
 
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│  POST ID    │ ──► │ Orchestrator  │ ──► │  Fetch Post │
-│  Input      │     │               │     │  Context    │
-└─────────────┘     └──────────────┘     └─────────────┘
-                                                 │
-                                                 ▼
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│  WordPress  │ ◄── │   Upload     │ ◄── │  Process    │
-│   Media     │     │   Images     │     │  & Optimize │
-└─────────────┘     └──────────────┘     └─────────────┘
-```
+- Photos originals dosyalarını keşfeder
+- kalite ve seçim skoru üretir
+- `asset_index` tablosuna yazar
+- Apple Photos ML verisini aynı tabloya enrich eder
 
-## Technology Stack
+Canonical repo ise bu DB'yi `YO_VISUAL_MEMORY_DB` ile kullanır.
 
-- **Language**: Python 3.9+
-- **Image Processing**: PIL/Pillow, OpenCV
-- **AI/ML**: Google Cloud Vision, CLIP
-- **Database**: SQLite (Visual Memory)
-- **Testing**: pytest, pytest-cov
-- **CI/CD**: GitHub Actions
+## Semantic Seçim
 
-## Security Considerations
+Semantic seçim eskiden ağırlıkla `source_path` eşleşmesine dayanıyordu. Güncel halde seçim şu index alanlarında da eşleşme arar:
 
-- Environment-based configuration (`.env`)
-- SQL injection prevention (parameterized queries)
-- Input validation on all user inputs
-- Secure credential management
+- `filename`
+- `title`
+- `description`
+- `summary`
+- `location`
+- `city`
+- `country`
+- `activity`
+- `scene`
 
-## Performance
+Bu değişiklik Mac Photos asset'lerinin UUID path yapısından dolayı zorunluydu; aksi halde lokasyon bazlı post eşleşmesi çalışmıyordu.
 
-- Batch processing for efficiency
-- Caching mechanisms
-- Parallel processing where applicable
-- Memory-efficient image handling
+## HTTP Yüzeyi
 
-## Extensibility
+Bugünkü HTTP surface minimaldir:
 
-The architecture supports:
-- Custom AI providers
-- Additional image sources
-- New optimization algorithms
-- Third-party integrations
+- `GET /health`
+- `POST /review`
+- `POST /plan`
+- `POST /process`
+- `POST /attach`
+- `POST /jobs/attach`
+- `GET /jobs`
+- `GET /jobs/{job_id}`
 
-For implementation details, see individual module documentation in `src/`.
+Bu yüzey şu an auth ve persisted job store olmadan çalışır.

@@ -112,6 +112,19 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
   - `GET /jobs`
   - `GET /jobs/{job_id}`
 - Rewrote `README.md` to match the actual repo surface instead of placeholder product copy.
+- Verified and connected the real visual memory DB:
+  - `/Users/yoldaolmak/Downloads/YO_OS_VIL/data/visual_memory.db`
+- Rebuilt Mac Photos index in the working visual memory runtime:
+  - discovered `328`
+  - kept `284`
+- Re-ran Apple Photos ML enrichment against indexed Mac Photos assets.
+- Extended Apple enrichment to also write location hints from Photos.sqlite moment metadata.
+- Updated semantic asset search in `src/main.py` so token matching now checks indexed metadata fields, not just `source_path`.
+- Rewrote docs to reflect the real CLI, HTTP, and Mac Photos indexing flow:
+  - `README.md`
+  - `docs/usage.md`
+  - `docs/installation.md`
+  - `docs/architecture.md`
 
 ## Verified
 - `python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py` -> pass
@@ -143,6 +156,8 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - HTTP attach route contract -> pass
 - HTTP attach job route -> pass
 - HTTP job query route -> pass
+- Mac Photos semantic lookup -> pass with real indexed assets
+- `search_semantic_assets('Sinop', count=5)` -> returns real Photos originals paths
 
 ## Current Test Result
 - `python3 -m pytest -q`
@@ -157,6 +172,7 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - Vision metadata depends on `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`; without credentials the native path stays on deterministic fallback metadata.
 - HTTP surface is intentionally minimal; there is no auth or persisted job state yet.
 - Real HTTP API server surface (current API layer is Python-callable, not yet FastAPI/HTTP)
+- Mac Photos indexing still lives in the separate `/Users/yoldaolmak/Downloads/YO_OS_VIL` runtime; canonical repo consumes its DB rather than rebuilding it itself.
 
 ## Remaining Risks
 - The branch now has a canonical package root, but most core logic still lives in legacy modules wrapped by `src/vil/*`.
