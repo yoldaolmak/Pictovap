@@ -101,7 +101,8 @@ INSERT INTO asset_index (
     metadata_keywords_json, quality_score,
     summary, scene, location, activity,
     objects_json, ai_keywords_json, places_json, people_json, story_tags_json,
-    capture_context, exif_metadata_json, raw_metadata_json
+    capture_context, exif_metadata_json, raw_metadata_json,
+    state_province, sub_admin_area
 ) VALUES (
     :source_id, 'mac_photos', :source_path, :folder_path, :filename, :file_extension,
     '',
@@ -112,7 +113,8 @@ INSERT INTO asset_index (
     :metadata_keywords_json, :quality_score,
     '', '', :location, '',
     '[]', '[]', '[]', '[]', '[]',
-    '', '{}', '{}'
+    '', '{}', '{}',
+    :state_province, :sub_admin
 )
 ON CONFLICT(source_id) DO UPDATE SET
     source_path = excluded.source_path,
@@ -122,7 +124,9 @@ ON CONFLICT(source_id) DO UPDATE SET
     longitude = excluded.longitude,
     album_names_json = excluded.album_names_json,
     width = excluded.width,
-    height = excluded.height;
+    height = excluded.height,
+    state_province = excluded.state_province,
+    sub_admin_area = excluded.sub_admin_area;
 """
 
 
@@ -215,10 +219,15 @@ def main():
 
         p = Path(path)
         place = photo.place
-        country_names = getattr(getattr(place, "names", None), "country", None) or []
+        pnames = getattr(place, "names", None)
+        country_names = getattr(pnames, "country", None) or []
         country = country_names[0] if country_names else "Türkiye"
-        city_names = getattr(getattr(place, "names", None), "city", None) or []
+        city_names = getattr(pnames, "city", None) or []
         city = city_names[0] if city_names else None
+        state_names = getattr(pnames, "state_province", None) or []
+        state_province = state_names[0] if state_names else None
+        sub_admin_names = getattr(pnames, "sub_administrative_area", None) or []
+        sub_admin = sub_admin_names[0] if sub_admin_names else None
         lat = photo.latitude
         lon = photo.longitude
 
@@ -254,6 +263,8 @@ def main():
             "metadata_keywords_json": json.dumps(keywords, ensure_ascii=False),
             "quality_score": _quality(photo),
             "location": location_str,
+            "state_province": state_province,
+            "sub_admin": sub_admin,
             "is_icloud": is_icloud,
         }
         try:

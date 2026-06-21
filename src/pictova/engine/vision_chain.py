@@ -136,6 +136,22 @@ def _codex_check_login() -> bool:
         return False
 
 
+def _find_bin(name: str) -> str | None:
+    """shutil.which + bilinen npm prefix konumları."""
+    found = shutil.which(name)
+    if found:
+        return found
+    candidates = [
+        Path.home() / "AI" / "npm" / "bin" / name,
+        Path("/usr/local/bin") / name,
+        Path("/opt/homebrew/bin") / name,
+    ]
+    for c in candidates:
+        if c.exists():
+            return str(c)
+    return None
+
+
 def _analyze_codex(
     image_path: str,
     location_hint: str,
@@ -144,7 +160,7 @@ def _analyze_codex(
     if not _codex_check_login():
         raise RuntimeError("Codex oturumu yok — terminalde: codex login")
 
-    codex_bin = shutil.which("codex")
+    codex_bin = _find_bin("codex")
     if not codex_bin:
         raise RuntimeError("codex CLI bulunamadı")
 
@@ -186,7 +202,7 @@ def _analyze_claude_cli(
     location_hint: str,
     post_context: Dict,
 ) -> Dict[str, Any]:
-    claude_bin = shutil.which("claude")
+    claude_bin = _find_bin("claude")
     if not claude_bin:
         raise RuntimeError("claude CLI bulunamadı")
 
@@ -199,7 +215,7 @@ def _analyze_claude_cli(
         [claude_bin, "--print", "--allowedTools", "Read", "--dangerously-skip-permissions",
          "--model", "claude-haiku-4-5-20251001"],
         input=prompt, text=True, check=False,
-        capture_output=True, timeout=60,
+        capture_output=True, timeout=120,
     )
     output = _strip_ansi((result.stdout or "").strip())
     if result.returncode != 0 or not output:
@@ -257,9 +273,9 @@ def has_any_vision_source() -> bool:
     """En az bir kaynak kullanılabilir mi?"""
     if os.environ.get("GEMINI_API_KEY", "").strip():
         return True
-    if _codex_check_login() and shutil.which("codex"):
+    if _codex_check_login() and _find_bin("codex"):
         return True
-    if shutil.which("claude"):
+    if _find_bin("claude"):
         return True
     return False
 

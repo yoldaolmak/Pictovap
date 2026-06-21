@@ -122,54 +122,64 @@ def search_semantic_assets(
     if not db_path.exists():
         return []
 
-    # Sorguyu normalize et, tokenize et (≥3 char)
-    normalized = _ascii_normalize(location_query)
-    tokens = [t for t in re.split(r"\s+", normalized) if len(t) >= 3]
+    # Sorguyu normalize et — Türkçe karakterleri koru, FTS unicode61 halleder
+    query_clean = re.sub(r'[^\w\s]', ' ', location_query, flags=re.UNICODE).strip()
+    tokens = [t for t in re.split(r"\s+", query_clean) if len(t) >= 3]
     if not tokens:
         return []
 
-    # Her token için metadata + path eşleşmesi (AND — tüm tokenlar bir alanda bulunmalı)
-    searchable_columns = (
-        "source_path",
-        "filename",
-        "title",
-        "description",
-        "summary",
-        "location",
-        "city",
-        "country",
-        "activity",
-        "scene",
-    )
-    token_clauses: list[str] = []
-    params: list[object] = []
-    for token in tokens:
-        per_token = " OR ".join([f"LOWER(COALESCE({column}, '')) LIKE ?" for column in searchable_columns])
-        token_clauses.append(f"({per_token})")
-        params.extend([f"%{token}%"] * len(searchable_columns))
-    location_sql = " AND ".join(token_clauses)
+    # FTS5 MATCH sorgusu — her token AND mantığıyla, prefix match için *
+    fts_query = " ".join(f'"{t}"*' for t in tokens)
 
     # İçerik filtresi SQL
     cf_key = _ascii_normalize(content_filter or "")
     canonical_cf = _FILTER_ALIASES.get(cf_key)
     content_sql = CONTENT_FILTER_SQL.get(canonical_cf or "", "") if canonical_cf else ""
 
-    where = f"({location_sql}) AND is_personal = 0"
-    if content_sql:
-        where += f" AND {content_sql}"
-
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:
+        # FTS ile eşleşen source_id'leri bul, asset_index ile JOIN et
+        content_filter_clause = f"AND {content_sql}" if content_sql else ""
         sql = f"""
-            SELECT source_path, filename, quality_score, selection_score,
-                   activity, scene, location, city, country, title, description, summary, orientation
-            FROM asset_index
-            WHERE {where}
-            ORDER BY selection_score DESC, quality_score DESC
+            SELECT a.source_path, a.filename, a.quality_score, a.selection_score,
+                   a.activity, a.scene, a.location, a.city, a.state_province,
+                   a.country, a.title, a.description, a.summary, a.orientation
+            FROM asset_search s
+            JOIN asset_index a ON a.source_id = s.source_id
+            WHERE s.document MATCH ?
+              AND a.is_personal = 0
+              AND a.source_path != ''
+              {content_filter_clause}
+            ORDER BY a.selection_score DESC, a.quality_score DESC
             LIMIT ?
         """
-        rows = conn.execute(sql, [*params, max(count * 4, 30)]).fetchall()
+        try:
+            rows = conn.execute(sql, [fts_query, max(count * 4, 30)]).fetchall()
+        except Exception:
+            # FTS MATCH hatası (özel karakter vb.) → LIKE fallback
+            rows = []
+
+        # FTS sonuç yetersizse LIKE fallback (tek token, city/state_province)
+        if len(rows) < count and tokens:
+            like_clauses = " OR ".join(
+                f"LOWER(COALESCE(city,'')) LIKE ? OR LOWER(COALESCE(state_province,'')) LIKE ?"
+                for _ in tokens
+            )
+            like_params = [f"%{t.lower()}%" for t in tokens for _ in range(2)]
+            fb_sql = f"""
+                SELECT source_path, filename, quality_score, selection_score,
+                       activity, scene, location, city, state_province,
+                       country, title, description, summary, orientation
+                FROM asset_index
+                WHERE ({like_clauses}) AND is_personal = 0
+                  {content_filter_clause.replace('AND ', 'AND ', 1) if content_filter_clause else ''}
+                ORDER BY selection_score DESC, quality_score DESC
+                LIMIT ?
+            """
+            seen = {r["source_path"] for r in rows}
+            fb_rows = conn.execute(fb_sql, [*like_params, max(count * 4, 30)]).fetchall()
+            rows = list(rows) + [r for r in fb_rows if r["source_path"] not in seen]
     finally:
         conn.close()
 
@@ -179,7 +189,10 @@ def search_semantic_assets(
 
     paths: list[str] = []
     for row in rows:
-        p = Path(row["source_path"])
+        src = row["source_path"] or ""
+        if not src:
+            continue  # iCloud — lokal değil
+        p = Path(src)
         if p.exists():
             paths.append(str(p))
         if len(paths) >= count:
