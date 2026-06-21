@@ -1,7 +1,7 @@
 # YOOS-VIL Development Status
 
 ## Current Goal
-Stabilize PR branch `kodu-güçlü-ve-zayıf-yanları-35031` for Milestone 1.
+Complete Milestone 2 by introducing `src/vil/` as the canonical package root without breaking the stabilized runtime.
 
 ## Physically Completed
 - Fixed `ops/yoos_vil_health.py` syntax errors so the health script parses again.
@@ -26,6 +26,22 @@ Stabilize PR branch `kodu-güçlü-ve-zayıf-yanları-35031` for Milestone 1.
 - Fixed `src/utils/config.py` so project root resolves to repo root instead of `src/utils/`.
 - Fixed `src/core/database.py` methods that were calling missing `self.execute(...)` instead of `self.db.execute(...)`.
 - Replaced the broken placeholder test file with branch-accurate smoke tests for current modules.
+- Added `AI_COORDINATION.md` to this branch so the active PR now carries the canonical product contract.
+- Introduced `src/vil/` as the canonical package root with:
+  - `src/vil/config.py`
+  - `src/vil/engine/`
+  - `src/vil/providers/`
+  - `src/vil/profiles/`
+  - `src/vil/app/`
+- Added canonical CLI entrypoint: `src/vil/app/cli.py`
+- Added app-surface modules:
+  - `src/vil/app/jobs.py`
+  - `src/vil/app/health.py`
+  - `src/vil/app/api.py`
+- Added `pyproject.toml` console script:
+  - `vil = "src.vil.app.cli:main"`
+- Updated `README.md` to show canonical `vil attach`, `vil review`, `vil health` usage.
+- Removed `pytest-cov` dependency from default `pytest.ini` addopts so plain `pytest` now runs in this environment.
 
 ## Verified
 - `python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py` -> pass
@@ -39,32 +55,33 @@ Stabilize PR branch `kodu-güçlü-ve-zayıf-yanları-35031` for Milestone 1.
   - `ops.index_memory_daily`
 - Runtime filter path check -> pass:
   - `YOImageProcessor().apply_yo_filter(...)`
-
-## Tested But Failed
-- `python3 -m pytest -q` failed because `pytest.ini` expects `pytest-cov`, which is not installed in this environment.
-- `python3 -m pytest -q -o addopts=''` was used as fallback and now runs the actual tests.
+- `python3 -m src.vil.app.cli health` -> pass
+- `python3 -m src.vil.app.cli attach --help` -> pass
+- `python3 -m pytest -q` -> pass
 
 ## Current Test Result
-- `python3 -m pytest -q -o addopts=''`
+- `python3 -m pytest -q`
 - Status at last update: `5 passed, 1 warning`
 
 ## Planned But Not Done
 - SQL injection audit and parameterized LIKE/query cleanup
 - Structured logging
 - Retry/error handling policy
-- Canonical `src/vil/` package layout
-- `vil attach` CLI contract
+- Full internal migration from legacy `src/main.py` / `src/core/*` modules into `src/vil/*`
+- Rich `vil attach` contract with structured constraints (`--lang`, `--people-first`) enforced end-to-end
 - API surface
 
 ## Remaining Risks
-- The branch is stabilized for current import/syntax failures, but broader architecture cleanup is still unfinished.
-- `pytest.ini` still assumes `pytest-cov`; environment bootstrap or config fallback should be handled later.
+- The branch now has a canonical package root, but most core logic still lives in legacy modules wrapped by `src/vil/*`.
+- `vil attach` currently wraps the existing orchestrator; it is not yet a fully native `src/vil/engine/*` implementation.
 - Some deleted modules were restored as compatibility modules to recover runtime behavior; they still need a proper long-term home in the planned package layout.
 
 ## Last Commands Run
 ```bash
 python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py
-python3 -m pytest -q -o addopts=''
+python3 -m pytest -q
+python3 -m src.vil.app.cli health
+python3 -m src.vil.app.cli attach --help
 python3 - <<'PY'
 import sys
 sys.path.insert(0, '/Users/yoldaolmak/Projects/YOOS-VIL-pr1')

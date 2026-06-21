@@ -4,6 +4,9 @@ version = "0.1.0"
 description = "Reusable visual memory component for content generation systems."
 requires-python = ">=3.9"
 
+[project.scripts]
+vil = "src.vil.app.cli:main"
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"

@@ -48,17 +48,10 @@ python scripts/yoos_vil_health.py
 ### Temel Kullanım
 
 ```bash
-# Tek Post ID için görsel ekleme
-python -m src.core.yo_orchestrator --post-id 12345
-
-# Birden fazla Post ID
-python -m src.core.yo_orchestrator --post-ids 12345,12346,12347
-
-# Belirli bir kategorideki tüm postlar
-python -m src.core.yo_orchestrator --category "seyahat" --limit 50
-
-# Dry-run (test modu)
-python -m src.core.yo_orchestrator --post-id 12345 --dry-run
+# Canonical CLI
+vil attach --site yoldaolmak --post 264459 --count 4 --location-query "roma" --people-first
+vil review --site yoldaolmak --post 264459
+vil health
 ```
 
 ## 📚 Dokümantasyon
