@@ -9,6 +9,7 @@ from typing import Any, Dict
 from src.vil.app.health import run_health_check
 from src.vil.app.jobs import run_attach_job
 from src.vil.app.api import plan_attach, process_attach
+from src.vil.app.server import serve
 from src.vil.providers.wordpress import fetch_post_context
 
 
@@ -60,6 +61,10 @@ def build_parser() -> argparse.ArgumentParser:
     process.add_argument("--content-filter")
     process.add_argument("--lang", default="tr")
     process.add_argument("--people-first", action="store_true")
+
+    serve_cmd = sub.add_parser("serve")
+    serve_cmd.add_argument("--host", default="127.0.0.1")
+    serve_cmd.add_argument("--port", type=int, default=8040)
 
     sub.add_parser("health")
     return parser
@@ -124,6 +129,24 @@ def main() -> int:
         result = run_health_check()
         _print_json(result)
         return 0 if result.get("status") == "ok" else 1
+
+    if args.command == "serve":
+        server = serve(host=args.host, port=args.port)
+        try:
+            _print_json(
+                {
+                    "command": "serve",
+                    "status": "ok",
+                    "host": args.host,
+                    "port": args.port,
+                }
+            )
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            server.server_close()
+        return 0
 
     parser.error(f"unknown command: {args.command}")
     return 2

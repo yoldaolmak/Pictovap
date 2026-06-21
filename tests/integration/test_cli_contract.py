@@ -1,5 +1,8 @@
 import sys
 from pathlib import Path
+import json
+import threading
+from urllib.request import Request, urlopen
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -358,3 +361,51 @@ def test_build_native_metadata_map_falls_back_without_credentials(monkeypatch):
 
     assert "roma-1_yo.webp" in metadata_dict
     assert "basic metadata fallback only" in warnings[0]
+
+
+def test_http_server_health_route_returns_json():
+    from src.vil.app.server import serve
+
+    server = serve(host="127.0.0.1", port=0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        host, port = server.server_address
+        with urlopen(f"http://{host}:{port}/health") as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        assert payload["status"] in {"ok", "fail"}
+        assert "modules" in payload
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_http_server_attach_route_uses_api_contract(monkeypatch):
+    from src.vil.app import server as server_module
+
+    monkeypatch.setattr(
+        server_module,
+        "attach_images",
+        lambda payload: {"command": "attach", "status": "success", "request": payload},
+    )
+
+    server = server_module.serve(host="127.0.0.1", port=0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        host, port = server.server_address
+        request = Request(
+            f"http://{host}:{port}/attach",
+            data=json.dumps({"site": "yoldaolmak", "post_id": 264459}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urlopen(request) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        assert payload["status"] == "success"
+        assert payload["request"]["post_id"] == 264459
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)

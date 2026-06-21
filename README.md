@@ -1,193 +1,101 @@
-# VIL - Visual Intelligence Layer
+# YOOS-VIL
 
-**Premium WordPress Otomatik Görsel Yerleştirme Platformu**
+YOOS-VIL, WordPress yazılarına içerikle uyumlu görseller seçmek, işlemek ve yerleştirmek için kullanılan görsel pipeline repo'sudur.
 
-VIL, WordPress içerik yönetim sisteminde yayınlanan yazılardaki başlık (H1, H2, H3...) yapılarını analiz ederek, her bölüm için en uygun görselleri otomatik olarak bulan, işleyen ve yerleştiren yapay zeka destekli bir platformdur.
+Bu repo şu an iki yüzey sunuyor:
 
-## 🎯 Değer Önermesi
+- `vil` CLI
+- minimal HTTP app surface
 
-- **Zaman Tasarrufu**: Manuel görsel arama ve yükleme sürecini %90 azaltır
-- **İçerik Kalitesi**: Her başlık için semantik olarak en alakalı görselleri seçer
-- **SEO Optimizasyonu**: Görsellere otomatik alt text, başlık ve açıklama meta verileri ekler
-- **Ölçeklenebilirlik**: Tek bir komutla yüzlerce yazıyı işleyebilir
-- **Multi-Site Desteği**: Birden fazla WordPress sitesini yönetebilir
+## Çalışan Yüzey
 
-## 🚀 Hızlı Başlangıç
-
-### Gereksinimler
-
-- Python 3.9+
-- WordPress REST API erişimi
-- (Opsiyonel) Google Cloud Vision API
-- (Opsiyonel) Unsplash API
-- PostgreSQL/MySQL (görsel metadata indexing için)
-
-### Kurulum
+### CLI
 
 ```bash
-# 1. Repository clone
-git clone <repo-url>
-cd vil
-
-# 2. Virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-
-# 3. Bağımlılıklar
-pip install -r requirements.txt
-
-# 4. Environment ayarları
-cp .env.example .env
-# .env dosyasını düzenle
-
-# 5. İlk çalıştırma
-python scripts/yoos_vil_health.py
-```
-
-### Temel Kullanım
-
-```bash
-# Canonical CLI
-vil attach --site yoldaolmak --post 264459 --count 4 --location-query "roma" --people-first
-vil review --site yoldaolmak --post 264459
 vil health
+vil review --site yoldaolmak --post 264459
+vil plan --site yoldaolmak --post 264459 --count 4 --people-first
+vil process --site yoldaolmak --post 264459 --count 4 --people-first
+vil attach --site yoldaolmak --post 264459 --count 4 --people-first
+vil attach --site yoldaolmak --post 264459 --count 4 --people-first --engine native
 ```
 
-## 📚 Dokümantasyon
+### HTTP
 
-- [Kurulum Kılavuzu](docs/installation.md)
-- [Kullanım Kılavuzu](docs/usage.md)
-- [API Referansı](docs/api-reference.md)
-- [Mimari Detaylar](docs/architecture.md)
-- [Güvenlik Best Practices](docs/security.md)
-
-## 🏗️ Proje Yapısı
-
-```
-vil/
-├── src/
-│   ├── core/           # Ana pipeline bileşenleri
-│   │   ├── yo_orchestrator.py
-│   │   ├── yo_image_processor.py
-│   │   ├── yo_metadata_generator.py
-│   │   └── ...
-│   ├── ai/             # AI/ML modülleri (gelecek)
-│   ├── integrations/   # Third-party entegrasyonlar (gelecek)
-│   └── utils/          # Yardımcı araçlar
-├── scripts/            # Operasyonel scriptler
-├── tests/              # Test suite
-│   ├── unit/
-│   └── integration/
-├── docs/               # Dokümantasyon
-├── .env.example        # Environment şablonu
-├── requirements.txt    # Python bağımlılıkları
-└── README.md           # Bu dosya
+```bash
+vil serve --host 127.0.0.1 --port 8040
 ```
 
-## 🔧 Özellikler
+Endpoints:
 
-### Core Pipeline
+- `GET /`
+- `GET /health`
+- `POST /review`
+- `POST /plan`
+- `POST /process`
+- `POST /attach`
 
-1. **İçerik Analizi**
-   - WordPress'ten POST ID al
-   - H başlıklarını parse et
-   - Her bölüm için bağlam çıkar
+Örnek:
 
-2. **Görsel Arama & Seçim**
-   - Vektör tabanlı semantik arama
-   - Kalite filtreleme
-   - Gelişmiş kriterler
-   - Dinamik adaptasyon
+```bash
+curl -s http://127.0.0.1:8040/health
 
-3. **Görsel İşleme**
-   - Boyutlandırma, optimizasyon
-   - AI ile meta veri üretimi
-   - CLIP modeli ile etiketleme
-   - Google Vision analizi
-
-4. **WordPress Entegrasyonu**
-   - Medya kütüphanesine yükleme
-   - Taslaklara yerleştirme
-   - Block editörü uyumlu
-
-5. **Orkestrasyon**
-   - Tüm pipeline'ı yönetir
-   - Süreç takibi ve loglama
-
-## 🛣️ Roadmap
-
-### Q2 2024 (Mevcut Faz)
-- ✅ Core pipeline implementation
-- ✅ Semantic search integration
-- ✅ Basic metadata generation
-- ⏳ Test coverage iyileştirme
-- ⏳ Documentation completion
-
-### Q3 2024
-- [ ] Advanced AI features (multi-modal understanding)
-- [ ] Real-time progress dashboard
-- [ ] Batch processing optimization (parallel execution)
-- [ ] Custom taxonomy support
-
-### Q4 2024
-- [ ] Multi-site WordPress support
-- [ ] Plugin olarak packaging (WordPress plugin repo)
-- [ ] Web UI for non-technical users
-- [ ] Analytics & reporting module
-
-### 2025+
-- [ ] Video content support
-- [ ] Multi-language content handling
-- [ ] ML model training on custom dataset
-- [ ] CDN integration for faster delivery
-
-## 🤝 Katkıda Bulunma
-
-### Development Workflow
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-### Code Style
-
-- PEP 8 compliant
-- Type hints kullanımı zorunlu
-- Docstrings (Google style) her public method için
-- Maximum line length: 100 characters
-
-### Commit Messages
-
-```
-feat: add semantic search caching
-fix: resolve image upload timeout issue
-docs: update README with usage examples
-refactor: extract metadata generation to separate module
-test: add unit tests for YoImageProcessor
+curl -s -X POST http://127.0.0.1:8040/plan \
+  -H 'Content-Type: application/json' \
+  -d '{"site":"yoldaolmak","post_id":264459,"count":4,"people_first":true}'
 ```
 
-## 🔐 Güvenlik
+## Native ve Legacy
 
-- Tüm API credentials `.env` dosyasında tutulur
-- SQL injection prevention (prepared statements)
-- Rate limiting ve throttling
-- Input validation ve sanitization
-- Sensitive information masking in logs
+- `legacy`: mevcut orkestratörü sarar, bugün en tam davranış burada
+- `native`: yeni `src/vil/*` yüzeyini kullanır; seçim, işleme, kalite kapısı ve publish kontratı ayrıştırılmıştır
 
-## 📄 Lisans
+Bugünkü durum:
 
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakınız.
+- native `plan` hazır
+- native `process` hazır
+- native `attach` çalışır
+- native metadata, API anahtarı varsa vision analizi dener
+- anahtar yoksa deterministic fallback metadata kullanır
 
-## 👥 İletişim
+## Repo Yapısı
 
-**Proje Lead**: Kemal  
-**Repository**: [GitHub](your-repo-url)  
-**Issue Tracker**: [GitHub Issues](your-issues-url)  
+```text
+src/
+  vil/
+    app/
+    engine/
+    profiles/
+    providers/
+  core/
+  services/
+  utils/
+ops/
+tests/
+docs/
+```
 
----
+## Doğrulama
 
-*Son Güncelleme: Haziran 2024*  
-*Versiyon: 2.0.0*
+Son doğrulanan komutlar:
+
+```bash
+python3 -m pytest -q
+python3 -m src.vil.app.cli attach --help
+python3 -m src.vil.app.cli plan --help
+python3 -m src.vil.app.cli process --help
+python3 -m src.vil.app.cli serve --help
+```
+
+Son test durumu:
+
+- `18 passed, 1 warning`
+
+## Eksik Olanlar
+
+- native hattın legacy kadar zengin semantic metadata üretmesi
+- gerçek job state / queue / progress yüzeyi
+- HTTP surface için auth
+- structured logging
+- retry politikası
+- legacy çekirdeğin kademeli olarak `src/vil/*` altına taşınması
