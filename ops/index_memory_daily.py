@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 
 from src.utils.config import get_visual_memory_db_path
-from src.core.selection import VisualMemoryComponent, VisualMemoryConfig
+from src.core.database import VisualMemoryComponent, VisualMemoryConfig
 
 
 def parse_args() -> argparse.Namespace:

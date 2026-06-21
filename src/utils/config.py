@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_VIL_DIR = Path.home() / "Downloads" / "VIL"
 DEFAULT_OUTPUT_DIR = Path.home() / "Downloads"
 DEFAULT_VISUAL_MEMORY_DB = PROJECT_ROOT / "data" / "visual_memory.db"

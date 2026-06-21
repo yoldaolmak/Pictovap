@@ -1,55 +1,75 @@
 # YOOS-VIL Development Status
 
 ## Current Goal
-Fix import paths and runtime integrity after restructuring repo into product surface (`src/`) and ops scripts (`ops/`).
+Stabilize PR branch `kodu-güçlü-ve-zayıf-yanları-35031` for Milestone 1.
 
-## Files Physically Changed (This Session)
-1. **`src/core/database.py`** - Added `VisualMemoryConfig` and `VisualMemoryComponent` classes for backward compatibility
-2. **`src/main.py`** - Fixed imports: changed `from src.core.selection` to `from src.core.database` for VisualMemory classes
-3. **`src/core/metadata_generator.py`** - Restored from git history, fixed import: `src.core.settings` → `src.utils.config`
-4. **`src/utils/config.py`** - Already existed, provides `load_project_env()` and config helpers
+## Physically Completed
+- Fixed `ops/yoos_vil_health.py` syntax errors so the health script parses again.
+- Restored runtime modules deleted by the cleanup but still imported by the live code:
+  - `yo_yoldaolmak_filter.py`
+  - `yo_adaptive_filter.py`
+  - `yo_unsplash.py`
+- Restored `src/visual_memory/` compatibility package for ops scripts that still depend on:
+  - `src.visual_memory`
+  - `src.visual_memory.deposit_config`
+  - `src.visual_memory.models`
+- Corrected broken imports in ops scripts:
+  - `ops/index_memory_daily.py`
+  - `ops/index_vil.py`
+  - `ops/run_deposit.py`
+- Added postponed annotation evaluation where needed to stop Python 3.9 runtime failures:
+  - `src/main.py`
+  - `src/core/metadata_generator.py`
+- Aligned packaging/runtime version declaration to Python 3.9+:
+  - `pyproject.toml`
+  - `docs/architecture.md`
+- Fixed `src/utils/config.py` so project root resolves to repo root instead of `src/utils/`.
+- Fixed `src/core/database.py` methods that were calling missing `self.execute(...)` instead of `self.db.execute(...)`.
+- Replaced the broken placeholder test file with branch-accurate smoke tests for current modules.
 
-## Completed and Verified
-- ✅ `src/main.py` compiles without errors
-- ✅ `src/core/database.py` compiles and exports required classes
-- ✅ `src/core/metadata_generator.py` restored and imports work
-- ✅ `from src.main import YOOrchestrator` succeeds
-- ✅ All core modules pass `python -m py_compile`
-- ✅ Import path structure validated: `src/core/`, `src/services/`, `src/utils/`
+## Verified
+- `python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py` -> pass
+- Import smoke check -> pass for:
+  - `src.main`
+  - `src.services.wordpress`
+  - `src.core.filter`
+  - `src.core.processor`
+  - `ops.run_deposit`
+  - `ops.index_vil`
+  - `ops.index_memory_daily`
+- Runtime filter path check -> pass:
+  - `YOImageProcessor().apply_yo_filter(...)`
 
-## Planned but Not Done
-- SQL injection audit (all queries must use parameterized statements)
-- Structured logging implementation (JSON format)
-- Error handling + retry policy decorators
-- Test coverage increase (current ~6%, target 60%+)
-- Remove unused deleted module references from imports
+## Tested But Failed
+- `python3 -m pytest -q` failed because `pytest.ini` expects `pytest-cov`, which is not installed in this environment.
+- `python3 -m pytest -q -o addopts=''` was used as fallback and now runs the actual tests.
 
-## Moved to Ops
-Already moved in previous sessions:
-- `ops/run_deposit.py` - One-time deposit asset download
-- `ops/vision_budget.py` - Budget tracking script
-- `ops/repair_*.py` - Repair scripts
-- `ops/index_*.py` - Indexing scripts
-- `ops/download_licensed_deposit_assets.py` - Licensed asset downloader
-- `ops/extract_apple_photos_ml.py` - Apple Photos ML extraction
+## Current Test Result
+- `python3 -m pytest -q -o addopts=''`
+- Status at last update: `5 passed, 1 warning`
+
+## Planned But Not Done
+- SQL injection audit and parameterized LIKE/query cleanup
+- Structured logging
+- Retry/error handling policy
+- Canonical `src/vil/` package layout
+- `vil attach` CLI contract
+- API surface
 
 ## Remaining Risks
-1. **Deleted modules still imported**: Several deleted files (`yo_cloud_vision.py`, `yo_face_detector.py`, etc.) may still be referenced somewhere
-2. **SQL Injection**: LIKE queries in `main.py` and `selection.py` use string formatting instead of parameters
-3. **Missing error handling**: No global exception handler or retry logic
-4. **No structured logging**: Print statements used instead of proper logging
-5. **Test coverage**: Only basic import tests exist
+- The branch is stabilized for current import/syntax failures, but broader architecture cleanup is still unfinished.
+- `pytest.ini` still assumes `pytest-cov`; environment bootstrap or config fallback should be handled later.
+- Some deleted modules were restored as compatibility modules to recover runtime behavior; they still need a proper long-term home in the planned package layout.
 
-## Last Commands/Tests Run
+## Last Commands Run
 ```bash
-python -c "from src.main import YOOrchestrator; print('Main import OK')"
-python -m py_compile src/main.py src/core/database.py src/core/metadata_generator.py src/utils/config.py
+python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py
+python3 -m pytest -q -o addopts=''
+python3 - <<'PY'
+import sys
+sys.path.insert(0, '/Users/yoldaolmak/Projects/YOOS-VIL-pr1')
+for name in ['src.main', 'src.services.wordpress', 'src.core.filter', 'src.core.processor', 'ops.run_deposit', 'ops.index_vil', 'ops.index_memory_daily']:
+    __import__(name)
+    print(name, 'ok')
+PY
 ```
-
-## Open Decisions
-1. Should we restore any of the deleted `yo_*.py` modules or refactor their functionality into existing modules?
-2. Where should `cloud_vision` functionality live if it's needed by `main.py`?
-3. Should `ops/` scripts be kept in the same repo or moved to a separate maintenance repo?
-
----
-Last updated: $(date -u +"%Y-%m-%d %H:%M UTC")

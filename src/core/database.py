@@ -139,7 +139,7 @@ class VisualMemoryComponent:
     
     def get_all_images(self, limit: int = 1000) -> List[Dict[str, Any]]:
         """Get all images from database"""
-        cursor = self.execute("""
+        cursor = self.db.execute("""
             SELECT * FROM images
             ORDER BY created_at DESC
             LIMIT ?
@@ -148,7 +148,7 @@ class VisualMemoryComponent:
     
     def get_image_by_path(self, path: str) -> Optional[Dict[str, Any]]:
         """Get image by path"""
-        cursor = self.execute("""
+        cursor = self.db.execute("""
             SELECT * FROM images WHERE path = ?
         """, (path,))
         row = cursor.fetchone()
@@ -156,7 +156,7 @@ class VisualMemoryComponent:
     
     def get_tags_for_image(self, image_id: int) -> List[str]:
         """Get all tags for an image"""
-        cursor = self.execute("""
+        cursor = self.db.execute("""
             SELECT tag FROM tags WHERE image_id = ?
             ORDER BY confidence DESC
         """, (image_id,))

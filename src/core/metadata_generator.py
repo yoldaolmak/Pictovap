@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 YO OS Metadata Generator — Semantic alt/title/caption/description
 Uses Claude Vision API to analyze images and generate SEO-friendly metadata

@@ -68,7 +68,7 @@ Visual Intelligence Layer (VIL) is a premium-grade image processing and publishi
 
 ## Technology Stack
 
-- **Language**: Python 3.10+
+- **Language**: Python 3.9+
 - **Image Processing**: PIL/Pillow, OpenCV
 - **AI/ML**: Google Cloud Vision, CLIP
 - **Database**: SQLite (Visual Memory)

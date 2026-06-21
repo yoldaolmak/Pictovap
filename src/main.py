@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 YO OS Orchestrator — Main command handler
 Parses user command and orchestrates full pipeline
