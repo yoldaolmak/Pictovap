@@ -8,6 +8,7 @@ import json
 from typing import Any, Callable, Dict, Tuple
 
 from src.vil.app.api import attach_images, health_status, plan_attach, process_attach, review_post
+from src.vil.app.state import job_registry
 
 
 RouteHandler = Callable[[Dict[str, Any]], Dict[str, Any]]
@@ -67,9 +68,30 @@ def build_handler() -> type[BaseHTTPRequestHandler]:
                             {"method": "POST", "path": "/plan"},
                             {"method": "POST", "path": "/process"},
                             {"method": "POST", "path": "/review"},
+                            {"method": "GET", "path": "/jobs"},
+                            {"method": "GET", "path": "/jobs/{job_id}"},
+                            {"method": "POST", "path": "/jobs/attach"},
                         ],
                     },
                 )
+                return
+
+            if self.path == "/jobs":
+                _json_response(
+                    self,
+                    HTTPStatus.OK,
+                    {"status": "ok", "jobs": job_registry.list_jobs()},
+                )
+                return
+
+            if self.path.startswith("/jobs/"):
+                job_id = self.path[len("/jobs/") :].strip()
+                try:
+                    job = job_registry.get_job(job_id)
+                except KeyError:
+                    _json_response(self, HTTPStatus.NOT_FOUND, {"status": "failed", "warning": "job not found"})
+                    return
+                _json_response(self, HTTPStatus.OK, {"status": "ok", "job": job})
                 return
 
             route = routes.get(("GET", self.path))
@@ -82,6 +104,19 @@ def build_handler() -> type[BaseHTTPRequestHandler]:
             _json_response(self, code, result)
 
         def do_POST(self) -> None:  # noqa: N802
+            if self.path == "/jobs/attach":
+                payload, error = _load_json_body(self)
+                if error:
+                    _json_response(self, HTTPStatus.BAD_REQUEST, {"status": "failed", "warning": error})
+                    return
+                job = job_registry.create_job(
+                    kind="attach",
+                    payload=payload or {},
+                    runner=attach_images,
+                )
+                _json_response(self, HTTPStatus.ACCEPTED, {"status": "accepted", "job": job})
+                return
+
             route = routes.get(("POST", self.path))
             if route is None:
                 _json_response(self, HTTPStatus.NOT_FOUND, {"status": "failed", "warning": "route not found"})

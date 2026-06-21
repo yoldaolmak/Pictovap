@@ -30,10 +30,13 @@ Endpoints:
 
 - `GET /`
 - `GET /health`
+- `GET /jobs`
+- `GET /jobs/{job_id}`
 - `POST /review`
 - `POST /plan`
 - `POST /process`
 - `POST /attach`
+- `POST /jobs/attach`
 
 Örnek:
 
@@ -43,7 +46,13 @@ curl -s http://127.0.0.1:8040/health
 curl -s -X POST http://127.0.0.1:8040/plan \
   -H 'Content-Type: application/json' \
   -d '{"site":"yoldaolmak","post_id":264459,"count":4,"people_first":true}'
+
+curl -s -X POST http://127.0.0.1:8040/jobs/attach \
+  -H 'Content-Type: application/json' \
+  -d '{"site":"yoldaolmak","post_id":264459,"count":4,"people_first":true}'
 ```
+
+`POST /jobs/attach` senkron cevap yerine job kaydı döner. Sonra `GET /jobs/{job_id}` ile durum sorgulanır.
 
 ## Native ve Legacy
 
@@ -96,6 +105,7 @@ Son test durumu:
 - native hattın legacy kadar zengin semantic metadata üretmesi
 - gerçek job state / queue / progress yüzeyi
 - HTTP surface için auth
+- persisted job store
 - structured logging
 - retry politikası
 - legacy çekirdeğin kademeli olarak `src/vil/*` altına taşınması

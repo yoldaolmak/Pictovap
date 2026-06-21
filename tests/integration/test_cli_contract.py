@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 import json
 import threading
+import time
 from urllib.request import Request, urlopen
 
 
@@ -405,6 +406,55 @@ def test_http_server_attach_route_uses_api_contract(monkeypatch):
             payload = json.loads(response.read().decode("utf-8"))
         assert payload["status"] == "success"
         assert payload["request"]["post_id"] == 264459
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_http_server_attach_job_route_returns_job_and_result(monkeypatch):
+    from src.vil.app import server as server_module
+    from src.vil.app.state import job_registry
+
+    monkeypatch.setattr(
+        server_module,
+        "attach_images",
+        lambda payload: {"command": "attach", "status": "success", "request": payload},
+    )
+
+    server = server_module.serve(host="127.0.0.1", port=0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        host, port = server.server_address
+        request = Request(
+            f"http://{host}:{port}/jobs/attach",
+            data=json.dumps({"site": "yoldaolmak", "post_id": 264459}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urlopen(request) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+
+        assert payload["status"] == "accepted"
+        job_id = payload["job"]["job_id"]
+
+        final_job = None
+        for _ in range(20):
+            with urlopen(f"http://{host}:{port}/jobs/{job_id}") as response:
+                polled = json.loads(response.read().decode("utf-8"))
+            if polled["job"]["status"] in {"success", "failed"}:
+                final_job = polled["job"]
+                break
+            time.sleep(0.05)
+
+        assert final_job is not None
+        assert final_job["status"] == "success"
+        assert final_job["result"]["request"]["post_id"] == 264459
+
+        with urlopen(f"http://{host}:{port}/jobs") as response:
+            jobs_payload = json.loads(response.read().decode("utf-8"))
+        assert any(item["job_id"] == job_id for item in jobs_payload["jobs"])
     finally:
         server.shutdown()
         server.server_close()

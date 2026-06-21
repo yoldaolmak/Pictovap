@@ -104,6 +104,13 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
   - `POST /plan`
   - `POST /process`
   - `POST /attach`
+- Added in-memory job registry:
+  - `src/vil/app/state.py`
+- Added async operator route:
+  - `POST /jobs/attach`
+- Added job query routes:
+  - `GET /jobs`
+  - `GET /jobs/{job_id}`
 - Rewrote `README.md` to match the actual repo surface instead of placeholder product copy.
 
 ## Verified
@@ -134,10 +141,12 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - native metadata fallback contract -> pass without API credentials
 - HTTP root route -> pass
 - HTTP attach route contract -> pass
+- HTTP attach job route -> pass
+- HTTP job query route -> pass
 
 ## Current Test Result
 - `python3 -m pytest -q`
-- Status at last update: `18 passed, 1 warning`
+- Status at last update: `19 passed, 1 warning`
 
 ## Planned But Not Done
 - SQL injection audit and parameterized LIKE/query cleanup
@@ -146,7 +155,7 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - Full internal migration from legacy `src/main.py` / `src/core/*` modules into `src/vil/*`
 - Native attach now supports selection + processing + basic-metadata publish + native quality gate, but advanced semantic metadata is still richer in the legacy orchestrator path
 - Vision metadata depends on `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`; without credentials the native path stays on deterministic fallback metadata.
-- HTTP surface is intentionally minimal; there is no auth, queue, or persisted job state yet.
+- HTTP surface is intentionally minimal; there is no auth or persisted job state yet.
 - Real HTTP API server surface (current API layer is Python-callable, not yet FastAPI/HTTP)
 
 ## Remaining Risks
