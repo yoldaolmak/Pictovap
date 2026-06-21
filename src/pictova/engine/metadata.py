@@ -1,12 +1,12 @@
-"""Metadata generation exports."""
+"""Metadata generation — vision chain ile."""
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-from src.core.metadata_generator import YOMetadataGenerator, build_basic_metadata
+from src.core.metadata_generator import build_basic_metadata
+from src.pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
 
 
 def build_basic_metadata_map(
@@ -29,13 +29,6 @@ def build_basic_metadata_map(
     return metadata_dict
 
 
-def _has_vision_credentials() -> bool:
-    return bool(
-        (os.environ.get("OPENAI_API_KEY") or "").strip()
-        or (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
-    )
-
-
 def build_native_metadata_map(
     image_files: List[str],
     *,
@@ -43,6 +36,14 @@ def build_native_metadata_map(
     post_context: Dict[str, Any] | None = None,
     mode: str = "auto",
 ) -> Tuple[Dict[str, Dict[str, Any]], List[str]]:
+    """Vision chain ile metadata üret.
+
+    Öncelik zinciri (vision_chain.py):
+      1. Gemini Flash (GEMINI_API_KEY)
+      2. Codex CLI web login
+      3. Claude CLI web login
+    Basic fallback YOK — hiçbiri çalışmıyorsa RuntimeError.
+    """
     post_context = post_context or {}
     metadata_dict = build_basic_metadata_map(
         image_files,
@@ -52,52 +53,45 @@ def build_native_metadata_map(
 
     normalized_mode = str(mode or "auto").strip().lower()
     if normalized_mode == "basic":
-        return metadata_dict, ["basic metadata fallback only"]
+        raise RuntimeError(
+            "mode=basic reddedildi: Pictova basic fallback kullanmaz. "
+            "GEMINI_API_KEY ekle veya codex/claude oturumu aç."
+        )
 
     if normalized_mode not in {"auto", "vision"}:
-        return metadata_dict, [f"unknown metadata mode: {normalized_mode}; basic fallback used"]
+        raise RuntimeError(f"Bilinmeyen metadata modu: {normalized_mode!r}")
 
-    if not _has_vision_credentials():
-        return metadata_dict, ["basic metadata fallback only"]
-
-    try:
-        generator = YOMetadataGenerator(use_gpt=bool((os.environ.get("OPENAI_API_KEY") or "").strip()))
-    except Exception as exc:
-        return metadata_dict, [f"basic metadata fallback only: {exc}"]
+    if not has_any_vision_source():
+        raise RuntimeError(
+            "Hiç vision kaynağı bulunamadı.\n"
+            "Seçenekler:\n"
+            "  1. GEMINI_API_KEY=... (.env'e ekle — Google AI Studio, ücretsiz)\n"
+            "  2. codex login  (terminalde)\n"
+            "  3. claude oturumu (zaten açık ise çalışır)"
+        )
 
     warnings: List[str] = []
-    total_images = len(image_files)
-    for index, image_file in enumerate(image_files):
+    for image_file in image_files:
         try:
-            result = generator.analyze_image(
+            analysis = analyze_image_vision_chain(
                 image_file,
                 location_hint=location_hint,
                 post_context=post_context,
-                image_index=index,
-                total_images=total_images,
             )
-        except Exception as exc:
-            warnings.append(f"{Path(image_file).name}: vision metadata failed: {exc}")
-            continue
+            source = analysis.pop("source", "vision_chain")
+            analysis["heading"] = post_context.get("title", "") or Path(image_file).stem
+            analysis["heading_level"] = 2
+            metadata_dict[image_file] = analysis
+            warnings.append(f"{Path(image_file).name}: OK ({source})")
+        except RuntimeError as exc:
+            raise RuntimeError(
+                f"Görsel analizi başarısız: {Path(image_file).name}\n{exc}"
+            ) from exc
 
-        if not result.get("success"):
-            warnings.append(
-                f"{Path(image_file).name}: vision metadata failed: {result.get('error', 'unknown error')}"
-            )
-            continue
-
-        analysis = dict(result.get("analysis") or {})
-        analysis["heading"] = post_context.get("title", "") or Path(image_file).stem
-        analysis["heading_level"] = 2
-        metadata_dict[image_file] = analysis
-
-    if not warnings:
-        warnings.append("vision metadata enabled")
     return metadata_dict, warnings
 
 
 __all__ = [
-    "YOMetadataGenerator",
     "build_basic_metadata",
     "build_basic_metadata_map",
     "build_native_metadata_map",

@@ -730,10 +730,50 @@ def build_publish_slug(metadata: Dict, post_context: Dict | None, original_path:
     return "-".join(deduped[:5]) or "seyahat-kare"
 
 
+def _slug_from_heading(heading: str, post_context: Dict) -> str | None:
+    """H başlığından SEO slug üret — Türkçe karakter ve numara yasak.
+
+    Öncelik sırası: heading tokens (generic filtreli) → destinasyon prefix.
+    Örnek: 'İnceburun Feneri' → 'inceburun-feneri'
+           'Sinop Gezilecek Yerler' → 'sinop' (generic tokenlar düşer)
+    """
+    raw = slugify(heading)
+    if not raw:
+        return None
+    # Trailing digit-only tokens yasak (e.g. "h2", "1", "4")
+    tokens = [
+        t for t in raw.split("-")
+        if t
+        and t not in GENERIC_POST_TOKENS
+        and t not in BAD_SLUG_TOKENS
+        and not t.isdigit()
+        and not (len(t) <= 2 and t[0] == "h" and t[1:].isdigit())
+    ]
+    if not tokens:
+        return None
+    # Destination prefix from post slug (first non-generic token)
+    dest_tokens = _extract_destination_tokens(post_context)
+    # Prepend destination if heading doesn't already start with it
+    if dest_tokens and tokens[0] not in dest_tokens:
+        combined = (dest_tokens[:1] + tokens)[:5]
+    else:
+        combined = tokens[:5]
+    slug = "-".join(combined)
+    return slug if len(slug) >= 6 else None
+
+
 def build_publish_slug_candidates(metadata: Dict, post_context: Dict | None, original_path: str) -> list[str]:
     post_context = post_context or {}
+
+    # H-heading → SEO slug (highest priority)
+    heading = str(metadata.get("heading") or "").strip()
+    heading_slug = _slug_from_heading(heading, post_context) if heading else None
+
     primary = build_publish_slug(metadata, post_context, original_path)
-    candidates: list[str] = [primary]
+    candidates: list[str] = []
+    if heading_slug and heading_slug != primary:
+        candidates.append(heading_slug)
+    candidates.append(primary)
     source_metadata = metadata.get("_source_embedded")
     if not isinstance(source_metadata, dict):
         source_metadata = read_embedded_source_metadata(original_path)

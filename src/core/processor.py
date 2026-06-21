@@ -40,6 +40,31 @@ class YOImageProcessor:
         self.work_dir = work_dir or Path("/tmp/yo_image_work")
         self.work_dir.mkdir(exist_ok=True)
 
+    def _heic_to_jpeg(self, input_p: Path) -> Path:
+        """Convert HEIC/HEIF to JPEG using macOS sips. Returns path to converted file.
+
+        Gereksinim: Terminal'e System Settings > Privacy > Full Disk Access verilmiş olmalı.
+        """
+        import shutil
+        if not shutil.which("sips"):
+            raise RuntimeError("sips not found — HEIC conversion requires macOS")
+        jpeg_path = self.work_dir / (input_p.stem + "_heic_tmp.jpg")
+        result = subprocess.run(
+            ["sips", "-s", "format", "jpeg", str(input_p), "--out", str(jpeg_path)],
+            capture_output=True,
+            timeout=60,
+        )
+        if result.returncode != 0 or not jpeg_path.exists():
+            stderr = result.stderr.decode()
+            if "error 13" in stderr.lower() or "permission" in stderr.lower():
+                raise PermissionError(
+                    f"HEIC dönüştürme başarısız — Photos Library için Full Disk Access gerekli.\n"
+                    f"System Settings > Privacy & Security > Full Disk Access → Terminal'i ekle.\n"
+                    f"Dosya: {input_p}"
+                )
+            raise RuntimeError(f"sips HEIC conversion failed: {stderr}")
+        return jpeg_path
+
     def detect_orientation(self, img: Image.Image) -> str:
         """Detect if image is landscape or portrait"""
         return "landscape" if img.width >= img.height else "portrait"
@@ -189,9 +214,14 @@ class YOImageProcessor:
 
         print(f"\n📷 Processing: {input_p.name}")
 
+        # HEIC/HEIF → JPEG via sips (macOS) before PIL opens it
+        if input_p.suffix.lower() in {".heic", ".heif"}:
+            input_p = self._heic_to_jpeg(input_p)
+            print(f"  ✓ HEIC converted via sips")
+
         # Load
         # Normalize EXIF orientation first so rotated phone images are upright.
-        img = ImageOps.exif_transpose(Image.open(input_path)).convert("RGB")
+        img = ImageOps.exif_transpose(Image.open(str(input_p))).convert("RGB")
         orig_size = (img.width, img.height)
         print(f"  Original: {img.width}x{img.height}")
 

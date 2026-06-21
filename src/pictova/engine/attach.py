@@ -26,12 +26,29 @@ def summarize_post_context(post_context: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+_SLUG_GENERIC = {
+    "gezilecek", "yerler", "yerleri", "gezi", "rehberi", "rehber",
+    "nerede", "nasil", "nasil-gidilir", "seyahat", "travel", "guide",
+    "rota", "rotasi", "rotalar", "detayli", "guncel", "notlari",
+    "ve", "ile", "icin", "the", "and", "bir",
+}
+
+
 def derive_location_query(post_context: Dict[str, Any]) -> str:
+    """Slug'dan ilk 1-2 anlamlı destinasyon tokenini çıkar.
+
+    Tam başlık AND-logic semantic aramayı kırar (8+ token → hiçbir şey eşleşmez).
+    Sadece destinasyon adı yeterli: 'sinop-gezilecek-yerler' → 'sinop'.
+    """
+    slug = str(post_context.get("slug") or "").strip()
+    tokens = [
+        t for t in slug.split("-")
+        if t and t not in _SLUG_GENERIC and len(t) >= 3 and not t.isdigit()
+    ]
+    if tokens:
+        return " ".join(tokens[:2])
     title = str(post_context.get("title") or "").strip()
-    slug = str(post_context.get("slug") or "").replace("-", " ").strip()
-    candidate = title or slug
-    candidate = re.sub(r"\s+", " ", candidate).strip()
-    return candidate
+    return re.sub(r"\s+", " ", title).strip()
 
 
 def build_failed_attach_result(

@@ -21,11 +21,20 @@ def process_selected_images(
 
     for src_file in image_files:
         dest_file = processor.work_dir / (Path(src_file).stem + "_yo.webp")
-        result_data = processor.process_image(
-            input_path=src_file,
-            output_path=str(dest_file),
-            auto_saturation=auto_saturation,
-        )
+        try:
+            result_data = processor.process_image(
+                input_path=src_file,
+                output_path=str(dest_file),
+                auto_saturation=auto_saturation,
+            )
+        except PermissionError as exc:
+            import sys
+            print(f"  ⚠ Atlandı (izin yok): {Path(src_file).name}\n    {exc}", file=sys.stderr)
+            continue
+        except Exception as exc:
+            import sys
+            print(f"  ✗ İşlem hatası: {Path(src_file).name}: {exc}", file=sys.stderr)
+            continue
         if result_data.get("is_panoramic"):
             panoramic_images[src_file] = {
                 "output": str(dest_file),

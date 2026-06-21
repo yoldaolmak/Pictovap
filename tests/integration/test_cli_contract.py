@@ -17,7 +17,7 @@ def test_run_attach_job_derives_location_and_constraints(monkeypatch):
 
     class FakeOrchestrator:
         def run_pipeline(self, **kwargs):
-            assert kwargs["location_query"] == "Roma Gezi Rehberi"
+            assert kwargs["location_query"] == "roma"
             assert kwargs["content_filter"] == "insan"
             return {
                 "site": kwargs["site"],
@@ -57,7 +57,7 @@ def test_run_attach_job_derives_location_and_constraints(monkeypatch):
     )
 
     assert result["status"] == "success"
-    assert result["request"]["location_query"] == "Roma Gezi Rehberi"
+    assert result["request"]["location_query"] == "roma"
     assert result["constraints"]["language"] == "tr"
     assert result["constraints"]["people_first"] is True
     assert result["uploaded_media_ids"] == [11, 12]
@@ -375,20 +375,21 @@ def test_insert_before_first_h2_preserves_gutenberg_heading_block():
     assert updated.index(block) < updated.index("<!-- wp:heading -->")
 
 
-def test_build_native_metadata_map_falls_back_without_credentials(monkeypatch):
+def test_build_native_metadata_map_raises_without_any_vision_source(monkeypatch):
+    """Basic fallback yasak — hiç kaynak yoksa RuntimeError fırlatılmalı."""
     from src.pictova.engine import metadata as metadata_engine
+    import src.pictova.engine.vision_chain as vc
 
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    # has_any_vision_source metadata_engine'e direkt import edildiği için oradan patch et
+    monkeypatch.setattr(metadata_engine, "has_any_vision_source", lambda: False)
 
-    metadata_dict, warnings = metadata_engine.build_native_metadata_map(
-        ["roma-1_yo.webp"],
-        location_hint="Roma",
-        post_context={"title": "Roma Rehberi", "slug": "roma-rehberi"},
-    )
-
-    assert "roma-1_yo.webp" in metadata_dict
-    assert "basic metadata fallback only" in warnings[0]
+    import pytest
+    with pytest.raises(RuntimeError, match="Hiç vision kaynağı bulunamadı"):
+        metadata_engine.build_native_metadata_map(
+            ["roma-1_yo.webp"],
+            location_hint="Roma",
+            post_context={"title": "Roma Rehberi", "slug": "roma-rehberi"},
+        )
 
 
 def test_http_server_health_route_returns_json():

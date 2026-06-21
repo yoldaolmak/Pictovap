@@ -3,6 +3,7 @@ anthropic
 requests
 numpy==1.26.4
 opencv-python-headless==4.9.0.80
+google-cloud-vision>=3.7.0
 
 # Testing
 pytest>=7.4.0

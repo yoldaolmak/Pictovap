@@ -154,10 +154,7 @@ def search_semantic_assets(
     canonical_cf = _FILTER_ALIASES.get(cf_key)
     content_sql = CONTENT_FILTER_SQL.get(canonical_cf or "", "") if canonical_cf else ""
 
-    where = (
-        f"({location_sql}) AND is_personal = 0 "
-        "AND LOWER(COALESCE(file_extension, '')) NOT IN ('.heic', '.heif')"
-    )
+    where = f"({location_sql}) AND is_personal = 0"
     if content_sql:
         where += f" AND {content_sql}"
 

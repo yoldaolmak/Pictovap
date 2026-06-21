@@ -310,24 +310,27 @@ alt≤125 | title≤60 | caption≤180 | description≤300 | keywords 3-6 | evid
             raise
 
     def generate_filename(self, metadata: Dict, location_hint: str = "") -> str:
-        """Generate SEO-friendly filename from metadata"""
-        alt = metadata["alt"].lower()
-        # Turkish char conversion BEFORE stripping non-ASCII
-        # Büyük harf Türkçe → ASCII önce (İ.lower() → i̇ problemi)
-        alt = (
-            alt.replace("İ", "I").replace("Ş", "S").replace("Ç", "C")
-               .replace("Ğ", "G").replace("Ü", "U").replace("Ö", "O")
+        """H başlığı → SEO slug (Türkçe harf yasak, numara yasak, max 50 char).
+
+        Öncelik: heading > alt text > location_hint > 'gorsel'.
+        slugify() Türkçeyi ASCII'ye çevirir (ş→s, ğ→g, vb).
+        """
+        from src.core.media_publish import slugify as mp_slugify
+
+        source = (
+            str(metadata.get("heading") or "").strip()
+            or str(metadata.get("alt") or "").strip()
+            or location_hint
         )
-        alt = alt.lower()
-        alt = (
-            alt.replace("ş", "s").replace("ç", "c").replace("ğ", "g")
-               .replace("ü", "u").replace("ö", "o").replace("ı", "i")
-        )
-        clean = re.sub(r'[^a-z0-9\s-]', '', alt)
-        clean = re.sub(r'\s+', '-', clean.strip())
-        clean = re.sub(r'-+', '-', clean)
+        if not source:
+            return "gorsel"
+
+        raw = mp_slugify(source)
+        # numara-only token'ları çıkar
+        tokens = [t for t in raw.split("-") if t and not t.isdigit()]
+        clean = "-".join(tokens)
         if len(clean) > 50:
-            clean = clean[:50].rsplit('-', 1)[0]
+            clean = clean[:50].rsplit("-", 1)[0]
         return clean or "gorsel"
 
 
