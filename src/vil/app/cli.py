@@ -8,7 +8,7 @@ from typing import Any, Dict
 
 from src.vil.app.health import run_health_check
 from src.vil.app.jobs import run_attach_job
-from src.vil.app.api import plan_attach
+from src.vil.app.api import plan_attach, process_attach
 from src.vil.providers.wordpress import fetch_post_context
 
 
@@ -47,6 +47,18 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--content-filter")
     plan.add_argument("--lang", default="tr")
     plan.add_argument("--people-first", action="store_true")
+
+    process = sub.add_parser("process")
+    process.add_argument("--site", default="yoldaolmak")
+    process.add_argument("--post", type=int, required=True)
+    process.add_argument("--count", type=int, default=4)
+    process.add_argument("--name")
+    process.add_argument("--source", default="semantic", choices=["semantic", "vil", "unsplash"])
+    process.add_argument("--query")
+    process.add_argument("--location-query")
+    process.add_argument("--content-filter")
+    process.add_argument("--lang", default="tr")
+    process.add_argument("--people-first", action="store_true")
 
     sub.add_parser("health")
     return parser
@@ -98,6 +110,11 @@ def main() -> int:
 
     if args.command == "plan":
         result = plan_attach(_attach_args_to_payload(args))
+        _print_json(result)
+        return 0 if result.get("status") == "success" else 1
+
+    if args.command == "process":
+        result = process_attach(_attach_args_to_payload(args))
         _print_json(result)
         return 0 if result.get("status") == "success" else 1
 

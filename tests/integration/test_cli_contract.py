@@ -161,3 +161,47 @@ def test_cli_plan_command_outputs_structured_selection(monkeypatch, capsys):
     assert exit_code == 0
     assert '"command": "plan"' in output
     assert '"roma-1.jpg"' in output
+
+
+def test_api_process_attach_returns_processed_images(monkeypatch):
+    from src.vil.app import api
+
+    monkeypatch.setattr(
+        "src.vil.app.api.prepare_attach_request",
+        lambda **payload: (
+            {"site": "yoldaolmak", "post_id": 42, "source": "semantic", "location_query": "Roma", "count": 2},
+            {"id": 42, "title": "Roma", "slug": "roma"},
+            {"language": "tr", "people_first": False},
+        ),
+    )
+    monkeypatch.setattr(
+        "src.vil.app.api.build_process_result",
+        lambda **kwargs: {"command": "process", "status": "success", "processed_images": ["a.webp"]},
+    )
+
+    result = api.process_attach({"site": "yoldaolmak", "post_id": 42})
+    assert result["command"] == "process"
+    assert result["status"] == "success"
+    assert result["processed_images"] == ["a.webp"]
+
+
+def test_cli_process_command_outputs_processed_images(monkeypatch, capsys):
+    from src.vil.app import cli
+
+    monkeypatch.setattr(
+        cli,
+        "process_attach",
+        lambda payload: {
+            "command": "process",
+            "status": "success",
+            "processed_images": ["roma-1_yo.webp"],
+        },
+    )
+    monkeypatch.setattr(sys, "argv", ["vil", "process", "--site", "yoldaolmak", "--post", "123"])
+
+    exit_code = cli.main()
+    output = capsys.readouterr().out
+
+    assert exit_code == 0
+    assert '"command": "process"' in output
+    assert '"roma-1_yo.webp"' in output

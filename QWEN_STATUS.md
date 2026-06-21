@@ -73,6 +73,12 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
   - `src/vil/app/api.py -> plan_attach(payload)`
   - `src/vil/app/cli.py -> vil plan ...`
 - `src/vil/engine/attach.py` now exposes `build_attach_plan(...)`
+- Added native processing helper:
+  - `src/vil/engine/processor.process_selected_images(...)`
+- Added `process` contract for running native selection + processing without publish:
+  - `src/vil/app/api.py -> process_attach(payload)`
+  - `src/vil/app/cli.py -> vil process ...`
+- `src/vil/engine/attach.py` now exposes `build_process_result(...)`
 
 ## Verified
 - `python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py` -> pass
@@ -91,9 +97,11 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - `python3 -m src.vil.app.cli review --site yoldaolmak --post 1` -> structured failure JSON when credentials are missing
 - `vil attach` unsplash validation -> structured failure when query is missing
 - `vil plan` unsplash validation -> structured failure when query is missing
+- `vil process` unsplash validation -> structured failure when query is missing
 - `python3 -m pytest -q` -> pass
 - `src/vil/engine/attach.py` compile/import path -> pass
 - `python3 -m src.vil.app.cli plan --help` -> pass
+- `python3 -m src.vil.app.cli process --help` -> pass
 
 ## Current Test Result
 - `python3 -m pytest -q`
@@ -105,7 +113,7 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - Retry/error handling policy
 - Full internal migration from legacy `src/main.py` / `src/core/*` modules into `src/vil/*`
 - Native attach execution inside `src/vil/engine/*` instead of wrapping the legacy orchestrator
-- Native processing/upload execution after source resolution still needs to move out of legacy orchestrator
+- Native publish/upload execution after source resolution + processing still needs to move out of legacy orchestrator
 - Real HTTP API server surface (current API layer is Python-callable, not yet FastAPI/HTTP)
 
 ## Remaining Risks

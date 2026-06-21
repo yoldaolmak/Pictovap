@@ -2,6 +2,7 @@
 
 from src.vil.engine.attach import (
     build_attach_plan,
+    build_process_result,
     build_failed_attach_result,
     derive_location_query,
     execute_legacy_attach,
@@ -13,6 +14,7 @@ from src.vil.engine.attach import (
 
 __all__ = [
     "build_attach_plan",
+    "build_process_result",
     "build_failed_attach_result",
     "derive_location_query",
     "execute_legacy_attach",
