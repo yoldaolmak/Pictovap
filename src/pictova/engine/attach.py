@@ -16,6 +16,23 @@ from src.pictova.providers.wordpress import fetch_post_context
 from src.pictova.engine.processor import process_selected_images
 from src.pictova.engine.publisher import publish_processed_images
 from src.pictova.engine.selector import resolve_source_images
+from src.pictova.engine.vision_chain import download_icloud_photo
+
+
+def resolve_icloud_files(files: list[str], warnings: list[str]) -> list[str]:
+    """iCloud UUID (icloud://UUID) dosyalarını indirip lokal path ile değiştirir."""
+    resolved = []
+    for f in files:
+        if f.startswith("icloud://"):
+            uuid = f.removeprefix("icloud://")
+            try:
+                local = download_icloud_photo(uuid)
+                resolved.append(local)
+            except Exception as exc:
+                warnings.append(f"iCloud indir başarısız ({uuid[:8]}): {exc}")
+        else:
+            resolved.append(f)
+    return resolved
 
 
 def summarize_post_context(post_context: Dict[str, Any]) -> Dict[str, Any]:
@@ -264,7 +281,9 @@ def build_process_result(
         content_filter=request.get("content_filter"),
         post_context=post_context,
     )
-    processed = process_selected_images(selection.get("files", []))
+    _warnings: list[str] = []
+    _files = resolve_icloud_files(selection.get("files", []), _warnings)
+    processed = process_selected_images(_files)
     return {
         "command": "process",
         "site": site,
@@ -351,7 +370,9 @@ def execute_native_attach(
         content_filter=request.get("content_filter"),
         post_context=post_context,
     )
-    processed = process_selected_images(selection.get("files", []))
+    _icloud_warnings: list[str] = []
+    _resolved_files = resolve_icloud_files(selection.get("files", []), _icloud_warnings)
+    processed = process_selected_images(_resolved_files)
     processed_images = processed.get("processed_images", [])
     metadata_dict, metadata_warnings = build_native_metadata_map(
         processed_images,
