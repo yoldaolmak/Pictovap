@@ -153,7 +153,9 @@ def search_semantic_assets(
               AND a.is_personal = 0
               {"" if include_icloud else "AND a.source_path != ''"}
               {content_filter_clause}
-            ORDER BY a.selection_score DESC, a.quality_score DESC
+            ORDER BY
+              (CASE WHEN a.vision_scan_status = 'done' THEN 1 ELSE 0 END) DESC,
+              a.selection_score DESC, a.quality_score DESC
             LIMIT ?
         """
         try:
