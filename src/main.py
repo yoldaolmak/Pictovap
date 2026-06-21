@@ -20,7 +20,7 @@ from src.utils.config import get_vil_dir, get_visual_memory_db_path, load_projec
 load_project_env()
 
 from src.core.media_publish import build_publish_slug_candidates, embed_metadata, ensure_publish_path, ensure_unique_slug
-from src.core.database import VisualMemoryComponent, VisualMemoryConfig
+from src.core.database import VisualMemoryComponent, VisualMemoryConfig, query_asset_from_visual_memory
 from src.core.processor import YOImageProcessor, get_vil_images
 from src.core.metadata_generator import (
     YOMetadataGenerator,
@@ -695,6 +695,30 @@ class YOOrchestrator:
             if vision_hints:
                 meta["_vision_hints"] = vision_hints
             slug_source_path = str(process_info.get("input") or file)
+
+            # Enrich with Visual Memory DB metadata when the source is a Mac Photos
+            # UUID path whose EXIF is empty — DB holds city/location/scene directly.
+            if not isinstance(meta.get("_source_embedded"), dict) or not meta.get("_source_embedded"):
+                vm_record = query_asset_from_visual_memory(get_visual_memory_db_path(), slug_source_path)
+                if vm_record:
+                    city = (vm_record.get("city") or "").strip()
+                    location = (vm_record.get("location") or "").strip()
+                    scene = (vm_record.get("scene") or "").strip()
+                    activity = (vm_record.get("activity") or "").strip()
+                    place = city or location
+                    desc_parts = [p for p in [place] if p]
+                    if scene and scene not in ("general",):
+                        desc_parts.append(scene)
+                    if activity and activity not in ("general", "walking"):
+                        desc_parts.append(activity)
+                    if desc_parts:
+                        meta["_source_embedded"] = {
+                            "description": " ".join(desc_parts),
+                            "location": place,
+                            "title": "",
+                            "keywords": [],
+                        }
+
             slug_candidates = build_publish_slug_candidates(meta, post_context, slug_source_path)
             candidate_slug = ensure_unique_slug(slug_candidates[0], used_slugs)
             for slug in slug_candidates:

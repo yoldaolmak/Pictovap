@@ -161,3 +161,25 @@ class VisualMemoryComponent:
             ORDER BY confidence DESC
         """, (image_id,))
         return [row['tag'] for row in cursor.fetchall()]
+
+
+def query_asset_from_visual_memory(db_path: Path, source_path: str) -> Optional[Dict[str, Any]]:
+    """Return the asset_index record for source_path, or None if not found."""
+    import sqlite3
+
+    if not db_path or not db_path.exists():
+        return None
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.row_factory = sqlite3.Row
+        try:
+            row = conn.execute(
+                "SELECT city, country, location, scene, activity, description "
+                "FROM asset_index WHERE source_path = ? LIMIT 1",
+                (source_path,),
+            ).fetchone()
+            return dict(row) if row else None
+        finally:
+            conn.close()
+    except Exception:
+        return None

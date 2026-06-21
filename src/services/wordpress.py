@@ -203,6 +203,19 @@ class YOWordPressUploader:
         original_content = current_content
         current_content, removed_broken = self._remove_broken_local_image_blocks(current_content)
         current_content = _remove_auto_media_region(current_content)
+
+        # Auto-assign headings: for items that have no heading set, distribute
+        # across H2/H3 headings in the post that don't already have a nearby image.
+        unheaded = [i for i, it in enumerate(media_items) if not str(it.get("heading", "")).strip()]
+        if unheaded:
+            available = _extract_available_headings(current_content)
+            media_items = list(media_items)
+            for slot, item_idx in enumerate(unheaded):
+                if slot >= len(available):
+                    break
+                h = available[slot]
+                media_items[item_idx] = {**media_items[item_idx], "heading": h["text"], "heading_level": h["level"]}
+
         auto_blocks: list[str] = []
         inserted = 0
 
@@ -438,6 +451,37 @@ def _insert_block_after_heading(
         return prefix + "\n\n" + block_html + "\n\n" + suffix
 
     return content
+
+
+def _extract_available_headings(content: str) -> list[dict]:
+    """Return H2/H3 Gutenberg headings that don't already have an image nearby."""
+    heading_pattern = re.compile(
+        r"<!-- wp:heading(?:\s+\{.*?\})? -->\s*<h(?P<level>[2-3])\b[^>]*>(?P<inner>.*?)</h(?P=level)>\s*<!-- /wp:heading -->",
+        flags=re.S | re.I,
+    )
+    results = []
+    for match in heading_pattern.finditer(content):
+        level = int(match.group("level"))
+        text = _strip_html(match.group("inner")).strip()
+        if not text:
+            continue
+        before = content[: match.start()]
+        after = content[match.end() :]
+        # Reuse the same proximity guards used in _insert_block_after_heading
+        has_image_before = re.search(
+            r"<!-- wp:image\b.*?<!-- /wp:image -->\s*(?:<!-- wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?$",
+            before,
+            flags=re.S | re.I,
+        )
+        has_image_after = re.match(
+            r"\s*(?:<!-- wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?<!-- wp:image\b",
+            after,
+            flags=re.S | re.I,
+        )
+        if has_image_before or has_image_after:
+            continue
+        results.append({"text": text, "level": level})
+    return results
 
 
 def _remove_auto_media_region(content: str) -> str:

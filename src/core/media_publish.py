@@ -701,10 +701,15 @@ def build_publish_slug(metadata: Dict, post_context: Dict | None, original_path:
         scene_tokens = _cleanup_scene_tokens(_extract_vision_scene_tokens(metadata, destination_tokens))
 
     if not scene_tokens:
+        _HEX_CHARS = set("0123456789abcdef")
         original_tokens = [
             token
             for token in _clean_tokens(original_stem)
-            if token not in BAD_SLUG_TOKENS and token not in GENERIC_POST_TOKENS and not token.isdigit()
+            if token not in BAD_SLUG_TOKENS
+            and token not in GENERIC_POST_TOKENS
+            and not token.isdigit()
+            # UUID stems produce hex fragments like "9ec243fb"; reject them.
+            and not (len(token) >= 4 and all(c in _HEX_CHARS for c in token))
         ]
         scene_tokens = original_tokens[:2]
 
