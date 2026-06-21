@@ -6,7 +6,7 @@ from typing import Dict
 
 
 BAD_METADATA_TOKENS = {"depositphotos", "xl", "processed", "yo"}
-ALLOWED_SIZES = {(1200, 750), (1200, 1600), (1200, 1200)}
+ALLOWED_SIZES = {(1200, 750), (1200, 1600), (1200, 1200), (900, 1200)}
 GENERIC_ANCHORS = {
     "vietnam", "gezi", "gezilecek", "rehberi", "rota", "deneyimler", "seyahat",
     "landmark", "travel", "tourism", "image", "photo", "view", "manzara",
@@ -212,11 +212,11 @@ def validate_processed_asset(meta: Dict, process_info: Dict | None) -> list[str]
     file_size_kb = float(process_info.get("file_size_kb", 0))
     if not (0.22 <= brightness <= 0.78):
         errors.append("brightness out of editorial range")
-    if not (0.12 <= saturation <= 0.62):
+    if not (0.12 <= saturation <= 0.68):
         errors.append("saturation out of editorial range")
     if not (0.10 <= contrast <= 0.30):
         errors.append("contrast out of editorial range")
-    if not (-0.12 <= color_temp <= 0.12):
+    if not (-0.24 <= color_temp <= 0.18):
         errors.append("color temperature inconsistent")
     if file_size_kb <= 60:
         errors.append("file too compressed")

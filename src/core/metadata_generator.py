@@ -9,16 +9,29 @@ Uses Claude Vision API to analyze images and generate SEO-friendly metadata
 import base64
 import json
 import re
+import sqlite3
 from pathlib import Path
 from typing import Dict
 import os
 
-from src.utils.config import load_project_env
+from src.utils.config import get_visual_memory_db_path, load_project_env
 
 load_project_env()
 
 BAD_SOURCE_TOKENS = {
     "depositphotos", "xl", "yo", "processed", "final", "image", "img", "jpeg", "jpg", "png", "webp"
+}
+
+SCENE_FALLBACKS = {
+    "general": "gezi karesi",
+    "landmark": "kent detayi",
+    "street": "sokak sahnesi",
+    "nature": "dogal manzara",
+    "landscape": "manzara",
+    "sahil": "sahil gorunumu",
+    "kiyi": "kiyi gorunumu",
+    "market": "pazar sahnesi",
+    "food": "yemek detayi",
 }
 
 try:
@@ -369,10 +382,42 @@ def sanitize_source_words(value: str) -> str:
             continue
         if lower.isdigit():
             continue
+        if re.fullmatch(r"[a-f0-9]{4,}", lower):
+            continue
         if sum(ch.isdigit() for ch in lower) >= max(2, len(lower) // 2):
             continue
         cleaned.append(token)
     return " ".join(cleaned).strip()
+
+
+def _lookup_indexed_asset_context(image_path: str) -> Dict[str, str]:
+    db_path = get_visual_memory_db_path()
+    if not db_path.exists():
+        return {}
+    try:
+        with sqlite3.connect(str(db_path)) as conn:
+            conn.row_factory = sqlite3.Row
+            row = conn.execute(
+                """
+                SELECT city, country, location, scene, title, description, summary
+                FROM asset_index
+                WHERE source_path = ?
+                LIMIT 1
+                """,
+                (str(Path(image_path)),),
+            ).fetchone()
+    except sqlite3.Error:
+        return {}
+    if not row:
+        return {}
+    return {key: str(row[key] or "").strip() for key in row.keys()}
+
+
+def _scene_fallback_phrase(scene: str) -> str:
+    token = clean_text(scene, limit=40).lower()
+    if not token:
+        return ""
+    return SCENE_FALLBACKS.get(token, sanitize_source_words(token))
 
 
 def extract_focus_terms(post_context: Dict, location_hint: str = "") -> list[str]:
@@ -559,24 +604,42 @@ def normalize_metadata(metadata: Dict, *, image_path: str, location_hint: str, p
 
 def build_basic_metadata(*, image_path: str, location_hint: str = "", post_context: Dict | None = None) -> Dict:
     post_context = post_context or {}
+    indexed = _lookup_indexed_asset_context(image_path)
     title = clean_text(post_context.get("title", ""), limit=120)
     slug_words = slug_to_words(post_context.get("slug", ""))
     excerpt = clean_text(post_context.get("excerpt", ""), limit=220)
     stem = Path(image_path).stem.replace("_yo", "")
     stem_words = sanitize_source_words(stem)
     focus_terms = extract_focus_terms(post_context, location_hint)
-    location_clean = clean_text(sanitize_source_words(location_hint), limit=80)
+    location_clean = clean_text(
+        sanitize_source_words(indexed.get("city") or indexed.get("location") or location_hint),
+        limit=80,
+    )
+    indexed_title = clean_text(sanitize_source_words(indexed.get("title", "")), limit=80)
+    indexed_scene = _scene_fallback_phrase(indexed.get("scene", ""))
     primary_focus = title or slug_words or location_clean or "gezi"
     detail_source = stem_words if stem_words and stem_words.lower() not in primary_focus.lower() else ""
+    if not detail_source:
+        detail_source = indexed_scene or indexed_title
     visual_detail = detail_source or ("genel gezi görünümü" if title else "seyahat görünümü")
 
     alt = f"{primary_focus} {visual_detail}".strip()
     title_parts = [focus_terms[0] if focus_terms else location_clean, detail_source or "gezi gorunumu"]
     title_text = " ".join(part for part in title_parts if part).strip()
 
-    caption = excerpt or f"{primary_focus} içeriğini destekleyen {visual_detail}"
+    caption = excerpt or f"{location_clean or primary_focus} için seçilen {visual_detail}"
     description = excerpt or f"{primary_focus} odağında kullanılan {visual_detail}"
-    keywords = focus_terms or [clean_text(location_clean or detail_source or "gezi", limit=40).lower()]
+    keywords = [
+        kw
+        for kw in (
+            focus_terms
+            or [
+                clean_text(location_clean or detail_source or "gezi", limit=40).lower(),
+                clean_text(indexed_scene, limit=40).lower(),
+            ]
+        )
+        if kw
+    ]
 
     return {
         "alt": clean_text(alt, limit=125),
