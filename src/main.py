@@ -145,7 +145,8 @@ def search_semantic_assets(
         sql = f"""
             SELECT a.source_path, a.filename, a.quality_score, a.selection_score,
                    a.activity, a.scene, a.location, a.city, a.state_province,
-                   a.country, a.title, a.description, a.summary, a.orientation
+                   a.country, a.title, a.description, a.summary, a.orientation,
+                   a.ai_keywords_json, a.source_id
             FROM asset_search s
             JOIN asset_index a ON a.source_id = s.source_id
             WHERE s.document MATCH ?
@@ -171,7 +172,8 @@ def search_semantic_assets(
             fb_sql = f"""
                 SELECT source_path, filename, quality_score, selection_score,
                        activity, scene, location, city, state_province,
-                       country, title, description, summary, orientation
+                       country, title, description, summary, orientation,
+                       ai_keywords_json, source_id
                 FROM asset_index
                 WHERE ({like_clauses}) AND is_personal = 0
                   {content_filter_clause.replace('AND ', 'AND ', 1) if content_filter_clause else ''}
@@ -220,6 +222,11 @@ def _hero_score(row: Dict, post_context: Dict) -> float:
     title_tokens = _tokenize_focus(post_context.get("title", ""))
     slug_tokens = _tokenize_focus(str(post_context.get("slug", "")).replace("-", " "))
     focus_tokens = title_tokens[:6] + [token for token in slug_tokens if token not in title_tokens][:4]
+    try:
+        import json as _json
+        ai_kws = " ".join(_json.loads(row.get("ai_keywords_json") or "[]"))
+    except Exception:
+        ai_kws = ""
     haystack = " ".join(
         [
             str(row["filename"] or "").lower(),
@@ -228,10 +235,14 @@ def _hero_score(row: Dict, post_context: Dict) -> float:
             str(row["location"] or "").lower(),
             str(row["activity"] or "").lower(),
             str(row["summary"] or "").lower(),
+            ai_kws.lower(),
         ]
     )
     overlap = sum(1 for token in focus_tokens if token in haystack)
     score += overlap * 1.5
+    # vision scan tamamlanmış fotoğraflara bonus
+    if ai_kws:
+        score += 0.3
     if row["orientation"] == "landscape":
         score += 0.75
     if row["scene"] in {"landmark", "street", "nature"}:
