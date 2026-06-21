@@ -264,4 +264,35 @@ def has_any_vision_source() -> bool:
     return False
 
 
-__all__ = ["analyze_image_vision_chain", "has_any_vision_source"]
+def download_icloud_photo(uuid: str, dest_dir: str | None = None) -> str:
+    """iCloud fotoğrafı UUID ile indir, lokal path döner.
+
+    python3.11 ve osxphotos gerektirir.
+    dest_dir yoksa /tmp/pictova_icloud/ kullanılır.
+    """
+    import subprocess as _sp
+    import tempfile as _tmp
+
+    dest = Path(dest_dir) if dest_dir else Path(_tmp.gettempdir()) / "pictova_icloud"
+    dest.mkdir(parents=True, exist_ok=True)
+
+    script = (
+        f"import osxphotos, sys\n"
+        f"db = osxphotos.PhotosDB()\n"
+        f"res = db.query(osxphotos.QueryOptions(uuid=['{uuid}']))\n"
+        f"if not res: sys.exit(1)\n"
+        f"exported = res[0].export('{dest}', use_photos_export=True, overwrite=True, timeout=300)\n"
+        f"print(exported[0] if exported else '')\n"
+    )
+
+    py311 = shutil.which("python3.11") or "python3.11"
+    result = _sp.run([py311, "-c", script], capture_output=True, text=True, timeout=360)
+    path = result.stdout.strip()
+    if result.returncode != 0 or not path:
+        raise RuntimeError(
+            f"iCloud indirme başarısız (uuid={uuid}): {result.stderr[-300:]}"
+        )
+    return path
+
+
+__all__ = ["analyze_image_vision_chain", "has_any_vision_source", "download_icloud_photo"]
