@@ -56,6 +56,14 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - Added post-context-based location query derivation for `semantic` attach mode when the operator only provides `--post`.
 - Added structured CLI failure handling so `attach` and `review` return JSON errors instead of tracebacks.
 - Added integration-style CLI contract tests in `tests/integration/test_cli_contract.py`.
+- Added early attach validation in `src/vil/app/jobs.py` for:
+  - missing semantic location query after derivation
+  - missing Unsplash query
+  - missing post_id
+- Expanded `src/vil/app/api.py` from placeholder to reusable wrappers:
+  - `attach_images(payload)`
+  - `review_post(payload)`
+  - `health_status()`
 
 ## Verified
 - `python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py` -> pass
@@ -72,11 +80,12 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - `python3 -m src.vil.app.cli health` -> pass
 - `python3 -m src.vil.app.cli attach --help` -> pass
 - `python3 -m src.vil.app.cli review --site yoldaolmak --post 1` -> structured failure JSON when credentials are missing
+- `vil attach` unsplash validation -> structured failure when query is missing
 - `python3 -m pytest -q` -> pass
 
 ## Current Test Result
 - `python3 -m pytest -q`
-- Status at last update: `7 passed, 1 warning`
+- Status at last update: `9 passed, 1 warning`
 
 ## Planned But Not Done
 - SQL injection audit and parameterized LIKE/query cleanup
@@ -84,7 +93,7 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - Retry/error handling policy
 - Full internal migration from legacy `src/main.py` / `src/core/*` modules into `src/vil/*`
 - Native attach flow inside `src/vil/engine/*` instead of wrapping the legacy orchestrator
-- API surface
+- Real HTTP API server surface (current API layer is Python-callable, not yet FastAPI/HTTP)
 
 ## Remaining Risks
 - The branch now has a canonical package root, but most core logic still lives in legacy modules wrapped by `src/vil/*`.

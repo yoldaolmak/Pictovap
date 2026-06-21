@@ -74,3 +74,42 @@ def test_cli_review_command_outputs_post_context(monkeypatch, capsys):
 
     assert exit_code == 0
     assert '"title": "Savsat"' in output
+
+
+def test_run_attach_job_fails_when_semantic_query_cannot_be_derived(monkeypatch):
+    from src.vil.app import jobs
+
+    monkeypatch.setattr(
+        "src.vil.providers.wordpress.fetch_post_context",
+        lambda post_id, site="yoldaolmak": {"id": post_id, "title": "", "slug": ""},
+    )
+
+    result = jobs.run_attach_job(
+        site="yoldaolmak",
+        post_id=264459,
+        count=4,
+        source="semantic",
+        location_query=None,
+        content_filter=None,
+        language="tr",
+        people_first=False,
+    )
+
+    assert result["status"] == "failed"
+    assert result["selected_assets"] == []
+    assert "location_query could not be derived" in result["warnings"][0]
+
+
+def test_api_attach_images_reuses_job_contract(monkeypatch):
+    from src.vil.app import api
+
+    monkeypatch.setattr(
+        api,
+        "run_attach_job",
+        lambda **payload: {"command": "attach", "status": "success", "request": payload},
+    )
+
+    result = api.attach_images({"site": "yoldaolmak", "post_id": 42})
+    assert result["command"] == "attach"
+    assert result["status"] == "success"
+    assert result["request"]["post_id"] == 42

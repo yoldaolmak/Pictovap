@@ -59,6 +59,35 @@ def normalize_attach_result(
     }
 
 
+def build_failed_attach_result(
+    *,
+    site: str,
+    post_id: Any,
+    request: Dict[str, Any],
+    post_context: Dict[str, Any],
+    constraints: Dict[str, Any],
+    warning: str,
+) -> Dict[str, Any]:
+    return {
+        "command": "attach",
+        "site": site,
+        "post_id": post_id,
+        "request": request,
+        "post_context": summarize_post_context(post_context),
+        "status": "failed",
+        "selected_assets": [],
+        "rejected_assets": [],
+        "uploaded_media_ids": [],
+        "inserted_blocks": 0,
+        "uploaded": [],
+        "failed_uploads": [],
+        "constraints": constraints,
+        "warnings": [warning],
+        "duration_ms": 0,
+        "raw": {},
+    }
+
+
 def run_attach_job(**kwargs: Any) -> Dict[str, Any]:
     site = kwargs.get("site", "yoldaolmak")
     if site == "yoldaolmak":
@@ -85,6 +114,35 @@ def run_attach_job(**kwargs: Any) -> Dict[str, Any]:
     }
     if constraints["people_first"] and not request.get("content_filter"):
         request["content_filter"] = "insan"
+
+    source = request.get("source", "semantic")
+    if source == "semantic" and not request.get("location_query"):
+        return build_failed_attach_result(
+            site=site,
+            post_id=post_id,
+            request=request,
+            post_context=post_context,
+            constraints=constraints,
+            warning="location_query could not be derived; provide --location-query or ensure the post has a usable title/slug",
+        )
+    if source == "unsplash" and not request.get("query"):
+        return build_failed_attach_result(
+            site=site,
+            post_id=post_id,
+            request=request,
+            post_context=post_context,
+            constraints=constraints,
+            warning="query is required when source=unsplash",
+        )
+    if not post_id:
+        return build_failed_attach_result(
+            site=site,
+            post_id=post_id,
+            request=request,
+            post_context=post_context,
+            constraints=constraints,
+            warning="post_id is required for attach",
+        )
 
     orchestrator = YOOrchestrator()
     raw = orchestrator.run_pipeline(**request)
