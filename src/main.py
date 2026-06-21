@@ -414,6 +414,9 @@ class YOOrchestrator:
         query: str = None,
         location_query: str = None,
         content_filter: str = None,
+        heading: str = None,
+        heading_level: int = 0,
+        **_ignored,
     ) -> Dict:
         """Run full upload pipeline.
 
@@ -790,6 +793,14 @@ class YOOrchestrator:
             "source": metadata_source,
         }
         self.log(f"  ✓ Metadata ready ({metadata_source})")
+
+        # If caller specified an explicit heading, force it on every image.
+        if heading:
+            for key in metadata_dict:
+                metadata_dict[key]["heading"] = heading
+                if heading_level:
+                    metadata_dict[key]["heading_level"] = heading_level
+            self.log(f"  📌 Heading override: H{heading_level or '?'} → {heading!r}")
 
         # Step 4: Upload veya yerel çıktı
         if not upload_mode:
