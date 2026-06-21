@@ -108,6 +108,7 @@ def search_semantic_assets(
     count: int,
     content_filter: str | None = None,
     post_context: Dict | None = None,
+    include_icloud: bool = False,
 ) -> list[str]:
     """
     Lokasyon sorgusu + içerik filtresiyle HDD'den fotoğraf bul.
@@ -149,7 +150,7 @@ def search_semantic_assets(
             JOIN asset_index a ON a.source_id = s.source_id
             WHERE s.document MATCH ?
               AND a.is_personal = 0
-              AND a.source_path != ''
+              {"" if include_icloud else "AND a.source_path != ''"}
               {content_filter_clause}
             ORDER BY a.selection_score DESC, a.quality_score DESC
             LIMIT ?
@@ -191,7 +192,10 @@ def search_semantic_assets(
     for row in rows:
         src = row["source_path"] or ""
         if not src:
-            continue  # iCloud — lokal değil
+            if include_icloud:
+                # iCloud UUID'si döndür — üst katman indirir
+                paths.append(f"icloud://{row['filename'].split('.')[0]}")
+            continue
         p = Path(src)
         if p.exists():
             paths.append(str(p))

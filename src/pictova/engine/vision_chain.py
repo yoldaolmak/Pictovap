@@ -197,6 +197,30 @@ def _analyze_codex(
 
 # ── 3. Claude CLI web login ──────────────────────────────────────────────────
 
+def _prepare_image_for_cli(image_path: str, max_side: int = 512) -> str:
+    """HEIC veya büyük dosyaları küçük JPEG thumbnail'e çevir. Path döner."""
+    p = Path(image_path)
+    ext = p.suffix.lower()
+    try:
+        from PIL import Image as _PIL, ImageOps as _IO
+        img = _IO.exif_transpose(_PIL.open(str(p))).convert("RGB")
+        img.thumbnail((max_side, max_side))
+        tmp = Path(tempfile.gettempdir()) / f"pictova_thumb_{p.stem}.jpg"
+        img.save(str(tmp), "JPEG", quality=75)
+        return str(tmp)
+    except Exception:
+        # sips fallback (HEIC)
+        if ext in {".heic", ".heif"} and shutil.which("sips"):
+            tmp = Path(tempfile.gettempdir()) / f"pictova_thumb_{p.stem}.jpg"
+            subprocess.run(
+                ["sips", "-s", "format", "jpeg", "-Z", str(max_side), str(p), "--out", str(tmp)],
+                capture_output=True, timeout=30,
+            )
+            if tmp.exists():
+                return str(tmp)
+        return image_path
+
+
 def _analyze_claude_cli(
     image_path: str,
     location_hint: str,
@@ -206,8 +230,11 @@ def _analyze_claude_cli(
     if not claude_bin:
         raise RuntimeError("claude CLI bulunamadı")
 
+    # HEIC ve büyük dosyaları küçük JPEG'e çevir (Claude Read tool 256KB limiti)
+    ready_path = _prepare_image_for_cli(image_path)
+
     prompt = (
-        f"Read the image at: {image_path}\n\n"
+        f"Read the image at: {ready_path}\n\n"
         + _vision_prompt(image_path, location_hint, post_context)
     )
 
