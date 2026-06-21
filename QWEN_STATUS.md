@@ -79,6 +79,13 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
   - `src/vil/app/api.py -> process_attach(payload)`
   - `src/vil/app/cli.py -> vil process ...`
 - `src/vil/engine/attach.py` now exposes `build_process_result(...)`
+- Added native publish helper:
+  - `src/vil/engine/publisher.publish_processed_images(...)`
+- Added basic metadata map helper:
+  - `src/vil/engine/metadata.build_basic_metadata_map(...)`
+- Added optional native attach execution path:
+  - `vil attach --engine native`
+  - `src/vil/engine/attach.execute_native_attach(...)`
 
 ## Verified
 - `python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py` -> pass
@@ -98,10 +105,12 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - `vil attach` unsplash validation -> structured failure when query is missing
 - `vil plan` unsplash validation -> structured failure when query is missing
 - `vil process` unsplash validation -> structured failure when query is missing
+- `vil attach --engine native` unsplash validation -> structured failure when query is missing
 - `python3 -m pytest -q` -> pass
 - `src/vil/engine/attach.py` compile/import path -> pass
 - `python3 -m src.vil.app.cli plan --help` -> pass
 - `python3 -m src.vil.app.cli process --help` -> pass
+- `python3 -m src.vil.app.cli attach --help` -> pass
 
 ## Current Test Result
 - `python3 -m pytest -q`
@@ -113,7 +122,7 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - Retry/error handling policy
 - Full internal migration from legacy `src/main.py` / `src/core/*` modules into `src/vil/*`
 - Native attach execution inside `src/vil/engine/*` instead of wrapping the legacy orchestrator
-- Native publish/upload execution after source resolution + processing still needs to move out of legacy orchestrator
+- Native attach now supports selection + processing + basic-metadata publish, but advanced semantic metadata and quality gate are still richer in the legacy orchestrator path
 - Real HTTP API server surface (current API layer is Python-callable, not yet FastAPI/HTTP)
 
 ## Remaining Risks

@@ -31,6 +31,7 @@ def build_parser() -> argparse.ArgumentParser:
     attach.add_argument("--content-filter")
     attach.add_argument("--lang", default="tr")
     attach.add_argument("--people-first", action="store_true")
+    attach.add_argument("--engine", default="legacy", choices=["legacy", "native"])
 
     review = sub.add_parser("review")
     review.add_argument("--site", default="yoldaolmak")
@@ -76,6 +77,7 @@ def _attach_args_to_payload(args: argparse.Namespace) -> Dict[str, Any]:
         "content_filter": args.content_filter,
         "language": args.lang,
         "people_first": args.people_first,
+        "engine": getattr(args, "engine", "legacy"),
     }
 
 

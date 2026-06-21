@@ -205,3 +205,61 @@ def test_cli_process_command_outputs_processed_images(monkeypatch, capsys):
     assert exit_code == 0
     assert '"command": "process"' in output
     assert '"roma-1_yo.webp"' in output
+
+
+def test_run_attach_job_native_engine_uses_native_pipeline(monkeypatch):
+    from src.vil.app import jobs
+    from src.vil.engine import attach as attach_engine
+
+    monkeypatch.setattr(
+        attach_engine,
+        "fetch_post_context",
+        lambda post_id, site="yoldaolmak": {"id": post_id, "title": "Roma", "slug": "roma"},
+    )
+    monkeypatch.setattr(
+        attach_engine,
+        "resolve_source_images",
+        lambda **kwargs: {"source": "semantic", "files": ["roma-1.jpg", "roma-2.jpg"]},
+    )
+    monkeypatch.setattr(
+        attach_engine,
+        "process_selected_images",
+        lambda files, **kwargs: {
+            "processed_images": ["roma-1_yo.webp", "roma-2_yo.webp"],
+            "processed_details": {},
+            "panoramic_images": {},
+            "work_dir": "/tmp/vil-native",
+        },
+    )
+    monkeypatch.setattr(
+        attach_engine,
+        "build_basic_metadata_map",
+        lambda image_files, **kwargs: {path: {"title": path, "alt": path, "caption": path, "description": path} for path in image_files},
+    )
+    monkeypatch.setattr(
+        attach_engine,
+        "publish_processed_images",
+        lambda **kwargs: {
+            "uploaded": [{"media_id": 91}, {"media_id": 92}],
+            "failed": [],
+            "content_update": {"inserted": 2},
+        },
+    )
+
+    result = jobs.run_attach_job(
+        site="yoldaolmak",
+        post_id=264459,
+        count=2,
+        source="semantic",
+        location_query="Roma",
+        content_filter=None,
+        language="tr",
+        people_first=False,
+        engine="native",
+    )
+
+    assert result["status"] == "success"
+    assert result["uploaded_media_ids"] == [91, 92]
+    assert result["inserted_blocks"] == 2
+    assert result["selected_assets"] == ["roma-1.jpg", "roma-2.jpg"]
+    assert "basic metadata fallback" in result["warnings"][0]

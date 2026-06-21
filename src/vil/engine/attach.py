@@ -8,8 +8,10 @@ from typing import Any, Dict, Tuple
 
 from src.main import YOOrchestrator
 from src.vil.profiles.yoldaolmak import apply_environment
+from src.vil.engine.metadata import build_basic_metadata_map
 from src.vil.providers.wordpress import fetch_post_context
 from src.vil.engine.processor import process_selected_images
+from src.vil.engine.publisher import publish_processed_images
 from src.vil.engine.selector import resolve_source_images
 
 
@@ -256,4 +258,68 @@ def build_process_result(
         "panoramic_images": processed.get("panoramic_images", {}),
         "work_dir": processed.get("work_dir"),
         "warnings": [],
+    }
+
+
+def execute_native_attach(
+    *,
+    site: str,
+    request: Dict[str, Any],
+    post_context: Dict[str, Any],
+    constraints: Dict[str, Any],
+) -> Dict[str, Any]:
+    failure = validate_attach_request(
+        site=site,
+        request=request,
+        post_context=post_context,
+        constraints=constraints,
+    )
+    if failure:
+        return failure
+
+    started = datetime.utcnow()
+    selection = resolve_source_images(
+        source=request.get("source", "semantic"),
+        count=request.get("count"),
+        name=request.get("name"),
+        query=request.get("query"),
+        location_query=request.get("location_query"),
+        content_filter=request.get("content_filter"),
+        post_context=post_context,
+    )
+    processed = process_selected_images(selection.get("files", []))
+    processed_images = processed.get("processed_images", [])
+    metadata_dict = build_basic_metadata_map(
+        processed_images,
+        location_hint=request.get("location_query") or post_context.get("title", ""),
+        post_context=post_context,
+    )
+    published = publish_processed_images(
+        site=site,
+        post_id=request["post_id"],
+        processed_images=processed_images,
+        metadata_dict=metadata_dict,
+    )
+    duration_ms = int((datetime.utcnow() - started).total_seconds() * 1000)
+    return {
+        "command": "attach",
+        "site": site,
+        "post_id": request.get("post_id"),
+        "request": request,
+        "post_context": summarize_post_context(post_context),
+        "status": "success" if not published.get("failed") else "partial",
+        "selected_assets": selection.get("files", []),
+        "rejected_assets": [],
+        "uploaded_media_ids": [item.get("media_id") for item in published.get("uploaded", []) if item.get("media_id")],
+        "inserted_blocks": published.get("content_update", {}).get("inserted", 0),
+        "uploaded": published.get("uploaded", []),
+        "failed_uploads": published.get("failed", []),
+        "constraints": constraints,
+        "warnings": ["native attach uses basic metadata fallback only"],
+        "duration_ms": duration_ms,
+        "raw": {
+            "selection": selection,
+            "processed": processed,
+            "published": published,
+        },
     }
