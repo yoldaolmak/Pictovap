@@ -400,8 +400,8 @@ class YOOrchestrator:
         self.log_file = self.work_dir / f"yo_upload_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
     def log(self, message: str):
-        """Log message"""
-        print(message)
+        import sys
+        print(message, file=sys.stderr)
 
     def run_pipeline(
         self,

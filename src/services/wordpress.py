@@ -8,6 +8,7 @@ import json
 import os
 import re
 import html
+import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 import base64
@@ -524,7 +525,7 @@ def upload_images_batch(
 
         meta = metadata_dict.get(file_path, {})
         if not meta:
-            print(f"  ✗ No metadata found")
+            print(f"  ✗ No metadata found", file=sys.stderr)
             results["failed"].append({
                 "file": file_path,
                 "error": "No metadata",
@@ -549,7 +550,7 @@ def upload_images_batch(
             continue
 
         media_id = upload_result["media_id"]
-        print(f"  ✓ Uploaded: ID {media_id}")
+        print(f"  ✓ Uploaded: ID {media_id}", file=sys.stderr)
 
         # Attach to post
         attach_result = uploader.attach_to_post(

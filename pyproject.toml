@@ -11,5 +11,8 @@ pictova = "src.pictova.app.cli:main"
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+py-modules = ["yo_unsplash", "yo_adaptive_filter", "yo_yoldaolmak_filter"]
+
 [tool.setuptools.packages.find]
 where = ["."]
