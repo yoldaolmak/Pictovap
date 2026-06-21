@@ -6,11 +6,11 @@ import argparse
 import json
 from typing import Any, Dict
 
-from src.vil.app.health import run_health_check
-from src.vil.app.jobs import run_attach_job
-from src.vil.app.api import plan_attach, process_attach
-from src.vil.app.server import serve
-from src.vil.providers.wordpress import fetch_post_context
+from src.pictova.app.health import run_health_check
+from src.pictova.app.jobs import run_attach_job
+from src.pictova.app.api import plan_attach, process_attach
+from src.pictova.app.server import serve
+from src.pictova.providers.wordpress import fetch_post_context
 
 
 def _print_json(payload: Dict[str, Any]) -> None:
@@ -18,7 +18,7 @@ def _print_json(payload: Dict[str, Any]) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="vil")
+    parser = argparse.ArgumentParser(prog="pictova")
     sub = parser.add_subparsers(dest="command", required=True)
 
     attach = sub.add_parser("attach")

@@ -1,146 +1,166 @@
-# YOOS-VIL
+# Pictova
 
-YOOS-VIL, WordPress yazılarına içerikle uyumlu görseller seçmek, işlemek ve yerleştirmek için kullanılan görsel pipeline repo'sudur.
+**Visual Intelligence for Content**
 
-Bu repo şu an iki yüzey sunuyor:
+Pictova finds, selects, processes, and places images into WordPress posts — from any source, without human intervention.
 
-- `vil` CLI
-- minimal HTTP app surface
-- Mac Photos tabanlı visual memory index
+```bash
+pictova attach --site yoldaolmak --post 265713 --count 4 --people-first
+```
 
-## Çalışan Yüzey
+---
+
+## What It Does
+
+A travel post about Sinop should have photos of Sinop. Pictova reads the post, understands the context, queries every configured image source, selects the best matches, processes them to spec, and inserts native Gutenberg blocks. In under 60 seconds. Without an editor opening a browser.
+
+**Sources it draws from:**
+
+- Personal library — Mac Photos, indexed by location, scene, and activity
+- Free APIs — Unsplash
+- Licensed stock — DepositPhotos *(coming: Pictova Depot)*
+- Local files — any directory of JPGs, PNGs, or WebPs on disk
+
+**Where it delivers:**
+
+- WordPress — media library upload + native Gutenberg image blocks + featured image
+- Structured JSON — for custom downstream pipelines
+
+---
+
+## Part of the Meridyen Ecosystem
+
+Pictova was born as the visual layer of **Meridyen**, the content platform behind [yoldaolmak.com](https://yoldaolmak.com). It is designed to be adopted by any content publisher — from solo bloggers to enterprise media teams.
+
+```
+Meridyen (platform)
+├── YOOS-APP   — content generation engine
+└── Pictova    — visual intelligence layer
+    ├── Pictova Select   — semantic image selection
+    ├── Pictova Depot    — licensed stock integration (planned)
+    └── Pictova Memory   — visual memory index (Mac Photos + local)
+```
+
+See [Brand & Naming Doctrine](docs/architecture/naming.md) for the full story.
+
+---
+
+## Install
+
+```bash
+git clone <repo-url> pictova
+cd pictova
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt && pip install -e .
+cp .env.example .env  # fill in WP_USER, WP_PASSWORD, UNSPLASH_ACCESS_KEY
+```
+
+Verify:
+
+```bash
+pictova health
+# {"status": "ok", "service": "pictova"}
+```
+
+Full setup: [Installation Guide](docs/guides/installation.md)
+
+---
+
+## Usage
 
 ### CLI
 
 ```bash
-vil health
-vil review --site yoldaolmak --post 264459
-vil plan --site yoldaolmak --post 264459 --count 4 --people-first
-vil process --site yoldaolmak --post 264459 --count 4 --people-first
-vil attach --site yoldaolmak --post 264459 --count 4 --people-first
-vil attach --site yoldaolmak --post 264459 --count 4 --people-first --engine native
+# Read post context (no changes)
+pictova review --site yoldaolmak --post 265713
+
+# Preview candidates (no changes)
+pictova plan --site yoldaolmak --post 265713 --count 4 --people-first
+
+# Process without publish
+pictova process --site yoldaolmak --post 265713 --count 4 --people-first
+
+# Full attach — selects, uploads, places
+pictova attach --site yoldaolmak --post 265713 --count 4 --people-first
+
+# Use native engine
+pictova attach --site yoldaolmak --post 265713 --count 4 --engine native
 ```
 
-### HTTP
+### HTTP API
 
 ```bash
-vil serve --host 127.0.0.1 --port 8040
-```
+# Start server
+pictova serve --host 127.0.0.1 --port 8040
 
-Endpoints:
-
-- `GET /`
-- `GET /health`
-- `GET /jobs`
-- `GET /jobs/{job_id}`
-- `POST /review`
-- `POST /plan`
-- `POST /process`
-- `POST /attach`
-- `POST /jobs/attach`
-
-Örnek:
-
-```bash
-curl -s http://127.0.0.1:8040/health
-
-curl -s -X POST http://127.0.0.1:8040/plan \
-  -H 'Content-Type: application/json' \
-  -d '{"site":"yoldaolmak","post_id":264459,"count":4,"people_first":true}'
-
+# Async job (returns job_id immediately)
 curl -s -X POST http://127.0.0.1:8040/jobs/attach \
   -H 'Content-Type: application/json' \
-  -d '{"site":"yoldaolmak","post_id":264459,"count":4,"people_first":true}'
+  -d '{"site":"yoldaolmak","post_id":265713,"count":4,"people_first":true}'
+
+# Poll job status
+curl -s http://127.0.0.1:8040/jobs/{job_id}
 ```
 
-`POST /jobs/attach` senkron cevap yerine job kaydı döner. Sonra `GET /jobs/{job_id}` ile durum sorgulanır.
+---
 
-## Mac Photos Akışı
+## Repository Structure
 
-YOOS-VIL artık Mac Photos originals havuzunu indexleyip semantic seçimde kullanabiliyor.
-
-Pratik akış:
-
-```bash
-# 1. Çalışan visual memory runtime içinde Photos index kur
-cd /Users/yoldaolmak/Downloads/YO_OS_VIL
-./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 0
-
-# 2. Apple Photos ML metadata işle
-./.venv/bin/python extract_apple_photos_ml.py
 ```
-
-Canonical repo, local `.env` içinde `YO_VISUAL_MEMORY_DB` verilirse bu indexi kullanır.
-
-Semantic arama artık sadece `source_path` değil, şu alanlarda da eşleşme arar:
-
-- `filename`
-- `title`
-- `description`
-- `summary`
-- `location`
-- `city`
-- `country`
-- `activity`
-- `scene`
-
-Bu sayede Mac Photos içindeki yer etiketli görseller post bağlamına göre seçilebilir.
-
-## Native ve Legacy
-
-- `legacy`: mevcut orkestratörü sarar, bugün en tam davranış burada
-- `native`: yeni `src/vil/*` yüzeyini kullanır; seçim, işleme, kalite kapısı ve publish kontratı ayrıştırılmıştır
-
-Bugünkü durum:
-
-- native `plan` hazır
-- native `process` hazır
-- native `attach` çalışır
-- native metadata, API anahtarı varsa vision analizi dener
-- anahtar yoksa deterministic fallback metadata kullanır
-
-## Repo Yapısı
-
-```text
 src/
-  vil/
-    app/
-    engine/
-    profiles/
-    providers/
-  core/
-  services/
-  utils/
-ops/
+  pictova/
+    app/          CLI · HTTP API · job orchestration
+    engine/       selector · processor · quality · metadata · publisher
+    providers/    WordPress adapter
+    profiles/     per-site configuration
+  core/           legacy orchestration (being migrated)
+  main.py         legacy entry point
+ops/              maintenance scripts · indexers · repair tools
 tests/
+  unit/
+  integration/
 docs/
+  concepts/       What and why
+  guides/         How to set up and use
+  reference/      CLI · HTTP API · config · profiles
+  architecture/   How it is built
+  ops/            Running in production
 ```
 
-## Doğrulama
+---
 
-Son doğrulanan komutlar:
+## Documentation
 
-```bash
-python3 -m pytest -q
-python3 -m src.vil.app.cli attach --help
-python3 -m src.vil.app.cli plan --help
-python3 -m src.vil.app.cli process --help
-python3 -m src.vil.app.cli serve --help
-python3 - <<'PY'
-from src.main import search_semantic_assets
-print(search_semantic_assets('Sinop', count=5))
-PY
-```
+| | |
+|--|--|
+| [Overview](docs/concepts/overview.md) | What Pictova is and why it exists |
+| [Quickstart](docs/guides/quickstart.md) | First attach in 5 minutes |
+| [CLI Reference](docs/reference/cli.md) | All commands and flags |
+| [HTTP API Reference](docs/reference/http-api.md) | All endpoints |
+| [Configuration](docs/reference/configuration.md) | Environment variables |
+| [Architecture](docs/architecture/overview.md) | System design |
+| [Naming Doctrine](docs/architecture/naming.md) | Why Pictova, Meridyen ecosystem |
+| [Runbook](docs/ops/runbook.md) | Day-to-day operations |
 
-Son test durumu:
+---
 
-- `19 passed, 1 warning`
+## Current Status
 
-## Eksik Olanlar
+| Surface | Status |
+|---------|--------|
+| CLI (legacy engine) | Stable, production use |
+| CLI (native engine) | Working, in active development |
+| HTTP API | Working, no auth yet |
+| Visual Memory (Mac Photos) | Stable, 284 indexed assets |
+| Unsplash source | Stable |
+| DepositPhotos source | Planned |
+| Persisted job store | Planned |
+| Structured logging | Planned |
 
-- native hattın legacy kadar zengin semantic metadata üretmesi
-- HTTP surface için auth
-- persisted job store
-- structured logging
-- retry politikası
-- legacy çekirdeğin kademeli olarak `src/vil/*` altına taşınması
+Tests: `python3 -m pytest -q` → 19 passed
+
+---
+
+## License
+
+MIT

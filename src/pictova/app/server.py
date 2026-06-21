@@ -7,8 +7,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from typing import Any, Callable, Dict, Tuple
 
-from src.vil.app.api import attach_images, health_status, plan_attach, process_attach, review_post
-from src.vil.app.state import job_registry
+from src.pictova.app.api import attach_images, health_status, plan_attach, process_attach, review_post
+from src.pictova.app.state import job_registry
 
 
 RouteHandler = Callable[[Dict[str, Any]], Dict[str, Any]]
@@ -60,7 +60,7 @@ def build_handler() -> type[BaseHTTPRequestHandler]:
                     self,
                     HTTPStatus.OK,
                     {
-                        "service": "vil",
+                        "service": "pictova",
                         "status": "ok",
                         "routes": [
                             {"method": "GET", "path": "/health"},

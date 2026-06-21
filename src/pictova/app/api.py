@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from src.vil.app.health import run_health_check
-from src.vil.app.jobs import run_attach_job
-from src.vil.engine.attach import build_attach_plan, build_process_result, prepare_attach_request
-from src.vil.providers.wordpress import fetch_post_context
+from src.pictova.app.health import run_health_check
+from src.pictova.app.jobs import run_attach_job
+from src.pictova.engine.attach import build_attach_plan, build_process_result, prepare_attach_request
+from src.pictova.providers.wordpress import fetch_post_context
 
 
 def review_post(payload: Dict[str, Any]) -> Dict[str, Any]:

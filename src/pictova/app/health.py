@@ -7,7 +7,7 @@ import os
 import sys
 from typing import Dict, List
 
-from src.vil.config import get_vil_dir, get_visual_memory_db_path, load_project_env
+from src.pictova.config import get_vil_dir, get_visual_memory_db_path, load_project_env
 
 
 REQUIRED_MODULES = ["PIL", "requests", "numpy", "cv2"]

@@ -12,8 +12,8 @@ if str(REPO_ROOT) not in sys.path:
 
 
 def test_run_attach_job_derives_location_and_constraints(monkeypatch):
-    from src.vil.app import jobs
-    from src.vil.engine import attach as attach_engine
+    from src.pictova.app import jobs
+    from src.pictova.engine import attach as attach_engine
 
     class FakeOrchestrator:
         def run_pipeline(self, **kwargs):
@@ -66,7 +66,7 @@ def test_run_attach_job_derives_location_and_constraints(monkeypatch):
 
 
 def test_cli_review_command_outputs_post_context(monkeypatch, capsys):
-    from src.vil.app import cli
+    from src.pictova.app import cli
 
     monkeypatch.setattr(
         cli,
@@ -83,8 +83,8 @@ def test_cli_review_command_outputs_post_context(monkeypatch, capsys):
 
 
 def test_run_attach_job_fails_when_semantic_query_cannot_be_derived(monkeypatch):
-    from src.vil.app import jobs
-    from src.vil.engine import attach as attach_engine
+    from src.pictova.app import jobs
+    from src.pictova.engine import attach as attach_engine
 
     monkeypatch.setattr(
         attach_engine,
@@ -109,7 +109,7 @@ def test_run_attach_job_fails_when_semantic_query_cannot_be_derived(monkeypatch)
 
 
 def test_api_attach_images_reuses_job_contract(monkeypatch):
-    from src.vil.app import api
+    from src.pictova.app import api
 
     monkeypatch.setattr(
         api,
@@ -124,10 +124,10 @@ def test_api_attach_images_reuses_job_contract(monkeypatch):
 
 
 def test_api_plan_attach_uses_native_selection(monkeypatch):
-    from src.vil.app import api
+    from src.pictova.app import api
 
     monkeypatch.setattr(
-        "src.vil.app.api.prepare_attach_request",
+        "src.pictova.app.api.prepare_attach_request",
         lambda **payload: (
             {"site": "yoldaolmak", "post_id": 42, "source": "semantic", "location_query": "Roma", "count": 3},
             {"id": 42, "title": "Roma", "slug": "roma"},
@@ -135,7 +135,7 @@ def test_api_plan_attach_uses_native_selection(monkeypatch):
         ),
     )
     monkeypatch.setattr(
-        "src.vil.app.api.build_attach_plan",
+        "src.pictova.app.api.build_attach_plan",
         lambda **kwargs: {"command": "plan", "status": "success", "selection": {"files": ["a.jpg"]}},
     )
 
@@ -146,7 +146,7 @@ def test_api_plan_attach_uses_native_selection(monkeypatch):
 
 
 def test_cli_plan_command_outputs_structured_selection(monkeypatch, capsys):
-    from src.vil.app import cli
+    from src.pictova.app import cli
 
     monkeypatch.setattr(
         cli,
@@ -168,10 +168,10 @@ def test_cli_plan_command_outputs_structured_selection(monkeypatch, capsys):
 
 
 def test_api_process_attach_returns_processed_images(monkeypatch):
-    from src.vil.app import api
+    from src.pictova.app import api
 
     monkeypatch.setattr(
-        "src.vil.app.api.prepare_attach_request",
+        "src.pictova.app.api.prepare_attach_request",
         lambda **payload: (
             {"site": "yoldaolmak", "post_id": 42, "source": "semantic", "location_query": "Roma", "count": 2},
             {"id": 42, "title": "Roma", "slug": "roma"},
@@ -179,7 +179,7 @@ def test_api_process_attach_returns_processed_images(monkeypatch):
         ),
     )
     monkeypatch.setattr(
-        "src.vil.app.api.build_process_result",
+        "src.pictova.app.api.build_process_result",
         lambda **kwargs: {"command": "process", "status": "success", "processed_images": ["a.webp"]},
     )
 
@@ -190,7 +190,7 @@ def test_api_process_attach_returns_processed_images(monkeypatch):
 
 
 def test_cli_process_command_outputs_processed_images(monkeypatch, capsys):
-    from src.vil.app import cli
+    from src.pictova.app import cli
 
     monkeypatch.setattr(
         cli,
@@ -212,8 +212,8 @@ def test_cli_process_command_outputs_processed_images(monkeypatch, capsys):
 
 
 def test_run_attach_job_native_engine_uses_native_pipeline(monkeypatch):
-    from src.vil.app import jobs
-    from src.vil.engine import attach as attach_engine
+    from src.pictova.app import jobs
+    from src.pictova.engine import attach as attach_engine
 
     monkeypatch.setattr(
         attach_engine,
@@ -287,8 +287,8 @@ def test_run_attach_job_native_engine_uses_native_pipeline(monkeypatch):
 
 
 def test_run_attach_job_native_engine_blocks_low_quality_assets(monkeypatch):
-    from src.vil.app import jobs
-    from src.vil.engine import attach as attach_engine
+    from src.pictova.app import jobs
+    from src.pictova.engine import attach as attach_engine
 
     monkeypatch.setattr(
         attach_engine,
@@ -376,7 +376,7 @@ def test_insert_before_first_h2_preserves_gutenberg_heading_block():
 
 
 def test_build_native_metadata_map_falls_back_without_credentials(monkeypatch):
-    from src.vil.engine import metadata as metadata_engine
+    from src.pictova.engine import metadata as metadata_engine
 
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
@@ -392,7 +392,7 @@ def test_build_native_metadata_map_falls_back_without_credentials(monkeypatch):
 
 
 def test_http_server_health_route_returns_json():
-    from src.vil.app.server import serve
+    from src.pictova.app.server import serve
 
     server = serve(host="127.0.0.1", port=0)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -410,7 +410,7 @@ def test_http_server_health_route_returns_json():
 
 
 def test_http_server_attach_route_uses_api_contract(monkeypatch):
-    from src.vil.app import server as server_module
+    from src.pictova.app import server as server_module
 
     monkeypatch.setattr(
         server_module,
@@ -440,8 +440,8 @@ def test_http_server_attach_route_uses_api_contract(monkeypatch):
 
 
 def test_http_server_attach_job_route_returns_job_and_result(monkeypatch):
-    from src.vil.app import server as server_module
-    from src.vil.app.state import job_registry
+    from src.pictova.app import server as server_module
+    from src.pictova.app.state import job_registry
 
     monkeypatch.setattr(
         server_module,

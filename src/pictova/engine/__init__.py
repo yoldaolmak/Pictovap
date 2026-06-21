@@ -1,6 +1,6 @@
 """Product core engine surface."""
 
-from src.vil.engine.attach import (
+from src.pictova.engine.attach import (
     build_attach_plan,
     build_process_result,
     build_failed_attach_result,
