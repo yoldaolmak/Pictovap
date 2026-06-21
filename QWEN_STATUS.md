@@ -64,6 +64,9 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
   - `attach_images(payload)`
   - `review_post(payload)`
   - `health_status()`
+- Moved attach preparation/validation/result-normalization logic out of `src/vil/app/jobs.py` into canonical engine module:
+  - `src/vil/engine/attach.py`
+- Reduced `src/vil/app/jobs.py` to a thin job layer over canonical engine helpers.
 
 ## Verified
 - `python3 -m compileall src tests ops yo_yoldaolmak_filter.py yo_adaptive_filter.py yo_unsplash.py` -> pass
@@ -82,6 +85,7 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - `python3 -m src.vil.app.cli review --site yoldaolmak --post 1` -> structured failure JSON when credentials are missing
 - `vil attach` unsplash validation -> structured failure when query is missing
 - `python3 -m pytest -q` -> pass
+- `src/vil/engine/attach.py` compile/import path -> pass
 
 ## Current Test Result
 - `python3 -m pytest -q`
@@ -92,7 +96,7 @@ Complete Milestone 3 by turning `vil attach` into a usable operator contract on 
 - Structured logging
 - Retry/error handling policy
 - Full internal migration from legacy `src/main.py` / `src/core/*` modules into `src/vil/*`
-- Native attach flow inside `src/vil/engine/*` instead of wrapping the legacy orchestrator
+- Native attach execution inside `src/vil/engine/*` instead of wrapping the legacy orchestrator
 - Real HTTP API server surface (current API layer is Python-callable, not yet FastAPI/HTTP)
 
 ## Remaining Risks

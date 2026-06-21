@@ -9,6 +9,7 @@ if str(REPO_ROOT) not in sys.path:
 
 def test_run_attach_job_derives_location_and_constraints(monkeypatch):
     from src.vil.app import jobs
+    from src.vil.engine import attach as attach_engine
 
     class FakeOrchestrator:
         def run_pipeline(self, **kwargs):
@@ -30,12 +31,13 @@ def test_run_attach_job_derives_location_and_constraints(monkeypatch):
             }
 
     monkeypatch.setattr(
-        jobs,
+        attach_engine,
         "YOOrchestrator",
         FakeOrchestrator,
     )
     monkeypatch.setattr(
-        "src.vil.providers.wordpress.fetch_post_context",
+        attach_engine,
+        "fetch_post_context",
         lambda post_id, site="yoldaolmak": {"id": post_id, "title": "Roma Gezi Rehberi", "slug": "roma-gezi-rehberi"},
     )
 
@@ -78,9 +80,11 @@ def test_cli_review_command_outputs_post_context(monkeypatch, capsys):
 
 def test_run_attach_job_fails_when_semantic_query_cannot_be_derived(monkeypatch):
     from src.vil.app import jobs
+    from src.vil.engine import attach as attach_engine
 
     monkeypatch.setattr(
-        "src.vil.providers.wordpress.fetch_post_context",
+        attach_engine,
+        "fetch_post_context",
         lambda post_id, site="yoldaolmak": {"id": post_id, "title": "", "slug": ""},
     )
 
