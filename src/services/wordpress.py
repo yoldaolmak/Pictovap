@@ -206,16 +206,21 @@ class YOWordPressUploader:
         current_content = _remove_auto_media_region(current_content)
 
         # Auto-assign headings: for items that have no heading set, distribute
-        # across H2/H3 headings in the post that don't already have a nearby image.
+        # evenly across H2/H3 headings in the post that don't already have a nearby image.
         unheaded = [i for i, it in enumerate(media_items) if not str(it.get("heading", "")).strip()]
         if unheaded:
             available = _extract_available_headings(current_content)
             media_items = list(media_items)
-            for slot, item_idx in enumerate(unheaded):
-                if slot >= len(available):
-                    break
-                h = available[slot]
-                media_items[item_idx] = {**media_items[item_idx], "heading": h["text"], "heading_level": h["level"]}
+            n_images = len(unheaded)
+            n_heads = len(available)
+            if n_heads > 0 and n_images > 0:
+                # Eşit aralıklı dağıtım: M heading içinde N resmi eşit böl
+                # step = M / (N+1) → resimler uç noktalara yığılmaz
+                step = n_heads / (n_images + 1)
+                for slot, item_idx in enumerate(unheaded):
+                    idx = min(int(step * (slot + 1)), n_heads - 1)
+                    h = available[idx]
+                    media_items[item_idx] = {**media_items[item_idx], "heading": h["text"], "heading_level": h["level"]}
 
         auto_blocks: list[str] = []
         inserted = 0
