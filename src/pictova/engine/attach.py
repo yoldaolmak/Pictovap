@@ -19,6 +19,27 @@ from src.pictova.engine.selector import resolve_source_images
 from src.pictova.engine.vision_chain import download_icloud_photo
 
 
+def _photo_index_stats() -> dict:
+    """Visual memory DB özet istatistikleri."""
+    import sqlite3 as _sq
+    try:
+        from src.pictova.config import get_visual_memory_db_path
+        db = get_visual_memory_db_path()
+        con = _sq.connect(str(db))
+        row = con.execute("""
+            SELECT
+              COUNT(*) AS total,
+              SUM(CASE WHEN source_path != '' THEN 1 ELSE 0 END) AS local_count,
+              SUM(CASE WHEN source_path  = '' THEN 1 ELSE 0 END) AS icloud_count,
+              SUM(CASE WHEN vision_scan_status = 'done' THEN 1 ELSE 0 END) AS scanned
+            FROM asset_index WHERE is_personal = 0
+        """).fetchone()
+        con.close()
+        return {"total": row[0], "local": row[1], "icloud": row[2], "vision_scanned": row[3]}
+    except Exception as exc:
+        return {"error": str(exc)}
+
+
 def resolve_icloud_files(files: list[str], warnings: list[str]) -> list[str]:
     """iCloud UUID (icloud://UUID) dosyalarını indirip lokal path ile değiştirir."""
     resolved = []
@@ -251,6 +272,7 @@ def build_attach_plan(
         "constraints": constraints,
         "status": "success",
         "selection": selection,
+        "photo_index_stats": _photo_index_stats(),
         "warnings": [],
     }
 
