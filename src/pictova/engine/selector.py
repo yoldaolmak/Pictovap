@@ -52,10 +52,9 @@ def resolve_source_images(
         # 3. DepositPhotos — hâlâ eksikse
         if len(files) < _count:
             need = _count - len(files)
-            dep_files = _deposit_search_download(
-                query=location_query or _extract_location(post_context),
-                count=need,
-            )
+            base_q = location_query or _extract_location(post_context)
+            enriched_q = _enrich_query_for_theme(base_q, post_context, content_filter)
+            dep_files = _deposit_search_download(query=enriched_q, count=need)
             files = files + dep_files
 
         return {"source": "auto", "query": location_query or "", "content_filter": content_filter, "files": files}
@@ -91,8 +90,20 @@ def resolve_source_images(
 
     if source == "deposit":
         loc_q = location_query or query or _extract_location(post_context)
-        files = _deposit_search_download(query=loc_q, count=_count)
-        return {"source": "deposit", "query": loc_q, "content_filter": None, "files": files}
+        enriched_q = _enrich_query_for_theme(loc_q, post_context, content_filter)
+        files = _deposit_search_download(query=enriched_q, count=_count)
+        return {"source": "deposit", "query": enriched_q, "content_filter": None, "files": files}
+
+    if source == "local":
+        # Doğrudan dosya yolları listesi — query'yi "," veya "\n" ayıracı ile al
+        raw = query or ""
+        paths = [p.strip() for p in raw.replace("\n", ",").split(",") if p.strip()]
+        # post_context'te "files" varsa onu da al
+        extra = post_context.get("files") or []
+        if isinstance(extra, list):
+            paths = paths + [str(f) for f in extra]
+        paths = paths[:_count]
+        return {"source": "local", "query": raw, "content_filter": None, "files": paths}
 
     if source == "unsplash":
         return {
@@ -103,6 +114,46 @@ def resolve_source_images(
         }
 
     raise ValueError(f"Unsupported source: {source}")
+
+
+_THEME_NIGHT_KEYWORDS = {
+    "gece hayatı", "nightlife", "gece kulübü", "bar ", "barlar", "eğlence",
+    "party", "club ", "disco", "meyhane", "taverna", "pub ",
+}
+_THEME_NATURE_KEYWORDS = {
+    "doğa", "yayla", "orman", "dağ", "kanyonu", "şelale", "vadisi",
+    "nature", "forest", "mountain", "canyon", "waterfall",
+}
+_THEME_BEACH_KEYWORDS = {
+    "plaj", "koy", "deniz", "sahil", "beach", "bay", "coast",
+}
+
+
+def _enrich_query_for_theme(
+    query: str,
+    post_context: Dict[str, Any],
+    content_filter: str | None,
+) -> str:
+    """Post temasına göre arama sorgusuna modifier ekler."""
+    text = " ".join([
+        query.lower(),
+        str(post_context.get("title") or "").lower(),
+        str(post_context.get("slug") or "").lower(),
+        str(content_filter or "").lower(),
+    ])
+
+    if any(kw in text for kw in _THEME_NIGHT_KEYWORDS):
+        # Gece teması: gündüz fotoğraf gelmesin
+        if "night" not in query and "gece" not in query:
+            return query + " night"
+    elif any(kw in text for kw in _THEME_NATURE_KEYWORDS):
+        if "nature" not in query and "landscape" not in query:
+            return query + " landscape"
+    elif any(kw in text for kw in _THEME_BEACH_KEYWORDS):
+        if "beach" not in query and "coast" not in query:
+            return query + " coast"
+
+    return query
 
 
 def _deposit_search_download(query: str, count: int) -> list[str]:

@@ -329,6 +329,27 @@ class YOCommandParser:
     def parse(cls, command: str) -> Optional[Dict]:
         command = command.strip()
 
+        # 0a. DepositPhotos: "deposit:bodrum gece 4 foto yo 31818"
+        if command.lower().startswith("deposit:"):
+            rest = command[8:].strip()
+            # rest: "<sorgu> <N> foto yo <post_id>"
+            dm = re.match(r"^(.+?)\s+(\d+)\s+foto\s+yo\s+(\d+)(?:\s+(\w+))?$", rest, re.I)
+            if dm:
+                site = cls.SITE_ALIASES.get((dm.group(4) or "yo").lower())
+                if site:
+                    return {"count": int(dm.group(2)), "name": None, "post_id": int(dm.group(3)),
+                            "site": site, "source": "deposit", "query": dm.group(1).strip()}
+
+        # 0b. Lokal dosya: "local:/path/a.jpg,/path/b.jpg yo 31818"
+        if command.lower().startswith("local:"):
+            rest = command[6:].strip()
+            lm = re.match(r"^(.+?)\s+yo\s+(\d+)(?:\s+(\w+))?$", rest, re.I)
+            if lm:
+                site = cls.SITE_ALIASES.get((lm.group(3) or "yo").lower())
+                if site:
+                    return {"count": None, "name": None, "post_id": int(lm.group(2)),
+                            "site": site, "source": "local", "query": lm.group(1).strip()}
+
         # 1. Unsplash: "unsplash:zadar sea 3 foto yo 21312"
         m = re.match(cls.PATTERN_UNSPLASH, command)
         if m:
@@ -509,6 +530,24 @@ class YOOrchestrator:
                 result["status"] = "failed"
                 result["error"] = str(e)
                 return result
+
+        elif source == "local":
+            # Manuel dosya yolları — virgülle ayrılmış ya da query içinde
+            raw_paths = query or ""
+            image_files = [p.strip() for p in raw_paths.replace("\n", ",").split(",") if p.strip()]
+            # post_context'te files listesi varsa ekle
+            extra = (post_context or {}).get("files") or []
+            if isinstance(extra, list):
+                image_files = image_files + [str(f) for f in extra]
+
+            missing = [p for p in image_files if not os.path.exists(p)]
+            if missing:
+                result["status"] = "failed"
+                result["error"] = f"Dosya bulunamadı: {', '.join(missing)}"
+                return result
+            self.log(f"\n📂 STEP 1: Lokal dosyalar ({len(image_files)} adet)")
+            for p in image_files:
+                self.log(f"  • {Path(p).name}")
 
         elif source == "semantic":
             # Semantic HDD arama: location_query + content_filter
