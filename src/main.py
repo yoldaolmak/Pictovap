@@ -123,8 +123,17 @@ def search_semantic_assets(
     if not db_path.exists():
         return []
 
+    # Coğrafi alias genişletme
+    try:
+        from src.pictova.engine.geo_aliases import expand_query
+        expanded_terms = expand_query(location_query)
+    except Exception:
+        expanded_terms = [location_query]
+
     # Sorguyu normalize et — Türkçe karakterleri koru, FTS unicode61 halleder
-    query_clean = re.sub(r'[^\w\s]', ' ', location_query, flags=re.UNICODE).strip()
+    # Tüm expanded terimleri birleştir
+    combined_query = " ".join(expanded_terms[:4])  # ilk 4 terim
+    query_clean = re.sub(r'[^\w\s]', ' ', combined_query, flags=re.UNICODE).strip()
     tokens = [t for t in re.split(r"\s+", query_clean) if len(t) >= 3]
     if not tokens:
         return []
