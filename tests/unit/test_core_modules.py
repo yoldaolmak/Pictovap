@@ -29,7 +29,8 @@ def test_processor_filter_path():
     os.environ["YO_IMAGE_FILTER_PROFILE"] = "yoldaolmak"
     filtered, details = YOImageProcessor().apply_yo_filter(image)
     assert filtered.size == image.size
-    assert "profile" in details
+    # adaptive filter params — brightness_factor her zaman mevcut
+    assert "brightness_factor" in details
 
 
 def test_config_uses_repo_root_defaults():

@@ -144,19 +144,34 @@ class YOImageProcessor:
             tuple (filtered_image, params_dict)
         """
         profile = os.getenv("YO_IMAGE_FILTER_PROFILE", "adaptive").strip().lower()
+
+        # Import filter from canonical location (src/core/filter.py)
+        # Falls back to project-root module for legacy compatibility
+        def _load_adaptive() -> "YOAdaptiveFilter":
+            try:
+                from src.core.filter import YOAdaptiveFilter as _F
+                return _F()
+            except ImportError:
+                pass
+            import importlib.util, pathlib
+            root = pathlib.Path(__file__).resolve().parents[2]  # project root
+            spec = importlib.util.spec_from_file_location("yo_adaptive_filter", root / "yo_adaptive_filter.py")
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod.YOAdaptiveFilter()
+
         if profile in {"yoldaolmak", "yo-yoldaolmak"}:
-            from yo_yoldaolmak_filter import YOYoldaOlmakFilter
+            try:
+                from src.core.filter import YOAdaptiveFilter
+                filter_obj = YOAdaptiveFilter()
+            except ImportError:
+                filter_obj = _load_adaptive()
+            img_filtered = filter_obj.apply_cinematic_grade(img)
+            print("  ✓ YO Filter applied (yoldaolmak profile → adaptive)")
+            return img_filtered, filter_obj.params
 
-            filter_obj = YOYoldaOlmakFilter()
-            img_filtered = filter_obj.apply_filter(img)
-            print("  ✓ YO Yoldaolmak Filter applied")
-            return img_filtered, {"profile": "yoldaolmak", **filter_obj.analyze_image(img_filtered)}
-
-        from yo_adaptive_filter import YOAdaptiveFilter
-
-        filter_obj = YOAdaptiveFilter()
+        filter_obj = _load_adaptive()
         img_filtered = filter_obj.apply_cinematic_grade(img)
-
         print("  ✓ YO Adaptive Filter applied")
         return img_filtered, filter_obj.params
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import re
 from typing import Any, Dict, Tuple
@@ -224,10 +224,10 @@ def execute_legacy_attach(
     post_context: Dict[str, Any],
     constraints: Dict[str, Any],
 ) -> Dict[str, Any]:
-    started = datetime.utcnow()
+    started = datetime.now(timezone.utc)
     orchestrator = YOOrchestrator()
     raw = orchestrator.run_pipeline(**request)
-    duration_ms = int((datetime.utcnow() - started).total_seconds() * 1000)
+    duration_ms = int((datetime.now(timezone.utc) - started).total_seconds() * 1000)
     return normalize_attach_result(
         raw,
         constraints=constraints,
@@ -382,7 +382,7 @@ def execute_native_attach(
     if failure:
         return failure
 
-    started = datetime.utcnow()
+    started = datetime.now(timezone.utc)
     selection = resolve_source_images(
         source=request.get("source", "semantic"),
         count=request.get("count"),
@@ -421,7 +421,7 @@ def execute_native_attach(
         processed_images=finalized_files,
         metadata_dict=finalized_metadata,
     )
-    duration_ms = int((datetime.utcnow() - started).total_seconds() * 1000)
+    duration_ms = int((datetime.now(timezone.utc) - started).total_seconds() * 1000)
     return {
         "command": "attach",
         "site": site,

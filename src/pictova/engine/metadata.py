@@ -39,19 +39,77 @@ def _db_cached_metadata(image_path: str) -> Optional[Dict[str, Any]]:
         return None
 
 
+def _kemal_voice_caption(summary: str, scene: str, location: str, keywords: list) -> str:
+    """Vision summary'sini Kemal Kaya üslubuyla caption'a dönüştür.
+
+    Kural: Kısa, gözlem odaklı, BBC Travel tonu. "Bu fotoğrafta", "Görselde"
+    gibi AI kalıpları yasak. Sanki sahneyi hatırlıyorsun gibi yaz.
+    """
+    if summary and len(summary) > 20:
+        # AI summary'sini temizle — kalıp ifadeleri kaldır
+        import re
+        s = summary.strip()
+        # Yaygın AI kalıpları
+        for pat in (
+            r"^(Bu (fotoğrafta|görselde|resimde)|Fotoğrafta|Görselde|Resimde)\s*",
+            r"^(The (image|photo|picture) (shows|depicts|features))\s*",
+        ):
+            s = re.sub(pat, "", s, flags=re.IGNORECASE).strip()
+        if s and s[0].islower():
+            s = s[0].upper() + s[1:]
+        if s and not s.endswith((".", "!", "?")):
+            s += "."
+        return s[:180]
+
+    # Summary yoksa veya çok kısaysa keywords + scene + location'dan üret
+    parts = []
+    if location:
+        parts.append(location)
+    if scene and scene.lower() not in (location or "").lower():
+        scene_tr = {
+            "coast": "kıyı", "mountain": "dağ", "city": "şehir", "village": "köy",
+            "forest": "orman", "lake": "göl", "valley": "vadi", "beach": "plaj",
+            "castle": "kale", "ruins": "harabe", "market": "çarşı",
+        }.get(scene.lower(), scene)
+        parts.append(scene_tr)
+    if keywords:
+        kw_extra = [k for k in keywords[:3] if k.lower() not in " ".join(parts).lower()]
+        if kw_extra:
+            parts.append(", ".join(kw_extra))
+    return (". ".join(parts) + ".").strip(".")[:180] or "Seyahat karesi."
+
+
 def _enrich_from_cache(cached: Dict, post_context: Dict) -> Dict:
     """DB cache'inden tam metadata formatı oluştur."""
     kws = cached.get("keywords", [])
     summary = cached.get("summary", "")
     scene = cached.get("scene", "")
+    activity = cached.get("activity", "")
     location = str(post_context.get("title") or "").strip()
-    kw_str = ", ".join(kws[:4]) if kws else location
-    alt = summary or f"{scene} in {location}".strip() or kw_str
+    kw_str = ", ".join(kws[:5]) if kws else location
+
+    # alt: ekran okuyucu için sade, tanımlayıcı
+    alt = summary or (f"{scene} — {location}".strip(" —") if scene or location else kw_str)
+
+    # title: SEO, lokasyon + sahne
+    if scene and location:
+        title = f"{location} — {scene.title()}"
+    elif location:
+        title = location
+    else:
+        title = scene.title() or kw_str
+
+    caption = _kemal_voice_caption(summary, scene, location, kws)
+
+    # description: lokasyon + içerik bağlamı
+    desc_parts = [p for p in [location, activity or scene, kw_str] if p]
+    description = ". ".join(dict.fromkeys(desc_parts))
+
     return {
         "alt": alt[:125],
-        "title": f"{scene.title()} — {location}"[:60] if scene and location else (alt[:60]),
-        "caption": summary[:180] if summary else f"{location} seyahat fotoğrafı"[:180],
-        "description": (summary or f"{location} — {kw_str}")[:300],
+        "title": title[:60],
+        "caption": caption,
+        "description": description[:300],
         "keywords": kws,
         "source": "db_cache",
     }
