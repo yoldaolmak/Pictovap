@@ -10,7 +10,7 @@
     <array>
         <string>/Users/yoldaolmak/Projects/Pictova/.venv/bin/python3</string>
         <string>-m</string>
-        <string>pictova.app.cli</string>
+        <string>src.pictova.app.cli</string>
         <string>serve</string>
         <string>--host</string>
         <string>127.0.0.1</string>
@@ -19,7 +19,7 @@
     </array>
 
     <key>WorkingDirectory</key>
-    <string>/Users/yoldaolmak/Projects/Pictova/src</string>
+    <string>/Users/yoldaolmak/Projects/Pictova</string>
 
     <key>EnvironmentVariables</key>
     <dict>
