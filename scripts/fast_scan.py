@@ -146,13 +146,19 @@ def main():
     if _done > 0:
         print("\n🔄 FTS indeksi yeniden oluşturuluyor...")
         import importlib.util
-        spec = importlib.util.spec_from_file_location(
-            "rebuild_fts",
-            str(Path(__file__).parent / "rebuild_fts.py"),
-        )
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        mod.main()
+
+        def _run_script(name: str) -> None:
+            spec = importlib.util.spec_from_file_location(
+                name, str(Path(__file__).parent / f"{name}.py")
+            )
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            mod.main()
+
+        _run_script("rebuild_fts")
+
+        print("\n🗺  Destination index güncelleniyor...")
+        _run_script("build_destination_index")
 
 
 if __name__ == "__main__":
