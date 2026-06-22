@@ -185,10 +185,10 @@ Bağlam: title={article_title or "?"} | slug={article_slug or "?"} | focus={focu
 
 Kurallar:
 - Türkçe yaz. Gördüğünü yaz, uydurma. Lokasyon adını ancak kuvvetli kanıtla ekle.
-- alt: Ekran okuyucu için sade, tanımlayıcı. "Fotoğraf:" ile başlama.
-- title: SEO dostu, 60 karakter altı, lokasyon + sahne.
-- caption: Kemal Kaya üslubuyla — BBC Travel / NatGeo tonu. Kısa cümle, gözlem odaklı, "Bu fotoğrafta" gibi AI kalıpları YASAK. Sanki sahneyi hatırlıyorsun gibi yaz, duygusal ama sade.
-- description: Lokasyon bağlamı + sahne detayı, SEO uyumlu.
+- alt: Türkçe, ekran okuyucu için sade tanım, "Fotoğraf:" ile başlama, max 125 char.
+- title: Türkçe, SEO dostu, lokasyon + sahne, max 60 char.
+- caption: Türkçe, Kemal Kaya üslubu — BBC Travel tonu. Kısa cümle, gözlem odaklı, "Bu fotoğrafta" / "Görselde" gibi AI kalıpları YASAK. Sanki sahneyi hatırlıyorsun gibi yaz.
+- description: Türkçe, lokasyon bağlamı + sahne detayı, SEO uyumlu, max 300 char.
 alt≤125 | title≤60 | caption≤180 | description≤300 | keywords 3-6 | evidence 1-4 | confidence 0-1
 
 {{"alt":"...","title":"...","caption":"...","description":"...","keywords":["k1"],"evidence":["kanıt"],"location_tokens":[],"scene_tokens":["sahne"],"confidence":0.8,"warnings":[]}}"""
