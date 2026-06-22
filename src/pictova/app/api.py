@@ -10,6 +10,22 @@ from src.pictova.engine.attach import build_attach_plan, build_process_result, p
 from src.pictova.providers.wordpress import fetch_post_context
 
 
+def gallery_query(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """POST /gallery — zengin fotoğraf galerisi araması."""
+    from src.pictova.engine.gallery import gallery_search, gallery_stats
+    query = str(payload.get("query", "")).strip()
+    if not query:
+        return {"status": "success", "stats": gallery_stats(), "results": []}
+    results = gallery_search(
+        query,
+        count=int(payload.get("count", 10)),
+        only_local=bool(payload.get("only_local", True)),
+        only_scanned=bool(payload.get("only_scanned", False)),
+        city=payload.get("city"),
+    )
+    return {"status": "success", "query": query, "count": len(results), "results": results}
+
+
 def search_photos(payload: Dict[str, Any]) -> Dict[str, Any]:
     """POST /search — lokasyon bazlı fotoğraf arama."""
     from src.main import search_semantic_assets

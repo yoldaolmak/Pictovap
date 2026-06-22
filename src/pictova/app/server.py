@@ -7,7 +7,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from typing import Any, Callable, Dict, Tuple
 
-from src.pictova.app.api import attach_images, health_status, plan_attach, process_attach, review_post, search_photos
+from src.pictova.app.api import attach_images, gallery_query, health_status, plan_attach, process_attach, review_post, search_photos
 from src.pictova.app.state import job_registry
 
 
@@ -47,6 +47,7 @@ def build_handler() -> type[BaseHTTPRequestHandler]:
         ("POST", "/process"): process_attach,
         ("POST", "/review"): review_post,
         ("POST", "/search"): search_photos,
+        ("POST", "/gallery"): gallery_query,
     }
 
     class VILRequestHandler(BaseHTTPRequestHandler):
