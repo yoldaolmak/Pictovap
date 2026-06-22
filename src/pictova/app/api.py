@@ -32,10 +32,25 @@ def review_post(payload: Dict[str, Any]) -> Dict[str, Any]:
     site = payload.get("site", "yoldaolmak")
     post_id = payload.get("post_id")
     try:
+        from src.main import search_semantic_assets
+        ctx = fetch_post_context(post_id, site=site)
+        slug = str(ctx.get("slug") or "").replace("-", " ")
+        title = str(ctx.get("title") or "")
+        query = slug or title
+        candidates = []
+        if query:
+            candidates = search_semantic_assets(
+                location_query=query,
+                count=payload.get("count", 8),
+                post_context=ctx,
+            )
         return {
             "command": "review",
             "status": "success",
-            "post_context": fetch_post_context(post_id, site=site),
+            "post_context": ctx,
+            "query": query,
+            "photo_candidates": candidates,
+            "candidate_count": len(candidates),
         }
     except Exception as exc:
         return {
