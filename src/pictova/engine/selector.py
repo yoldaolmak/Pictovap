@@ -49,6 +49,15 @@ def resolve_source_images(
         if icloud_uuids:
             files = files + icloud_uuids[:need]
 
+        # 3. DepositPhotos — hâlâ eksikse
+        if len(files) < _count:
+            need = _count - len(files)
+            dep_files = _deposit_search_download(
+                query=location_query or _extract_location(post_context),
+                count=need,
+            )
+            files = files + dep_files
+
         return {"source": "auto", "query": location_query or "", "content_filter": content_filter, "files": files}
 
     if source == "semantic":
@@ -80,6 +89,11 @@ def resolve_source_images(
             "files": files,
         }
 
+    if source == "deposit":
+        loc_q = location_query or query or _extract_location(post_context)
+        files = _deposit_search_download(query=loc_q, count=_count)
+        return {"source": "deposit", "query": loc_q, "content_filter": None, "files": files}
+
     if source == "unsplash":
         return {
             "source": "unsplash",
@@ -89,6 +103,16 @@ def resolve_source_images(
         }
 
     raise ValueError(f"Unsupported source: {source}")
+
+
+def _deposit_search_download(query: str, count: int) -> list[str]:
+    """DepositPhotos'tan ara + indir. Hata olursa boş liste döner."""
+    try:
+        from src.pictova.providers.deposit import search_and_download
+        return search_and_download(query=query, count=count)
+    except Exception as e:
+        print(f"  ⚠ DepositPhotos atlandı: {e}")
+        return []
 
 
 def _extract_location(post_context: Dict[str, Any]) -> str:
