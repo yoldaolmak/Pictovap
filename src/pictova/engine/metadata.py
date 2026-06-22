@@ -39,44 +39,67 @@ def _db_cached_metadata(image_path: str) -> Optional[Dict[str, Any]]:
         return None
 
 
+def _is_turkish(text: str) -> bool:
+    """Metnin Türkçe olup olmadığını hızlıca tahmin et."""
+    tr_chars = set("çğıöşüÇĞİÖŞÜ")
+    tr_words = {"ve", "bir", "bu", "da", "de", "ile", "için", "olan", "gibi", "ise"}
+    if any(c in tr_chars for c in text):
+        return True
+    words = set(text.lower().split())
+    return len(words & tr_words) >= 2
+
+
 def _kemal_voice_caption(summary: str, scene: str, location: str, keywords: list) -> str:
     """Vision summary'sini Kemal Kaya üslubuyla caption'a dönüştür.
 
     Kural: Kısa, gözlem odaklı, BBC Travel tonu. "Bu fotoğrafta", "Görselde"
     gibi AI kalıpları yasak. Sanki sahneyi hatırlıyorsun gibi yaz.
+    Eğer summary İngilizce ise lokasyon+sahne+keyword ile Türkçe üret.
     """
+    import re
     if summary and len(summary) > 20:
-        # AI summary'sini temizle — kalıp ifadeleri kaldır
-        import re
         s = summary.strip()
-        # Yaygın AI kalıpları
+        # AI kalıplarını temizle
         for pat in (
-            r"^(Bu (fotoğrafta|görselde|resimde)|Fotoğrafta|Görselde|Resimde)\s*",
-            r"^(The (image|photo|picture) (shows|depicts|features))\s*",
+            r"^(Bu (fotoğrafta|görselde|resimde)|Fotoğrafta|Görselde|Resimde)[,\s]*",
+            r"^(The (image|photo|picture) (shows|depicts|features|captures))[,\s]*",
+            r"^(This (image|photo|picture) (shows|depicts|features|captures))[,\s]*",
         ):
             s = re.sub(pat, "", s, flags=re.IGNORECASE).strip()
         if s and s[0].islower():
             s = s[0].upper() + s[1:]
         if s and not s.endswith((".", "!", "?")):
             s += "."
-        return s[:180]
+        # Türkçe ise kullan; İngilizce ise aşağı düş
+        if _is_turkish(s):
+            return s[:180]
 
-    # Summary yoksa veya çok kısaysa keywords + scene + location'dan üret
+    # Summary yoksa veya İngilizce ise: Türkçe lokasyon tabanlı fallback
+    _skip = {"general", "other", "unknown", "various", "misc"}
+    scene_tr_map = {
+        "coast": "kıyı", "mountain": "dağ", "city": "şehir", "village": "köy",
+        "forest": "orman", "lake": "göl", "valley": "vadi", "beach": "plaj",
+        "castle": "kale", "ruins": "harabe", "market": "çarşı", "nature": "doğa",
+        "landscape": "manzara", "harbor": "liman", "port": "liman",
+    }
+    # Önemli keyword'leri Türkçeleştirmeye çalış, gerisi bırak
+    kw_clean = [k for k in keywords[:4]
+                if k.lower() not in _skip
+                and k.lower() not in (location or "").lower()
+                and k.lower() not in (scene or "").lower()]
+
     parts = []
     if location:
         parts.append(location)
-    if scene and scene.lower() not in (location or "").lower():
-        scene_tr = {
-            "coast": "kıyı", "mountain": "dağ", "city": "şehir", "village": "köy",
-            "forest": "orman", "lake": "göl", "valley": "vadi", "beach": "plaj",
-            "castle": "kale", "ruins": "harabe", "market": "çarşı",
-        }.get(scene.lower(), scene)
-        parts.append(scene_tr)
-    if keywords:
-        kw_extra = [k for k in keywords[:3] if k.lower() not in " ".join(parts).lower()]
-        if kw_extra:
-            parts.append(", ".join(kw_extra))
-    return (". ".join(parts) + ".").strip(".")[:180] or "Seyahat karesi."
+    if scene and scene.lower() not in _skip:
+        parts.append(scene_tr_map.get(scene.lower(), scene))
+    if kw_clean:
+        parts.append(", ".join(kw_clean[:2]))
+
+    caption = ", ".join(parts)
+    if caption and not caption.endswith((".", "!", "?")):
+        caption += "."
+    return caption[:180] or "Seyahat karesi."
 
 
 def _enrich_from_cache(cached: Dict, post_context: Dict) -> Dict:
@@ -91,13 +114,18 @@ def _enrich_from_cache(cached: Dict, post_context: Dict) -> Dict:
     # alt: ekran okuyucu için sade, tanımlayıcı
     alt = summary or (f"{scene} — {location}".strip(" —") if scene or location else kw_str)
 
-    # title: SEO, lokasyon + sahne
-    if scene and location:
-        title = f"{location} — {scene.title()}"
+    # title: SEO, lokasyon + sahne (generic scene kelimeleri atla)
+    _skip_scenes = {"general", "other", "unknown", "various", "misc"}
+    meaningful_scene = scene if scene and scene.lower() not in _skip_scenes else ""
+    if meaningful_scene and location:
+        title = f"{location} — {meaningful_scene.title()}"
     elif location:
         title = location
+    elif meaningful_scene:
+        title = meaningful_scene.title()
     else:
-        title = scene.title() or kw_str
+        # İlk keyword'den üret
+        title = kws[0].title() if kws else kw_str
 
     caption = _kemal_voice_caption(summary, scene, location, kws)
 

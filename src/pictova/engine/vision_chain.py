@@ -74,13 +74,14 @@ def _vision_prompt(image_path: str, location_hint: str, post_context: Dict) -> s
         f"Bağlam: title={title or '?'} | slug={slug or '?'} | hint={location_hint or '?'}\n\n"
         f"Kurallar:\n"
         f"- Gördüğünü yaz, uydurma\n"
-        f"- alt: İngilizce, SEO uyumlu, Türkçe harf YASAK, numara YASAK, max 125 char\n"
-        f"- title: İngilizce, SEO uyumlu, Türkçe harf YASAK, numara YASAK, max 60 char\n"
-        f"- caption: Türkçe olabilir, max 180 char\n"
-        f"- description: Türkçe olabilir, max 300 char\n"
+        f"- alt: İngilizce, SEO uyumlu, Türkçe özel harf YASAK, numara YASAK, max 125 char\n"
+        f"- title: İngilizce, SEO uyumlu, Türkçe özel harf YASAK, numara YASAK, max 60 char\n"
+        f"- caption: ZORUNLU Türkçe, Kemal Kaya üslubu (BBC Travel tonu, kısa cümle, gözlem odaklı), max 180 char\n"
+        f"- description: ZORUNLU Türkçe, SEO uyumlu lokasyon + sahne bağlamı, max 300 char\n"
+        f"- summary: ZORUNLU Türkçe, tek cümle sahne özeti, max 150 char\n"
         f"- keywords: 3-6 İngilizce kelime, array\n\n"
         f"{{\"alt\":\"...\",\"title\":\"...\",\"caption\":\"...\","
-        f"\"description\":\"...\",\"keywords\":[\"k1\",\"k2\"]}}"
+        f"\"description\":\"...\",\"summary\":\"...\",\"keywords\":[\"k1\",\"k2\"]}}"
     )
 
 

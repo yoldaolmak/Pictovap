@@ -205,10 +205,27 @@ def validate_attach_request(
             constraints=constraints,
             warning="query is required when source=unsplash",
         )
-    if not post_id:
+    # post_id plan aşamasında opsiyonel — execute_native_attach'ta zorunlu
+    return None
+
+
+def _validate_execute_request(
+    *,
+    site: str,
+    request: Dict[str, Any],
+    post_context: Dict[str, Any],
+    constraints: Dict[str, Any],
+) -> Dict[str, Any] | None:
+    """execute_native_attach için ek validasyon — post_id zorunlu."""
+    failure = validate_attach_request(
+        site=site, request=request, post_context=post_context, constraints=constraints
+    )
+    if failure:
+        return failure
+    if not request.get("post_id"):
         return build_failed_attach_result(
             site=site,
-            post_id=post_id,
+            post_id=None,
             request=request,
             post_context=post_context,
             constraints=constraints,
@@ -373,7 +390,7 @@ def execute_native_attach(
     post_context: Dict[str, Any],
     constraints: Dict[str, Any],
 ) -> Dict[str, Any]:
-    failure = validate_attach_request(
+    failure = _validate_execute_request(
         site=site,
         request=request,
         post_context=post_context,
