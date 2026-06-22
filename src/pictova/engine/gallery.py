@@ -66,7 +66,14 @@ def gallery_search(
     if len(rows) < count:
         like_val = f"%{query.lower()}%"
         seen_ids = {r["source_id"] for r in rows}
-        like_cond = " AND ".join(conditions + [
+        # LIKE fallback: conditions'daki "a." prefix'leri kaldır
+        like_conditions = [c.replace("a.is_personal", "is_personal")
+                            .replace("a.source_path", "source_path")
+                            .replace("a.vision_scan_status", "vision_scan_status")
+                            .replace("a.city", "city")
+                            .replace("a.state_province", "state_province")
+                           for c in conditions]
+        like_cond = " AND ".join(like_conditions + [
             "(LOWER(COALESCE(city,'')) LIKE ? OR LOWER(COALESCE(state_province,'')) LIKE ? "
             "OR LOWER(COALESCE(summary,'')) LIKE ?)"
         ])
