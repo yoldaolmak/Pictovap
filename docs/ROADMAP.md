@@ -1,35 +1,39 @@
-# 🗺 Pictova Roadmap
+# 🗺 Pictova Development Roadmap
 
-Pictova, içerik odaklı görsel otomasyonunda endüstri standardı olmayı hedefler. Geliştirme yol haritamız, uygulamayı **Premium bir SaaS** ve güçlü bir CLI/API ekosistemine dönüştürmek üzerine kuruludur.
-
----
-
-## 🎯 Phase 1: Core Intelligence & Native Engine (Q3)
-**Hedef:** Temel görsel arama, işleme ve AI-Destekli Metadata motorunun kusursuzlaştırılması.
-
-- [x] **Native Engine Geçişi:** Legacy kodların bırakılıp, modüler (`attach`, `process`, `plan`) mimariye geçilmesi.
-- [x] **Heading-Aware Selection:** Yazı içi H2/H3 başlıklarına duyarlı görsel atama ve SEO (slug/title) isimlendirme mekanizması.
-- [x] **Vision Chain:** Gemini / Claude / Codex fallback yapısıyla resim piksellerinden kusursuz, anadilinde (TR) alt metin/başlık üretimi.
-- [ ] **Multi-Source Fallback:** Semantic Selector başarısız olduğunda otomatik olarak Unsplash API'sine düşme (fallback).
+Pictova aims to become the industry standard for content-driven visual automation. Our development roadmap is structured to evolve the project from a local CLI tool into a robust, enterprise-grade Python SDK and eventually a premium SaaS engine.
 
 ---
 
-## 🚀 Phase 2: Premium Features & Stock Integrations (Q4)
-**Hedef:** Ticari (lisanslı) stok sitelerinin entegrasyonu ve kalite standartlarının artırılması.
+## 🎯 Phase 1: Core Intelligence & Native Engine (Current)
+**Goal:** Perfect the core visual search, image processing pipeline, and the AI-powered Metadata Vision Chain.
 
-- [ ] **Pictova Depot (DepositPhotos API):** Semantic search veya Unsplash yetersiz kaldığında lisanslı stok kütüphanelerinden otomatik satın alım ve indirme.
-- [ ] **Advanced Quality Gate:** İndirilen resimlerde bulanıklık (blur), çözünürlük veya içerik kalitesi tespiti yaparak düşük kaliteli resimleri eleme sistemi.
-- [ ] **WebP Optimization V2:** %100 kayıpsız (lossless) sıkıştırma algoritmalarının entegrasyonu ve EXIF verilerinin tam kontrolü.
-
----
-
-## 🌐 Phase 3: Platform & UI/UX (Next Year)
-**Hedef:** Geliştirici odaklı (CLI) araçtan, son kullanıcıya hitap eden yönetilebilir bir servise dönüşüm.
-
-- [ ] **Meridyen UI Entegrasyonu:** YOOS-APP (İçerik üretim platformu) ile doğrudan görsel iletişim sağlayan web arayüzü.
-- [ ] **Job Queue & Persisted Store:** Uzun süren attach görevlerini asenkron yönetmek için Redis / SQLite tabanlı görev kuyruğu (Task Queue).
-- [ ] **Custom Prompts:** Kullanıcıların Vision Chain için kendi `system_prompt` yapılarını tanımlayabilmesi (Örn: Sadece teknik terimlerle açıklama yap).
+- [x] **Native Engine Transition:** Deprecate legacy procedural code in favor of a clean, modular class-based pipeline (`selector`, `processor`, `metadata`, `publisher`).
+- [x] **Heading-Aware Selection:** Implement semantic matching of images based on `H2/H3` post structure, and apply SEO-optimized titles and slugs.
+- [x] **Vision Chain:** Establish a highly resilient local LLM -> Gemini -> Claude API fallback chain for WCAG-compliant image tagging.
+- [ ] **Multi-Source Fallback:** Implement automated fallback to the Unsplash API if local Visual Memory index queries do not yield enough diverse candidates.
 
 ---
 
-> *"The road to seamless visual content is automated, intelligent, and context-aware."*
+## 🚀 Phase 2: Premium Features & Stock Integrations (Next Up)
+**Goal:** Integrate commercial stock libraries, advanced asset quality scoring, and programmatic image optimization.
+
+- [ ] **Pictova Depot (DepositPhotos API):** Add support for DepositPhotos integration to automatically search, purchase, and download licensed stock photos when local or free options are insufficient.
+- [ ] **Advanced Quality Gate:** Implement ML-based quality controls to filter out blurry, low-resolution, or low-aesthetic-score images.
+- [ ] **WebP Optimization V2:** Support lossy vs. lossless WebP configuration, strip/preserve specific EXIF metadata profiles, and add custom image watermark overlays.
+
+---
+
+## 📦 Phase 3: SDK & Multi-Platform Support (Developer Focus)
+**Goal:** Expand Pictova's footprint beyond WordPress and simplify developer integration.
+
+- [ ] **PyPI Release:** Package and publish `pictova` to PyPI (`pip install pictova`).
+- [ ] **Ghost CMS & Strapi Publishers:** Implement publisher adapters for Headless CMS architectures (Ghost, Strapi, Contentful).
+- [ ] **Custom Vision Templates:** Allow developers to define custom metadata prompt templates (e.g. strict technical analysis vs. poetic captions).
+
+---
+
+## 🌐 Phase 4: Platform & UI Dashboard (Long Term)
+**Goal:** Turn Pictova into an easily manageable web service with a clean interface.
+
+- [ ] **Web Administration Dashboard:** A Next.js/Vite frontend for monitoring visual memory health, previewing candidate selections, and manually correcting AI captions.
+- [ ] **Asynchronous Task Queue:** SQLite/Redis-backed background worker queue to handle heavy Vision Chain processing asynchronously.
