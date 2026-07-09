@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import ssl
 import tempfile
 import urllib.parse
 import urllib.request
@@ -30,13 +29,6 @@ _MIN_DOWNLOADS = 2     # neredeyse hiç indirilmemiş = düşük kalite sinyali
 _MIN_SCORE = 2         # toplam puan eşiği
 
 
-def _ssl_ctx() -> ssl.SSLContext:
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-    return ctx
-
-
 def _post(payload: Dict) -> Dict:
     req = urllib.request.Request(
         _API_URL,
@@ -44,7 +36,10 @@ def _post(payload: Dict) -> Dict:
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=30, context=_ssl_ctx()) as r:
+    # Uses the default SSL context (full certificate + hostname verification).
+    # This endpoint carries the account login/API key, so it must never be
+    # sent over an unverified connection.
+    with urllib.request.urlopen(req, timeout=30) as r:
         return json.loads(r.read())
 
 
@@ -189,7 +184,7 @@ def download(asset_id: str, session_id: str, dest_dir: Optional[str] = None) -> 
     dest = out_dir / f"deposit_{asset_id}.jpg"
 
     req = urllib.request.Request(dl_url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=60, context=_ssl_ctx()) as resp:
+    with urllib.request.urlopen(req, timeout=60) as resp:
         dest.write_bytes(resp.read())
 
     return str(dest)

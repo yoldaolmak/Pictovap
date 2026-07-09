@@ -178,6 +178,35 @@ class TestNoLeakedCredentials:
 # 4. yoldaolmak references only in allowed locations
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# 5. No disabled TLS/SSL certificate verification anywhere in src/
+# ---------------------------------------------------------------------------
+
+def test_no_disabled_ssl_verification():
+    """
+    No source file may disable TLS certificate verification
+    (ssl.CERT_NONE, check_hostname = False, requests verify=False). Any of
+    these exposes API credentials in transit to man-in-the-middle attacks.
+    """
+    forbidden = [
+        r"CERT_NONE",
+        r"check_hostname\s*=\s*False",
+        r"verify\s*=\s*False",
+    ]
+    violations = []
+    src_dir = REPO_ROOT / "src"
+    for fpath in src_dir.rglob("*.py"):
+        content = fpath.read_text(encoding="utf-8")
+        for pattern in forbidden:
+            if re.search(pattern, content):
+                rel = fpath.relative_to(REPO_ROOT)
+                violations.append(f"  {rel}: matches {pattern!r}")
+
+    assert not violations, (
+        "Disabled TLS/SSL verification found:\n" + "\n".join(violations)
+    )
+
+
 def test_yoldaolmak_references_only_in_allowed_locations():
     """
     yoldaolmak may appear in pyproject.toml (author email),
