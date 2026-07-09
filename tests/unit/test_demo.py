@@ -191,7 +191,7 @@ def test_docs_readme_links_resolve():
 
         resolved = (docs_dir / path_part).resolve()
         if not resolved.exists():
-            broken.append(f"  [{link_text}]({link_target}) → {resolved}")
+            broken.append(f"  [{link_text}]({link_target}) -> {resolved}")
 
     assert not broken, (
         f"docs/README.md contains {len(broken)} broken link(s):\n" +

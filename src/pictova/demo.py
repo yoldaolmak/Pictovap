@@ -211,7 +211,7 @@ def run_demo():
         print(f"    - {slot['slot_id']}: {slot['purpose']} ({slot['preferred_type']})")
 
     # 3. Score all candidates for each slot
-    print(f"\n[2/4] Fit Scores ({len(MOCK_CANDIDATES)} candidates × {len(brief.image_slots)} slots)")
+    print(f"\n[2/4] Fit Scores ({len(MOCK_CANDIDATES)} candidates x {len(brief.image_slots)} slots)")
     all_scores = []
     for slot in brief.image_slots:
         slot_scores = []
@@ -224,8 +224,8 @@ def run_demo():
         best = slot_scores[0]
         print(f"  Slot '{slot['slot_id']}':")
         for s in slot_scores:
-            icon = "✓" if s.decision == "selected" else ("✗" if s.decision == "rejected" else "?")
-            print(f"    {icon} {s.candidate_id}: {s.final_score:.1f} ({s.decision}) — {s.human_reason}")
+            icon = "v" if s.decision == "selected" else ("x" if s.decision == "rejected" else "?")
+            print(f"    {icon} {s.candidate_id}: {s.final_score:.1f} ({s.decision}) -- {s.human_reason}")
 
     # 4. Select best candidate per slot & build Provenance Packs
     print(f"\n[3/4] Provenance Packs")
@@ -263,7 +263,7 @@ def run_demo():
                     processing_actions=["resize_1200", "webp_convert", "exif_strip"],
                 )
                 packs.append(pack)
-                print(f"  {pack.slot_id}: {pack.original_filename} → {pack.generated_filename}")
+                print(f"  {pack.slot_id}: {pack.original_filename} -> {pack.generated_filename}")
                 print(f"    Provider: {pack.provider}, License: {pack.license_status}, Hash: {pack.content_hash}")
                 break
 
@@ -282,7 +282,7 @@ def run_demo():
             caption=pack.generated_caption,
         )
         instructions.append(instr)
-        print(f"  [{instr.image_role}] {instr.output_path} → {instr.placement_strategy}:{instr.target_section or 'top'}")
+        print(f"  [{instr.image_role}] {instr.output_path} -> {instr.placement_strategy}:{instr.target_section or 'top'}")
 
     placement = CMSPlacement(
         article_id=brief.article_id,
