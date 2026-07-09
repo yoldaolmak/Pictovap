@@ -15,7 +15,10 @@ def test_public_files_are_not_collapsed():
         "docs/README.md": 20,
         "docs/ARCHITECTURE.md": 40,
         "examples/profiles/sample-publisher.yaml": 25,
+        "src/pictova/demo.py": 100,
         "tests/unit/test_demo.py": 80,
+        "tests/unit/test_file_formatting.py": 20,
+        "pyproject.toml": 20,
     }
     repo_root = Path(__file__).parent.parent.parent
     for rel_path, minimum in minimum_lines.items():
