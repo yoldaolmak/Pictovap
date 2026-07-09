@@ -13,6 +13,7 @@ Usage:
 import json
 import hashlib
 import sys
+import argparse
 from pathlib import Path
 
 # Add src to path when run directly from repo root
@@ -181,7 +182,7 @@ def score_candidate(candidate: dict, slot: dict, brief: VisualBrief) -> FitScore
 # ---------------------------------------------------------------------------
 # Demo runner
 # ---------------------------------------------------------------------------
-def run_demo():
+def run_demo(article_path_str: str = None, profile_path_str: str = None, output_path_str: str = None):
     """Run the full Pictovap demo pipeline."""
     print("=" * 60)
     print("  Pictovap Local Demo")
@@ -189,13 +190,30 @@ def run_demo():
     print("=" * 60)
 
     # 1. Load publisher profile
-    profile = PublisherProfile.get_default_profile()
+    if profile_path_str:
+        profile_path = Path(profile_path_str)
+        if not profile_path.exists():
+            print(f"Error: Profile not found at {profile_path_str}")
+            sys.exit(1)
+        profile = PublisherProfile.from_yaml(str(profile_path))
+    else:
+        profile = PublisherProfile.get_default_profile()
+    
     print(f"\n[Profile] Loaded: {profile.brand_name} ({profile.profile_id})")
 
     # 2. Parse article into Visual Brief
-    article_path = Path(__file__).parent / "sample-article.md"
-    if not article_path.exists():
-        article_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-article.md"
+    if article_path_str:
+        article_path = Path(article_path_str)
+        if not article_path.exists():
+            print(f"Error: Article not found at {article_path_str}")
+            sys.exit(1)
+    else:
+        article_path = Path(__file__).parent / "sample-article.md"
+        if not article_path.exists():
+            article_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-article.md"
+            if not article_path.exists():
+                 print(f"Error: Default sample article not found.")
+                 sys.exit(1)
 
     brief = VisualBrief.from_markdown(str(article_path))
     brief.topic = "minimalist travel"
@@ -310,9 +328,14 @@ def run_demo():
     }
 
     # 7. Write output file
-    out_path = Path(__file__).parent / "sample-output.json"
-    if not out_path.parent.exists() or out_path.parent.name == "pictova":
-        out_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-output.json"
+    if output_path_str:
+        out_path = Path(output_path_str)
+    else:
+        out_path = Path(__file__).parent / "sample-output.json"
+        if not out_path.parent.exists() or out_path.parent.name == "pictova":
+            out_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-output.json"
+    
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"\n{'=' * 60}")
@@ -328,4 +351,14 @@ def run_demo():
 
 
 if __name__ == "__main__":
-    run_demo()
+    parser = argparse.ArgumentParser(description="Pictovap Local Demo")
+    parser.add_argument("--article", help="Path to a custom Markdown article", default=None)
+    parser.add_argument("--profile", help="Path to a custom Publisher Profile YAML", default=None)
+    parser.add_argument("--output", help="Path to write the JSON output", default=None)
+    args = parser.parse_args()
+
+    run_demo(
+        article_path_str=args.article,
+        profile_path_str=args.profile,
+        output_path_str=args.output
+    )

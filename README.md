@@ -16,7 +16,7 @@ Independent publishers spend significant time on visual operations per article: 
 
 ## Quickstart
 
-Get Pictovap running locally in under five minutes.
+Get Pictovap running locally using the credential-free demo mode.
 
 ```bash
 git clone https://github.com/yoldaolmak/Pictovap.git
@@ -27,15 +27,20 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-Run the local credential-free demo:
+Run the local credential-free demo to see the deterministic scoring in action:
 
 ```bash
 make demo
 ```
 
+You can also test the demo against your own article:
+```bash
+python -m pictova.demo --article path/to/your/article.md --output my-plan.json
+```
+
 ## Demo Output
 
-The demo runs the entire pipeline locally and outputs a summary of what it did:
+The demo runs the core pipeline locally and outputs a summary of what it did. It uses deterministic scoring rather than live API calls:
 
 ```text
   Brief:      4 slots from 3 sections
@@ -45,27 +50,31 @@ The demo runs the entire pipeline locally and outputs a summary of what it did:
   Placements: 3 instructions
 ```
 
-## Four Primitives
+## Core Primitives
 
 Pictovap operates on four core architectural primitives:
 
 1. **Visual Brief:** Analyzes the article to determine exactly what imagery is needed.
 2. **Fit Score:** Evaluates candidates deterministically against contextual, technical, and licensing criteria.
-3. **Provenance Pack:** Maintains an audit trail tracking image origin, license, and processing actions.
-4. **CMS Placement:** Produces a CMS-agnostic plan for where images should be injected.
+3. **Provenance Pack:** Maintains a provenance audit trail tracking image origin, license, and processing actions.
+4. **CMS Placement:** Produces a CMS-agnostic placement model for where images should be injected.
 
 ## Adapter Model
 
 Pictovap uses an adapter-based architecture:
 
 - **Image Sources:** Local folder, Unsplash, DepositPhotos, Visual Memory DB.
-- **CMS Placement:** WordPress (working), Ghost (stub), Strapi (stub).
+- **CMS Placement:** WordPress adapter exists; other adapters are reference/stub work.
 
 ## Current Limitations
 
 - Core logic was recently extracted from production; some internal dict passing is still being migrated to strict primitives.
 - The local demo uses mock assets rather than live API calls.
 - Only the WordPress CMS adapter is production-hardened; others are reference implementations.
+
+## Project Status
+
+Pictovap is an early OSS infrastructure project. While it has been dogfooded in production for a single travel publisher, external adoption evidence is still needed. We do not claim guaranteed acceptance into ecosystems or widespread usage at this stage.
 
 ## Contributing
 

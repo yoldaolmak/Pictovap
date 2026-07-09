@@ -53,20 +53,29 @@ Independent publishers spend significant time on visual operations per article. 
 ## Current Evidence
 
 - Public MIT-licensed repository on GitHub
-- Working local demo with no credential requirements
-- Documented primitives with unit tests
-- Real-world dogfooding on yoldaolmak.com
+- Working local credential-free demo
+- Four documented primitives with unit tests
+- CI smoke test (GitHub Actions)
 - Adapter architecture with documented extension points
-- Issue templates and contribution guide
-- Honest roadmap without SaaS promises
+- Real-world dogfooding on yoldaolmak.com
 
-## Evidence Still Needed
+## Evidence Still Missing
 
-- External contributors beyond the original author
-- Usage by at least one non-yoldaolmak publisher
-- Published package on PyPI with download metrics
+- External contributors
+- External publisher case studies
+- Package downloads on PyPI
 - Dependent projects or integrations
-- Tagged releases with semantic versioning
+- Tagged releases
 - OpenSSF Scorecard improvements
-- Community engagement from external users
-- Case studies from non-travel publishers
+- External issues/PRs
+- Third-party validation
+
+## Application Timing
+
+Recommended application timing:
+
+* After first tagged release
+* After at least one external user has run the demo or opened an issue
+* After CI badge is green
+* After OpenSSF/security hygiene check
+* After a clear roadmap issue set is created

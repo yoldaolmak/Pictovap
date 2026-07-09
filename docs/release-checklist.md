@@ -1,33 +1,26 @@
 # Release Checklist
 
-Follow this checklist before publishing a new Pictovap release.
+Follow these steps before publishing a new release:
 
-## Pre-Release
+- [ ] clean git status
+- [ ] version selected
+- [ ] changelog updated
+- [ ] README checked
+- [ ] docs links checked
+- [ ] tests pass
+- [ ] demo runs
+- [ ] CI green
+- [ ] package build succeeds
+- [ ] no secrets
+- [ ] no fake adoption claims
+- [ ] GitHub release notes drafted
+- [ ] tag created only with explicit approval
 
-- [ ] All tests pass: `source .venv/bin/activate && pytest`
-- [ ] Local demo runs successfully: `make demo`
-- [ ] Demo output is valid and complete
-- [ ] No credential requirements for demo path
-- [ ] Version bumped in `pyproject.toml`
-- [ ] Version bumped in `src/pictova/__init__.py`
-- [ ] `CHANGELOG.md` updated with release notes
-- [ ] All documentation links are valid
-- [ ] README accurately describes current functionality
+## Package Build Verification
 
-## Build
+Verify that the wheel and source distribution build correctly without uploading them:
 
-- [ ] Package builds cleanly: `python -m build`
-- [ ] Package installs in a fresh venv
-- [ ] CLI entry point works after install: `pictova --help`
-
-## Release
-
-- [ ] Create a git tag: `git tag vX.Y.Z`
-- [ ] Push tag: `git push origin vX.Y.Z`
-- [ ] Create GitHub release with changelog excerpt
-- [ ] Publish to PyPI (when authorized): `twine upload dist/*`
-
-## Post-Release
-
-- [ ] Verify PyPI page shows correct metadata
-- [ ] Test install from PyPI in a clean environment
+```bash
+python -m pip install --upgrade build
+python -m build
+```

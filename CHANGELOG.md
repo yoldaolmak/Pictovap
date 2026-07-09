@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-07-09
+
+### Added
+- First public Open Source release.
+- Local credential-free demo (`make demo`) demonstrating the core primitives.
+- Extensive OSS documentation in `docs/` covering architecture, concepts, and adapter model.
+- Standardized primitives: `VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`.
+- Sample publisher profiles and articles.
+- OSS hygiene files (SECURITY.md, CODE_OF_CONDUCT.md, CONTRIBUTING.md).
+
 ### Changed
 - Renamed package from `vil` → `pictova` across all modules, CLI, and pyproject.toml
 - Removed AI agent coordination files (`AI_COORDINATION.md`, `QWEN_STATUS.md`)

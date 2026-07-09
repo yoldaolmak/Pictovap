@@ -1,22 +1,26 @@
 {
   "pipeline": "Pictovap Visual Finishing Demo",
   "visual_brief": {
-    "article_title": "The Future of Minimalist Travel",
+    "article_title": "The Ultimate 3-Day Tokyo Itinerary",
     "article_id": "demo-article-001",
     "article_language": "en",
     "topic": "minimalist travel",
     "detected_location": null,
     "sections": [
       {
-        "heading": "Packing Smart",
+        "heading": "Day 1: Exploring Shinjuku and Shibuya",
         "level": "h2"
       },
       {
-        "heading": "Finding Serenity in Nature",
+        "heading": "Where to Eat",
+        "level": "h3"
+      },
+      {
+        "heading": "Day 2: Culture in Asakusa and Ueno",
         "level": "h2"
       },
       {
-        "heading": "Conclusion",
+        "heading": "Day 3: Modern Marvels in Odaiba",
         "level": "h2"
       }
     ],
@@ -28,43 +32,43 @@
       },
       {
         "slot_id": "section_0",
-        "purpose": "inline_after_packing_smart",
+        "purpose": "inline_after_day_1:_exploring_shinjuku_and_shibuya",
         "preferred_type": "any",
-        "target_heading": "Packing Smart"
+        "target_heading": "Day 1: Exploring Shinjuku and Shibuya"
       },
       {
         "slot_id": "section_1",
-        "purpose": "inline_after_finding_serenity_in_nature",
+        "purpose": "inline_after_day_2:_culture_in_asakusa_and_ueno",
         "preferred_type": "any",
-        "target_heading": "Finding Serenity in Nature"
+        "target_heading": "Day 2: Culture in Asakusa and Ueno"
       },
       {
         "slot_id": "section_2",
-        "purpose": "inline_after_conclusion",
+        "purpose": "inline_after_day_3:_modern_marvels_in_odaiba",
         "preferred_type": "any",
-        "target_heading": "Conclusion"
+        "target_heading": "Day 3: Modern Marvels in Odaiba"
       }
     ],
     "avoid_list": [],
     "editorial_notes": "",
     "confidence": 0.8,
-    "source_path": "/Users/yoldaolmak/Projects/Pictovap/examples/sample-article.md"
+    "source_path": "examples/articles/travel-guide.md"
   },
   "fit_scores": {
     "featured": [
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "featured",
-        "contextual_relevance": 2.0,
+        "contextual_relevance": 1.43,
         "section_relevance": 1.5,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 12.5,
+        "final_score": 11.93,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.4, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -83,28 +87,28 @@
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "featured",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.71,
         "section_relevance": 1.5,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 2.0,
-        "final_score": 10.5,
+        "final_score": 10.21,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.7, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "featured",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.71,
         "section_relevance": 1.5,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 9.0,
+        "final_score": 8.71,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -127,16 +131,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_0",
-        "contextual_relevance": 2.0,
-        "section_relevance": 1.5,
+        "contextual_relevance": 1.43,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 12.0,
+        "final_score": 9.93,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.4, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -155,28 +159,28 @@
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_0",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.71,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.5,
+        "final_score": 8.21,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.7, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_0",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.71,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 7.0,
+        "final_score": 6.71,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -199,56 +203,56 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_1",
-        "contextual_relevance": 2.0,
+        "contextual_relevance": 1.43,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.5,
+        "final_score": 9.93,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.4, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
         "slot_id": "section_1",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.0,
+        "final_score": 8.5,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_1",
-        "contextual_relevance": 1.0,
-        "section_relevance": 0.75,
+        "contextual_relevance": 0.71,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 9.25,
+        "final_score": 8.21,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.7, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_1",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.71,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 7.0,
+        "final_score": 6.71,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -271,16 +275,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_2",
-        "contextual_relevance": 2.0,
+        "contextual_relevance": 1.43,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.5,
+        "final_score": 9.93,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.4, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -299,28 +303,28 @@
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_2",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.71,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.5,
+        "final_score": 8.21,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.7, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_2",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.71,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 7.0,
+        "final_score": 6.71,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -356,8 +360,8 @@
       "slot_id": "featured",
       "placement_target": "featured_image",
       "generated_alt_text": "A backpack, travel, minimalist scene",
-      "generated_caption": "Visual for: The Future of Minimalist Travel",
-      "timestamp": "2026-07-09T12:28:56.673988",
+      "generated_caption": "Visual for: The Ultimate 3-Day Tokyo Itinerary",
+      "timestamp": "2026-07-09T12:27:36.657892",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -377,10 +381,10 @@
       "content_hash": "0c8d86d771e6d03f",
       "article_id": "demo-article-001",
       "slot_id": "section_0",
-      "placement_target": "inline_after_packing_smart",
+      "placement_target": "inline_after_day_1:_exploring_shinjuku_and_shibuya",
       "generated_alt_text": "A forest, nature, path scene",
-      "generated_caption": "Visual for: Packing Smart",
-      "timestamp": "2026-07-09T12:28:56.674013",
+      "generated_caption": "Visual for: Day 1: Exploring Shinjuku and Shibuya",
+      "timestamp": "2026-07-09T12:27:36.658148",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -400,10 +404,10 @@
       "content_hash": "546a0986053c06d2",
       "article_id": "demo-article-001",
       "slot_id": "section_1",
-      "placement_target": "inline_after_finding_serenity_in_nature",
+      "placement_target": "inline_after_day_2:_culture_in_asakusa_and_ueno",
       "generated_alt_text": "A sunset, mountains, nature scene",
-      "generated_caption": "Visual for: Finding Serenity in Nature",
-      "timestamp": "2026-07-09T12:28:56.674032",
+      "generated_caption": "Visual for: Day 2: Culture in Asakusa and Ueno",
+      "timestamp": "2026-07-09T12:27:36.658160",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -423,25 +427,25 @@
         "placement_strategy": "featured",
         "image_role": "featured",
         "alt_text": "A backpack, travel, minimalist scene",
-        "caption": "Visual for: The Future of Minimalist Travel"
+        "caption": "Visual for: The Ultimate 3-Day Tokyo Itinerary"
       },
       {
         "slot_id": "section_0",
         "output_path": "pictovap_forest-path.webp",
-        "target_section": "Packing Smart",
+        "target_section": "Day 1: Exploring Shinjuku and Shibuya",
         "placement_strategy": "after_heading",
         "image_role": "content",
         "alt_text": "A forest, nature, path scene",
-        "caption": "Visual for: Packing Smart"
+        "caption": "Visual for: Day 1: Exploring Shinjuku and Shibuya"
       },
       {
         "slot_id": "section_1",
         "output_path": "pictovap_sunset-mountains.webp",
-        "target_section": "Finding Serenity in Nature",
+        "target_section": "Day 2: Culture in Asakusa and Ueno",
         "placement_strategy": "after_heading",
         "image_role": "content",
         "alt_text": "A sunset, mountains, nature scene",
-        "caption": "Visual for: Finding Serenity in Nature"
+        "caption": "Visual for: Day 2: Culture in Asakusa and Ueno"
       }
     ]
   },

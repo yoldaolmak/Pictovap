@@ -22,6 +22,9 @@ install:
 test:
 	pytest tests/unit -v
 
+check-docs:
+	pytest tests/unit/test_docs.py -v
+
 lint:
 	flake8 src/ --max-line-length=120
 

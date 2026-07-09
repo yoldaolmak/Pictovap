@@ -1,22 +1,22 @@
 {
   "pipeline": "Pictovap Visual Finishing Demo",
   "visual_brief": {
-    "article_title": "The Future of Minimalist Travel",
+    "article_title": "Authentic Italian Carbonara",
     "article_id": "demo-article-001",
     "article_language": "en",
     "topic": "minimalist travel",
     "detected_location": null,
     "sections": [
       {
-        "heading": "Packing Smart",
+        "heading": "Ingredients",
         "level": "h2"
       },
       {
-        "heading": "Finding Serenity in Nature",
+        "heading": "Instructions",
         "level": "h2"
       },
       {
-        "heading": "Conclusion",
+        "heading": "Pro Tips",
         "level": "h2"
       }
     ],
@@ -28,27 +28,27 @@
       },
       {
         "slot_id": "section_0",
-        "purpose": "inline_after_packing_smart",
+        "purpose": "inline_after_ingredients",
         "preferred_type": "any",
-        "target_heading": "Packing Smart"
+        "target_heading": "Ingredients"
       },
       {
         "slot_id": "section_1",
-        "purpose": "inline_after_finding_serenity_in_nature",
+        "purpose": "inline_after_instructions",
         "preferred_type": "any",
-        "target_heading": "Finding Serenity in Nature"
+        "target_heading": "Instructions"
       },
       {
         "slot_id": "section_2",
-        "purpose": "inline_after_conclusion",
+        "purpose": "inline_after_pro_tips",
         "preferred_type": "any",
-        "target_heading": "Conclusion"
+        "target_heading": "Pro Tips"
       }
     ],
     "avoid_list": [],
     "editorial_notes": "",
     "confidence": 0.8,
-    "source_path": "/Users/yoldaolmak/Projects/Pictovap/examples/sample-article.md"
+    "source_path": "examples/articles/recipe-post.md"
   },
   "fit_scores": {
     "featured": [
@@ -128,13 +128,13 @@
         "candidate_id": "img-backpack-01",
         "slot_id": "section_0",
         "contextual_relevance": 2.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 12.0,
+        "final_score": 10.5,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
       },
@@ -214,13 +214,13 @@
         "candidate_id": "img-forest-02",
         "slot_id": "section_1",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.0,
+        "final_score": 8.5,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
@@ -228,13 +228,13 @@
         "candidate_id": "img-sunset-05",
         "slot_id": "section_1",
         "contextual_relevance": 1.0,
-        "section_relevance": 0.75,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 9.25,
+        "final_score": 8.5,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
       },
@@ -356,8 +356,8 @@
       "slot_id": "featured",
       "placement_target": "featured_image",
       "generated_alt_text": "A backpack, travel, minimalist scene",
-      "generated_caption": "Visual for: The Future of Minimalist Travel",
-      "timestamp": "2026-07-09T12:28:56.673988",
+      "generated_caption": "Visual for: Authentic Italian Carbonara",
+      "timestamp": "2026-07-09T12:27:37.571678",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -377,10 +377,10 @@
       "content_hash": "0c8d86d771e6d03f",
       "article_id": "demo-article-001",
       "slot_id": "section_0",
-      "placement_target": "inline_after_packing_smart",
+      "placement_target": "inline_after_ingredients",
       "generated_alt_text": "A forest, nature, path scene",
-      "generated_caption": "Visual for: Packing Smart",
-      "timestamp": "2026-07-09T12:28:56.674013",
+      "generated_caption": "Visual for: Ingredients",
+      "timestamp": "2026-07-09T12:27:37.571896",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -400,10 +400,10 @@
       "content_hash": "546a0986053c06d2",
       "article_id": "demo-article-001",
       "slot_id": "section_1",
-      "placement_target": "inline_after_finding_serenity_in_nature",
+      "placement_target": "inline_after_instructions",
       "generated_alt_text": "A sunset, mountains, nature scene",
-      "generated_caption": "Visual for: Finding Serenity in Nature",
-      "timestamp": "2026-07-09T12:28:56.674032",
+      "generated_caption": "Visual for: Instructions",
+      "timestamp": "2026-07-09T12:27:37.571906",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -423,25 +423,25 @@
         "placement_strategy": "featured",
         "image_role": "featured",
         "alt_text": "A backpack, travel, minimalist scene",
-        "caption": "Visual for: The Future of Minimalist Travel"
+        "caption": "Visual for: Authentic Italian Carbonara"
       },
       {
         "slot_id": "section_0",
         "output_path": "pictovap_forest-path.webp",
-        "target_section": "Packing Smart",
+        "target_section": "Ingredients",
         "placement_strategy": "after_heading",
         "image_role": "content",
         "alt_text": "A forest, nature, path scene",
-        "caption": "Visual for: Packing Smart"
+        "caption": "Visual for: Ingredients"
       },
       {
         "slot_id": "section_1",
         "output_path": "pictovap_sunset-mountains.webp",
-        "target_section": "Finding Serenity in Nature",
+        "target_section": "Instructions",
         "placement_strategy": "after_heading",
         "image_role": "content",
         "alt_text": "A sunset, mountains, nature scene",
-        "caption": "Visual for: Finding Serenity in Nature"
+        "caption": "Visual for: Instructions"
       }
     ]
   },

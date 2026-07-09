@@ -197,3 +197,38 @@ def test_docs_readme_links_resolve():
         f"docs/README.md contains {len(broken)} broken link(s):\n" +
         "\n".join(broken)
     )
+
+
+# ---------------------------------------------------------------------------
+# 6. Demo arguments (custom paths)
+# ---------------------------------------------------------------------------
+
+def test_demo_with_custom_paths(tmp_path):
+    """Demo should accept custom article and output paths."""
+    from pictova.demo import run_demo
+    
+    # Create a dummy article
+    custom_article = tmp_path / "custom-article.md"
+    custom_article.write_text("# Custom Article\n\nSome text.", encoding="utf-8")
+    
+    custom_output = tmp_path / "custom-output.json"
+    
+    # Run demo
+    run_demo(article_path_str=str(custom_article), output_path_str=str(custom_output))
+    
+    assert custom_output.exists(), "Custom output file must be created"
+    data = json.loads(custom_output.read_text(encoding="utf-8"))
+    assert data["visual_brief"]["article_title"] == "Custom Article", "Should parse the custom article"
+
+
+def test_demo_missing_article_exits(capsys):
+    """Demo should exit clearly if custom article doesn't exist."""
+    from pictova.demo import run_demo
+    
+    with pytest.raises(SystemExit) as exc_info:
+        run_demo(article_path_str="/path/that/does/not/exist.md")
+    
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert "Error: Article not found" in captured.out
+
