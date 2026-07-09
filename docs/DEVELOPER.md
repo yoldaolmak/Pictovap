@@ -26,7 +26,7 @@ pip install -e .
 
 ### 2. Configure Environment Variables
 
-The application relies on `.env` for secrets and configuration.
+The project relies on `.env` for secrets and configuration.
 
 ```bash
 cp .env.example .env

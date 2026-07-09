@@ -68,7 +68,7 @@ These issues are not yet active on our GitHub board but are ready to be opened. 
 **Credentials required:** No
 
 ## 10. Improve alt text templates
-**Problem:** The default Claude/Gemini prompts sometimes generate overly verbose alt text.
+**Problem:** The default external model prompts sometimes generate overly verbose alt text.
 **Expected files:** `src/pictova/vision_templates.py`
 **Acceptance Criteria:** Add a strict length constraint to the system prompt and verify output.
 **Difficulty:** Low

@@ -77,6 +77,6 @@ Pictovap is built around adapters. If you use a specific image source (like Open
 ## 10. Current Limitations
 
 - The credential-free demo relies on mock assets and deterministic scoring, not live APIs.
-- Real API runs (with Gemini/Claude) require configuration not covered in this quick playbook.
+- Real API runs (with external model providers) require configuration not covered in this quick playbook.
 - We currently only offer a WordPress CMS adapter (reference implementation).
 - Pictovap has no external adoption yet; you are on the bleeding edge.

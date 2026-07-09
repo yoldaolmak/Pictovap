@@ -76,7 +76,7 @@ Pictovap uses an adapter-based architecture:
 
 ## Project Status
 
-Pictovap is an early OSS infrastructure project. While it has been dogfooded in production for a single travel publisher, external adoption evidence is still needed. We do not claim guaranteed acceptance into ecosystems or widespread usage at this stage.
+Pictovap is an early open-source infrastructure project. It has a credential-free local demo, documented primitives, tests, and an adapter model. It has been dogfooded by one publisher, but it does not yet claim broad ecosystem adoption, external contributors, package downloads, or third-party validation.
 
 ## Contributing
 

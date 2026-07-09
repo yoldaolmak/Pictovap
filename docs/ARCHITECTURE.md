@@ -87,7 +87,7 @@ configuration, not the default path or product center.
 
 While Pictovap produces standard metadata (Alt Text, SEO Title, Caption), the
 exact mechanism is source-agnostic. It may be generated via an AI metadata
-adapter (e.g., Gemini, Claude, LM Studio) or fall back to rule-based templates.
+adapter (e.g., via external model providers) or fall back to rule-based templates.
 No specific AI model or "Vision Chain" is a required architectural component.
 
 ## 9. Legacy Package/CLI Compatibility

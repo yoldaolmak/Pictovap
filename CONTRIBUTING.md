@@ -34,7 +34,7 @@ We love Pull Requests. To ensure a smooth review process:
 
 ## 🏛 Architecture Rules
 
-Pictovap is a production-grade application, and we strictly enforce layering to prevent "spaghetti code".
+Pictovap is a production-grade project, and we strictly enforce layering to prevent "spaghetti code".
 
 | Layer | Directory | Enforcement Rule |
 | :--- | :--- | :--- |

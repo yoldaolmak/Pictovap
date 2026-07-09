@@ -22,7 +22,7 @@ All configuration is via environment variables, loaded from `.env` in the repo r
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `ANTHROPIC_API_KEY` | No | Enables vision-backed metadata generation (Claude) |
+| `ANTHROPIC_API_KEY` | No | Enables vision-backed metadata generation (via external provider) |
 | `OPENAI_API_KEY` | No | Alternative vision provider |
 
 Without a vision key, Pictovap falls back to deterministic metadata (filename, index fields). Vision keys improve alt text and caption quality.

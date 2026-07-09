@@ -52,7 +52,7 @@ Key functions:
 - `build_basic_metadata_map(assets, context)` — deterministic, no API
 - `build_native_metadata_map(assets, context)` — vision-backed when key present
 
-The native metadata function calls Claude or OpenAI for vision analysis when an API key is configured. Falls back to basic metadata per-image if the vision call fails.
+The native metadata function calls external model providers for vision analysis when an API key is configured. Falls back to basic metadata per-image if the vision call fails.
 
 ## `publisher.py` — WordPress Publisher
 
