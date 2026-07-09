@@ -217,4 +217,34 @@ def search_and_download(
     return paths
 
 
-__all__ = ["search", "download", "search_and_download", "_login"]
+def search_candidates(query: str, count: int = 8) -> List[Dict[str, Any]]:
+    """ImageSourceAdapter-conformant candidate search (no download).
+
+    Returns the standard candidate dict shape without fetching the actual
+    image bytes; the pipeline downloads only selected images. Returns an
+    empty list (rather than raising) when DEPOSIT_API_KEY is not set, so
+    this adapter degrades gracefully when unconfigured.
+    """
+    try:
+        results = search(query, count=count)
+    except RuntimeError:
+        return []
+    return [
+        {
+            "id": f"deposit-{r['id']}",
+            "filename": f"deposit_{r['id']}.jpg",
+            "provider": "depositphotos",
+            "source_type": "api",
+            "local_path": None,
+            "source_url": r.get("preview_url"),
+            "license": "editorial",
+            "attribution": None,
+            "keywords": [w for w in (r.get("title") or "").split() if w],
+            "width": r.get("width", 0),
+            "height": 0,
+        }
+        for r in results
+    ]
+
+
+__all__ = ["search", "download", "search_and_download", "search_candidates", "_login"]

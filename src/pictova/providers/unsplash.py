@@ -78,3 +78,29 @@ class YOUnsplashDownloader:
             except Exception:
                 continue
         return downloaded
+
+    def search_candidates(self, query: str, count: int) -> List[Dict]:
+        """ImageSourceAdapter-conformant candidate search (no download).
+
+        Returns the standard candidate dict shape without fetching the
+        actual image bytes; the pipeline downloads only selected images.
+        """
+        results = self.search(query, count=count)
+        candidates: List[Dict] = []
+        for r in results[:count]:
+            candidates.append(
+                {
+                    "id": f"unsplash-{r.get('id')}",
+                    "filename": f"{r.get('id')}.jpg",
+                    "provider": "unsplash",
+                    "source_type": "api",
+                    "local_path": None,
+                    "source_url": (r.get("links") or {}).get("download"),
+                    "license": "unsplash",
+                    "attribution": f"Photo by {(r.get('user') or {}).get('name', 'Unknown')} on Unsplash",
+                    "keywords": [w for w in (r.get("alt_description") or "").split() if w],
+                    "width": r.get("width", 0),
+                    "height": r.get("height", 0),
+                }
+            )
+        return candidates

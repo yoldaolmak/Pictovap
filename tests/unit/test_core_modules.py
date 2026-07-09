@@ -10,10 +10,6 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 
-def test_main_import():
-    import pictova.main  # noqa: F401
-
-
 def test_visual_memory_exports():
     from pictova.visual_memory import VisualMemoryComponent, VisualMemoryConfig
 

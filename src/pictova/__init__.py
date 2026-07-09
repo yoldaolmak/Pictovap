@@ -7,14 +7,11 @@ publish images across various CMS platforms.
 
 __version__ = "0.2.0"
 
-# Core engine
-from .engine.vision_chain import analyze_image_vision_chain
-from .engine.selector import resolve_source_images
+# Public library API — the framework entry point.
+from .demo import create_visual_plan
 
-# CMS publishers
-from .services.wordpress import YOWordPressUploader
-from .publishers.ghost import GhostPublisher
-from .publishers.strapi import StrapiPublisher
+# Adapter contracts
+from .core.adapters import ImageSourceAdapter, CMSAdapter, ReportRenderer
 
 # Vision template system
 from .vision_templates import (
@@ -28,11 +25,10 @@ from .vision_templates import (
 )
 
 __all__ = [
-    "analyze_image_vision_chain",
-    "resolve_source_images",
-    "YOWordPressUploader",
-    "GhostPublisher",
-    "StrapiPublisher",
+    "create_visual_plan",
+    "ImageSourceAdapter",
+    "CMSAdapter",
+    "ReportRenderer",
     "VisionTemplate",
     "TRAVEL_BLOG",
     "TECHNICAL",

@@ -27,6 +27,7 @@ from pictova.core.primitives import (  # noqa: E402
     PlacementInstruction,
 )
 from pictova.core.profile import PublisherProfile  # noqa: E402
+from pictova.core.sources import fetch_candidates  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -296,46 +297,22 @@ def generate_report_from_file(plan_path: str, output_path: str):
 
 
 # ---------------------------------------------------------------------------
-# Demo runner
+# Core pipeline (shared by the CLI runner and the public library API)
 # ---------------------------------------------------------------------------
-def run_demo(
-    article_path_str: str = None,
-    profile_path_str: str = None,
-    output_path_str: str = None,
-    report_path_str: str = None,
-):
-    """Run the full Pictovap demo pipeline."""
-    print("=" * 60)
-    print("  Pictovap Local Demo")
-    print("  Visual finishing pipeline — no credentials required")
-    print("=" * 60)
+def _build_plan_output(article_path: Path, profile: PublisherProfile, *, use_real_sources: bool) -> dict:
+    """Run the visual finishing pipeline for an already-resolved article path
+    and profile, and return the JSON-shaped plan output.
 
-    # 1. Load publisher profile
-    if profile_path_str:
-        profile_path = Path(profile_path_str)
-        if not profile_path.exists():
-            print(f"Error: Profile not found at {profile_path_str}", file=sys.stderr)
-            sys.exit(1)
-        profile = PublisherProfile.from_yaml(str(profile_path))
-    else:
-        profile = PublisherProfile.get_default_profile()
+    This is the one place the pipeline logic lives — `run_demo()` (CLI) and
+    `create_visual_plan()` (library API) both call this after doing their
+    own input validation.
 
-    print(f"\n[Profile] Loaded: {profile.brand_name} ({profile.profile_id})")
-
-    # 2. Parse article into Visual Brief
-    if article_path_str:
-        article_path = Path(article_path_str)
-        if not article_path.exists():
-            print(f"Error: Article not found at {article_path_str}", file=sys.stderr)
-            sys.exit(1)
-    else:
-        article_path = Path(__file__).parent / "sample-article.md"
-        if not article_path.exists():
-            article_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-article.md"
-            if not article_path.exists():
-                print("Error: Default sample article not found.")
-                sys.exit(1)
-
+    `use_real_sources` controls whether configured image source adapters
+    (local/unsplash/deposit) are actually queried. `run_demo()` always
+    passes False: the demo's whole point is to be a deterministic,
+    credential-free example, so it must not vary based on whatever
+    credentials happen to be present in the environment/.env.
+    """
     brief = VisualBrief.from_markdown(str(article_path), fallback_lang=profile.language if profile else "en")
     brief.topic = "minimalist travel"
     brief.detected_location = None
@@ -356,12 +333,21 @@ def run_demo(
             excerpt) > 40 else (f" (Context: {excerpt})" if excerpt else "")
         print(f"    - {slot['slot_id']}: {slot['purpose']} ({slot['preferred_type']}){excerpt_disp}")
 
+    # 2b. Fetch real candidates from the profile's configured image sources,
+    # falling back to deterministic mock candidates when none are
+    # configured/credentialed (or when running the credential-free demo).
+    candidates = []
+    if use_real_sources and profile:
+        candidates = fetch_candidates(profile, query=brief.topic or brief.article_title, count=8)
+    if not candidates:
+        candidates = MOCK_CANDIDATES
+
     # 3. Score all candidates for each slot
-    print(f"\n[2/4] Fit Scores ({len(MOCK_CANDIDATES)} candidates x {len(brief.image_slots)} slots)")
+    print(f"\n[2/4] Fit Scores ({len(candidates)} candidates x {len(brief.image_slots)} slots)")
     all_scores = []
     for slot in brief.image_slots:
         slot_scores = []
-        for cand in MOCK_CANDIDATES:
+        for cand in candidates:
             score = score_candidate(cand, slot, brief)
             slot_scores.append(score)
         slot_scores.sort(key=lambda s: s.final_score, reverse=True)
@@ -381,7 +367,7 @@ def run_demo(
     for slot, slot_scores in all_scores:
         for score in slot_scores:
             if score.decision == "selected" and score.candidate_id not in used_ids:
-                cand = next(c for c in MOCK_CANDIDATES if c["id"] == score.candidate_id)
+                cand = next(c for c in candidates if c["id"] == score.candidate_id)
                 used_ids.add(score.candidate_id)
                 selected_map[slot["slot_id"]] = cand
 
@@ -454,6 +440,7 @@ def run_demo(
         "provenance_packs": [p.to_dict() for p in packs],
         "cms_placement": placement.to_dict(),
         "source_path": str(article_path),
+        "candidates_evaluated": len(candidates),
         "profile": {
             "id": profile.profile_id,
             "brand": profile.brand_name,
@@ -461,8 +448,11 @@ def run_demo(
             "language": profile.language,
         },
     }
+    return output
 
-    # 7. Write output file
+
+def _write_plan_files(output: dict, output_path_str: str | None, report_path_str: str | None) -> Path:
+    """Write the JSON plan (and optional Markdown report) to disk. Returns the JSON path used."""
     if output_path_str:
         out_path = Path(output_path_str)
     else:
@@ -473,22 +463,135 @@ def run_demo(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    # 8. Write Markdown report if requested
     if report_path_str:
         report_path = Path(report_path_str)
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        report_markdown = generate_markdown_report(output)
-        report_path.write_text(report_markdown, encoding="utf-8")
+        report_path.write_text(generate_markdown_report(output), encoding="utf-8")
+
+    return out_path
+
+
+# ---------------------------------------------------------------------------
+# Public library API
+# ---------------------------------------------------------------------------
+def create_visual_plan(
+    article: str,
+    profile: str | None = None,
+    *,
+    output: str | None = None,
+    report: str | None = None,
+) -> dict:
+    """Build a visual plan for an article — the library equivalent of
+    `pictovap plan`. Importable and usable without going through the CLI.
+
+    Args:
+        article: Path to a Markdown article.
+        profile: Path to a Publisher Profile YAML. Uses the default demo
+            profile when omitted.
+        output: If given, also writes the JSON plan to this path.
+        report: If given, also writes a Markdown editor report to this path.
+
+    Returns:
+        The JSON-shaped visual plan as a dict (visual_brief, fit_scores,
+        provenance_packs, cms_placement, ...).
+
+    Raises:
+        FileNotFoundError: if `article` or `profile` doesn't exist.
+
+    Example:
+        from pictova import create_visual_plan
+
+        plan = create_visual_plan(
+            article="article.md",
+            profile="publisher.yaml",
+        )
+    """
+    article_path = Path(article)
+    if not article_path.exists():
+        raise FileNotFoundError(f"Article not found: {article}")
+
+    if profile:
+        profile_path = Path(profile)
+        if not profile_path.exists():
+            raise FileNotFoundError(f"Profile not found: {profile}")
+        pub_profile = PublisherProfile.from_yaml(str(profile_path))
+    else:
+        pub_profile = PublisherProfile.get_default_profile()
+
+    import contextlib
+    import io
+    with contextlib.redirect_stdout(io.StringIO()):
+        plan_output = _build_plan_output(article_path, pub_profile, use_real_sources=True)
+
+    if output or report:
+        _write_plan_files(plan_output, output, report)
+
+    return plan_output
+
+
+# ---------------------------------------------------------------------------
+# CLI runner
+# ---------------------------------------------------------------------------
+def run_demo(
+    article_path_str: str = None,
+    profile_path_str: str = None,
+    output_path_str: str = None,
+    report_path_str: str = None,
+):
+    """Run the full Pictovap demo pipeline from the CLI.
+
+    This is the terminal-facing wrapper: it prints progress, exits with
+    code 1 on bad input, and always writes the JSON plan (and optionally a
+    Markdown report) to disk. Library callers should use
+    `create_visual_plan()` instead.
+    """
+    print("=" * 60)
+    print("  Pictovap Local Demo")
+    print("  Visual finishing pipeline — no credentials required")
+    print("=" * 60)
+
+    # 1. Load publisher profile
+    if profile_path_str:
+        profile_path = Path(profile_path_str)
+        if not profile_path.exists():
+            print(f"Error: Profile not found at {profile_path_str}", file=sys.stderr)
+            sys.exit(1)
+        profile = PublisherProfile.from_yaml(str(profile_path))
+    else:
+        profile = PublisherProfile.get_default_profile()
+
+    print(f"\n[Profile] Loaded: {profile.brand_name} ({profile.profile_id})")
+
+    # 2. Resolve article path
+    if article_path_str:
+        article_path = Path(article_path_str)
+        if not article_path.exists():
+            print(f"Error: Article not found at {article_path_str}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        article_path = Path(__file__).parent / "sample-article.md"
+        if not article_path.exists():
+            article_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-article.md"
+            if not article_path.exists():
+                print("Error: Default sample article not found.")
+                sys.exit(1)
+
+    output = _build_plan_output(article_path, profile, use_real_sources=False)
+    out_path = _write_plan_files(output, output_path_str, report_path_str)
 
     print(f"\n{'=' * 60}")
     print(f"  Output written to: {out_path}")
     if report_path_str:
-        print(f"  Report written to: {report_path}")
-    print(f"  Brief:      {len(brief.image_slots)} slots from {len(brief.sections)} sections")
-    print(f"  Evaluated:  {len(MOCK_CANDIDATES)} candidates")
-    print(f"  Selected:   {len(packs)} images")
-    print(f"  Rejected:   {sum(1 for _, ss in all_scores for s in ss if s.decision == 'rejected')} candidates")
-    print(f"  Placements: {len(placement.placements)} instructions")
+        print(f"  Report written to: {report_path_str}")
+    brief = output["visual_brief"]
+    rejected = sum(
+        1 for scores in output["fit_scores"].values() for s in scores if s["decision"] == "rejected"
+    )
+    print(f"  Brief:      {len(brief['image_slots'])} slots from {len(brief['sections'])} sections")
+    print(f"  Evaluated:  {output['candidates_evaluated']} candidates")
+    print(f"  Selected:   {len(output['provenance_packs'])} images")
+    print(f"  Rejected:   {rejected} candidates")
+    print(f"  Placements: {len(output['cms_placement']['placements'])} instructions")
     print(f"{'=' * 60}")
     print("  Demo completed. No credentials were used.")
     print()
@@ -503,9 +606,20 @@ if __name__ == "__main__":
                         help="Path to write the human-readable Markdown report", default=None)
     args = parser.parse_args()
 
-    run_demo(
-        article_path_str=args.article,
-        profile_path_str=args.profile,
-        output_path_str=args.output,
-        report_path_str=args.report
-    )
+    if args.article:
+        # A real article was given: use the same real-adapter-aware path as
+        # `pictovap plan`, not the always-mock demo path.
+        plan = create_visual_plan(
+            article=args.article,
+            profile=args.profile,
+            output=args.output,
+            report=args.report,
+        )
+        print(json.dumps(plan, ensure_ascii=False, indent=2) if not args.output else f"Plan written to {args.output}")
+    else:
+        run_demo(
+            article_path_str=None,
+            profile_path_str=args.profile,
+            output_path_str=args.output,
+            report_path_str=args.report,
+        )

@@ -449,7 +449,7 @@ def analyze_image_vision_chain(
 
     Example::
 
-        from pictova import analyze_image_vision_chain
+        from pictova.engine.vision_chain import analyze_image_vision_chain
         from pictova.vision_templates import TECHNICAL
 
         meta = analyze_image_vision_chain(
