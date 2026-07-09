@@ -1,8 +1,8 @@
-# Claude for OSS Readiness
+# Open-Source Readiness
 
-This document tracks Pictovap's progress toward applying for the Claude for Open Source program.
+This document tracks Pictovap's progress toward achieving open-source maturity and public infrastructure readiness.
 
-**Current Status:** Pictovap does not yet meet the quantitative Claude for OSS thresholds. We are actively building the evidence runway required for a successful application.
+**Current Status:** Pictovap is in its early stages of public release. We are actively building the evidence and ecosystem signals required to establish it as a mature open-source project.
 
 ## Current Evidence
 - Public MIT-licensed repository
@@ -14,7 +14,7 @@ This document tracks Pictovap's progress toward applying for the Claude for Open
 - Adoption playbook for early users
 - Single-publisher dogfooding case study (Yoldaolmak)
 
-## Evidence Still Missing
+## Missing Ecosystem Signals
 - Tagged public release
 - External contributors (PRs merged)
 - External publisher case studies
@@ -24,12 +24,12 @@ This document tracks Pictovap's progress toward applying for the Claude for Open
 - Third-party validation or mentions
 - OpenSSF Scorecard improvements
 
-## Recommended Application Timing
-Do **not** apply for the program yet. Wait until:
+## Release Readiness Timing
+We are preparing for our first official tagged release. The goals for the next major milestone include:
 - The first tagged release is published.
 - The CI pipeline remains consistently green.
 - At least one external person runs the demo or opens a valid issue.
 - The release notes and adoption playbook are public.
 - The starter issues are actively engaged by external developers.
 
-*Note: We do not claim Pictovap is "ready for acceptance" or guaranteed to qualify.*
+*Note: We do not claim external adoption or third-party validation until real external metrics are achieved.*

@@ -17,7 +17,6 @@ Follow this final pre-release sequence before publishing a new Pictovap release.
 - [ ] 11. CI green
 - [ ] 12. tag created only after explicit approval
 - [ ] 13. GitHub release published manually
-- [ ] 14. Claude application not submitted until external evidence exists
 
 ## Package Build Verification
 
