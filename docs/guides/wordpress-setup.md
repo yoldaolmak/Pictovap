@@ -2,12 +2,12 @@
 
 ## Enabling Application Passwords
 
-Pictova uses WordPress Application Passwords for authentication. These are separate from your account password and can be revoked independently.
+Pictovap uses WordPress Application Passwords for authentication. These are separate from your account password and can be revoked independently.
 
 1. Log in to WordPress admin
 2. Go to **Users → Profile**
 3. Scroll to **Application Passwords**
-4. Enter a name (e.g., `Pictova`) and click **Add New Application Password**
+4. Enter a name (e.g., `Pictovap`) and click **Add New Application Password**
 5. Copy the generated password — it is shown only once
 
 The password looks like: `xxxx xxxx xxxx xxxx xxxx xxxx`
@@ -25,7 +25,7 @@ Spaces in the password are fine — WordPress accepts both formats.
 
 ## Site Profiles
 
-Pictova uses site profiles to store per-site configuration beyond credentials. The profile for `yoldaolmak` is at `src/pictova/profiles/yoldaolmak.py`.
+Pictovap uses site profiles to store per-site configuration beyond credentials. The profile for `yoldaolmak` is at `src/pictova/profiles/yoldaolmak.py`.
 
 A profile defines:
 
@@ -56,4 +56,4 @@ Contributor role is insufficient — use Editor or create a custom role.
 
 ## HTTPS Requirement
 
-Pictova enforces HTTPS for all WordPress connections. `http://` URLs will be rejected at validation time.
+Pictovap enforces HTTPS for all WordPress connections. `http://` URLs will be rejected at validation time.

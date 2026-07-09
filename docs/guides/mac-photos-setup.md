@@ -1,15 +1,15 @@
 # Mac Photos Setup
 
-Pictova can use your Mac Photos library as an image source. This guide covers indexing your library and connecting it to Pictova.
+Pictovap can use your Mac Photos library as an image source. This guide covers indexing your library and connecting it to Pictovap.
 
 ## How It Works
 
 1. A separate index runtime scans your Photos originals
 2. Apple's on-device ML metadata (location, scene, faces) is extracted
 3. All metadata is written to a SQLite database (`visual_memory.db`)
-4. Pictova reads this database via `YO_VISUAL_MEMORY_DB`
+4. Pictovap reads this database via `YO_VISUAL_MEMORY_DB`
 
-The index runtime and Pictova are intentionally separate: the indexer runs on your Mac, Pictova can run anywhere.
+The index runtime and Pictovap are intentionally separate: the indexer runs on your Mac, Pictovap can run anywhere.
 
 ## Step 1: Set Up the Index Runtime
 
@@ -59,10 +59,10 @@ This step may take several minutes for large libraries.
 
 ## Step 4: Connect to Pictova
 
-In Pictova's `.env`:
+In Pictovap's `.env`:
 
 ```bash
-YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db
+YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db
 ```
 
 ## Step 5: Verify

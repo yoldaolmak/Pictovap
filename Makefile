@@ -13,6 +13,7 @@ help:
 	@echo "  lint       Run code linters"
 	@echo "  clean      Clean temporary files"
 	@echo "  venv       Create virtual environment (.venv)"
+	@echo "  check-docs Check documentation link integrity"
 
 demo:
 	python3 -m pictova.demo
@@ -35,3 +36,6 @@ clean:
 
 venv:
 	python3 -m venv .venv
+
+check-docs:
+	python3 scripts/check_docs_links.py

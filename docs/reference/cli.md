@@ -1,6 +1,6 @@
 # CLI Reference
 
-All Pictova operations are available via the `pictova` command.
+All Pictovap operations are available via the `pictova` command.
 
 ## Global Usage
 

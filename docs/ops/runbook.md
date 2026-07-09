@@ -1,6 +1,6 @@
 # Runbook
 
-Day-to-day operations for Pictova.
+Day-to-day operations for Pictovap.
 
 ## Attach Images to a Post
 

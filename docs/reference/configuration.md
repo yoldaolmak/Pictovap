@@ -25,7 +25,7 @@ All configuration is via environment variables, loaded from `.env` in the repo r
 | `ANTHROPIC_API_KEY` | No | Enables vision-backed metadata generation (Claude) |
 | `OPENAI_API_KEY` | No | Alternative vision provider |
 
-Without a vision key, Pictova falls back to deterministic metadata (filename, index fields). Vision keys improve alt text and caption quality.
+Without a vision key, Pictovap falls back to deterministic metadata (filename, index fields). Vision keys improve alt text and caption quality.
 
 ## Database
 
@@ -56,7 +56,7 @@ WP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
 
 # Image sources
 UNSPLASH_ACCESS_KEY=abc123
-YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db
+YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db
 
 # Vision (optional, improves metadata quality)
 ANTHROPIC_API_KEY=sk-ant-...

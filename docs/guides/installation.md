@@ -1,6 +1,6 @@
 # Installation
 
-Full setup guide covering all Pictova components.
+Full setup guide covering all Pictovap components.
 
 ## System Requirements
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-The `-e` flag installs Pictova in editable mode and registers the `pictova` CLI command.
+The `-e` flag installs Pictovap in editable mode and registers the `pictova` CLI command.
 
 ## Step 4: Configure Environment
 
@@ -71,19 +71,19 @@ Expected: `19 passed, 1 warning` (or better).
 
 ## Optional: Mac Photos Visual Memory
 
-If you want Pictova to draw images from your Mac Photos library, you need to set up the visual memory index separately.
+If you want Pictovap to draw images from your Mac Photos library, you need to set up the visual memory index separately.
 
 See [Mac Photos Setup](mac-photos-setup.md) for the full guide.
 
 Once indexed, add to `.env`:
 
 ```bash
-YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db
+YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db
 ```
 
 ## Optional: HTTP Service
 
-To run Pictova as an HTTP service:
+To run Pictovap as an HTTP service:
 
 ```bash
 pictova serve --host 127.0.0.1 --port 8040

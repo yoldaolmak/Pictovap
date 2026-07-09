@@ -5,7 +5,7 @@ Visual Memory index maintenance guide.
 ## Index Location
 
 ```
-/Users/yoldaolmak/Projects/Pictova/
+/Users/yoldaolmak/Projects/Pictovap/
   data/
     visual_memory.db     ← the index
   index_memory_daily.py
@@ -48,7 +48,7 @@ cd /Users/yoldaolmak/Projects/Pictova
 ```bash
 python3 - <<'PY'
 import sqlite3
-db = "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db"
+db = "/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db"
 con = sqlite3.connect(db)
 count = con.execute("SELECT COUNT(*) FROM asset_index").fetchone()[0]
 with_location = con.execute("SELECT COUNT(*) FROM asset_index WHERE city IS NOT NULL").fetchone()[0]
@@ -76,7 +76,7 @@ To keep the index fresh automatically, add a daily cron job on your Mac:
 crontab -e
 
 # Add (runs at 3am daily)
-0 3 * * * cd /Users/yoldaolmak/Projects/Pictova && ./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 200 >> /tmp/pictova-index.log 2>&1
+0 3 * * * cd /Users/yoldaolmak/Projects/Pictovap && ./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 200 >> /tmp/pictova-index.log 2>&1
 ```
 
 Note: Mac must be awake and Photos library accessible at run time.

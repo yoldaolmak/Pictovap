@@ -55,7 +55,7 @@ Pick any post ID from your WordPress site.
 pictova review --site yoldaolmak --post 265713
 ```
 
-This reads the post and shows what context Pictova derived. No images are touched.
+This reads the post and shows what context Pictovap derived. No images are touched.
 
 ## 5. Plan
 
@@ -71,7 +71,7 @@ Shows the candidate images that would be selected. Still no changes to WordPress
 pictova attach --site yoldaolmak --post 265713 --count 4
 ```
 
-Pictova selects, downloads, processes, uploads, and places 4 images into the post as Gutenberg image blocks.
+Pictovap selects, downloads, processes, uploads, and places 4 images into the post as Gutenberg image blocks.
 
 ---
 

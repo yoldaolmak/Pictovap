@@ -64,7 +64,7 @@ This script checks:
 
 ## Logs
 
-Pictova does not write structured logs yet (planned in Milestone A). Current output goes to stdout/stderr. Capture with:
+Pictovap does not write structured logs yet (planned in Milestone A). Current output goes to stdout/stderr. Capture with:
 
 ```bash
 pictova attach --site yoldaolmak --post 265713 2>&1 | tee /tmp/pictova-run.log
