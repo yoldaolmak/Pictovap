@@ -16,10 +16,31 @@ Follow this final pre-release sequence before publishing a new Pictovap release.
 - [ ] No fake adoption claims (stars, forks, downloads, contributors)
 - [ ] CI pipeline is green on main branch
 
-## Release Process
+## Final Manual Release
 
-- [ ] Tag created only after maintainer approval (`git tag -a v0.x.y -m "..."`)
-- [ ] GitHub release published manually with release notes
+Before tagging:
+
+* clean git status
+* tests pass
+* demo runs
+* docs links pass
+* public-language guard passes
+* package builds
+* CI is green on main
+* release notes ready
+* no secrets
+* no fake adoption claims
+
+Manual release steps:
+
+```bash
+git tag -a v0.2.0 -m "Pictovap v0.2.0"
+git push origin v0.2.0
+```
+
+Then create GitHub Release manually using:
+
+`docs/release-notes/github-release-v0.2.0.md`
 
 ## Package Build Verification
 
@@ -37,4 +58,4 @@ Inspect the output in `dist/` to confirm the package name, version, and included
 - [ ] Verify the tag is visible on GitHub
 - [ ] Verify the release notes render correctly
 - [ ] Open planned GitHub issues from `docs/github-issue-plan.md`
-- [ ] Notify any external testers (see `docs/external-tester-note.md`)
+- [ ] Notify any external testers (see `docs/external-tester-message.md`)

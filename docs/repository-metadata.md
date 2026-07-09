@@ -33,7 +33,7 @@ Not set. Do not add a social preview image until one is designed intentionally.
 
 ## Badges
 
-Do not add badges for metrics that are not yet real (downloads, coverage percentage, etc.). The CI status badge in the README is sufficient for now.
+Do not add badges for downloads, stars, contributors, or package installs unless those signals exist.
 
 Current badge:
 
