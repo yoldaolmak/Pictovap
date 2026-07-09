@@ -1,38 +1,24 @@
 # Pictovap Documentation
 
-Welcome to the documentation for **Pictovap**, an open-source visual finishing engine
-for content publishers.
+Welcome to the Pictovap documentation.
 
-## Getting Started
+Pictovap is an open-source visual finishing engine for content publishers.
 
-- [Quickstart](quickstart.md) — Install and run the local demo in under five minutes.
-- [Architecture](ARCHITECTURE.md) — Understand how the pipeline works.
+It turns unfinished articles into visually complete, rights-aware, publish-ready CMS pages.
 
-## Core Concepts
+It reads article structure, creates a Visual Brief, evaluates candidate images with Fit Scores, records Provenance Packs, generates metadata, and prepares CMS Placement instructions.
 
-- [Visual Brief](concepts/visual-brief.md) — Structured visual requirements extracted from articles.
-- [Fit Score](concepts/fit-score.md) — Transparent candidate image evaluation.
-- [Provenance Pack](concepts/provenance-pack.md) — Audit trail for selected images.
-- [CMS Placement](concepts/cms-placement.md) — CMS-agnostic placement instructions.
+## Navigation
 
-## Reference
+### Guides
+- [Quickstart](quickstart.md) — Get up and running in 5 minutes
+- [Using Pictovap](guides/using-pictovap.md) — The full user journey from configure to publish
+- [Editor Report](guides/editor-report.md) — How humans review visual plans
+- [Publisher Profile](guides/publisher-profile.md) — How to configure output rules
+- [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos)
+- [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS
 
-- [Publisher Profiles](reference/publisher-profiles.md) — Per-publisher configuration.
-- [CLI Reference](CLI_REFERENCE.md) — Command-line interface.
-- [Configuration](reference/configuration.md) — Environment variables and settings.
+### Reference
+- [CLI Reference](reference/cli.md) — Available commands and flags
 
-## Adapters
-
-- [Adapter Overview](adapters/overview.md) — How to extend Pictovap.
-- [Image Sources](adapters/image-sources.md) — Adding new image providers.
-- [CMS Adapters](adapters/cms-adapters.md) — Adding new CMS targets.
-
-## Contributing
-
-- [Contributing Guide](../CONTRIBUTING.md)
-- [Writing Adapters](contributing/adapters.md)
-- [Good First Issues](contributing/good-first-issues.md)
-
-## Case Studies
-
-- [Yoldaolmak.com](case-studies/yoldaolmak.md) — Real-world dogfooding case study.
+Pictovap currently has no graphical user interface. It is a CLI-first open-source core. The intended review surface is an editor-readable report, while CMS adapters consume the JSON plan.

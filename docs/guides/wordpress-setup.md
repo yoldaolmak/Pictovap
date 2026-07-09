@@ -1,59 +1,29 @@
 # WordPress Setup
 
-## Enabling Application Passwords
+You do not need WordPress credentials to run the local demo. The demo runs entirely in a dry-run / plan-first workflow, creating local JSON and Markdown reports.
 
-Pictovap uses WordPress Application Passwords for authentication. These are separate from your account password and can be revoked independently.
+For real WordPress publishing, Pictovap will need a WordPress URL, username, and Application Password or another supported authentication method. These credentials must live in `.env` or another local secret store. They must never be committed to the repository.
 
-1. Log in to WordPress admin
-2. Go to **Users → Profile**
-3. Scroll to **Application Passwords**
-4. Enter a name (e.g., `Pictovap`) and click **Add New Application Password**
-5. Copy the generated password — it is shown only once
+The WordPress adapter should consume a CMS Placement plan. WordPress is one adapter, not the conceptual center of Pictovap.
 
-The password looks like: `xxxx xxxx xxxx xxxx xxxx xxxx`
+## Configuration
 
-## Configuring Pictova
+In your project root, copy `.env.example` to `.env` and fill in the values:
 
-In `.env`:
-
-```bash
-WP_USER=your-wp-username
-WP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
+```env
+# Optional CMS adapter configuration
+CMS_TYPE=wordpress
+CMS_URL=
+CMS_USER=
+CMS_APP_PASSWORD=
 ```
 
-Spaces in the password are fine — WordPress accepts both formats.
+### Application Passwords
 
-## Site Profiles
+WordPress requires an Application Password, not your standard login password. You can generate this in your WordPress Admin dashboard under `Users -> Profile -> Application Passwords`.
 
-Pictovap uses site profiles to store per-site configuration beyond credentials. The profile for `yoldaolmak` is at `src/pictova/profiles/yoldaolmak.py`.
+## Implementation Status
 
-A profile defines:
-
-| Field | Default | Description |
-|-------|---------|-------------|
-| `site_url` | — | Base URL of the WordPress site |
-| `wp_path` | — | Server path to WordPress root (for wp-cli) |
-| `default_count` | 4 | Images per post |
-| `people_first` | false | Prefer images with human subjects |
-| `source_priority` | `["semantic", "unsplash"]` | Sources in order of preference |
-| `block_type` | `"image"` | Gutenberg block type for placement |
-| `featured_image` | true | Set first image as featured image |
-
-## Adding a New Site
-
-Create `src/pictova/profiles/mysite.py` following the existing `yoldaolmak.py` structure. Then use `--site mysite` in any command.
-
-See [Site Profiles Reference](../reference/profiles.md) for the full profile schema.
-
-## WordPress Permissions
-
-The Application Password user needs:
-
-- `upload_files` capability (Editor or Author role minimum)
-- `edit_posts` capability to update post content
-
-Contributor role is insufficient — use Editor or create a custom role.
-
-## HTTPS Requirement
-
-Pictovap enforces HTTPS for all WordPress connections. `http://` URLs will be rejected at validation time.
+- **Implemented**: Dry-run local JSON placement plans.
+- **Implemented**: WordPress publishing adapter (extracted from production).
+- **Planned**: Ghost and Strapi publishing adapters.

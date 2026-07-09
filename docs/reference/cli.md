@@ -1,138 +1,30 @@
 # CLI Reference
 
-All Pictovap operations are available via the `pictova` command.
+Pictovap is a CLI-first tool. The primary execution surface currently is the demo module, which runs the pipeline locally without requiring API credentials or external dependencies.
 
-## Global Usage
+## Current Commands
 
-```
-pictova <command> [options]
-```
-
-## Commands
-
-### `pictova health`
-
-Check that the service is running and configured correctly.
-
+### Run the Default Demo
+Runs the local credential-free demo using the sample article and mock candidates.
 ```bash
-pictova health
+python -m pictova.demo
 ```
 
-```json
-{"status": "ok", "service": "pictova"}
-```
-
-No options.
-
----
-
-### `pictova review`
-
-Read a post from WordPress and display its derived context. Does not touch images.
-
+### Run with a Custom Article
+Executes the visual finishing pipeline on a specific Markdown article and outputs the canonical JSON plan.
 ```bash
-pictova review --site <site> --post <post_id>
+python -m pictova.demo --article path/to/article.md --output output/plan.json
 ```
 
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--site` | Yes | Site profile name (e.g., `yoldaolmak`) |
-| `--post` | Yes | WordPress post ID |
-
-Output: JSON with `title`, `excerpt`, `location_query`, `topic`, `categories`, `tags`, `current_image_count`.
-
----
-
-### `pictova plan`
-
-Query image sources and display candidates. Does not download or process anything.
-
+### Generate a Human-Readable Report
+Executes the pipeline and simultaneously generates an editor-readable Markdown report alongside the JSON plan.
 ```bash
-pictova plan --site <site> --post <post_id> [options]
+python -m pictova.demo --article path/to/article.md --output output/plan.json --report output/report.md
 ```
 
-| Flag | Required | Default | Description |
-|------|----------|---------|-------------|
-| `--site` | Yes | — | Site profile name |
-| `--post` | Yes | — | WordPress post ID |
-| `--count` | No | profile default | Number of images to select |
-| `--source` | No | `semantic` | Image source: `semantic`, `unsplash` |
-| `--people-first` | No | false | Prefer images with human subjects |
-| `--lang` | No | `tr` | Language hint for query construction |
+## Planned Commands
 
-Output: JSON list of candidate assets with `source`, `path_or_url`, `score`, `quality_score`, `flags`.
+*Note: The following commands represent the planned CLI direction and are not currently implemented.*
 
----
-
-### `pictova process`
-
-Run selection and processing (resize, format conversion) without publishing to WordPress.
-
-```bash
-pictova process --site <site> --post <post_id> [options]
-```
-
-Accepts the same flags as `plan`, plus:
-
-| Flag | Required | Default | Description |
-|------|----------|---------|-------------|
-| `--engine` | No | `legacy` | Engine path: `legacy` or `native` |
-
-Output: JSON with `selected_assets`, `rejected_assets`, `processed_paths`.
-
----
-
-### `pictova attach`
-
-Full pipeline: select → process → upload → place. Modifies WordPress.
-
-```bash
-pictova attach --site <site> --post <post_id> [options]
-```
-
-Accepts the same flags as `process`.
-
-Output:
-```json
-{
-  "site": "yoldaolmak",
-  "post_id": 265713,
-  "selected_assets": [...],
-  "rejected_assets": [...],
-  "uploaded_media_ids": [101, 102, 103, 104],
-  "inserted_blocks": [...],
-  "warnings": [],
-  "duration_ms": 4210
-}
-```
-
----
-
-### `pictova serve`
-
-Start the HTTP API server.
-
-```bash
-pictova serve [--host <host>] [--port <port>]
-```
-
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--host` | `127.0.0.1` | Bind address |
-| `--port` | `8040` | Port |
-
-See [HTTP API Reference](http-api.md) for endpoint documentation.
-
----
-
-## Exit Codes
-
-| Code | Meaning |
-|------|---------|
-| `0` | Success |
-| `1` | Validation error (missing flags, invalid post ID, etc.) |
-| `2` | WordPress error (auth failure, post not found) |
-| `3` | Source error (no candidates, API failure) |
-| `4` | Processing error (quality gate blocked all candidates) |
-
-All errors return structured JSON to stdout, not tracebacks.
+- `pictovap plan <article.md>` — Generate a visual plan only.
+- `pictovap publish <plan.json>` — Push a confirmed plan to a CMS via the configured adapter.

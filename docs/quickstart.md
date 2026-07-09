@@ -2,12 +2,15 @@
 
 Get Pictovap running locally in under five minutes.
 
-## Prerequisites
+## 1. What is Pictovap?
 
-- Python 3.9+
-- Git
+Pictovap is an open-source visual finishing engine for content publishers.
 
-## Installation
+It turns unfinished articles into visually complete, rights-aware, publish-ready CMS pages.
+
+It reads article structure, creates a Visual Brief, evaluates candidate images with Fit Scores, records Provenance Packs, generates metadata, and prepares CMS Placement instructions.
+
+## 2. Installation
 
 ```bash
 git clone https://github.com/yoldaolmak/Pictovap.git
@@ -18,9 +21,12 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-## Run the Local Demo
+## 3. Run the Local Demo
 
-The demo requires no credentials, no external APIs, and no CMS connection.
+You do not need WordPress credentials to run the local demo.
+You do not need image provider credentials to run the local demo.
+
+The demo requires no credentials, no external APIs, and no CMS connection. The demo uses deterministic local/mock candidates.
 
 ```bash
 make demo
@@ -33,32 +39,13 @@ python -m pictova.demo
 ```
 
 This will:
-1. Read `examples/sample-article.md`
+1. Read an example article
 2. Load a sample publisher profile
-3. Load mock image candidates from `examples/assets/`
-4. Create a Visual Brief
-5. Evaluate candidates with Fit Scores
-6. Create Provenance Packs for selected images
-7. Create a CMS Placement plan
-8. Write canonical JSON output to `examples/sample-output.json`
-9. Print a terminal summary
+3. Evaluate mock images
+4. Create a JSON output (canonical machine-readable artifact for adapters and automation)
+5. Create a Markdown report (editor-readable preview for humans)
 
-To generate a human-readable visual plan report alongside the JSON, use the `--report` flag:
+## 4. Next Steps
 
-```bash
-python -m pictova.demo --output examples/sample-output.json --report examples/sample-report.md
-```
-
-## Run Tests
-
-```bash
-source .venv/bin/activate
-pytest
-```
-
-## Next Steps
-
-- Read the Architecture Guide to understand the pipeline
-- Explore the four primitives in docs/concepts/
-- See Adapter Architecture to learn how to extend Pictovap
-- Review Publisher Profiles to configure for your site
+- Read [Using Pictovap](guides/using-pictovap.md) for the full user journey
+- See [CLI Reference](reference/cli.md) to run it against your own files

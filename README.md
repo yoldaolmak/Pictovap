@@ -2,21 +2,45 @@
 
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 
-Open-source visual finishing for content publishers.
+## 1. What is Pictovap?
 
-Pictovap turns unfinished articles into visually complete, rights-aware, publish-ready CMS pages.
+Pictovap is an open-source visual finishing engine for content publishers.
 
-## What is Pictovap?
+It turns unfinished articles into visually complete, rights-aware, publish-ready CMS pages.
 
-It is the missing article-aware layer between written content and CMS publishing. It reads an article's structure, creates a visual brief, evaluates candidate images, records provenance, generates metadata, and produces CMS placement instructions.
+It reads article structure, creates a Visual Brief, evaluates candidate images with Fit Scores, records Provenance Packs, generates metadata, and prepares CMS Placement instructions.
 
-Pictovap is **not** a stock photo search tool, a DAM, or a generic AI image generator.
-
-## Why it exists
+## 2. Why it exists
 
 Independent publishers spend significant time on visual operations per article: finding images, checking licenses, resizing, writing alt text, and placing them in a CMS. This labor scales linearly with article volume. Pictovap automates this workflow so editors can focus on narrative quality.
 
-## Quickstart
+## 3. What problem it solves
+
+Pictovap bridges the gap between raw written content and a visually complete CMS post. It handles the structural, visual, and metadata decisions needed to successfully place media within an article, removing the manual overhead of sourcing and placing images.
+
+## 4. Who it is for
+
+Pictovap is for independent publishers, editors, and developers who want to automate their visual editorial pipelines using an open-source, CLI-first approach.
+
+Pictovap is not a writing tool.
+Pictovap is not a generic AI image generator.
+Pictovap is not a DAM.
+Pictovap is not a stock photo search tool.
+Pictovap is not a WordPress-only plugin.
+Pictovap currently has no graphical UI.
+
+It is a CLI-first open-source core for article-aware visual planning and CMS placement.
+
+## 5. How it works
+
+Pictovap follows a simple lifecycle: `Configure → Plan → Review → Publish`
+
+1. **Configure**: A publisher profile defines site name, CMS type, language, output rules, filename rules, alt text rules, caption rules, and image source adapters.
+2. **Plan**: Pictovap reads an article and creates a machine-readable visual plan.
+3. **Review**: Editors review the visual plan through a Markdown report, not raw JSON.
+4. **Publish**: CMS adapters can use the plan to place selected images into WordPress or other CMS platforms. Live publishing is adapter-dependent and must be configured explicitly.
+
+## 6. Quickstart
 
 Get Pictovap running locally using the credential-free demo mode.
 
@@ -29,13 +53,15 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-Run the local credential-free demo to see the deterministic scoring in action:
+Run the local credential-free demo:
 
 ```bash
 make demo
 ```
 
-You can also test the demo against your own article. The demo outputs canonical JSON by default, but you can optionally generate an editor-readable Markdown report:
+## 7. Try your own article
+
+You can test the demo against your own article:
 ```bash
 python -m pictova.demo \
   --article path/to/your/article.md \
@@ -43,49 +69,48 @@ python -m pictova.demo \
   --report my-report.md
 ```
 
-## Demo Output
+## 8. Outputs: JSON and editor report
 
-The demo runs the core pipeline locally and outputs a summary of what it did. It uses deterministic scoring rather than live API calls:
+- **JSON output** = canonical machine-readable artifact for adapters and automation.
+- **Markdown report** = editor-readable preview for humans.
 
-```text
-  Brief:      4 slots from 3 sections
-  Evaluated:  5 candidates
-  Selected:   3 images
-  Rejected:   4 candidates
-  Placements: 3 instructions
-```
+Pictovap currently has no graphical user interface. It is a CLI-first open-source core. The intended review surface is an editor-readable report, while CMS adapters consume the JSON plan.
 
-## Core Primitives
+## 9. WordPress and CMS adapters
 
-Pictovap operates on four core architectural primitives:
+You do not need WordPress credentials to run the local demo.
 
-1. **Visual Brief:** Analyzes the article to determine exactly what imagery is needed.
-2. **Fit Score:** Evaluates candidates deterministically against contextual, technical, and licensing criteria.
-3. **Provenance Pack:** Maintains a provenance audit trail tracking image origin, license, and processing actions.
-4. **CMS Placement:** Produces a CMS-agnostic placement model for where images should be injected.
+For real WordPress publishing, Pictovap will need a WordPress URL, username, and Application Password or another supported authentication method. These credentials must live in `.env` or another local secret store. They must never be committed to the repository.
 
-## Adapter Model
+The WordPress adapter should consume a CMS Placement plan. WordPress is one adapter, not the conceptual center of Pictovap.
 
-Pictovap uses an adapter-based architecture:
+## 10. Image source adapters
 
-- **Image Sources:** The demo uses local/mock sources. Planned source adapters include Unsplash, Openverse, DepositPhotos, and Visual Memory DB.
-- **CMS Placement:** WordPress adapter exists; other adapters are reference/stub work.
+You do not need image provider credentials to run the local demo.
 
-## Current Limitations
+Current demo source: deterministic local/mock candidates.
 
-- Core logic was recently extracted from production; some internal dict passing is still being migrated to strict primitives.
-- The local demo uses mock assets rather than live API calls.
+Planned source adapters: Openverse, Unsplash, DepositPhotos, Visual Memory.
+
+Real image providers such as Openverse, Unsplash, DepositPhotos, or private archives should be connected through image source adapters. Provider credentials must live in `.env` or another local secret store. Each selected/downloaded asset must create a Provenance Pack.
+
+*Note: DepositPhotos and Unsplash are planned adapters, not active in the credential-free demo.*
+
+## 11. Current status
+
+Pictovap is an early open-source infrastructure project. It has a credential-free local demo, documented primitives, tests, and an adapter model. It does not yet claim broad ecosystem adoption, external contributors, or package downloads.
+
+## 12. Limitations
+
 - Only the WordPress CMS adapter is production-hardened; others are reference implementations.
+- The local demo uses mock assets rather than live API calls.
+- The default structural extraction handles English and Turkish articles reliably; other languages are untested.
 
-## Project Status
-
-Pictovap is an early open-source infrastructure project. It has a credential-free local demo, documented primitives, tests, and an adapter model. It has been dogfooded by one publisher, but it does not yet claim broad ecosystem adoption, external contributors, package downloads, or third-party validation.
-
-## Contributing
-
-See the [Documentation Portal](docs/README.md) for full guides on architecture, concepts, and contribution.
-
-## Compatibility Note
+## 13. Compatibility note
 
 Product name: Pictovap.
 Python package and legacy CLI may remain `pictova` for backward compatibility.
+
+## 14. Contributing
+
+See the [Documentation Portal](docs/README.md) for full guides on architecture, concepts, and contribution.
