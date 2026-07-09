@@ -1,56 +1,35 @@
-# Sample Publisher Profile for Pictovap
-#
-# This file is used by the local demo (make demo / python -m pictova.demo).
-# It requires no API keys, no credentials, and no external services.
-#
-# Product name: Pictovap
-# Python package and legacy CLI may remain `pictova` for backward compatibility.
-
 profile_id: sample-publisher
 brand_name: Sample Publisher
-
-# CMS type determines which CMS adapter is used in the placement phase.
-# WordPress is one adapter among many. Ghost and Strapi are also supported stubs.
-# The demo uses a mock adapter (no CMS connection required).
 cms_type: generic
-
 language: en
 
-# Image sources queried during candidate evaluation.
-# The demo uses "local" with mock data only — no API keys needed.
 image_sources:
   - local
 
-# Output rules for image processing.
 output_rules:
   format: webp
-  max_width: "1200"
-  max_height: "800"
-  quality: "85"
+  max_width: 1200
+  max_height: 800
+  quality: 85
 
-# Filename rules for generated files.
 filename_rules:
   prefix: pictovap_
   case: lowercase
   separator: "-"
 
-# Alt text generation rules.
 alt_text_rules:
   language: en
-  max_length: "125"
+  max_length: 125
   avoid_word: image
 
-# Caption generation rules.
 caption_rules:
   language: en
-  include_attribution: "true"
+  include_attribution: true
 
-# Editorial preferences.
 editorial_preferences:
   tone: neutral
   style: documentary
 
-# Forbidden visual patterns — images matching these are rejected regardless of score.
 forbidden_patterns:
   - tourists holding maps
   - stock photo handshake

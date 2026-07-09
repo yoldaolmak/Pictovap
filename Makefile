@@ -1,19 +1,16 @@
-# Pictovap Makefile
-# Open-source visual finishing engine for content publishers
-
-.PHONY: install test lint clean demo help venv
+.PHONY: install test lint clean demo help venv check-docs
 
 help:
 	@echo "Pictovap - Visual Finishing Engine"
 	@echo ""
 	@echo "Available targets:"
-	@echo "  demo       Run the local credential-free demo"
-	@echo "  test       Run test suite"
-	@echo "  install    Install all dependencies (including dev)"
-	@echo "  lint       Run code linters"
-	@echo "  clean      Clean temporary files"
-	@echo "  venv       Create virtual environment (.venv)"
-	@echo "  check-docs Check documentation link integrity"
+	@echo "  demo        Run the local credential-free demo"
+	@echo "  test        Run test suite"
+	@echo "  install     Install dependencies"
+	@echo "  lint        Run code linters"
+	@echo "  clean       Clean temporary files"
+	@echo "  venv        Create virtual environment"
+	@echo "  check-docs  Check documentation link integrity"
 
 demo:
 	python3 -m pictova.demo
