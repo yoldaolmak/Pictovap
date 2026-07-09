@@ -1,67 +1,64 @@
-# Visual Memory
+# Visual Memory DB
 
-Visual Memory is Pictova's local image index. It is a SQLite database that stores metadata about every image in your library — including Apple Photos ML enrichments — and powers the semantic selection engine.
+Visual Memory DB is an optional local image index that powers semantic candidate
+selection from a personal or organizational image library. It is a SQLite database
+enriched with metadata from indexed image sources.
+
+This is an optional, advanced feature. The local demo and core pipeline run
+without it.
 
 ## What It Contains
 
-Each record in the `asset_index` table represents one image and stores:
+Each record in the index represents one image:
 
 | Field | Description |
-|-------|-------------|
+|---|---|
 | `source_path` | Absolute path to the original file |
 | `filename` | File name |
-| `title` | Human-readable title (from Photos or inferred) |
-| `description` | Generated or Photos-sourced description |
+| `title` | Human-readable title |
+| `description` | Generated or source description |
 | `summary` | Short text summary |
 | `location` | Place name where the photo was taken |
-| `city` | City extracted from Photos moment metadata |
+| `city` | City extracted from metadata |
 | `country` | Country |
 | `activity` | Activity detected (hiking, dining, etc.) |
 | `scene` | Scene type (landscape, street, interior, etc.) |
 | `quality_score` | Composite score: sharpness, exposure, composition |
-| `face_count` | Number of faces detected (Apple ML) |
-| `blur_score` | Apple Photos blur indicator |
+| `face_count` | Number of faces detected |
+| `blur_score` | Blur indicator |
 
-## Why It Exists
+## When to Use It
 
-Mac Photos stores originals with UUID-based paths that change across devices and library migrations. A path-only approach breaks silently. Visual Memory solves this by indexing semantic fields alongside paths, so the selection engine can match on `city`, `scene`, or `activity` even when the path structure is opaque.
+Use Visual Memory DB when you have a large personal or organizational image library
+that you want to query semantically — matching images to article topics and locations
+without manual tagging.
 
-## The Two Runtimes
+It is particularly useful when:
+- You have hundreds or thousands of images with rich metadata
+- You need location-aware selection (e.g., "photos from Istanbul")
+- You want to prefer owned photography over stock APIs
 
-Visual Memory operates across two runtimes:
+## Configuration
 
-**Index Runtime** (separate, in `/Users/yoldaolmak/Projects/Pictova`):
-- Scans Photos originals
-- Applies quality gate
-- Reads Apple Photos `.sqlite` for ML metadata
-- Writes to `visual_memory.db`
-
-**Consumer Runtime** (this repo, Pictova):
-- Reads `visual_memory.db` via `YO_VISUAL_MEMORY_DB`
-- Uses the index for semantic selection
-- Never writes to the index
-
-This separation keeps the indexer and the selection engine independently deployable.
-
-## Indexing
-
-```bash
-cd /Users/yoldaolmak/Projects/Pictova
-./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 0
-./.venv/bin/python extract_apple_photos_ml.py
+```
+YO_VISUAL_MEMORY_DB=/path/to/visual_memory.db
 ```
 
-The first command discovers and quality-gates originals. The second enriches indexed records with Apple ML metadata (moment, location, faces, blur/exposure scores).
+Set this environment variable to point to a populated index. When unset, this source
+is silently skipped — the pipeline continues with other configured sources.
 
-Run both after importing new photos or on a daily schedule.
+## Building the Index
 
-See: [Indexing Ops Guide](../ops/indexing.md)
+The index is built by a separate indexer process that scans image directories or
+library exports and writes to `visual_memory.db`. The consumer runtime (Pictovap)
+reads the index but never writes to it.
 
-## Verification
+Indexer implementation details are outside the scope of this document. Contributions
+to document or generalize the indexer are welcome.
 
-```python
-from src.main import search_semantic_assets
-print(search_semantic_assets('Sinop', count=5))
-```
+## Compatibility Note
 
-A working index returns real file paths to Photos originals matching the query. An empty result means the index is missing, the `YO_VISUAL_MEMORY_DB` env var is unset, or no assets match.
+Product name: Pictovap.
+Python package and legacy CLI may remain `pictova` for backward compatibility.
+The Visual Memory indexer was originally developed for the yoldaolmak.com Mac Photos
+library. The consumer interface is generalized and works with any populated index.

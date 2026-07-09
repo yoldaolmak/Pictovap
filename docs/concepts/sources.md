@@ -1,67 +1,81 @@
 # Image Sources
 
-Pictova can draw images from multiple source types simultaneously or selectively. Each source has a driver, a configuration key, and a quality gate.
+Pictovap can draw candidate images from multiple source types simultaneously or selectively.
+Each source is an adapter that implements the standard candidate interface and returns
+metadata-enriched candidates for the Fit Score stage.
 
 ## Source Types
 
-### Semantic / Visual Memory
-
-The default source. Pictova queries an indexed local database of images — derived from Mac Photos, local directories, or any other indexed asset — using semantic matching against the post's content context.
-
-```bash
-pictova attach --site yoldaolmak --post 265713 --source semantic
-```
-
-Requires: `YO_VISUAL_MEMORY_DB` pointing to a populated index.  
-See: [Visual Memory](visual-memory.md), [Semantic Selection](semantic-selection.md)
-
-### Unsplash (Free)
-
-Queries the Unsplash API for royalty-free images matching the post context.
-
-```bash
-pictova attach --site yoldaolmak --post 265713 --source unsplash
-```
-
-Requires: `UNSPLASH_ACCESS_KEY` in `.env`
-
-### DepositPhotos (Licensed)
-
-Queries DepositPhotos for licensed stock images. Selected images are downloaded, watermark-free, under the account's license tier.
-
-Planned: **Pictova Depot** sub-layer.  
-Requires: `DEPOSITPHOTOS_API_KEY`, active subscription.
-
 ### Local Directory
 
-Any directory of image files (JPG, PNG, WebP) on disk can be used as a source. Pictova applies the same quality gate and semantic scoring to local files as to any other source.
+Reads image files from a local directory. No credentials required.
 
-Configuration: `LOCAL_IMAGE_DIR` in `.env` or via `--local-dir` flag (planned).
+```
+LOCAL_IMAGE_DIR=/path/to/images  # environment variable
+```
 
-### Mac Photos Library
+This is the only source used by the local demo. No API key needed.
 
-A specialized variant of semantic source. Your Mac Photos library is indexed by a separate visual memory runtime, enriched with Apple's on-device ML metadata (location, scene, faces, moment), and made available to Pictova through the visual memory database.
+### Unsplash (Free API)
 
-See: [Mac Photos Setup](../guides/mac-photos-setup.md)
+Queries the Unsplash API for royalty-free images matching the Visual Brief topic.
 
-## Source Selection Logic
+```
+UNSPLASH_ACCESS_KEY=your_key_here  # .env
+```
 
-When multiple sources are configured, Pictova:
+### DepositPhotos (Licensed Stock)
 
-1. Queries each enabled source in parallel
-2. Scores all candidates using the semantic selection engine
-3. Applies the quality gate (`quality.py`) to each batch
-4. Merges and ranks across sources
-5. Returns the top `--count` results
+Queries DepositPhotos for licensed stock images.
 
-You can restrict to a single source with `--source <name>` or configure source priority in the site profile.
+```
+DEPOSITPHOTOS_API_KEY=your_key_here  # .env
+```
+
+### Visual Memory DB (Local Semantic Index)
+
+Queries a local SQLite database of indexed images. The database is built by a
+separate indexer process and enriched with semantic metadata (location, scene,
+activity, quality score).
+
+```
+YO_VISUAL_MEMORY_DB=/path/to/visual_memory.db  # .env
+```
+
+This source enables semantic matching against a personal or organizational image library.
+It is optional; the demo and core pipeline do not require it.
+
+## How Sources Are Combined
+
+When multiple sources are configured in the publisher profile:
+
+1. Each enabled source is queried independently.
+2. All candidates are scored using the Fit Score engine.
+3. Candidates are ranked across sources by final score.
+4. Hard rejections (resolution, license) are applied before ranking.
+5. The top candidates pass to the Provenance Pack stage.
+
+You can restrict to a single source by configuring `image_sources` in the publisher profile.
 
 ## Adding a New Source
 
-Sources are implemented as provider modules under `src/pictova/providers/`. A new source needs:
+Sources are implemented as adapters under `src/pictova/providers/`. A new source needs:
 
-1. A provider class that implements `query(context, count) -> list[Asset]`
-2. Registration in `src/pictova/config.py`
-3. A corresponding profile key in `src/pictova/profiles/`
+1. A file in `src/pictova/providers/` implementing the candidate dict interface.
+2. Registration in the profile system.
+3. A credential key in `.env.example` (if credentials are needed).
+4. Unit tests with mocked external calls.
 
-See [Site Profiles](../reference/profiles.md) for configuration details.
+See [Image Source Adapters](../adapters/image-sources.md) for the full interface contract
+and [Writing Adapters](../contributing/adapters.md) for the contribution guide.
+
+## Credential Isolation
+
+All source credentials must come from environment variables. The local demo runs with
+no `.env` file and no credentials. Sources that require credentials are simply not queried
+when their environment variable is unset.
+
+## Compatibility Note
+
+Product name: Pictovap.
+Python package and legacy CLI may remain `pictova` for backward compatibility.

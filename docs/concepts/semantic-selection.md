@@ -1,64 +1,85 @@
-# Semantic Selection
+# Candidate Selection
 
-Semantic selection is the process by which Pictova decides which images fit a given post.
+Candidate selection is the process by which Pictovap determines which images fit a
+given article slot. It operates within the Fit Score stage of the pipeline.
 
 ## The Core Problem
 
-A travel post about Sinop should get photos of Sinop — its harbor, its castle, its fish market. A post about packing light should get photos of backpacks and organized luggage, not tourist landmarks. This requires understanding the post's content, not just its title.
+An article about minimalist travel should get photos of backpacks, trails, and
+organized luggage — not tourist landmark panoramas or generic cityscapes. An article
+about Istanbul should get photos with the right geographic context. This requires
+understanding the article's content, not just matching a single keyword to a filename.
 
-## How It Works
+## How Fit Scoring Works
 
-### Step 1: Context Derivation
+### Step 1: Context From the Visual Brief
 
-Pictova reads the post from WordPress (title, excerpt, content, categories, tags) and derives a semantic context object:
+The Visual Brief provides the selection context:
 
-- **Location query**: city, country, or region name extracted from content
-- **Topic query**: the subject matter of the post (food, gear, architecture, etc.)
-- **Activity hints**: verbs and activity keywords detected in the body
-- **People first**: whether the post benefits from human subjects in images
+- **Article topic** — the thematic focus (e.g., "minimalist travel")
+- **Section headings** — the specific section this image slot serves
+- **Editorial preferences** — from the publisher profile
 
-### Step 2: Query Construction
+### Step 2: Keyword Scoring
 
-The context becomes a multi-field query against the visual memory index. Pictova scores each asset across:
+The engine scores each candidate's keywords against the article context:
 
-- `location`, `city`, `country` — geographic match
-- `activity`, `scene` — contextual match
-- `title`, `description`, `summary` — semantic text match
-- `filename` — fallback keyword match
+- **Contextual relevance** — overlap with the article topic and title
+- **Section relevance** — overlap with the target section heading
 
-Assets are scored, not filtered. A photo of Sinop harbor taken from a boat scores higher than a generic harbor photo, which scores higher than an unrelated landscape.
+### Step 3: Technical Gate
 
-### Step 3: Quality Gate
+Technical quality is evaluated against minimum thresholds:
 
-Scores are adjusted by the quality gate (`src/pictova/engine/quality.py`):
+- Resolution (minimum width and height for the target slot)
+- Aspect ratio suitability for the CMS layout
+- Blur and exposure (when metadata is available)
 
-- Images below the blur threshold are penalized
-- Images below the exposure threshold are penalized
-- Face count is used when `--people-first` is active (images with faces rank higher)
-- Aspect ratio is checked against target block dimensions
+Candidates below the technical minimum receive a `rejected` decision immediately,
+regardless of contextual score.
 
-### Step 4: Deduplication and Ranking
+### Step 4: License and Trust
 
-Across multiple sources (Visual Memory, Unsplash, local), candidates are merged, duplicates removed by hash, and the final ranking produced. The top `--count` images pass to the processor.
+- **License confidence** — whether the license is confirmed and commercially safe
+- **Source trust** — preference for owned and locally indexed images over stock APIs
 
-## Inspecting Selection
+Candidates with unclear licenses receive a `rejected` decision regardless of other scores.
 
-Use `pictova plan` to see what would be selected without committing to attach:
+### Step 5: Decision
 
-```bash
-pictova plan --site yoldaolmak --post 265713 --count 4 --people-first
+After all dimensions are scored, each candidate receives a decision:
+
+| Decision | Criteria |
+|---|---|
+| `selected` | Final score above threshold; all hard gates passed |
+| `rejected` | Failed a hard gate (resolution, license) |
+| `needs_review` | Passed hard gates but score is moderate; flagged for human review |
+
+## Inspecting Scores
+
+Run `make demo` to see the full score breakdown for all candidates across all slots:
+
 ```
-
-The output shows each candidate, its source, its score, and the reason it was selected.
+Slot 'featured':
+  ✓ img-backpack-01: 12.5 (selected) — Strong fit: contextual=2.0, quality=3.0, license=2.0
+  ✓ img-forest-02:   10.5 (selected) — Strong fit: contextual=0.0, quality=3.0, license=2.0
+  ✗ img-lowres-04:   9.0  (rejected) — Resolution too low (320x240)
+  ? img-generic-03:  7.0  (needs_review) — Moderate fit, manual review recommended
+```
 
 ## Tuning Selection
 
-Selection behavior is controlled by the site profile (`src/pictova/profiles/yoldaolmak.py`). Profile fields that affect selection:
+Selection behavior is controlled by the publisher profile. Relevant fields:
 
 | Field | Effect |
-|-------|--------|
-| `default_count` | Images per post when `--count` is omitted |
-| `people_first` | Default people preference |
-| `source_priority` | Ordered list of sources to query |
-| `min_quality_score` | Quality gate threshold |
-| `aspect_ratio` | Target ratio for block placement |
+|---|---|
+| `image_sources` | Which adapters supply candidates |
+| `forbidden_patterns` | Keywords causing immediate rejection |
+| `editorial_preferences` | Contextual weighting hints |
+
+See [Publisher Profiles](../reference/publisher-profiles.md) for configuration details.
+
+## Compatibility Note
+
+Product name: Pictovap.
+Python package and legacy CLI may remain `pictova` for backward compatibility.

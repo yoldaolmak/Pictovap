@@ -1,63 +1,62 @@
 # Overview
 
-## What Pictova Is
+## What Pictovap Is
 
-Pictova is a visual intelligence layer for content publishing. Given a WordPress post, it finds the right images, processes them, and places them — without human intervention.
+Pictovap is an open-source visual finishing engine for content publishers.
 
-It connects to any combination of image sources:
+Given an article, it analyzes the content structure, determines what imagery is needed,
+evaluates candidate images, records provenance, and produces a CMS-agnostic placement plan.
 
-- **Free APIs**: Unsplash and similar open providers
-- **Licensed stock**: DepositPhotos and compatible APIs
-- **Personal library**: Mac Photos via indexed visual memory
-- **Local files**: Any directory of JPGs, PNGs, or WebPs on disk
+Pictovap is not a stock photo search tool, a DAM, or a generic AI image generator.
+It is the article-aware layer between written content and a visually complete,
+publish-ready CMS page.
 
-It delivers to any combination of destinations:
+## The Four Primitives
 
-- **WordPress**: native Gutenberg blocks, media library upload, featured image
-- **Local output**: processed files with generated metadata
-- **Structured JSON**: for custom downstream pipelines
+Pictovap is built around four core data structures that move through the pipeline:
+
+1. **[Visual Brief](visual-brief.md)** — A structured extraction of what imagery the article needs.
+2. **[Fit Score](fit-score.md)** — A transparent, deterministic evaluation of each candidate image.
+3. **[Provenance Pack](provenance-pack.md)** — An audit trail for every selected image.
+4. **[CMS Placement](cms-placement.md)** — A CMS-agnostic plan for where images are placed.
 
 ## What Problem It Solves
 
-Adding images to content is slow, repetitive, and cognitively expensive. A human editor must:
+Adding images to content is slow, repetitive, and requires domain judgment. An editor must:
 
-1. Read the post to understand its context
+1. Read the article to understand its visual needs
 2. Search multiple sources for relevant images
-3. Download, resize, and rename files
-4. Upload to WordPress
+3. Evaluate candidates against quality, license, and brand criteria
+4. Process and rename files
 5. Write alt text and captions
-6. Place images at appropriate positions
-7. Repeat for every post
+6. Place images at appropriate positions in the CMS
 
-Pictova automates all seven steps. It reads the post context, derives a semantic query, scores candidates from every configured source, selects the best matches, processes them to spec, generates metadata, and inserts native WordPress blocks.
-
-A post that takes 20 minutes of manual work takes under 60 seconds with Pictova.
+Pictovap automates this workflow. It reads article structure, derives a visual brief,
+scores candidates from configured sources, selects the best matches, records provenance,
+and produces placement instructions that a CMS adapter can execute.
 
 ## What It Is Not
 
-Pictova does not generate images. It selects, processes, and places images that already exist — in your library, on your disk, or via licensed providers.
+Pictovap does not generate images. It selects, evaluates, and places images that already
+exist — in a local directory, a licensed stock API, or any configured image source.
 
-It does not replace editorial judgment for hero image selection or brand-defining visuals. It automates the volume work so editors can focus on the decisions that matter.
+It does not replace editorial judgment for hero image selection or brand-defining visuals.
+It automates the systematic work so editors can focus on decisions that matter.
 
-## Where It Lives
+## Adapter-Based Architecture
 
-Pictova was born as the visual layer of **Meridyen**, the content platform behind [yoldaolmak.com](https://yoldaolmak.com). It is designed to operate as a standalone application that any content publisher can adopt — from solo travel bloggers to enterprise media teams.
+Pictovap connects to external systems via adapters:
 
-See [Brand & Naming Doctrine](../architecture/naming.md) for the full Meridyen ecosystem map.
+- **Image Sources** — Local folders, Unsplash, DepositPhotos, Wikimedia, and others.
+  See [Image Source Adapters](../adapters/image-sources.md).
+- **CMS Targets** — WordPress, Ghost, Strapi, and others.
+  See [CMS Adapters](../adapters/cms-adapters.md).
 
-## Two Ways to Run It
+The core pipeline is independent of any specific adapter. The local demo runs with
+no credentials, no CMS, and no external APIs.
 
-**CLI** — for single posts and operator workflows:
-```bash
-pictova attach --site yoldaolmak --post 265713 --count 4 --people-first
-```
+## Compatibility Note
 
-**HTTP** — for automation, batch pipelines, and integrations:
-```bash
-pictova serve --host 127.0.0.1 --port 8040
-curl -X POST http://127.0.0.1:8040/jobs/attach \
-  -H 'Content-Type: application/json' \
-  -d '{"site":"yoldaolmak","post_id":265713,"count":4,"people_first":true}'
-```
-
-See [CLI Reference](../reference/cli.md) and [HTTP API Reference](../reference/http-api.md) for full details.
+Product name: Pictovap.
+Python package and legacy CLI may remain `pictova` for backward compatibility.
+Preferred public product name is Pictovap.

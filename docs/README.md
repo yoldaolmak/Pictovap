@@ -1,6 +1,7 @@
 # Pictovap Documentation
 
-Welcome to the documentation for **Pictovap**, an open-source visual finishing engine for content publishers.
+Welcome to the documentation for **Pictovap**, an open-source visual finishing engine
+for content publishers.
 
 ## Getting Started
 
@@ -10,13 +11,13 @@ Welcome to the documentation for **Pictovap**, an open-source visual finishing e
 ## Core Concepts
 
 - [Visual Brief](concepts/visual-brief.md) — Structured visual requirements extracted from articles.
-- [Fit Score](fit-score.md) — Transparent candidate image evaluation.
-- [Provenance Pack](provenance-pack.md) — Audit trail for selected images.
-- [CMS Placement](cms-placement.md) — CMS-agnostic placement instructions.
+- [Fit Score](concepts/fit-score.md) — Transparent candidate image evaluation.
+- [Provenance Pack](concepts/provenance-pack.md) — Audit trail for selected images.
+- [CMS Placement](concepts/cms-placement.md) — CMS-agnostic placement instructions.
 
 ## Reference
 
-- [Publisher Profiles](publisher-profiles.md) — Per-publisher configuration.
+- [Publisher Profiles](reference/publisher-profiles.md) — Per-publisher configuration.
 - [CLI Reference](CLI_REFERENCE.md) — Command-line interface.
 - [Configuration](reference/configuration.md) — Environment variables and settings.
 
@@ -34,4 +35,4 @@ Welcome to the documentation for **Pictovap**, an open-source visual finishing e
 
 ## Case Studies
 
-- [Yoldaolmak.com](case-study-yoldaolmak.md) — Real-world dogfooding case study.
+- [Yoldaolmak.com](case-studies/yoldaolmak.md) — Real-world dogfooding case study.
