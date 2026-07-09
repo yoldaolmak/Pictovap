@@ -1,125 +1,86 @@
-# Contributing to Pictova
+# 🤝 Contributing to Pictova
 
-Thank you for your interest in contributing to Pictova! Whether you're fixing a bug, improving documentation, or proposing a new feature, your contribution is welcome.
+First off, thank you for considering contributing to Pictova! It's people like you that make open-source software such a powerful tool for the community. 
 
-## 🚀 Getting Started
-
-### 1. Fork & Clone
-
-```bash
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
-```
-
-### 2. Set Up Development Environment
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt && pip install -e .
-```
-
-### 3. Run the Test Suite
-
-```bash
-python3 -m pytest -q                  # all tests
-python3 -m pytest tests/unit/         # unit only
-python3 -m pytest tests/integration/  # integration only
-```
-
-Integration tests require no WordPress credentials — they test the CLI contract with structured failure responses.
+Whether you're fixing a typo, resolving a critical bug, or proposing a massive architectural improvement, your contribution is highly valued.
 
 ---
 
-## 📝 How to Contribute
+## 🚀 How Can I Contribute?
 
-### Bug Reports
-Open an [issue](https://github.com/yoldaolmak/Pictovap/issues) with:
-- Steps to reproduce
-- Expected vs actual behavior
-- Python version and OS
+### 1. Reporting Bugs
+If you find a bug, please open an [issue](https://github.com/yoldaolmak/Pictovap/issues) and include:
+- A clear, descriptive title.
+- Steps to reproduce the behavior.
+- Expected behavior versus actual behavior.
+- Your OS and Python version.
 
-### Feature Proposals
-Open a [discussion](https://github.com/yoldaolmak/Pictovap/issues) describing:
-- The problem you're solving
-- Your proposed solution
-- Any alternatives considered
+### 2. Suggesting Enhancements
+Have an idea that would make Pictova better? Open a [discussion](https://github.com/yoldaolmak/Pictovap/issues) describing:
+- The specific problem you are trying to solve.
+- Your proposed solution.
+- Any alternative solutions you have considered.
 
-### Pull Requests
-1. Branch from `main`
-2. Write or update tests — all must pass
-3. Update relevant docs in `docs/`
-4. Update `CHANGELOG.md` under `[Unreleased]`
-5. Submit a PR with a clear description
+### 3. Submitting Pull Requests
+We love Pull Requests. To ensure a smooth review process:
+1. **Fork the repository** and create your branch from `main`.
+2. **Set up your environment** by following the [Developer Guide](docs/DEVELOPER.md).
+3. **Write tests** for any new logic (all existing and new tests must pass via `pytest`).
+4. **Update Documentation** if you change CLI arguments, API endpoints, or core architecture.
+5. **Update the CHANGELOG.md** under the `[Unreleased]` section.
+6. **Submit your PR** with a descriptive summary of your changes.
 
 ---
 
 ## 🏛 Architecture Rules
 
-Pictova's codebase follows strict layering:
+Pictova is a production-grade application, and we strictly enforce layering to prevent "spaghetti code".
 
-| Layer | Location | Rule |
-|-------|----------|------|
-| **App** | `src/pictova/app/` | HTTP/CLI entry points only — no business logic |
-| **Engine** | `src/pictova/engine/` | Core logic — no direct I/O, use injected providers |
-| **Providers** | `src/pictova/providers/` | External integrations (WordPress, Unsplash, etc.) |
-| **Legacy** | `src/core/`, `src/main.py` | Do not add new code here — migrate into `src/pictova/engine/` |
+| Layer | Directory | Enforcement Rule |
+| :--- | :--- | :--- |
+| **App** | `src/pictova/app/` | HTTP/CLI entry points only. Absolutely no business logic. |
+| **Engine** | `src/pictova/engine/` | Core logic and pipeline processing. Cannot import from `app/`. |
+| **Providers** | `src/pictova/providers/` | API boundaries (WP, Unsplash). Cannot import from `engine/`. |
+| **Legacy** | `src/core/` | Deprecated. **Do not add new code here.** |
 
-**Do not delete legacy modules** if anything still imports them — deprecate gradually.
+> [!WARNING]
+> Pull Requests that violate these architectural boundaries will not be merged. If you are unsure where a piece of logic belongs, please ask in your PR!
 
 ---
 
-## 🔤 Naming Convention
+## 🔤 Brand & Naming Convention
 
-- Product name: **Pictova**
-- CLI command: `pictova`
-- Python package root: `src.pictova`
-
-See [Brand & Naming Doctrine](docs/architecture/naming.md) for details.
+When writing documentation or code comments, please adhere to our naming conventions:
+- **Product Name:** Pictova (Always capitalized).
+- **CLI Command:** `pictova` (Always lowercase).
+- **Package Root:** `src.pictova`.
 
 ---
 
 ## 📋 Commit Messages
 
-Follow the conventional commits format:
+We strictly follow the [Conventional Commits](https://www.conventionalcommits.org/) specification. This allows us to auto-generate changelogs and version bumps.
 
-```
-type: short description
-```
-
-Types: `feat`, `fix`, `docs`, `refactor`, `test`, `ops`
-
-Examples:
-- `feat: add DepositPhotos provider`
-- `fix: handle HEIC files in vision chain`
-- `docs: update CLI reference for plan command`
-
----
-
-## 🧪 Testing
-
-Every new feature or bug fix must include tests:
-
-```bash
-# Run the full suite before submitting
-python3 -m pytest -q
+**Format:**
+```text
+<type>: <short description>
 ```
 
-Current test coverage: **51 tests** across unit and integration suites.
+**Allowed Types:**
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `refactor`: Code change that neither fixes a bug nor adds a feature
+- `test`: Adding or correcting tests
+- `ops`: Infrastructure, CI/CD, or deployment changes
 
----
-
-## 📖 Documentation
-
-- All docs are in English
-- Every new feature needs at least one updated doc page
-- Documentation structure:
-  - **Concepts** = What and Why
-  - **Guides** = How-to
-  - **Reference** = Complete specification
-  - **Architecture** = Design decisions
+**Examples:**
+- `feat: add local LLM support via LM Studio`
+- `fix: resolve crash when parsing malformed HEIC metadata`
+- `docs: update quickstart guide in README`
 
 ---
 
 ## 🙏 Code of Conduct
 
-Be respectful, constructive, and inclusive. We're building something useful together.
+In the interest of fostering an open and welcoming environment, we pledge to make participation in our project and our community a harassment-free experience for everyone. Be respectful, be constructive, and let's build something awesome together.

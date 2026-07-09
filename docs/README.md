@@ -1,55 +1,50 @@
-# Pictova Documentation
+# Pictova Documentation Portal
 
-**Pictova** — Visual Intelligence for Content
+Welcome to the official documentation for **Pictova**. 
 
-Pictova finds, selects, processes, and places images into WordPress posts from any source: free photo APIs, licensed stock providers, Mac Photos, or local files. It runs as a CLI, an HTTP service, or a Python library.
+Whether you are a content editor looking to automate your workflow, a developer wanting to contribute to the open-source engine, or an operator maintaining the infrastructure, you will find everything you need here.
 
----
+<br/>
 
-## Contents
+## 🧭 Navigation
 
-### Concepts
-Understand the system before running it.
+### 1. Fundamentals & Concepts
+Understand how Pictova works under the hood and why specific architectural decisions were made.
+- [System Overview](concepts/overview.md)
+- [Pipeline Architecture](concepts/pipeline.md)
+- [Semantic Selection Engine](concepts/semantic-selection.md)
+- [Visual Memory Index](concepts/visual-memory.md)
+- [Image Sources](concepts/sources.md)
 
-- [Overview](concepts/overview.md) — What Pictova is and why it exists
-- [Visual Memory](concepts/visual-memory.md) — The local image index and Mac Photos integration
-- [Semantic Selection](concepts/semantic-selection.md) — How images are matched to content
-- [The Pipeline](concepts/pipeline.md) — review → plan → process → attach
-- [Image Sources](concepts/sources.md) — All supported providers and local sources
+### 2. Implementation Guides
+Step-by-step guides for installing, configuring, and operating Pictova.
+- [Quickstart Guide](guides/quickstart.md)
+- [Full Installation](guides/installation.md)
+- [WordPress Integration Setup](guides/wordpress-setup.md)
+- [Mac Photos Library Setup](guides/mac-photos-setup.md)
+- [Adding New Sources](guides/adding-sources.md)
 
-### Guides
-Task-oriented walkthroughs.
+### 3. Architecture & Internal Design
+For developers looking to understand the separation of concerns and codebase structure.
+- [Architecture Manifesto](ARCHITECTURE.md)
+- [Engine Modules Deep Dive](architecture/engine-modules.md)
+- [Native vs Legacy Pipeline](architecture/native-vs-legacy.md)
+- [Brand & Naming Doctrine](architecture/naming.md)
 
-- [Quickstart](guides/quickstart.md) — First image attached in 5 minutes
-- [Installation](guides/installation.md) — Full setup with all components
-- [Mac Photos Setup](guides/mac-photos-setup.md) — Index and enrich your Photos library
-- [WordPress Setup](guides/wordpress-setup.md) — Credentials and site profiles
-- [Adding Image Sources](guides/adding-sources.md) — Configure Unsplash, DepositPhotos, local paths
+### 4. Technical Reference
+Exhaustive reference material for APIs, CLI commands, and configuration schemas.
+- [CLI Reference](reference/cli.md)
+- [HTTP API Reference](reference/http-api.md)
+- [Configuration Reference](reference/configuration.md)
+- [Site Profiles](reference/profiles.md)
 
-### Reference
-Complete specification for all interfaces.
+### 5. Operations & DevOps
+Runbooks and guides for deploying and maintaining Pictova in a production environment.
+- [Indexing Workflows](ops/indexing.md)
+- [Production Runbook](ops/runbook.md)
+- [Monitoring & Health](ops/monitoring.md)
 
-- [CLI Reference](reference/cli.md) — All `pictova` commands and flags
-- [HTTP API Reference](reference/http-api.md) — All endpoints, payloads, and responses
-- [Configuration](reference/configuration.md) — Environment variables and config file
-- [Site Profiles](reference/profiles.md) — Per-site rules and customization
+<br/>
 
-### Architecture
-How it is built and why.
-
-- [System Overview](architecture/overview.md) — Layers, modules, data flow
-- [Native vs Legacy Engine](architecture/native-vs-legacy.md) — Two engine paths explained
-- [Engine Modules](architecture/engine-modules.md) — selector, processor, publisher, quality, metadata
-- [Brand & Naming Doctrine](architecture/naming.md) — Why Pictova, Meridyen ecosystem, sub-layer names
-
-### Ops
-Running Pictova in production.
-
-- [Runbook](ops/runbook.md) — Day-to-day operation commands
-- [Indexing](ops/indexing.md) — Visual memory index maintenance
-- [Monitoring](ops/monitoring.md) — Health checks and observability
-
----
-
-- [Changelog](../CHANGELOG.md)
-- [Contributing](../CONTRIBUTING.md)
+> [!TIP]
+> **New to Pictova?** We highly recommend starting with the [Quickstart Guide](guides/quickstart.md) and the [System Overview](concepts/overview.md).
