@@ -24,31 +24,35 @@
       {
         "slot_id": "featured",
         "purpose": "featured_image",
-        "preferred_type": "landscape"
+        "preferred_type": "landscape",
+        "section_excerpt": "The Future of Minimalist Travel"
       },
       {
         "slot_id": "section_0",
         "purpose": "inline_after_packing_smart",
         "preferred_type": "any",
-        "target_heading": "Packing Smart"
+        "target_heading": "Packing Smart",
+        "section_excerpt": "The core of minimalism is the capsule wardrobe. By selecting versatile, neutral-colored clothing, travelers can mix and match outfits for any occasion without carrying excess weight."
       },
       {
         "slot_id": "section_1",
         "purpose": "inline_after_finding_serenity_in_nature",
         "preferred_type": "any",
-        "target_heading": "Finding Serenity in Nature"
+        "target_heading": "Finding Serenity in Nature",
+        "section_excerpt": "When you travel with less, you have the physical and mental energy to explore further. Walking through ancient forests or hiking coastal trails becomes the focus of the trip, rather than managing lugg"
       },
       {
         "slot_id": "section_2",
         "purpose": "inline_after_conclusion",
         "preferred_type": "any",
-        "target_heading": "Conclusion"
+        "target_heading": "Conclusion",
+        "section_excerpt": "Embracing this mindset transforms the journey. The world opens up when you carry only what you need."
       }
     ],
     "avoid_list": [],
     "editorial_notes": "",
     "confidence": 0.8,
-    "source_path": "/Users/yoldaolmak/Projects/Pictovap/examples/sample-article.md"
+    "source_path": "/Users/username/Projects/Pictovap/examples/sample-article.md"
   },
   "fit_scores": {
     "featured": [
@@ -56,55 +60,55 @@
         "candidate_id": "img-backpack-01",
         "slot_id": "featured",
         "contextual_relevance": 2.0,
-        "section_relevance": 1.5,
+        "section_relevance": 1.2,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 12.5,
+        "final_score": 12.2,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
-      },
-      {
-        "candidate_id": "img-forest-02",
-        "slot_id": "featured",
-        "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
-        "technical_quality": 3.0,
-        "duplication_risk": 0.0,
-        "source_trust": 2.0,
-        "license_confidence": 2.0,
-        "cms_suitability": 2.0,
-        "final_score": 10.5,
-        "decision": "selected",
-        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "featured",
         "contextual_relevance": 1.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.6,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 2.0,
-        "final_score": 10.5,
+        "final_score": 9.6,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
       },
       {
-        "candidate_id": "img-lowres-04",
+        "candidate_id": "img-forest-02",
         "slot_id": "featured",
-        "contextual_relevance": 1.0,
-        "section_relevance": 1.5,
-        "technical_quality": 0.5,
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
         "final_score": 9.0,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-lowres-04",
+        "slot_id": "featured",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.6,
+        "technical_quality": 0.5,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 2.0,
+        "final_score": 8.1,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -112,15 +116,15 @@
         "candidate_id": "img-generic-03",
         "slot_id": "featured",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 2.0,
         "duplication_risk": 0.0,
         "source_trust": 1.0,
         "license_confidence": 0.5,
         "cms_suitability": 2.0,
-        "final_score": 7.0,
+        "final_score": 5.5,
         "decision": "needs_review",
-        "human_reason": "Moderate fit (score=7.0), manual review recommended"
+        "human_reason": "Moderate fit (score=5.5), manual review recommended"
       }
     ],
     "section_0": [
@@ -128,13 +132,13 @@
         "candidate_id": "img-backpack-01",
         "slot_id": "section_0",
         "contextual_relevance": 2.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.11,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 12.0,
+        "final_score": 10.61,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
       },
@@ -200,13 +204,13 @@
         "candidate_id": "img-backpack-01",
         "slot_id": "section_1",
         "contextual_relevance": 2.0,
-        "section_relevance": 0.0,
+        "section_relevance": 0.09,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.5,
+        "final_score": 10.59,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
       },
@@ -214,13 +218,13 @@
         "candidate_id": "img-forest-02",
         "slot_id": "section_1",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.18,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.0,
+        "final_score": 8.68,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
@@ -228,13 +232,13 @@
         "candidate_id": "img-sunset-05",
         "slot_id": "section_1",
         "contextual_relevance": 1.0,
-        "section_relevance": 0.75,
+        "section_relevance": 0.18,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 9.25,
+        "final_score": 8.68,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
       },
@@ -242,13 +246,13 @@
         "candidate_id": "img-lowres-04",
         "slot_id": "section_1",
         "contextual_relevance": 1.0,
-        "section_relevance": 0.0,
+        "section_relevance": 0.09,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 7.0,
+        "final_score": 7.09,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -355,9 +359,9 @@
       "article_id": "demo-article-001",
       "slot_id": "featured",
       "placement_target": "featured_image",
-      "generated_alt_text": "A backpack, travel, minimalist scene",
-      "generated_caption": "Visual for: The Future of Minimalist Travel",
-      "timestamp": "2026-07-09T18:36:38.967446",
+      "generated_alt_text": "Visual showing the future of minimalist travel (backpack, travel, minimalist)",
+      "generated_caption": "The Future of Minimalist Travel",
+      "timestamp": "2026-07-09T18:51:26.340035",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -378,9 +382,9 @@
       "article_id": "demo-article-001",
       "slot_id": "section_0",
       "placement_target": "inline_after_packing_smart",
-      "generated_alt_text": "A forest, nature, path scene",
-      "generated_caption": "Visual for: Packing Smart",
-      "timestamp": "2026-07-09T18:36:38.967466",
+      "generated_alt_text": "Visual showing packing smart (forest, nature, path)",
+      "generated_caption": "The core of minimalism is the capsule wardrobe.",
+      "timestamp": "2026-07-09T18:51:26.340135",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -401,9 +405,9 @@
       "article_id": "demo-article-001",
       "slot_id": "section_1",
       "placement_target": "inline_after_finding_serenity_in_nature",
-      "generated_alt_text": "A sunset, mountains, nature scene",
-      "generated_caption": "Visual for: Finding Serenity in Nature",
-      "timestamp": "2026-07-09T18:36:38.967483",
+      "generated_alt_text": "Visual showing finding serenity in nature (sunset, mountains, nature)",
+      "generated_caption": "When you travel with less, you have the physical and mental energy to explore further.",
+      "timestamp": "2026-07-09T18:51:26.340183",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -422,8 +426,8 @@
         "target_section": "",
         "placement_strategy": "featured",
         "image_role": "featured",
-        "alt_text": "A backpack, travel, minimalist scene",
-        "caption": "Visual for: The Future of Minimalist Travel"
+        "alt_text": "Visual showing the future of minimalist travel (backpack, travel, minimalist)",
+        "caption": "The Future of Minimalist Travel"
       },
       {
         "slot_id": "section_0",
@@ -431,8 +435,8 @@
         "target_section": "Packing Smart",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A forest, nature, path scene",
-        "caption": "Visual for: Packing Smart"
+        "alt_text": "Visual showing packing smart (forest, nature, path)",
+        "caption": "The core of minimalism is the capsule wardrobe."
       },
       {
         "slot_id": "section_1",
@@ -440,8 +444,8 @@
         "target_section": "Finding Serenity in Nature",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A sunset, mountains, nature scene",
-        "caption": "Visual for: Finding Serenity in Nature"
+        "alt_text": "Visual showing finding serenity in nature (sunset, mountains, nature)",
+        "caption": "When you travel with less, you have the physical and mental energy to explore further."
       }
     ]
   },

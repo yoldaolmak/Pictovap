@@ -58,7 +58,7 @@ def _api_key() -> str:
 def _login() -> str:
     """Session ID döner (her çağrıda yeni session açar)."""
     api_key = _api_key()
-    user = os.getenv("DEPOSIT_LOGIN_USER", "yoldaolmak")
+    user = os.getenv("DEPOSIT_LOGIN_USER", "your_username")
     pwd = os.getenv("DEPOSIT_LOGIN_PASSWORD", "")
     r = _post({"dp_command": "login", "dp_apikey": api_key,
                 "dp_login_user": user, "dp_login_password": pwd})

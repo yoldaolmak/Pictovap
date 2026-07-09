@@ -76,7 +76,7 @@ curl -s http://127.0.0.1:8040/jobs
 Run after importing new photos:
 
 ```bash
-cd /Users/yoldaolmak/Projects/Pictova
+cd /Users/username/Projects/Pictova
 ./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 100
 ./.venv/bin/python extract_apple_photos_ml.py
 ```

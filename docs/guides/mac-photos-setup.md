@@ -16,7 +16,7 @@ The index runtime and Pictovap are intentionally separate: the indexer runs on y
 The index runtime lives in a separate directory (not this repo):
 
 ```bash
-cd /Users/yoldaolmak/Projects/Pictova
+cd /Users/username/Projects/Pictova
 ```
 
 If you don't have this directory, contact the project maintainer or set up the indexer from the `ops/` directory in this repo.
@@ -62,7 +62,7 @@ This step may take several minutes for large libraries.
 In Pictovap's `.env`:
 
 ```bash
-YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db
+YO_VISUAL_MEMORY_DB=/Users/username/Projects/Pictovap/data/visual_memory.db
 ```
 
 ## Step 5: Verify
@@ -83,7 +83,7 @@ If you see real file paths to your Photos originals, the connection is working.
 After importing new photos:
 
 ```bash
-cd /Users/yoldaolmak/Projects/Pictova
+cd /Users/username/Projects/Pictova
 ./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 100
 ./.venv/bin/python extract_apple_photos_ml.py
 ```

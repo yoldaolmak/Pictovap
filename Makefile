@@ -1,4 +1,4 @@
-.PHONY: install test lint clean demo help venv check-docs
+.PHONY: install test lint clean demo help venv check-docs security-check
 
 help:
 	@echo "Pictovap - Visual Finishing Engine"
@@ -11,6 +11,7 @@ help:
 	@echo "  clean       Clean temporary files"
 	@echo "  venv        Create virtual environment"
 	@echo "  check-docs  Check documentation link integrity"
+	@echo "  security-check  Run security hygiene tests"
 
 demo:
 	python3 -m pictova.demo
@@ -36,3 +37,6 @@ clean:
 
 venv:
 	python3 -m venv .venv
+
+security-check:
+	pytest tests/unit/test_security_hygiene.py -v

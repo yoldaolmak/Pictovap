@@ -56,7 +56,7 @@ WP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
 
 # Image sources
 UNSPLASH_ACCESS_KEY=abc123
-YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db
+YO_VISUAL_MEMORY_DB=/Users/username/Projects/Pictovap/data/visual_memory.db
 
 # Vision (optional, improves metadata quality)
 ANTHROPIC_API_KEY=sk-ant-...

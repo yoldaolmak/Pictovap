@@ -68,7 +68,7 @@ Pictovap operates on four core architectural primitives:
 
 Pictovap uses an adapter-based architecture:
 
-- **Image Sources:** Local folder, Unsplash, DepositPhotos, Visual Memory DB.
+- **Image Sources:** The demo uses local/mock sources. Planned source adapters include Unsplash, Openverse, DepositPhotos, and Visual Memory DB.
 - **CMS Placement:** WordPress adapter exists; other adapters are reference/stub work.
 
 ## Current Limitations
