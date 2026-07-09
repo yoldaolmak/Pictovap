@@ -214,7 +214,7 @@ class YOWordPressUploader:
                 return {
                     "success": False,
                     "code": "media_manifest_drift",
-                    "error": "Pictova-managed media blocks are missing; run guard --repair before attaching new media",
+                    "error": "Pictovap-managed media blocks are missing; run guard --repair before attaching new media",
                     **integrity,
                 }
 
@@ -349,7 +349,7 @@ class YOWordPressUploader:
             return {
                 "success": False,
                 "code": "post_content_conflict",
-                "error": "Post changed while Pictova was preparing media blocks; no content was overwritten",
+                "error": "Post changed while Pictovap was preparing media blocks; no content was overwritten",
                 "expected_modified": original_modified,
                 "current_modified": latest.get("modified", ""),
             }
@@ -438,7 +438,7 @@ class YOWordPressUploader:
         adopt: bool = False,
         media_ids: Optional[List[int]] = None,
     ) -> Dict:
-        """Check, adopt, or safely reconstruct Pictova-managed media blocks."""
+        """Check, adopt, or safely reconstruct Pictovap-managed media blocks."""
         post = self.fetch_post_context(post_id)
         if not post:
             return {"command": "guard", "status": "failed", "error": "Post context could not be loaded"}

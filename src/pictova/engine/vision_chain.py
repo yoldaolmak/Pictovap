@@ -1,4 +1,4 @@
-"""Pictova Vision Chain — görsel analiz öncelik zinciri.
+"""Pictovap Vision Chain — görsel analiz öncelik zinciri.
 
 Öncelik (asla basic fallback yok):
   1. Gemini Flash REST (GEMINI_API_KEY — Google AI Studio, ücretsiz)

@@ -21,7 +21,7 @@ from pictova.engine.vision_chain import analyze_image_vision_chain, has_any_visi
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db",
 ))
 
 _lock = threading.Lock()

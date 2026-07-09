@@ -1,5 +1,5 @@
 """
-Vision template system for Pictova.
+Vision template system for Pictovap.
 
 Developers can define custom prompt templates to control metadata tone,
 language, and field structure. Templates can be passed to
@@ -56,7 +56,7 @@ class VisionTemplate:
 # ── Built-in templates ────────────────────────────────────────────────────────
 
 def _travel_blog_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
-    """Default Pictova travel blog template (Turkish output)."""
+    """Default Pictovap travel blog template (Turkish output)."""
     title = str(post_context.get("title") or "").strip()
     location_ctx = location_hint or title or ""
     apple_labels = post_context.get("apple_labels") or []
@@ -133,7 +133,7 @@ def _ecommerce_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
 
 TRAVEL_BLOG = VisionTemplate(
     name="travel_blog",
-    description="Default Pictova template — Turkish output, travel blog SEO.",
+    description="Default Pictovap template — Turkish output, travel blog SEO.",
     prompt_fn=_travel_blog_prompt,
 )
 

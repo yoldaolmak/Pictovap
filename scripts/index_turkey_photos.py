@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.11
-"""Pictova — Global photos & video indexer (Mac Photos).
+"""Pictovap — Global photos & video indexer (Mac Photos).
 
 Hierarchy: Continent → Country → City (Compatible with Meridian map structure)
 
@@ -121,7 +121,7 @@ def _country_code_to_continent(code: str) -> str:
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db",
 ))
 
 # ── DB init ───────────────────────────────────────────────────────────────────

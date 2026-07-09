@@ -8,7 +8,7 @@ from pathlib import Path
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db",
 ))
 
 

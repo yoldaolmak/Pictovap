@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.11
-"""Pictova — Country-based photo indexer.
+"""Pictovap — Country-based photo indexer.
 
 For countries other than TR. Excludes personal albums.
 Usage: python3.11 scripts/index_country_photos.py --country IT --limit 5000
@@ -26,7 +26,7 @@ EXCLUDE_ALBUMS = {
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db",
 ))
 
 UPSERT_SQL = """

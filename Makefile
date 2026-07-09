@@ -23,7 +23,7 @@ test:
 	pytest tests/unit -v
 
 check-docs:
-	pytest tests/unit/test_docs.py -v
+	pytest tests/unit/test_demo.py::test_docs_readme_links_resolve -v
 
 lint:
 	flake8 src/ --max-line-length=120
@@ -36,6 +36,3 @@ clean:
 
 venv:
 	python3 -m venv .venv
-
-check-docs:
-	pytest tests/unit/test_demo.py::test_docs_readme_links_resolve -v

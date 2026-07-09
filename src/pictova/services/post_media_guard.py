@@ -1,4 +1,4 @@
-"""Persistent integrity manifests for Pictova-managed WordPress media blocks."""
+"""Persistent integrity manifests for Pictovap-managed WordPress media blocks."""
 
 from __future__ import annotations
 

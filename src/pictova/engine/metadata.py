@@ -247,7 +247,7 @@ def build_native_metadata_map(
     normalized_mode = str(mode or "auto").strip().lower()
     if normalized_mode == "basic":
         raise RuntimeError(
-            "mode=basic reddedildi: Pictova basic fallback kullanmaz. "
+            "mode=basic reddedildi: Pictovap basic fallback kullanmaz. "
             "GEMINI_API_KEY ekle veya codex/claude oturumu aç."
         )
 

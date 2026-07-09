@@ -15,7 +15,7 @@ from pathlib import Path
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db",
 ))
 OUT_PATH = DB_PATH.parent / "destination_index.json"
 TOP_N = 20  # Top N photos from each destination

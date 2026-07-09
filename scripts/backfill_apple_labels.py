@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.11
-"""Pictova - Apple ML Labels Backfill Script
+"""Pictovap - Apple ML Labels Backfill Script
 This script populates the newly added `apple_labels_json` column 
 for all existing photos in the database by reading from osxphotos.
 """
@@ -13,7 +13,7 @@ import osxphotos
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictovap/data/visual_memory.db",
 ))
 
 def main():
