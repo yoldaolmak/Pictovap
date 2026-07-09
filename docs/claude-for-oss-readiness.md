@@ -1,6 +1,6 @@
 # Claude for Open Source — Readiness Assessment
 
-This document is an honest internal assessment of Pictovap's readiness for the Claude for Open Source program. It does not claim qualification.
+This document is an honest internal assessment of Pictovap's readiness for the Claude for Open Source program. Pictovap does not yet meet the quantitative Claude for OSS ecosystem thresholds.
 
 ## What Pictovap Is
 

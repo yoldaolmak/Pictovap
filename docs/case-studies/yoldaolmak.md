@@ -21,7 +21,7 @@ A typical 2,000-word travel guide required:
 5. **Placement** — manually uploading each image to the WordPress media library and
    inserting Gutenberg blocks at the correct paragraph.
 
-This process took an average of **45 minutes per article**. It scaled linearly with
+This process could take tens of minutes per long-form travel article. It scaled linearly with
 article volume and was entirely manual.
 
 ## The Solution
@@ -40,16 +40,14 @@ By implementing the four Pictovap primitives, Yoldaolmak automated this pipeline
 
 ## The Result
 
-The visual finishing process went from 45 minutes of manual labor to a single
-automated pipeline invocation. Editors now focus on narrative quality. Pictovap
-acts as an automated photo editor, image researcher, and layout assistant.
+Before Pictovap, visual finishing could take tens of minutes per long-form travel article. Pictovap turns that workflow into a single pipeline run, but results still require editorial review before publishing.
 
 ## What This Case Study Is Not
 
-This is a single-publisher dogfooding case study. Yoldaolmak.com uses a
-WordPress/Turkish-language setup with a specific local photo library. The Pictovap
-primitives and adapter architecture are designed to generalize beyond this specific
-context.
+This is a single-publisher dogfooding case.
+It is not evidence of broad external adoption.
+The reusable part is the primitive/adapters model.
+The site-specific part is WordPress, Turkish-language metadata, and yoldaolmak's editorial profile.
 
 The project welcomes case studies from:
 - Publishers using different CMS platforms

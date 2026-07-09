@@ -42,6 +42,10 @@ inputs, it produces the same output. This makes it:
 - **Testable** — unit tests cover the full decision tree
 - **Tunable** — weights can be adjusted per publisher profile
 
+## Extending Scoring
+
+While the current engine uses rule-based heuristics, the `FitScore` primitive is designed so that future adapters can extend or replace scoring logic (e.g., using a local lightweight ML model for aesthetic grading) as long as they return the deterministic `FitScore` object.
+
 ## Example
 
 ```python

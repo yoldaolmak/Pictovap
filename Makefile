@@ -38,4 +38,4 @@ venv:
 	python3 -m venv .venv
 
 check-docs:
-	python3 scripts/check_docs_links.py
+	pytest tests/unit/test_demo.py::test_docs_readme_links_resolve -v

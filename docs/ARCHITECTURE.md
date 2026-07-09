@@ -55,12 +55,16 @@ While WordPress is currently the most production-hardened target, it is merely o
 
 Pictovap was extracted from the production infrastructure of a travel publisher, yoldaolmak.com. The site's profile (`src/pictova/profiles/yoldaolmak.py`) and specific constraints represent a dogfooding case study and one possible configuration, not the default path or product center.
 
-## 8. Legacy Package/CLI Compatibility
+## 8. Metadata Generation as Optional Adapter Behavior
+
+While Pictovap produces standard metadata (Alt Text, SEO Title, Caption), the exact mechanism is source-agnostic. It may be generated via an AI metadata adapter (e.g., Gemini, Claude, LM Studio) or fall back to rule-based templates. No specific AI model or "Vision Chain" is a required architectural component.
+
+## 9. Legacy Package/CLI Compatibility
 
 - **Product name:** Pictovap.
 - Python package, directories (e.g., `src/pictova/`), and legacy CLI commands may remain `pictova` for backward compatibility.
 
-## 9. Current Limitations
+## 10. Current Limitations
 
 - Core logic was recently extracted from production; some internal dict passing is still being migrated to strict primitives.
 - Only the WordPress CMS adapter is production-hardened; others are reference stubs.

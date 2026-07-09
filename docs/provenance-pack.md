@@ -1,17 +1,3 @@
-# Provenance Pack
+# Moved
 
-The **Provenance Pack** is Pictovap's solution to copyright tracking, metadata generation, and historical auditing. 
-
-For every image that passes the `FitScore` gate and is selected for processing, a `ProvenancePack` is generated. This pack travels with the image through processing and into the CMS.
-
-## Data Maintained
-
-The Pack records:
-
-- **Source Identity**: Original URL, local path, and Provider (e.g., Unsplash, DepositPhotos).
-- **Licensing & Attribution**: The required attribution string and the known commercial license status.
-- **Integrity**: A content hash of the original file to track modifications.
-- **Generated Metadata**: The Alt Text, SEO Title, and Caption generated during processing. These may be produced by an AI metadata adapter (Gemini, Claude, LM Studio) or by a rule-based template fallback — the ProvenancePack records the result regardless of the generator used.
-- **Output Files**: The paths to the final optimized WebP files.
-
-Maintaining this pack ensures that if a publisher is ever audited for copyright, they have a deterministic log of exactly where an image came from and under what license it was obtained.
+This document has moved to `docs/concepts/provenance-pack.md`.
