@@ -113,8 +113,10 @@ def score_candidate(candidate: dict, slot: dict, brief: VisualBrief) -> FitScore
     overlap = len(topic_words & kw)
     contextual = min(overlap / max(len(topic_words), 1) * 5.0, 5.0)
 
-    # Section relevance: keyword overlap with target heading
-    section_words = set(target_heading.lower().split()) if target_heading else set()
+    # Section relevance: keyword overlap with target heading and context
+    section_excerpt = slot.get("section_excerpt", "")
+    section_text = f"{target_heading} {section_excerpt}".strip()
+    section_words = set(section_text.lower().split()) if section_text else set()
     section_overlap = len(section_words & kw)
     section_rel = min(section_overlap / max(len(section_words), 1) * 3.0, 3.0) if section_words else 1.5
 
@@ -179,10 +181,84 @@ def score_candidate(candidate: dict, slot: dict, brief: VisualBrief) -> FitScore
     )
 
 
+def generate_markdown_report(output: dict) -> str:
+    """Generate a human-readable Markdown report from the JSON output."""
+    lines = []
+    
+    brief = output.get("visual_brief", {})
+    profile = output.get("profile", {})
+    
+    lines.append("# Pictovap Visual Plan")
+    lines.append("")
+    
+    lines.append("## Article")
+    lines.append(f"- **Title:** {brief.get('article_title', 'Unknown')}")
+    lines.append(f"- **Language:** {brief.get('article_language', 'en')}")
+    lines.append(f"- **Publisher Profile:** {profile.get('brand', 'Unknown')} ({profile.get('id', 'unknown')})")
+    lines.append("")
+    
+    lines.append("## Visual Brief")
+    lines.append(f"Detected {len(brief.get('sections', []))} sections and {len(brief.get('image_slots', []))} required image slots.")
+    for slot in brief.get('image_slots', []):
+        lines.append(f"- **{slot['slot_id']}**: {slot['purpose']}")
+    lines.append("")
+    
+    lines.append("## Selected Images")
+    scores = output.get("fit_scores", {})
+    packs = output.get("provenance_packs", [])
+    for pack in packs:
+        slot_id = pack['slot_id']
+        lines.append(f"### Slot: {slot_id}")
+        lines.append(f"**Image ID:** {pack['image_id']}")
+        lines.append(f"- **Alt text:** {pack['generated_alt_text']}")
+        lines.append(f"- **Caption:** {pack['generated_caption']}")
+        lines.append("")
+
+    lines.append("## Candidates Requiring Review")
+    has_review = False
+    for slot_id, slot_scores in scores.items():
+        review = [s for s in slot_scores if s['decision'] == 'needs_review']
+        rejected = [s for s in slot_scores if s['decision'] == 'rejected']
+        
+        if review or rejected:
+            lines.append(f"### Slot: {slot_id}")
+            has_review = True
+            if review:
+                for r in review:
+                    lines.append(f"- ⚠️ **Needs Review** ({r['candidate_id']}): {r['human_reason']}")
+            if rejected:
+                for r in rejected:
+                    lines.append(f"- ❌ **Rejected** ({r['candidate_id']}): {r['human_reason']}")
+            lines.append("")
+            
+    if not has_review:
+        lines.append("No candidates flagged for manual review.")
+        lines.append("")
+        
+    lines.append("## Provenance")
+    for pack in packs:
+        lines.append(f"- **{pack['slot_id']}**: {pack['image_id']} -> Provider: {pack['provider']}, License: {pack['license_status']}, Hash: {pack['content_hash']}")
+    lines.append("")
+
+    lines.append("## CMS Placement Plan")
+    placement = output.get("cms_placement", {})
+    for instr in placement.get("placements", []):
+        lines.append(f"- **{instr['slot_id']}** -> `{instr['placement_strategy']}:{instr['target_section'] or 'top'}` (File: `{instr['output_path']}`)")
+    lines.append("")
+    
+    lines.append("## Editorial Review Checklist")
+    lines.append("- [ ] Verify alt text correctly describes the image for accessibility.")
+    lines.append("- [ ] Ensure captions are editorially sound and not repetitive.")
+    lines.append("- [ ] Check that selected images match the brand's visual identity.")
+    lines.append("- [ ] Review any candidates flagged in the 'Candidates Requiring Review' section.")
+    
+    return "\n".join(lines)
+
+
 # ---------------------------------------------------------------------------
 # Demo runner
 # ---------------------------------------------------------------------------
-def run_demo(article_path_str: str = None, profile_path_str: str = None, output_path_str: str = None):
+def run_demo(article_path_str: str = None, profile_path_str: str = None, output_path_str: str = None, report_path_str: str = None):
     """Run the full Pictovap demo pipeline."""
     print("=" * 60)
     print("  Pictovap Local Demo")
@@ -218,7 +294,11 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
     brief = VisualBrief.from_markdown(str(article_path))
     brief.topic = "minimalist travel"
     brief.detected_location = None
-    brief.article_language = "en"
+    
+    # Allow publisher profile to override if explicitly set to something else
+    if profile.profile_id != "demo" and profile.language:
+        brief.article_language = profile.language
+        
     brief.article_id = "demo-article-001"
 
     print(f"\n[1/4] Visual Brief")
@@ -226,7 +306,9 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
     print(f"  Sections: {len(brief.sections)}")
     print(f"  Slots:    {len(brief.image_slots)}")
     for slot in brief.image_slots:
-        print(f"    - {slot['slot_id']}: {slot['purpose']} ({slot['preferred_type']})")
+        excerpt = slot.get('section_excerpt', '')
+        excerpt_disp = f" (Context: {excerpt[:40]}...)" if len(excerpt) > 40 else (f" (Context: {excerpt})" if excerpt else "")
+        print(f"    - {slot['slot_id']}: {slot['purpose']} ({slot['preferred_type']}){excerpt_disp}")
 
     # 3. Score all candidates for each slot
     print(f"\n[2/4] Fit Scores ({len(MOCK_CANDIDATES)} candidates x {len(brief.image_slots)} slots)")
@@ -262,6 +344,20 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
                 chash = hashlib.sha256(content.encode()).hexdigest()[:16]
                 gen_name = f"pictovap_{cand['filename'].rsplit('.', 1)[0]}.webp"
 
+                target = slot.get('target_heading') or brief.article_title
+                excerpt = slot.get('section_excerpt', '').strip()
+                
+                # Extract first sentence for an editorial caption
+                first_sentence = excerpt.split('.')[0] + "." if '.' in excerpt else excerpt
+                caption = first_sentence.strip() if first_sentence.strip() else target
+                
+                kw_str = ", ".join(cand.get('keywords', [])[:3])
+
+                if brief.article_language == "tr":
+                    alt_text = f"{target} ile ilgili görsel ({kw_str})"
+                else:
+                    alt_text = f"Visual showing {target.lower()} ({kw_str})"
+
                 pack = ProvenancePack(
                     image_id=cand["id"],
                     source_type=cand.get("source_type", "local"),
@@ -276,8 +372,8 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
                     article_id=brief.article_id,
                     slot_id=slot["slot_id"],
                     placement_target=slot.get("purpose", ""),
-                    generated_alt_text=f"A {', '.join(cand.get('keywords', [])[:3])} scene",
-                    generated_caption=f"Visual for: {slot.get('target_heading', brief.article_title)}",
+                    generated_alt_text=alt_text,
+                    generated_caption=caption,
                     processing_actions=["resize_1200", "webp_convert", "exif_strip"],
                 )
                 packs.append(pack)
@@ -337,9 +433,18 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
     
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
+    
+    # 8. Write Markdown report if requested
+    if report_path_str:
+        report_path = Path(report_path_str)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_markdown = generate_markdown_report(output)
+        report_path.write_text(report_markdown, encoding="utf-8")
 
     print(f"\n{'=' * 60}")
     print(f"  Output written to: {out_path}")
+    if report_path_str:
+        print(f"  Report written to: {report_path}")
     print(f"  Brief:      {len(brief.image_slots)} slots from {len(brief.sections)} sections")
     print(f"  Evaluated:  {len(MOCK_CANDIDATES)} candidates")
     print(f"  Selected:   {len(packs)} images")
@@ -355,10 +460,12 @@ if __name__ == "__main__":
     parser.add_argument("--article", help="Path to a custom Markdown article", default=None)
     parser.add_argument("--profile", help="Path to a custom Publisher Profile YAML", default=None)
     parser.add_argument("--output", help="Path to write the JSON output", default=None)
+    parser.add_argument("--report", nargs='?', const="examples/sample-report.md", help="Path to write the human-readable Markdown report", default=None)
     args = parser.parse_args()
 
     run_demo(
         article_path_str=args.article,
         profile_path_str=args.profile,
-        output_path_str=args.output
+        output_path_str=args.output,
+        report_path_str=args.report
     )

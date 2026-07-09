@@ -56,20 +56,37 @@ class VisualBrief:
         This is a deterministic, rule-based parser. It does not use AI.
         It extracts headings and builds image slots from the document structure.
         """
+        import re
         from pathlib import Path
         text = Path(path).read_text(encoding="utf-8")
+        # Simple language detection (heuristic)
+        text_lower = text.lower()
+        tr_words = {"bir", "ve", "için", "ile", "kahve", "seçimi", "nasıl", "ekipman", "demleme", "çekirdek", "su", "öğütme", "gerekir", "kullanılır"}
+        en_words = {"the", "and", "for", "with", "guide", "how", "travel", "coffee", "equipment", "section"}
+        words = set(re.findall(r'\b\w+\b', text_lower))
+        tr_count = len(words & tr_words)
+        en_count = len(words & en_words)
+        
+        # fallback to "en" or profile language later, but detect primary here
+        lang = "tr" if tr_count > en_count else "en"
+
         lines = text.strip().split("\n")
 
         title = ""
         sections = []
+        current_section = None
         for line in lines:
             stripped = line.strip()
             if stripped.startswith("# ") and not title:
                 title = stripped[2:].strip()
             elif stripped.startswith("## "):
-                sections.append({"heading": stripped[3:].strip(), "level": "h2"})
+                current_section = {"heading": stripped[3:].strip(), "level": "h2", "lines": []}
+                sections.append(current_section)
             elif stripped.startswith("### "):
-                sections.append({"heading": stripped[4:].strip(), "level": "h3"})
+                current_section = {"heading": stripped[4:].strip(), "level": "h3", "lines": []}
+                sections.append(current_section)
+            elif current_section is not None and stripped:
+                current_section["lines"].append(stripped)
 
         # Build image slots: one featured + one per h2 section
         h2_sections = [s for s in sections if s.get("level") == "h2"]
@@ -78,18 +95,25 @@ class VisualBrief:
                 "slot_id": "featured",
                 "purpose": "featured_image",
                 "preferred_type": "landscape",
+                "section_excerpt": title,
             }
         ]
         for i, sec in enumerate(h2_sections):
+            excerpt = " ".join(sec.get("lines", []))[:200]
             slots.append({
                 "slot_id": f"section_{i}",
                 "purpose": f"inline_after_{sec['heading'].lower().replace(' ', '_')}",
                 "preferred_type": "any",
                 "target_heading": sec["heading"],
+                "section_excerpt": excerpt.strip(),
             })
+
+        for sec in sections:
+            sec.pop("lines", None)
 
         return cls(
             article_title=title,
+            article_language=lang,
             sections=sections,
             image_slots=slots,
             source_path=str(path),

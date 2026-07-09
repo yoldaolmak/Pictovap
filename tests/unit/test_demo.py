@@ -232,3 +232,38 @@ def test_demo_missing_article_exits(capsys):
     captured = capsys.readouterr()
     assert "Error: Article not found" in captured.out
 
+
+def test_demo_with_markdown_report(tmp_path):
+    """Demo should optionally write a Markdown report that meets formatting requirements."""
+    from pictova.demo import run_demo
+    
+    custom_article = tmp_path / "custom-article.md"
+    custom_article.write_text("# Markdown Test\n\nTesting the report.", encoding="utf-8")
+    
+    custom_output = tmp_path / "custom-output.json"
+    custom_report = tmp_path / "custom-report.md"
+    
+    run_demo(
+        article_path_str=str(custom_article),
+        output_path_str=str(custom_output),
+        report_path_str=str(custom_report)
+    )
+    
+    assert custom_output.exists(), "JSON output must be created"
+    assert custom_report.exists(), "Markdown report must be created"
+    
+    report_text = custom_report.read_text(encoding="utf-8")
+    
+    # Must contain sections
+    assert "## Article" in report_text
+    assert "## Visual Brief" in report_text
+    assert "## CMS Placement Plan" in report_text
+    assert "## Provenance" in report_text
+    
+    # Must contain the title
+    assert "**Title:** Markdown Test" in report_text
+    
+    # Must not contain raw JSON dumped (a heuristic is no top-level brace or quoting)
+    assert '{"visual_brief":' not in report_text
+    assert '}' not in report_text  # Simple heuristic for raw JSON formatting
+

@@ -35,9 +35,12 @@ Run the local credential-free demo to see the deterministic scoring in action:
 make demo
 ```
 
-You can also test the demo against your own article:
+You can also test the demo against your own article. The demo outputs canonical JSON by default, but you can optionally generate an editor-readable Markdown report:
 ```bash
-python -m pictova.demo --article path/to/your/article.md --output my-plan.json
+python -m pictova.demo \
+  --article path/to/your/article.md \
+  --output my-plan.json \
+  --report my-report.md
 ```
 
 ## Demo Output

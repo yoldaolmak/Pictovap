@@ -40,8 +40,14 @@ This will:
 5. Evaluate candidates with Fit Scores
 6. Create Provenance Packs for selected images
 7. Create a CMS Placement plan
-8. Write output to `examples/sample-output.json`
+8. Write canonical JSON output to `examples/sample-output.json`
 9. Print a terminal summary
+
+To generate a human-readable visual plan report alongside the JSON, use the `--report` flag:
+
+```bash
+python -m pictova.demo --output examples/sample-output.json --report examples/sample-report.md
+```
 
 ## Run Tests
 
