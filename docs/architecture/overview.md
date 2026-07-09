@@ -2,7 +2,7 @@
 
 ## Layers
 
-Pictova is structured in three layers. Each layer has a single responsibility and a clean boundary.
+Pictovapp is structured in three layers. Each layer has a single responsibility and a clean boundary.
 
 ```
 ┌─────────────────────────────────────┐

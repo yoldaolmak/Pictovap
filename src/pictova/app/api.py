@@ -45,7 +45,9 @@ def search_photos(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def review_post(payload: Dict[str, Any]) -> Dict[str, Any]:
-    site = payload.get("site", "yoldaolmak")
+    site = payload.get("site")
+    if not site:
+        return {"command": "review", "status": "failed", "warning": "site parameter is required"}
     post_id = payload.get("post_id")
     try:
         from pictova.main import search_semantic_assets
@@ -83,7 +85,7 @@ def guard_post(payload: Dict[str, Any]) -> Dict[str, Any]:
         return {"command": "guard", "status": "failed", "warning": "post_id gerekli"}
     return guard_post_media(
         int(post_id),
-        site=payload.get("site", "yoldaolmak"),
+        site=payload.get("site", "demo"),
         repair=bool(payload.get("repair", False)),
         adopt=bool(payload.get("adopt", False)),
         media_ids=payload.get("media_ids"),
@@ -109,8 +111,8 @@ def health_status() -> Dict[str, Any]:
 
 
 def plan_attach(payload: Dict[str, Any]) -> Dict[str, Any]:
-    site = payload.get("site", "yoldaolmak")
-    request, post_context, constraints = prepare_attach_request(**payload)
+    site = payload.get("site", "demo")
+    request, post_context, constraints, brief = prepare_attach_request(**payload)
     return build_attach_plan(
         site=site,
         request=request,
@@ -120,8 +122,8 @@ def plan_attach(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def process_attach(payload: Dict[str, Any]) -> Dict[str, Any]:
-    site = payload.get("site", "yoldaolmak")
-    request, post_context, constraints = prepare_attach_request(**payload)
+    site = payload.get("site", "demo")
+    request, post_context, constraints, brief = prepare_attach_request(**payload)
     return build_process_result(
         site=site,
         request=request,

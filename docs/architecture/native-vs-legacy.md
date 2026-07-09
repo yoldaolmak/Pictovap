@@ -1,6 +1,6 @@
 # Native vs Legacy Engine
 
-Pictova operates on two engine paths. Both produce the same structured output. The difference is architecture, not behavior.
+Pictovapp operates on two engine paths. Both produce the same structured output. The difference is architecture, not behavior.
 
 ## Legacy Engine (default)
 
@@ -52,7 +52,7 @@ The native engine is the long-term target. Migration is incremental:
 | A | HTTP surface auth | Planned |
 | B | Persisted job store | Planned |
 | C | Legacy core retired into `src/pictova/engine/` | In progress |
-| D | Visual memory indexer absorbed into Pictova repo | Planned |
+| D | Visual memory indexer absorbed into Pictovapp repo | Planned |
 
 No behavior is removed until the native path matches it. The legacy core remains available indefinitely until Milestone C is complete.
 

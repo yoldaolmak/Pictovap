@@ -68,7 +68,15 @@ def _parse_json_from_text(text: str) -> Dict:
     raise ValueError(f"JSON bulunamadı: {text[:200]}")
 
 
-def _vision_prompt(image_path: str, location_hint: str, post_context: Dict) -> str:
+def _vision_prompt(
+    image_path: str,
+    location_hint: str,
+    post_context: Dict,
+    template=None,
+) -> str:
+    """Build vision prompt. If a VisionTemplate is supplied, delegates to it."""
+    if template is not None:
+        return template.build_prompt(location_hint, post_context)
     title = str(post_context.get("title") or "").strip()
     location_ctx = location_hint or title or ""
     apple_labels = post_context.get("apple_labels") or []
@@ -95,6 +103,7 @@ def _analyze_gemini_flash(
     image_path: str,
     location_hint: str,
     post_context: Dict,
+    template=None,
 ) -> Dict[str, Any]:
     keys_env = os.environ.get("GEMINI_API_KEYS", "").strip()
     
@@ -122,7 +131,7 @@ def _analyze_gemini_flash(
         raise RuntimeError("GEMINI_API_KEY veya GEMINI_API_KEYS yok")
 
     b64, mime = _image_b64(image_path)
-    prompt = _vision_prompt(image_path, location_hint, post_context)
+    prompt = _vision_prompt(image_path, location_hint, post_context, template)
     model = os.environ.get("GEMINI_VISION_MODEL", "").strip()
     if not model:
         env_path = Path(__file__).parent.parent.parent.parent / ".env"
@@ -226,6 +235,7 @@ def _analyze_codex(
     image_path: str,
     location_hint: str,
     post_context: Dict,
+    template=None,
 ) -> Dict[str, Any]:
     if not _codex_check_login():
         raise RuntimeError("Codex oturumu yok — terminalde: codex login")
@@ -234,7 +244,7 @@ def _analyze_codex(
     if not codex_bin:
         raise RuntimeError("codex CLI bulunamadı")
 
-    prompt_text = _vision_prompt(image_path, location_hint, post_context)
+    prompt_text = _vision_prompt(image_path, location_hint, post_context, template)
     full_prompt = (
         f"Analyze the image file at path: {image_path}\n\n"
         f"{prompt_text}"
@@ -312,6 +322,7 @@ def _analyze_claude_cli(
     image_path: str,
     location_hint: str,
     post_context: Dict,
+    template=None,
 ) -> Dict[str, Any]:
     claude_bin = _find_bin("claude")
     if not claude_bin:
@@ -322,7 +333,7 @@ def _analyze_claude_cli(
 
     prompt = (
         f"Read the image at: {ready_path}\n\n"
-        + _vision_prompt(image_path, location_hint, post_context)
+        + _vision_prompt(image_path, location_hint, post_context, template)
     )
 
     result = subprocess.run(
@@ -343,6 +354,7 @@ def _analyze_lm_studio(
     image_path: str,
     location_hint: str,
     post_context: Dict,
+    template=None,
 ) -> Dict[str, Any]:
     url_models = "http://localhost:1234/v1/models"
     url_chat = "http://localhost:1234/v1/chat/completions"
@@ -360,7 +372,7 @@ def _analyze_lm_studio(
 
     # Prepare image
     b64_mime, b64_data = _image_b64(image_path, max_side=1024)
-    prompt = _vision_prompt(image_path, location_hint, post_context)
+    prompt = _vision_prompt(image_path, location_hint, post_context, template)
 
     system_msg = (
         "Sen bir seyahat fotoğrafı analiz asistanısın. Görselleri nesnel, sade ve doğal bir dille analiz edersin. "
@@ -424,18 +436,46 @@ def analyze_image_vision_chain(
     *,
     location_hint: str = "",
     post_context: Dict | None = None,
+    template=None,
 ) -> Dict[str, Any]:
-    """Öncelik zinciri ile görsel analizi. Basic fallback YOK.
+    """Analyze an image through the Vision Chain fallback stack.
 
-    Döner: {"alt":..., "title":..., "caption":..., "description":..., "keywords":[...], "source":"..."}
-    Hepsi başarısız → RuntimeError.
+    Args:
+        image_path:    Path to the image file.
+        location_hint: Geographic context hint (e.g. "Akyaka").
+        post_context:  Dict with ``title``, ``slug``, ``apple_labels``, etc.
+        template:      Optional :class:`~pictova.vision_templates.VisionTemplate`
+                       or template name string (e.g. ``"technical"``).
+                       Defaults to the built-in ``travel_blog`` template.
+
+    Returns:
+        Dict with ``alt``, ``title``, ``caption``, ``description``,
+        ``keywords``, ``source``, and optional ``scene``, ``activity``.
+
+    Raises:
+        RuntimeError: when all vision sources are exhausted.
+
+    Example::
+
+        from pictova import analyze_image_vision_chain
+        from pictova.vision_templates import TECHNICAL
+
+        meta = analyze_image_vision_chain(
+            "photo.webp",
+            location_hint="Istanbul",
+            template=TECHNICAL,
+        )
     """
+    # Resolve template by name if a string was passed
+    if isinstance(template, str):
+        from pictova.vision_templates import get_template
+        template = get_template(template)
     post_context = post_context or {}
     errors: list[str] = []
 
     # 1. LM Studio (Local, if running, try first to save API tokens)
     try:
-        result = _analyze_lm_studio(image_path, location_hint, post_context)
+        result = _analyze_lm_studio(image_path, location_hint, post_context, template=template)
         result["source"] = "lm_studio"
         return result
     except Exception as exc:
@@ -443,7 +483,7 @@ def analyze_image_vision_chain(
 
     # 2. Gemini Flash
     try:
-        result = _analyze_gemini_flash(image_path, location_hint, post_context)
+        result = _analyze_gemini_flash(image_path, location_hint, post_context, template=template)
         result["source"] = "gemini_flash"
         return result
     except Exception as exc:
@@ -451,7 +491,7 @@ def analyze_image_vision_chain(
 
     # 2. Codex CLI
     try:
-        result = _analyze_codex(image_path, location_hint, post_context)
+        result = _analyze_codex(image_path, location_hint, post_context, template=template)
         result["source"] = "codex_cli"
         return result
     except Exception as exc:
@@ -459,7 +499,7 @@ def analyze_image_vision_chain(
 
     # 3. Claude CLI
     try:
-        result = _analyze_claude_cli(image_path, location_hint, post_context)
+        result = _analyze_claude_cli(image_path, location_hint, post_context, template=template)
         result["source"] = "claude_cli"
         return result
     except Exception as exc:

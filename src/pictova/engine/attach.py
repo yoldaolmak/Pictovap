@@ -15,6 +15,7 @@ from pictova.engine.quality import quality_gate_native_batch
 from pictova.providers.wordpress import fetch_post_context
 from pictova.engine.processor import process_selected_images
 from pictova.engine.publisher import publish_processed_images
+from pictova.core.primitives import VisualBrief
 from pictova.engine.selector import resolve_source_images
 from pictova.engine.vision_chain import download_icloud_photo
 
@@ -182,11 +183,9 @@ def normalize_attach_result(
     }
 
 
-def prepare_attach_request(**kwargs: Any) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
-    site = kwargs.get("site", "yoldaolmak")
-    if site == "yoldaolmak":
-        apply_environment()
-
+def prepare_attach_request(**kwargs: Any) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], VisualBrief]:
+    site = kwargs.get("site", "demo")
+    
     request = dict(kwargs)
     post_id = request.get("post_id")
     post_context = {}
@@ -196,8 +195,10 @@ def prepare_attach_request(**kwargs: Any) -> Tuple[Dict[str, Any], Dict[str, Any
         except Exception:
             post_context = {}
 
-    if request.get("source") == "semantic" and not request.get("location_query"):
-        request["location_query"] = derive_location_query(post_context)
+    location = request.get("location_query")
+    if request.get("source") == "semantic" and not location:
+        location = derive_location_query(post_context)
+        request["location_query"] = location
 
     constraints = {
         "language": request.pop("language", "tr"),
@@ -206,7 +207,15 @@ def prepare_attach_request(**kwargs: Any) -> Tuple[Dict[str, Any], Dict[str, Any
     if constraints["people_first"] and not request.get("content_filter"):
         request["content_filter"] = "insan"
 
-    return request, post_context, constraints
+    brief = VisualBrief(
+        article_title=post_context.get("title", ""),
+        topic=post_context.get("slug", ""),
+        detected_location=location,
+        image_slots=[{"slot_id": f"slot_{i}", "purpose": "generic"} for i in range(request.get("count", 1))],
+        editorial_notes="people_first" if constraints["people_first"] else ""
+    )
+
+    return request, post_context, constraints, brief
 
 
 def validate_attach_request(

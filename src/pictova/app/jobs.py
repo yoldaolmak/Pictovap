@@ -13,8 +13,8 @@ from pictova.engine.attach import (
 
 
 def run_attach_job(**kwargs: Any) -> Dict[str, Any]:
-    site = kwargs.get("site", "yoldaolmak")
-    request, post_context, constraints = prepare_attach_request(**kwargs)
+    site = kwargs.get("site", "demo")
+    request, post_context, constraints, brief = prepare_attach_request(**kwargs)
     failed = validate_attach_request(
         site=site,
         request=request,

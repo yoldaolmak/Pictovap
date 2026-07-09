@@ -22,7 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     attach = sub.add_parser("attach")
-    attach.add_argument("--site", default="yoldaolmak")
+    attach.add_argument("--site", required=True, help="Target publisher profile/site name")
     attach.add_argument("--post", type=int, required=True)
     attach.add_argument("--count", type=int, default=4)
     attach.add_argument("--name")
@@ -41,11 +41,11 @@ def build_parser() -> argparse.ArgumentParser:
     attach.add_argument("--heading-level", type=int, default=0, help="Heading level (2 or 3)")
 
     review = sub.add_parser("review")
-    review.add_argument("--site", default="yoldaolmak")
+    review.add_argument("--site", required=True, help="Target publisher profile/site name")
     review.add_argument("--post", type=int, required=True)
 
     guard = sub.add_parser("guard")
-    guard.add_argument("--site", default="yoldaolmak")
+    guard.add_argument("--site", required=True, help="Target publisher profile/site name")
     guard.add_argument("--post", type=int, required=True)
     guard_mode = guard.add_mutually_exclusive_group()
     guard_mode.add_argument("--repair", action="store_true")
@@ -53,7 +53,7 @@ def build_parser() -> argparse.ArgumentParser:
     guard.add_argument("--media-id", dest="media_ids", action="append", type=int)
 
     plan = sub.add_parser("plan")
-    plan.add_argument("--site", default="yoldaolmak")
+    plan.add_argument("--site", required=True, help="Target publisher profile/site name")
     plan.add_argument("--post", type=int, required=True)
     plan.add_argument("--count", type=int, default=4)
     plan.add_argument("--name")
@@ -71,7 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--heading-level", type=int, default=0, help="Heading level (2 or 3)")
 
     process = sub.add_parser("process")
-    process.add_argument("--site", default="yoldaolmak")
+    process.add_argument("--site", required=True, help="Target publisher profile/site name")
     process.add_argument("--post", type=int, required=True)
     process.add_argument("--count", type=int, default=4)
     process.add_argument("--name")

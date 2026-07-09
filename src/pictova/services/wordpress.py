@@ -31,33 +31,14 @@ AUTO_MEDIA_END = "<!-- yo:auto-media:end -->"
 class YOWordPressUploader:
     """Upload processed images to WordPress via REST API"""
 
-    SITE_ENDPOINTS = {
-        "yoldaolmak": {
-            "url": env_str("WP_URL", "https://yoldaolmak.com"),
-            "user": env_str("WP_USER", "hamal"),
-            "password": env_str("WP_APP_PASSWORD"),
-        },
-        "gezievreni": {
-            "url": env_str("GEZIEVRENI_URL", "https://gezievreni.com"),
-            "user": env_str("GEZIEVRENI_USER", "hamal"),
-            "password": env_str("GEZIEVRENI_PASS"),
-        },
-        "gezgindunyasi": {
-            "url": env_str("GEZGINDUNYASI_URL", "https://gezgindunyasi.com"),
-            "user": env_str("GEZGINDUNYASI_USER", "clawdbot"),
-            "password": env_str("GEZGINDUNYASI_PASS"),
-        },
-    }
-
-    def __init__(self, site: str = "yoldaolmak"):
-        if site not in self.SITE_ENDPOINTS:
-            raise ValueError(f"Unknown site: {site}")
-
-        config = self.SITE_ENDPOINTS[site]
+    def __init__(self, site: str = "demo"):
         self.site = site
-        self.base_url = config["url"]
-        self.user = config["user"]
-        self.password = config["password"]
+        prefix = f"{site.upper()}_" if site and site != "demo" else "WP_"
+        
+        # Default to the WP_ prefix if site-specific is not found
+        self.base_url = env_str(f"{prefix}URL", env_str("WP_URL", "http://localhost:8080"))
+        self.user = env_str(f"{prefix}USER", env_str("WP_USER", "admin"))
+        self.password = env_str(f"{prefix}APP_PASSWORD", env_str("WP_APP_PASSWORD", "password"))
         if not self.base_url or not self.user or not self.password:
             raise ValueError(f"Missing WordPress credentials for site: {site}")
         self.session = self._create_session()
@@ -595,7 +576,7 @@ def _strip_html(value: str) -> str:
     return html.unescape(re.sub(r"\s+", " ", text)).strip()
 
 
-def fetch_post_context(post_id: int, site: str = "yoldaolmak") -> Dict:
+def fetch_post_context(post_id: int, site: str = "demo") -> Dict:
     uploader = YOWordPressUploader(site=site)
     return uploader.fetch_post_context(post_id)
 
@@ -748,7 +729,7 @@ def upload_images_batch(
     image_files: List[str],
     metadata_dict: Dict,  # filepath → {alt, title, caption, description}
     post_id: int,
-    site: str = "yoldaolmak",
+    site: str = "demo",
 ) -> Dict:
     """Upload multiple processed images and attach to post
 
@@ -855,7 +836,7 @@ def upload_images_batch(
 
 if __name__ == "__main__":
     # Test authentication
-    uploader = YOWordPressUploader(site="yoldaolmak")
+    uploader = YOWordPressUploader(site="demo")
     print(f"✓ Connected to {uploader.base_url}")
     print(f"  User: {uploader.user}")
     print("\nReady for image uploads")

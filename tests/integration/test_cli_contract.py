@@ -120,10 +120,10 @@ def test_cli_parser_exposes_native_local_and_auto_sources():
 
     parser = build_parser()
     local_args = parser.parse_args([
-        "attach", "--post", "267970", "--source", "local", "--query", "/tmp/a.jpg",
+        "attach", "--site", "yoldaolmak", "--post", "267970", "--source", "local", "--query", "/tmp/a.jpg",
     ])
-    auto_args = parser.parse_args(["plan", "--post", "267970", "--source", "auto"])
-    guard_args = parser.parse_args(["guard", "--post", "267970", "--repair"])
+    auto_args = parser.parse_args(["plan", "--site", "yoldaolmak", "--post", "267970", "--source", "auto"])
+    guard_args = parser.parse_args(["guard", "--site", "yoldaolmak", "--post", "267970", "--repair"])
 
     assert local_args.source == "local"
     assert auto_args.source == "auto"
@@ -154,6 +154,7 @@ def test_api_plan_attach_uses_native_selection(monkeypatch):
             {"site": "yoldaolmak", "post_id": 42, "source": "semantic", "location_query": "Roma", "count": 3},
             {"id": 42, "title": "Roma", "slug": "roma"},
             {"language": "tr", "people_first": True},
+            None,
         ),
     )
     monkeypatch.setattr(
@@ -198,6 +199,7 @@ def test_api_process_attach_returns_processed_images(monkeypatch):
             {"site": "yoldaolmak", "post_id": 42, "source": "semantic", "location_query": "Roma", "count": 2},
             {"id": 42, "title": "Roma", "slug": "roma"},
             {"language": "tr", "people_first": False},
+            None,
         ),
     )
     monkeypatch.setattr(

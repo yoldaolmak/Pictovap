@@ -71,5 +71,6 @@ def test_append_media_to_post_content_creates_gallery(
     assert "wp-image-2" in new_content
     assert "<!-- /wp:gallery -->" in new_content
     assert "<!-- wp:image" in new_content
-    manifest = json.loads((tmp_path / "manifests" / "yoldaolmak-123.json").read_text())
+    with open(result["manifest_path"], "r", encoding="utf-8") as f:
+        manifest = json.load(f)
     assert manifest["expected_media_ids"] == [1, 2]

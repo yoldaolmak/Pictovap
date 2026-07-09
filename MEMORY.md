@@ -1,10 +1,10 @@
-# PICTOVA - CURRENT PROJECT MEMORY
+# PICTOVAP - CURRENT PROJECT MEMORY
 
 **Date:** June 2026
 **Purpose:** Quick context resume for AI agents starting a new session. Read this file to understand the current state without reading long transcripts.
 
 ## Core Project Overview
-- **Pictova** is a robust photo/video indexing and AI metadata generation system for macOS Photos Library (`osxphotos`).
+- **Pictovapp** is a robust photo/video indexing and AI metadata generation system for macOS Photos Library (`osxphotos`).
 - It extracts local metadata and uses AI models (Gemini Flash / Claude / Codex via `vision_chain.py`) to generate SEO-friendly, rich textual metadata (title, alt text, description, summary, caption) for WordPress blog publishing.
 
 ## Latest Accomplishments & Architecture Updates (Recent Context)

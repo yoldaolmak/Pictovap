@@ -1,6 +1,6 @@
 # 💻 CLI Reference
 
-Pictova exposes a simple but powerful command-line interface.
+Pictovapp exposes a simple but powerful command-line interface.
 
 ## Global Flags
 All commands require the following flags to define the context:

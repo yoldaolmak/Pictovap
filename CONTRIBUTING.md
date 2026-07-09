@@ -1,6 +1,6 @@
-# 🤝 Contributing to Pictova
+# 🤝 Contributing to Pictovap
 
-First off, thank you for considering contributing to Pictova! It's people like you that make open-source software such a powerful tool for the community. 
+First off, thank you for considering contributing to Pictovap! It's people like you that make open-source software such a powerful tool for the community. 
 
 Whether you're fixing a typo, resolving a critical bug, or proposing a massive architectural improvement, your contribution is highly valued.
 
@@ -16,7 +16,7 @@ If you find a bug, please open an [issue](https://github.com/yoldaolmak/Pictovap
 - Your OS and Python version.
 
 ### 2. Suggesting Enhancements
-Have an idea that would make Pictova better? Open a [discussion](https://github.com/yoldaolmak/Pictovap/issues) describing:
+Have an idea that would make Pictovap better? Open a [discussion](https://github.com/yoldaolmak/Pictovap/issues) describing:
 - The specific problem you are trying to solve.
 - Your proposed solution.
 - Any alternative solutions you have considered.
@@ -34,14 +34,15 @@ We love Pull Requests. To ensure a smooth review process:
 
 ## 🏛 Architecture Rules
 
-Pictova is a production-grade application, and we strictly enforce layering to prevent "spaghetti code".
+Pictovap is a production-grade application, and we strictly enforce layering to prevent "spaghetti code".
 
 | Layer | Directory | Enforcement Rule |
 | :--- | :--- | :--- |
 | **App** | `src/pictova/app/` | HTTP/CLI entry points only. Absolutely no business logic. |
+| **Core** | `src/pictova/core/` | Defines core domain primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`). |
 | **Engine** | `src/pictova/engine/` | Core logic and pipeline processing. Cannot import from `app/`. |
-| **Providers** | `src/pictova/providers/` | API boundaries (WP, Unsplash). Cannot import from `engine/`. |
-| **Legacy** | `src/core/` | Deprecated. **Do not add new code here.** |
+| **Providers** | `src/pictova/providers/` | Data sources and APIs. Cannot import from `engine/`. |
+| **Publishers** | `src/pictova/publishers/` | Adapters for CMS targets implementing `PublisherProtocol`. |
 
 > [!WARNING]
 > Pull Requests that violate these architectural boundaries will not be merged. If you are unsure where a piece of logic belongs, please ask in your PR!
@@ -51,8 +52,8 @@ Pictova is a production-grade application, and we strictly enforce layering to p
 ## 🔤 Brand & Naming Convention
 
 When writing documentation or code comments, please adhere to our naming conventions:
-- **Product Name:** Pictova (Always capitalized).
-- **CLI Command:** `pictova` (Always lowercase).
+- **Product Name:** Pictovap (Always capitalized).
+- **CLI Command:** `pictova` (Always lowercase, kept for backward compatibility).
 - **Package Root:** `src.pictova`.
 
 ---

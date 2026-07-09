@@ -1,19 +1,19 @@
 # 💻 Developer Guide
 
-Welcome to the Pictova developer guide. This document outlines everything you need to set up your local development environment, understand our tooling, and contribute high-quality code.
+Welcome to the Pictovapp developer guide. This document outlines everything you need to set up your local development environment, understand our tooling, and contribute high-quality code.
 
 ---
 
 ## 🛠 Local Environment Setup
 
-Pictova is built with Python 3.9+ and relies heavily on a clean, isolated virtual environment.
+Pictovapp is built with Python 3.9+ and relies heavily on a clean, isolated virtual environment.
 
 ### 1. Bootstrap the Project
 
 ```bash
 # Clone the repository
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
+git clone https://github.com/yoldaolmak/Pictovapp.git
+cd Pictovapp
 
 # Initialize a clean virtual environment
 python3 -m venv .venv

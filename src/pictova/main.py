@@ -603,7 +603,7 @@ class YOCommandParser:
             # query'den içerik filtresi çıkar (son kelime filtre olabilir)
             cf, loc = cls._split_filter_from_query(raw_query)
             return {"count": count, "name": None, "post_id": post_id,
-                    "site": "yoldaolmak", "source": "semantic",
+                    "site": "demo", "source": "semantic",
                     "location_query": loc, "content_filter": cf}
 
         # 5. Semantic + upload: "madura adası 5 foto insan yo 21312"
@@ -637,7 +637,7 @@ class YOCommandParser:
             count          = int(m.group(2))
             filter_raw     = (m.group(3) or "").strip()
             return {"count": count, "name": None, "post_id": None,
-                    "site": "yoldaolmak", "source": "semantic",
+                    "site": "demo", "source": "semantic",
                     "location_query": location_query,
                     "content_filter": filter_raw or None}
 
@@ -682,7 +682,7 @@ class YOOrchestrator:
         count: int = None,
         name: str = None,
         post_id: int = None,
-        site: str = "yoldaolmak",
+        site: str = "demo",
         location_hint: str = "",
         source: str = "vil",
         query: str = None,

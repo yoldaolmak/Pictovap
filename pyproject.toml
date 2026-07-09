@@ -3,14 +3,14 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pictova"
+name = "pictovap"
 version = "0.2.0"
-description = "Visual intelligence layer — finds, selects, and places images from any source into WordPress and beyond."
+description = "Open-source visual finishing engine for content publishers."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [
-    {name = "Pictova Contributors", email = "hello@yoldaolmak.com"}
+    {name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}
 ]
 keywords = [
     "wordpress", "image automation", "llm", "vision", "seo", "cms", "mac photos", "unsplash"
@@ -46,6 +46,7 @@ Repository = "https://github.com/yoldaolmak/Pictovap.git"
 
 [project.scripts]
 pictova = "pictova.app.cli:main"
+pictovap = "pictova.app.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

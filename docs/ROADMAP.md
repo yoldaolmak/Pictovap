@@ -1,40 +1,41 @@
-# 🗺 Pictova Development Roadmap
+# Pictovap Roadmap
 
-Pictova aims to become the industry standard for content-driven visual automation. Our development roadmap is structured to evolve the project from a local CLI tool into a robust, enterprise-grade Python SDK and eventually a premium SaaS engine.
+Pictovap is open-source publisher infrastructure. Our goal is to provide the most reliable, extensible, and high-quality headless visual finishing engine.
 
----
+## Phase 1: Public Core (Current)
+- [x] Pictovap identity cleanup
+- [x] Local credential-free demo
+- [x] Four primitives (Visual Brief, Fit Score, Provenance Pack, CMS Placement)
+- [x] Sample publisher profile
+- [x] Basic tests
+- [x] Core documentation
 
-## 🎯 Phase 1: Core Intelligence & Native Engine (Current)
-**Goal:** Perfect the core visual search, image processing pipeline, and the AI-powered Metadata Vision Chain.
+## Phase 2: Adapter Ecosystem
+- [ ] Local folder source
+- [ ] Openverse source adapter
+- [ ] WordPress adapter hardening
+- [ ] Ghost adapter prototype
+- [ ] Strapi adapter prototype
+- [ ] Adapter contribution guide
 
-- [x] **Native Engine Transition:** Deprecate legacy procedural code in favor of a clean, modular class-based pipeline (`selector`, `processor`, `metadata`, `publisher`).
-- [x] **Heading-Aware Selection:** Implement semantic matching of images based on `H2/H3` post structure, and apply SEO-optimized titles and slugs.
-- [x] **Vision Chain:** Establish a highly resilient local LLM -> Gemini -> Claude API fallback chain for WCAG-compliant image tagging.
-- [x] **Multi-Source Fallback:** Implement automated fallback to the Unsplash API if local Visual Memory index queries do not yield enough diverse candidates.
+## Phase 3: Provenance & Safety
+- [ ] Stronger license metadata
+- [ ] Attribution templates
+- [ ] Duplicate detection across articles
+- [ ] Hash index for previously processed images
+- [ ] Source reliability rules
+- [ ] Provenance export tools
 
----
+## Phase 4: Contributor Growth
+- [ ] Good first issues
+- [ ] Example integrations
+- [ ] Public demos
+- [ ] Small starter tasks
+- [ ] Release cadence established
+- [ ] Package publishing on PyPI
 
-## 🚀 Phase 2: Premium Features & Stock Integrations (Next Up)
-**Goal:** Integrate commercial stock libraries, advanced asset quality scoring, and programmatic image optimization.
-
-- [ ] **Pictova Depot (DepositPhotos API):** Add support for DepositPhotos integration to automatically search, purchase, and download licensed stock photos when local or free options are insufficient.
-- [ ] **Advanced Quality Gate:** Implement ML-based quality controls to filter out blurry, low-resolution, or low-aesthetic-score images.
-- [ ] **WebP Optimization V2:** Support lossy vs. lossless WebP configuration, strip/preserve specific EXIF metadata profiles, and add custom image watermark overlays.
-
----
-
-## 📦 Phase 3: SDK & Multi-Platform Support (Developer Focus)
-**Goal:** Expand Pictova's footprint beyond WordPress and simplify developer integration.
-
-- [x] **PyPI Release:** Package and publish `pictova` to PyPI (`pip install pictova`). Wheel, sdist, and GitHub Actions OIDC publish pipeline ready.
-- [x] **Ghost CMS Publisher:** Implemented `GhostPublisher` adapter with JWT auth, `upload_media`, `attach_to_post`, and `fetch_post_context`.
-- [x] **Strapi Publisher:** Implemented `StrapiPublisher` adapter (v4/v5) with token auth, file upload, field attachment, and entry context fetch.
-- [ ] **Custom Vision Templates:** Allow developers to define custom metadata prompt templates (e.g. strict technical analysis vs. poetic captions).
-
----
-
-## 🌐 Phase 4: Platform & UI Dashboard (Long Term)
-**Goal:** Turn Pictova into an easily manageable web service with a clean interface.
-
-- [ ] **Web Administration Dashboard:** A Next.js/Vite frontend for monitoring visual memory health, previewing candidate selections, and manually correcting AI captions.
-- [ ] **Asynchronous Task Queue:** SQLite/Redis-backed background worker queue to handle heavy Vision Chain processing asynchronously.
+## Phase 5: Publisher Adoption
+- [ ] First external publisher examples
+- [ ] Real-world case studies
+- [ ] Plugin/adapter ecosystem scaling
+- [ ] Stability and compatibility guarantees
