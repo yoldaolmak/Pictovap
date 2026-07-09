@@ -10,7 +10,7 @@ Pictova aims to become the industry standard for content-driven visual automatio
 - [x] **Native Engine Transition:** Deprecate legacy procedural code in favor of a clean, modular class-based pipeline (`selector`, `processor`, `metadata`, `publisher`).
 - [x] **Heading-Aware Selection:** Implement semantic matching of images based on `H2/H3` post structure, and apply SEO-optimized titles and slugs.
 - [x] **Vision Chain:** Establish a highly resilient local LLM -> Gemini -> Claude API fallback chain for WCAG-compliant image tagging.
-- [ ] **Multi-Source Fallback:** Implement automated fallback to the Unsplash API if local Visual Memory index queries do not yield enough diverse candidates.
+- [x] **Multi-Source Fallback:** Implement automated fallback to the Unsplash API if local Visual Memory index queries do not yield enough diverse candidates.
 
 ---
 
@@ -26,8 +26,9 @@ Pictova aims to become the industry standard for content-driven visual automatio
 ## 📦 Phase 3: SDK & Multi-Platform Support (Developer Focus)
 **Goal:** Expand Pictova's footprint beyond WordPress and simplify developer integration.
 
-- [ ] **PyPI Release:** Package and publish `pictova` to PyPI (`pip install pictova`).
-- [ ] **Ghost CMS & Strapi Publishers:** Implement publisher adapters for Headless CMS architectures (Ghost, Strapi, Contentful).
+- [x] **PyPI Release:** Package and publish `pictova` to PyPI (`pip install pictova`). Wheel, sdist, and GitHub Actions OIDC publish pipeline ready.
+- [x] **Ghost CMS Publisher:** Implemented `GhostPublisher` adapter with JWT auth, `upload_media`, `attach_to_post`, and `fetch_post_context`.
+- [x] **Strapi Publisher:** Implemented `StrapiPublisher` adapter (v4/v5) with token auth, file upload, field attachment, and entry context fetch.
 - [ ] **Custom Vision Templates:** Allow developers to define custom metadata prompt templates (e.g. strict technical analysis vs. poetic captions).
 
 ---

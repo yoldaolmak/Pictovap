@@ -7,13 +7,19 @@ publish images across various CMS platforms.
 
 __version__ = "0.2.0"
 
-# Expose core functionality to developers
+# Core engine
 from .engine.vision_chain import analyze_image_vision_chain
 from .engine.selector import resolve_source_images
+
+# CMS publishers
 from .services.wordpress import YOWordPressUploader
+from .publishers.ghost import GhostPublisher
+from .publishers.strapi import StrapiPublisher
 
 __all__ = [
     "analyze_image_vision_chain",
     "resolve_source_images",
     "YOWordPressUploader",
+    "GhostPublisher",
+    "StrapiPublisher",
 ]
