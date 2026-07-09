@@ -1,14 +1,14 @@
 #!/usr/bin/env python3.11
-"""Pictova — Global photos & video indeksleyici (Mac Photos).
+"""Pictova — Global photos & video indexer (Mac Photos).
 
-Hierarchy: Continent → Country → City (Meridyen harita yapısı ile uyumlu)
+Hierarchy: Continent → Country → City (Compatible with Meridian map structure)
 
-Filtre:
-  DAHIL : Tüm GPS'li ve GPS'siz photos ve videolar
-  Kişisel: Aile albümleri ve aile fertlerinin olduğu photoslar
+Filter:
+  INCLUDE: All photos and videos with and without GPS
+  Personal: Family albums and photos featuring family members
            is_personal=1 saved as (no AI scan, stays in DB)
-  Değerli: Sadece Kemal Kaya olan photoslar is_personal=0 (full AI scan)
-  Video : is_video=1 olarak kaydedilir (AI taranmaz, on-demand analiz)
+  Valuable: Photos only featuring Kemal Kaya is_personal=0 (full AI scan)
+  Video: is_video=1 saved as (no AI scan, on-demand analysis)
 
 Output: updates visual_memory.db (upsert).
 """
@@ -23,15 +23,15 @@ from pathlib import Path
 
 import osxphotos
 
-# ── Sabitler ─────────────────────────────────────────────────────────────────
+# ── Constants ─────────────────────────────────────────────────────────────────
 
-# Family/personal albums — no longer skipped, is_personal=1 olarak kaydediliyor
+# Family/personal albums — no longer skipped, saved as is_personal=1
 PERSONAL_ALBUMS = {
     "Ayşa", "Ella", "Kemal", "Pamuk", "Kıymet",
     "Gömbe 🏡", "Home",
 }
 
-# Social media / import albums — completely skipped (düşük kalite)
+# Social media / import albums — completely skipped (low quality)
 SKIP_ALBUMS = {
     "Instagram", "Twitter", "WhatsApp", "InShot", "Import",
 }
@@ -48,9 +48,9 @@ HOME_CITIES = {
     "Narlıdere", "Bayrakli", "Bayraklı", "Kınık", "Aliağa",
 }
 
-# ── Coğrafi Hiyerarşi: Kıta Haritası (ISO 3166-1 alpha-2 → Kıta) ───────────
+# ── Geographical Hierarchy: Continent Map (ISO 3166-1 alpha-2 → Continent) ───────────
 CONTINENT_MAP = {
-    # Avrupa
+    # Europe
     "AL": "Avrupa", "AD": "Avrupa", "AT": "Avrupa", "BY": "Avrupa",
     "BE": "Avrupa", "BA": "Avrupa", "BG": "Avrupa", "HR": "Avrupa",
     "CY": "Avrupa", "CZ": "Avrupa", "DK": "Avrupa", "EE": "Avrupa",
@@ -63,7 +63,7 @@ CONTINENT_MAP = {
     "SM": "Avrupa", "RS": "Avrupa", "SK": "Avrupa", "SI": "Avrupa",
     "ES": "Avrupa", "SE": "Avrupa", "CH": "Avrupa", "UA": "Avrupa",
     "GB": "Avrupa", "VA": "Avrupa",
-    # Asya
+    # Asia
     "AF": "Asya", "AM": "Asya", "AZ": "Asya", "BH": "Asya",
     "BD": "Asya", "BT": "Asya", "BN": "Asya", "KH": "Asya",
     "CN": "Asya", "GE": "Asya", "IN": "Asya", "ID": "Asya",
@@ -76,7 +76,7 @@ CONTINENT_MAP = {
     "LK": "Asya", "SY": "Asya", "TW": "Asya", "TJ": "Asya",
     "TH": "Asya", "TL": "Asya", "TR": "Asya", "TM": "Asya",
     "AE": "Asya", "UZ": "Asya", "VN": "Asya", "YE": "Asya",
-    # Afrika
+    # Africa
     "DZ": "Afrika", "AO": "Afrika", "BJ": "Afrika", "BW": "Afrika",
     "BF": "Afrika", "BI": "Afrika", "CV": "Afrika", "CM": "Afrika",
     "CF": "Afrika", "TD": "Afrika", "KM": "Afrika", "CD": "Afrika",
@@ -91,7 +91,7 @@ CONTINENT_MAP = {
     "ZA": "Afrika", "SS": "Afrika", "SD": "Afrika", "TZ": "Afrika",
     "TG": "Afrika", "TN": "Afrika", "UG": "Afrika", "ZM": "Afrika",
     "ZW": "Afrika",
-    # Kuzey Amerika
+    # North America
     "AG": "Kuzey Amerika", "BS": "Kuzey Amerika", "BB": "Kuzey Amerika",
     "BZ": "Kuzey Amerika", "CA": "Kuzey Amerika", "CR": "Kuzey Amerika",
     "CU": "Kuzey Amerika", "DM": "Kuzey Amerika", "DO": "Kuzey Amerika",
@@ -100,12 +100,12 @@ CONTINENT_MAP = {
     "MX": "Kuzey Amerika", "NI": "Kuzey Amerika", "PA": "Kuzey Amerika",
     "KN": "Kuzey Amerika", "LC": "Kuzey Amerika", "VC": "Kuzey Amerika",
     "TT": "Kuzey Amerika", "US": "Kuzey Amerika",
-    # Güney Amerika
+    # South America
     "AR": "Güney Amerika", "BO": "Güney Amerika", "BR": "Güney Amerika",
     "CL": "Güney Amerika", "CO": "Güney Amerika", "EC": "Güney Amerika",
     "GY": "Güney Amerika", "PY": "Güney Amerika", "PE": "Güney Amerika",
     "SR": "Güney Amerika", "UY": "Güney Amerika", "VE": "Güney Amerika",
-    # Okyanusya
+    # Oceania
     "AU": "Okyanusya", "FJ": "Okyanusya", "KI": "Okyanusya",
     "MH": "Okyanusya", "FM": "Okyanusya", "NR": "Okyanusya",
     "NZ": "Okyanusya", "PW": "Okyanusya", "PG": "Okyanusya",
@@ -115,7 +115,7 @@ CONTINENT_MAP = {
 
 
 def _country_code_to_continent(code: str) -> str:
-    """ISO ülke kodunu kıta adına çevir."""
+    """Translate ISO country code to continent name."""
     return CONTINENT_MAP.get(code.upper(), "Diğer")
 
 
@@ -243,10 +243,10 @@ ON CONFLICT(source_id) DO UPDATE SET
 """
 
 
-# ── Filtre ────────────────────────────────────────────────────────────────────
+# ── Filter ────────────────────────────────────────────────────────────────────
 
 def _classify_photo(photo: osxphotos.PhotoInfo) -> tuple[str, int, str]:
-    """Fotoğrafı sınıflandır.
+    """Classify the photo.
 
     Returns:
         (action, is_personal, personal_reason)
@@ -254,7 +254,7 @@ def _classify_photo(photo: osxphotos.PhotoInfo) -> tuple[str, int, str]:
     """
     place = photo.place
     
-    # Sosyal medya / import albümleri — tamamen atla (düşük kalite)
+    # Social media / import albums — completely skipped (low quality)
     photo_albums = {a.title for a in (photo.album_info or [])}
     bad_social = photo_albums & SKIP_ALBUMS
     if bad_social:
@@ -263,13 +263,13 @@ def _classify_photo(photo: osxphotos.PhotoInfo) -> tuple[str, int, str]:
     is_personal = 0
     personal_reason = ""
 
-    # Personal album check — atlamak yerine is_personal=1 olarak işaretle
+    # Personal album check — mark as is_personal=1 instead of skipping
     personal_albums = photo_albums & PERSONAL_ALBUMS
     if personal_albums:
         is_personal = 1
         personal_reason = f"album={personal_albums}"
 
-    # Kişi analizi — akıllı filtreleme
+    # Person analysis — intelligent filtering
     try:
         persons = {pp.name for pp in (photo.person_info or []) if pp.name}
         family_in_photo = persons & FAMILY_PERSONS
@@ -277,16 +277,16 @@ def _classify_photo(photo: osxphotos.PhotoInfo) -> tuple[str, int, str]:
 
         if family_in_photo:
             if owner_in_photo and not family_in_photo:
-                # Sadece Kemal → değerli, is_personal=0
+                # Only Kemal → valuable, is_personal=0
                 pass
             else:
-                # Aile fertleri var → kişisel
+                # Family members present → personal
                 is_personal = 1
                 personal_reason = personal_reason or f"family={family_in_photo}"
     except Exception:
         pass
 
-    # İzmir ev şehri — kişisel olarak işaretle ama atla değil
+    # Izmir home city — mark as personal but not skip
     city_names = getattr(getattr(place, "names", None), "city", None) or []
     city = city_names[0] if city_names else ""
     if city in HOME_CITIES and not is_personal:
@@ -297,7 +297,7 @@ def _classify_photo(photo: osxphotos.PhotoInfo) -> tuple[str, int, str]:
 
 
 def _quality(photo: osxphotos.PhotoInfo) -> float:
-    """Basit kalite skoru 0-1."""
+    """Simple quality score 0-1."""
     score = 0.5
     if photo.width and photo.height:
         mp = (photo.width * photo.height) / 1_000_000
@@ -313,15 +313,15 @@ def _quality(photo: osxphotos.PhotoInfo) -> float:
     return round(min(max(score, 0.0), 1.0), 3)
 
 
-# ── Ana akış ──────────────────────────────────────────────────────────────────
+# ── Main flow ──────────────────────────────────────────────────────────────────
 
 def main():
-    print(f"📸 Photos Library yükleniyor (photos + video)...")
+    print(f"📸 Loading Photos Library (photos + video)...")
     db_photos = osxphotos.PhotosDB()
     all_photos = db_photos.photos(movies=False)
     all_videos = db_photos.photos(movies=True, images=False)
     all_items = all_photos + all_videos
-    print(f"   Total: {len(all_photos):,} photos + {len(all_videos):,} video = {len(all_items):,}")
+    print(f"   Total: {len(all_photos):,} photos + {len(all_videos):,} videos = {len(all_items):,}")
 
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(str(DB_PATH))
@@ -338,7 +338,7 @@ def main():
     personal_count = video_count = 0
     skip_reasons: dict[str, int] = {}
 
-    print(f"\n🔍 Tüm arşiv taranyyor (Kıta → Ülke → Şehir)...")
+    print(f"\n🔍 Scanning entire archive (Continent → Country → City)...")
     for i, photo in enumerate(all_items):
         is_video = 1 if photo.ismovie else 0
 
@@ -360,7 +360,7 @@ def main():
             video_count += 1
 
         path = photo.path or ""
-        # iCloud photoslar path=None olabilir — metadata yine de indeksle
+        # iCloud photos might have path=None — still index metadata
         is_icloud = 1 if not path else 0
 
         p = Path(path)
@@ -389,7 +389,7 @@ def main():
 
         location_str = city or state_province or country or ""
 
-        # Video ise AI taranmaz, photos ise kişisel değilse taranır
+        # If video, no AI scan; if photo, scan if not personal
         if is_video:
             scan_status = "skipped_video"
         elif is_personal:
@@ -397,7 +397,7 @@ def main():
         else:
             scan_status = "pending"
 
-        # Video süresi
+        # Video duration
         video_duration = None
         if is_video:
             try:
@@ -449,19 +449,19 @@ def main():
 
         if (i + 1) % 500 == 0:
             con.commit()
-            print(f"   {i+1:,}/{len(all_items):,} processed — {included} dahil ({personal_count} kişisel, {video_count} video), {skipped} skipped")
+            print(f"   {i+1:,}/{len(all_items):,} processed — {included} included ({personal_count} personal, {video_count} videos), {skipped} skipped")
 
     con.commit()
     con.close()
 
-    print(f"\n✅ Tamamlandı")
-    print(f"   Dahil      : {included:,}")
-    print(f"     Kişisel  : {personal_count:,} (is_personal=1, AI taranmaz)")
-    print(f"     Video    : {video_count:,} (is_video=1, on-demand analiz)")
-    print(f"     AI Scan  : {included - personal_count - video_count:,} (tam tarama yapılacak)")
-    print(f"   Atlandı    : {skipped:,}")
-    print(f"   Hata       : {errors:,}")
-    print(f"   Atlanma nedenleri: {skip_reasons}")
+    print(f"\n✅ Completed")
+    print(f"   Included   : {included:,}")
+    print(f"     Personal : {personal_count:,} (is_personal=1, no AI scan)")
+    print(f"     Videos   : {video_count:,} (is_video=1, on-demand analysis)")
+    print(f"     AI Scan  : {included - personal_count - video_count:,} (full scan will be performed)")
+    print(f"   Skipped    : {skipped:,}")
+    print(f"   Errors     : {errors:,}")
+    print(f"   Skip reasons: {skip_reasons}")
     print(f"   DB         : {DB_PATH}")
 
 

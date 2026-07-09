@@ -1,18 +1,42 @@
-[project]
-name = "pictova"
-version = "0.1.0"
-description = "Visual intelligence layer — finds, selects, and places images from any source into WordPress and beyond."
-requires-python = ">=3.9"
-
-[project.scripts]
-pictova = "src.pictova.app.cli:main"
-
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-py-modules = ["yo_unsplash", "yo_adaptive_filter", "yo_yoldaolmak_filter"]
+[project]
+name = "pictova"
+version = "0.2.0"
+description = "Visual intelligence layer — finds, selects, and places images from any source into WordPress and beyond."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Pictova Contributors", email = "hello@yoldaolmak.com"}
+]
+keywords = [
+    "wordpress", "image automation", "llm", "vision", "seo", "cms", "mac photos", "unsplash"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    # Will be merged from requirements.txt, but typically we would list them here.
+]
+
+[project.urls]
+Homepage = "https://github.com/yoldaolmak/Pictovap"
+Documentation = "https://github.com/yoldaolmak/Pictovap/blob/main/docs/README.md"
+Repository = "https://github.com/yoldaolmak/Pictovap.git"
+
+[project.scripts]
+pictova = "pictova.app.cli:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
+namespaces = false

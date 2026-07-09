@@ -6,11 +6,11 @@ import argparse
 import json
 from typing import Any, Dict
 
-from src.pictova.app.health import run_health_check
-from src.pictova.app.jobs import run_attach_job
-from src.pictova.app.api import plan_attach, process_attach
-from src.pictova.app.server import serve
-from src.pictova.providers.wordpress import fetch_post_context, guard_post_media
+from pictova.app.health import run_health_check
+from pictova.app.jobs import run_attach_job
+from pictova.app.api import plan_attach, process_attach
+from pictova.app.server import serve
+from pictova.providers.wordpress import fetch_post_context, guard_post_media
 
 
 def _print_json(payload: Dict[str, Any]) -> None:

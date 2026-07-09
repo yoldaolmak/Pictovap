@@ -18,7 +18,7 @@ def test_slug_prepends_destination_when_stem_lacks_it(tmp_path):
     """bodrum-koy-kayalik.webp + post='gumusluk-gezilecek-yerler'
     → slug 'gumusluk-bodrum-koy-kayalik' (gumusluk öne eklenmiş)
     """
-    from src.core.media_publish import build_publish_slug
+    from pictova.core.media_publish import build_publish_slug
 
     img = tmp_path / "bodrum-koy-kayalik_yo.webp"
     img.write_bytes(b"fake")
@@ -37,7 +37,7 @@ def test_slug_prepends_destination_when_stem_lacks_it(tmp_path):
 
 def test_slug_does_not_double_destination_when_already_present(tmp_path):
     """gumusluk-koy.webp + post=gumusluk-... → gumusluk tekrarlanmamalı."""
-    from src.core.media_publish import build_publish_slug
+    from pictova.core.media_publish import build_publish_slug
 
     img = tmp_path / "gumusluk-koy_yo.webp"
     img.write_bytes(b"fake")
@@ -53,7 +53,7 @@ def test_slug_does_not_double_destination_when_already_present(tmp_path):
 
 def test_slug_returns_valid_without_post_context(tmp_path):
     """Post context olmadan da slug üretilmeli; boş veya sadece '-' olmamalı."""
-    from src.core.media_publish import build_publish_slug
+    from pictova.core.media_publish import build_publish_slug
 
     img = tmp_path / "xf23kabc_yo.webp"
     img.write_bytes(b"fake")
@@ -63,7 +63,7 @@ def test_slug_returns_valid_without_post_context(tmp_path):
 
 def test_slug_incorporates_heading_if_present(tmp_path):
     """Metadata içinde heading varsa slug'a dahil olmalı."""
-    from src.core.media_publish import build_publish_slug
+    from pictova.core.media_publish import build_publish_slug
 
     img = tmp_path / "sahil-restoran_yo.webp"
     img.write_bytes(b"fake")
@@ -83,7 +83,7 @@ def test_slug_incorporates_heading_if_present(tmp_path):
 
 def test_enrich_from_cache_translates_english_scene_to_turkish():
     """DB'den 'coast' geldiğinde title/alt Türkçe 'kıyı' içermeli."""
-    from src.pictova.engine.metadata import _enrich_from_cache
+    from pictova.engine.metadata import _enrich_from_cache
 
     cached = {
         "keywords": ["bodrum", "koy"],
@@ -107,7 +107,7 @@ def test_enrich_from_cache_translates_english_scene_to_turkish():
 
 def test_enrich_from_cache_uses_turkish_summary_directly():
     """Summary Türkçe ise alt'a doğrudan koymalı."""
-    from src.pictova.engine.metadata import _enrich_from_cache
+    from pictova.engine.metadata import _enrich_from_cache
 
     cached = {
         "keywords": ["bodrum"],
@@ -125,7 +125,7 @@ def test_enrich_from_cache_uses_turkish_summary_directly():
 
 def test_enrich_from_cache_skips_generic_scenes():
     """scene='general' generic → title'da yalnızca lokasyon olmalı."""
-    from src.pictova.engine.metadata import _enrich_from_cache
+    from pictova.engine.metadata import _enrich_from_cache
 
     cached = {
         "keywords": ["bodrum"],

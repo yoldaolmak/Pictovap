@@ -5,9 +5,9 @@ from __future__ import annotations
 from typing import Any, Dict, List
 
 import json
-from src.core.processor import get_vil_images
-from src.main import load_vil_images_from_index_for_post, search_semantic_assets
-from src.pictova.config import get_visual_memory_db_path
+from pictova.core.processor import get_vil_images
+from pictova.main import load_vil_images_from_index_for_post, search_semantic_assets
+from pictova.config import get_visual_memory_db_path
 
 
 def resolve_source_images(
@@ -191,7 +191,7 @@ def _enrich_query_for_theme(
 def _deposit_search_download(query: str, count: int) -> list[str]:
     """DepositPhotos'tan ara + indir. Hata olursa boş liste döner."""
     try:
-        from src.pictova.providers.deposit import search_and_download
+        from pictova.providers.deposit import search_and_download
         return search_and_download(query=query, count=count)
     except Exception as e:
         print(f"  ⚠ DepositPhotos atlandı: {e}")
@@ -201,7 +201,7 @@ def _deposit_search_download(query: str, count: int) -> list[str]:
 def _unsplash_search_download(query: str, count: int) -> list[str]:
     """Unsplash'tan ara + indir. Hata olursa boş liste döner."""
     try:
-        from yo_unsplash import YOUnsplashDownloader
+        from pictova.providers.yo_unsplash import YOUnsplashDownloader
         d = YOUnsplashDownloader()
         # Kalite filtresi: min 3000px genişlik, önce likes>0
         results = d.search(query, count=count * 3)

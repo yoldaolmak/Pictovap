@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
 
-from src.core.media_quality import (
+from pictova.core.media_quality import (
     BAD_METADATA_TOKENS,
     normalize_text,
     validate_metadata,

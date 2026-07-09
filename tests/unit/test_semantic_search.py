@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from src import main
+from pictova import main
 
 
 def _row(source_id: str, *, created_at: str, latitude: float, longitude: float) -> dict:

@@ -8,7 +8,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from src.services.wordpress import YOWordPressUploader
+from pictova.services.wordpress import YOWordPressUploader
 
 WP_PATH = Path("/home/yoldaolmak/public_html")
 ROOT = Path("/YOOS-VIL")

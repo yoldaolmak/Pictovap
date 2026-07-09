@@ -11,7 +11,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from src.utils.config import get_visual_memory_db_path
+from pictova.utils.config import get_visual_memory_db_path
 
 
 def _ascii_normalize(text: str) -> str:

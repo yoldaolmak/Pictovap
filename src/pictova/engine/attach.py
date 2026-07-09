@@ -7,23 +7,23 @@ from pathlib import Path
 import re
 from typing import Any, Dict, Tuple
 
-from src.main import YOOrchestrator
-from src.core.media_publish import build_publish_slug_candidates, embed_metadata, ensure_publish_path, ensure_unique_slug
-from src.pictova.profiles.yoldaolmak import apply_environment
-from src.pictova.engine.metadata import build_native_metadata_map
-from src.pictova.engine.quality import quality_gate_native_batch
-from src.pictova.providers.wordpress import fetch_post_context
-from src.pictova.engine.processor import process_selected_images
-from src.pictova.engine.publisher import publish_processed_images
-from src.pictova.engine.selector import resolve_source_images
-from src.pictova.engine.vision_chain import download_icloud_photo
+from pictova.main import YOOrchestrator
+from pictova.core.media_publish import build_publish_slug_candidates, embed_metadata, ensure_publish_path, ensure_unique_slug
+from pictova.profiles.yoldaolmak import apply_environment
+from pictova.engine.metadata import build_native_metadata_map
+from pictova.engine.quality import quality_gate_native_batch
+from pictova.providers.wordpress import fetch_post_context
+from pictova.engine.processor import process_selected_images
+from pictova.engine.publisher import publish_processed_images
+from pictova.engine.selector import resolve_source_images
+from pictova.engine.vision_chain import download_icloud_photo
 
 
 def _photo_index_stats() -> dict:
     """Visual memory DB özet istatistikleri."""
     import sqlite3 as _sq
     try:
-        from src.pictova.config import get_visual_memory_db_path
+        from pictova.config import get_visual_memory_db_path
         db = get_visual_memory_db_path()
         con = _sq.connect(str(db))
         row = con.execute("""

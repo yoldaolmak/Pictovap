@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Her destinasyon için en iyi photosların UUID önbelleği.
+"""UUID cache of the best photos for each destination.
 
 visual_memory.db → destination_index.json
 Format: {"Sinop": ["uuid1","uuid2",...], "Antalya": [...], ...}
 
-Bu indeks iCloud indirme önceliğini belirler.
+This index determines the iCloud download priority.
 """
 from __future__ import annotations
 
@@ -18,14 +18,14 @@ DB_PATH = Path(os.environ.get(
     "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
 ))
 OUT_PATH = DB_PATH.parent / "destination_index.json"
-TOP_N = 20  # Her destinasyondan en iyi N foto
+TOP_N = 20  # Top N photos from each destination
 
 
 def main():
     con = sqlite3.connect(str(DB_PATH))
     con.row_factory = sqlite3.Row
 
-    # Tüm benzersiz destinasyonlar
+    # All unique destinations
     locs = con.execute("""
         SELECT DISTINCT COALESCE(city, state_province) AS loc, COUNT(*) AS cnt
         FROM asset_index
@@ -56,11 +56,11 @@ def main():
     con.close()
 
     OUT_PATH.write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"✅ {len(index)} destinasyon → {OUT_PATH}")
-    # Özet
+    print(f"✅ {len(index)} destinations → {OUT_PATH}")
+    # Summary
     top = sorted(index.items(), key=lambda x: len(x[1]), reverse=True)[:10]
     for name, uuids in top:
-        print(f"   {name:<28} {len(uuids)} foto")
+        print(f"   {name:<28} {len(uuids)} photos")
 
 
 if __name__ == "__main__":

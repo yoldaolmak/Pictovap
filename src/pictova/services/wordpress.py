@@ -13,14 +13,14 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import base64
 
-from src.services.post_media_guard import (
+from pictova.services.post_media_guard import (
     assess_post_media,
     load_post_media_manifest,
     manifest_path as post_media_manifest_path,
     media_items_from_content,
     save_post_media_manifest,
 )
-from src.utils.config import env_str, load_project_env
+from pictova.utils.config import env_str, load_project_env
 
 load_project_env()
 
@@ -81,7 +81,7 @@ class YOWordPressUploader:
         caption: str = "",
     ) -> Dict:
         """Upload single image to WordPress media library.
-        Aynı slug'lı eski media varsa önce siler (slug çakışması / -1 -2 sorunu).
+        If old media with the same slug exists, it deletes it first (to avoid slug conflicts / -1 -2 issues).
 
         Returns:
             dict with media_id and details
@@ -269,7 +269,7 @@ class YOWordPressUploader:
                 continue
 
             if len(valid_items) == 1:
-                # Tekil wp:image
+                # Single wp:image
                 item = valid_items[0]
                 media_id = item.get("media_id")
                 url = item.get("url", "")
@@ -284,7 +284,7 @@ class YOWordPressUploader:
                     block += f'<figcaption class="wp-element-caption">{caption}</figcaption>'
                 block += "</figure>\n<!-- /wp:image -->"
             else:
-                # Grup wp:gallery
+                # Group wp:gallery
                 block = '<!-- wp:gallery {"linkTo":"none"} -->\n'
                 block += '<figure class="wp-block-gallery has-nested-images columns-default is-cropped">\n'
                 for item in valid_items:
@@ -854,7 +854,7 @@ def upload_images_batch(
 
 
 if __name__ == "__main__":
-    # Test auth
+    # Test authentication
     uploader = YOWordPressUploader(site="yoldaolmak")
     print(f"✓ Connected to {uploader.base_url}")
     print(f"  User: {uploader.user}")

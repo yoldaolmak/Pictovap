@@ -7,8 +7,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from typing import Any, Callable, Dict, Tuple
 
-from src.pictova.app.api import attach_images, gallery_query, guard_post, health_status, plan_attach, process_attach, review_post, search_photos, stats_summary
-from src.pictova.app.state import job_registry
+from pictova.app.api import attach_images, gallery_query, guard_post, health_status, plan_attach, process_attach, review_post, search_photos, stats_summary
+from pictova.app.state import job_registry
 
 
 RouteHandler = Callable[[Dict[str, Any]], Dict[str, Any]]

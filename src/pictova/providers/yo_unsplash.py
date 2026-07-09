@@ -11,7 +11,7 @@ from typing import Dict, List
 
 import requests
 
-from src.utils.config import get_vil_dir, load_project_env
+from pictova.utils.config import get_vil_dir, load_project_env
 
 load_project_env()
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.services.wordpress import YOWordPressUploader, fetch_post_context, upload_images_batch
+from pictova.services.wordpress import YOWordPressUploader, fetch_post_context, upload_images_batch
 
 
 def guard_post_media(

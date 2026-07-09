@@ -15,8 +15,8 @@ from scripts.run_deposit import (
     login_session_id,
     login_user_for_download,
 )
-from src.utils.config import get_vil_dir, load_project_env
-from src.visual_memory.deposit_config import load_deposit_config
+from pictova.utils.config import get_vil_dir, load_project_env
+from pictova.visual_memory.deposit_config import load_deposit_config
 
 load_project_env()
 ASSETS = [

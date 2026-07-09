@@ -1,6 +1,6 @@
 """Canonical VIL config exports."""
 
-from src.utils.config import (
+from pictova.utils.config import (
     PROJECT_ROOT,
     env_str,
     get_vil_dir,

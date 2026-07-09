@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from src.pictova.engine.attach import (
+from pictova.engine.attach import (
     execute_legacy_attach,
     execute_native_attach,
     prepare_attach_request,

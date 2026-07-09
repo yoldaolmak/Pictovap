@@ -8,7 +8,7 @@ import sqlite3
 import sys
 from typing import Dict, List
 
-from src.pictova.config import get_vil_dir, get_visual_memory_db_path, load_project_env
+from pictova.config import get_vil_dir, get_visual_memory_db_path, load_project_env
 
 
 REQUIRED_MODULES = ["PIL", "requests", "numpy", "cv2"]
@@ -38,7 +38,7 @@ def _db_stats(db_path: str) -> Dict:
 
 def _vision_chain_status() -> Dict:
     try:
-        from src.pictova.engine.vision_chain import has_any_vision_source, _find_bin, _codex_check_login
+        from pictova.engine.vision_chain import has_any_vision_source, _find_bin, _codex_check_login
         return {
             "any_source": has_any_vision_source(),
             "gemini_key": bool(os.environ.get("GEMINI_API_KEY", "").strip()),

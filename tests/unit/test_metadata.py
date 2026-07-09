@@ -38,8 +38,8 @@ def _make_minimal_db(path: str, with_scanned: bool = True) -> None:
 def test_db_cached_metadata_returns_data(tmp_path):
     db = str(tmp_path / "test.db")
     _make_minimal_db(db)
-    from src.pictova.engine.metadata import _db_cached_metadata
-    with patch("src.pictova.config.get_visual_memory_db_path", return_value=Path(db)):
+    from pictova.engine.metadata import _db_cached_metadata
+    with patch("pictova.config.get_visual_memory_db_path", return_value=Path(db)):
         result = _db_cached_metadata("/fake/photo.heic")
     assert result is not None
     assert "sinop" in result["keywords"]
@@ -53,14 +53,14 @@ def test_db_cached_metadata_returns_none_for_pending(tmp_path):
     con.execute("INSERT INTO asset_index VALUES ('uuid2','/other.heic','[]','','','','pending')")
     con.commit()
     con.close()
-    from src.pictova.engine.metadata import _db_cached_metadata
-    with patch("src.pictova.config.get_visual_memory_db_path", return_value=Path(db)):
+    from pictova.engine.metadata import _db_cached_metadata
+    with patch("pictova.config.get_visual_memory_db_path", return_value=Path(db)):
         result = _db_cached_metadata("/other.heic")
     assert result is None
 
 
 def test_enrich_from_cache_builds_metadata():
-    from src.pictova.engine.metadata import _enrich_from_cache
+    from pictova.engine.metadata import _enrich_from_cache
     cached = {"keywords": ["sinop", "castle"], "scene": "coast", "summary": "Sinop kalesi", "activity": "travel"}
     post_ctx = {"title": "Sinop Gezisi"}
     result = _enrich_from_cache(cached, post_ctx)
@@ -84,11 +84,11 @@ def test_build_native_metadata_map_uses_cache(tmp_path):
     con.commit()
     con.close()
 
-    from src.pictova.engine.metadata import build_native_metadata_map
+    from pictova.engine.metadata import build_native_metadata_map
 
-    with patch("src.pictova.config.get_visual_memory_db_path", return_value=Path(db)), \
-         patch("src.pictova.engine.metadata.has_any_vision_source", return_value=True), \
-         patch("src.pictova.engine.metadata.analyze_image_vision_chain") as mock_chain:
+    with patch("pictova.config.get_visual_memory_db_path", return_value=Path(db)), \
+         patch("pictova.engine.metadata.has_any_vision_source", return_value=True), \
+         patch("pictova.engine.metadata.analyze_image_vision_chain") as mock_chain:
         meta, warnings = build_native_metadata_map(
             [str(fake_img)],
             post_context={"title": "Sinop Gezisi"},
@@ -107,7 +107,7 @@ def test_build_native_metadata_map_falls_back_to_vision(tmp_path):
     fake_img = tmp_path / "photo.jpg"
     fake_img.write_bytes(b"fake")
 
-    from src.pictova.engine.metadata import build_native_metadata_map
+    from pictova.engine.metadata import build_native_metadata_map
 
     mock_result = {
         "alt": "a" * 20,
@@ -117,9 +117,9 @@ def test_build_native_metadata_map_falls_back_to_vision(tmp_path):
         "keywords": ["kıyı"],
         "scene": "coast",
     }
-    with patch("src.pictova.config.get_visual_memory_db_path", return_value=Path(db)), \
-         patch("src.pictova.engine.metadata.has_any_vision_source", return_value=True), \
-         patch("src.pictova.engine.metadata.analyze_image_vision_chain", return_value=dict(mock_result)) as mock_chain:
+    with patch("pictova.config.get_visual_memory_db_path", return_value=Path(db)), \
+         patch("pictova.engine.metadata.has_any_vision_source", return_value=True), \
+         patch("pictova.engine.metadata.analyze_image_vision_chain", return_value=dict(mock_result)) as mock_chain:
         meta, _ = build_native_metadata_map(
             [str(fake_img)],
             post_context={},

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.11
 """Pictova — Country-based photo indexer.
 
-For countries outside TR. Excludes personal albums.
-Kullanım: python3.11 scripts/index_country_photos.py --country IT --limit 5000
+For countries other than TR. Excludes personal albums.
+Usage: python3.11 scripts/index_country_photos.py --country IT --limit 5000
 """
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from pathlib import Path
 
 import osxphotos
 
-# ── Sabitler ─────────────────────────────────────────────────────────────────
+# ── Constants ────────────────────────────────────────────────────────────────
 
 EXCLUDE_ALBUMS = {
     "Ayşa", "Ella", "Kemal", "Pamuk", "Kıymet",
@@ -86,7 +86,7 @@ def _quality(photo: osxphotos.PhotoInfo) -> float:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--country", required=True, help="ISO country code, örn: IT, GR, HR")
+    parser.add_argument("--country", required=True, help="ISO country code, e.g.: IT, GR, HR")
     parser.add_argument("--limit", type=int, default=0, help="Maximum number of photos")
     args = parser.parse_args()
 
@@ -97,12 +97,12 @@ def main():
     print(f"   Total: {len(all_photos):,} photos")
 
     con = sqlite3.connect(str(DB_PATH))
-    # asset_index table already exists (index_turkey_photos.py tarafından oluşturuldu)
+    # The asset_index table already exists (created by index_turkey_photos.py)
 
     included = skipped = errors = 0
     processed = 0
 
-    print(f"\n🔍 {country_code} filter applied...")
+    print(f"\n🔍 Applying {country_code} filter...")
     for photo in all_photos:
         if args.limit and included >= args.limit:
             break
@@ -186,10 +186,10 @@ def main():
     con.commit()
     con.close()
 
-    print(f"\n✅ {country_code} indexing completed")
-    print(f"   Included : {included:,}")
-    print(f"   Skipped  : {skipped:,}")
-    print(f"   Error    : {errors:,}")
+    print(f"\n✅ {country_code} indexing complete")
+    print(f"   Included: {included:,}")
+    print(f"   Skipped : {skipped:,}")
+    print(f"   Errors  : {errors:,}")
     print(f"   DB      : {DB_PATH}")
 
 

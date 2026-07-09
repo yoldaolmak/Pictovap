@@ -4,8 +4,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from src.utils.config import get_visual_memory_db_path
-from src.core.database import VisualMemoryComponent, VisualMemoryConfig
+from pictova.utils.config import get_visual_memory_db_path
+from pictova.core.database import VisualMemoryComponent, VisualMemoryConfig
 
 
 def parse_args() -> argparse.Namespace:

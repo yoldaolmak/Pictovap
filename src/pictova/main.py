@@ -15,22 +15,22 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from datetime import datetime
 
-from src.core.media_quality import normalize_text, validate_metadata, validate_processed_asset
-from src.utils.config import get_vil_dir, get_visual_memory_db_path, load_project_env
+from pictova.core.media_quality import normalize_text, validate_metadata, validate_processed_asset
+from pictova.utils.config import get_vil_dir, get_visual_memory_db_path, load_project_env
 
 load_project_env()
 
-from src.core.media_publish import build_publish_slug_candidates, embed_metadata, ensure_publish_path, ensure_unique_slug
-from src.core.database import VisualMemoryComponent, VisualMemoryConfig, query_asset_from_visual_memory
-from src.core.processor import YOImageProcessor, get_vil_images
-from src.core.metadata_generator import (
+from pictova.core.media_publish import build_publish_slug_candidates, embed_metadata, ensure_publish_path, ensure_unique_slug
+from pictova.core.database import VisualMemoryComponent, VisualMemoryConfig, query_asset_from_visual_memory
+from pictova.core.processor import YOImageProcessor, get_vil_images
+from pictova.core.metadata_generator import (
     YOMetadataGenerator,
     build_basic_metadata,
 )
-from src.services.wordpress import fetch_post_context, upload_images_batch
+from pictova.services.wordpress import fetch_post_context, upload_images_batch
 
 try:
-    from src.core.cloud_vision import YOCloudVisionClient, generate_metadata_for_files as generate_gv_metadata
+    from pictova.core.cloud_vision import YOCloudVisionClient, generate_metadata_for_files as generate_gv_metadata
 except ImportError:
     generate_metadata_for_files = None
 
@@ -295,7 +295,7 @@ def search_semantic_assets(
 
     # Coğrafi alias genişletme
     try:
-        from src.pictova.engine.geo_aliases import expand_query
+        from pictova.engine.geo_aliases import expand_query
         expanded_terms = expand_query(location_query)
     except Exception:
         expanded_terms = [location_query]
@@ -723,7 +723,7 @@ class YOOrchestrator:
         if source == "unsplash":
             self.log(f"\n📥 STEP 1: Download from Unsplash (query: '{query}')")
             try:
-                from yo_unsplash import YOUnsplashDownloader
+                from pictova.providers.yo_unsplash import YOUnsplashDownloader
 
                 downloader = YOUnsplashDownloader()
                 image_files = downloader.download(query, count=count)

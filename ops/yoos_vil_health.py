@@ -6,7 +6,7 @@ import os
 import sys
 from pathlib import Path
 
-from src.utils.config import get_vil_dir, get_visual_memory_db_path, load_project_env
+from pictova.utils.config import get_vil_dir, get_visual_memory_db_path, load_project_env
 
 load_project_env()
 ROOT = Path(__file__).resolve().parent

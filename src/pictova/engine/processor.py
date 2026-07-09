@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List
 
-from src.core.processor import YOImageProcessor, get_vil_images
+from pictova.core.processor import YOImageProcessor, get_vil_images
 
 
 def process_selected_images(

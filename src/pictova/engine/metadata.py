@@ -7,14 +7,14 @@ import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.core.metadata_generator import build_basic_metadata
-from src.pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
+from pictova.core.metadata_generator import build_basic_metadata
+from pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
 
 
 def _db_cached_metadata(image_path: str) -> Optional[Dict[str, Any]]:
     """Visual memory DB'de önceden taranmış metadata var mı? Varsa döner."""
     try:
-        from src.pictova.config import get_visual_memory_db_path
+        from pictova.config import get_visual_memory_db_path
         db_path = str(get_visual_memory_db_path())
         con = sqlite3.connect(db_path)
         row = con.execute("""

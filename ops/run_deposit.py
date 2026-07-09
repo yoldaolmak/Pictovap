@@ -13,10 +13,10 @@ from urllib.request import Request, urlopen
 
 from PIL import Image, ImageOps
 
-from src.utils.config import load_project_env
-from src.core.database import VisualMemoryComponent, VisualMemoryConfig
-from src.visual_memory.deposit_config import load_deposit_config
-from src.visual_memory.models import StockConnectionStatus, StockSearchResult
+from pictova.utils.config import load_project_env
+from pictova.core.database import VisualMemoryComponent, VisualMemoryConfig
+from pictova.visual_memory.deposit_config import load_deposit_config
+from pictova.visual_memory.models import StockConnectionStatus, StockSearchResult
 
 load_project_env()
 
@@ -332,7 +332,7 @@ def main() -> None:
         first = next((r for r in results if str(r.asset_id) == str(args.asset_id)), None)
         if not first:
             # asset not in results, build a minimal stub
-            from src.visual_memory.models import StockSearchResult
+            from pictova.visual_memory.models import StockSearchResult
             first = StockSearchResult(
                 provider="depositphotos",
                 asset_id=str(args.asset_id),

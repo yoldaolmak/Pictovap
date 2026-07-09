@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict
 import os
 
-from src.utils.config import get_visual_memory_db_path, load_project_env
+from pictova.utils.config import get_visual_memory_db_path, load_project_env
 
 load_project_env()
 
@@ -321,7 +321,7 @@ Kurallar:
         Öncelik: heading > alt text > location_hint > 'gorsel'.
         slugify() Türkçeyi ASCII'ye çevirir (ş→s, ğ→g, vb).
         """
-        from src.core.media_publish import slugify as mp_slugify
+        from pictova.core.media_publish import slugify as mp_slugify
 
         source = (
             str(metadata.get("heading") or "").strip()

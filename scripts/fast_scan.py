@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Parallel vision scan — runs multiple Claude CLI processes concurrently.
 
-Kullanım:
+Usage:
   python3 scripts/fast_scan.py --workers 3 --limit 120
 """
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
+from pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
@@ -40,7 +40,7 @@ def _update_done(con_path: str, source_id: str, result: dict) -> None:
     scene = result.get("scene", "")
     activity = result.get("activity", "")
     if not scene or not activity:
-        from src.pictova.engine.vision_chain import _extract_scene_activity  # type: ignore
+        from pictova.engine.vision_chain import _extract_scene_activity  # type: ignore
         _s, _a = _extract_scene_activity(kws) if kws else ("", "")
         scene = scene or _s
         activity = activity or _a
@@ -94,7 +94,7 @@ def _worker(rows: list, db_str: str, idx: int) -> None:
             _update_error(db_str, uid, "file_not_found")
             with _lock:
                 _errors += 1
-                print(f"  ✗ [{idx}] {Path(src).name}: dosya yok")
+                print(f"  ✗ [{idx}] {Path(src).name}: file not found")
             continue
         
         apple_labels = []
@@ -136,7 +136,7 @@ def main():
 
     con = sqlite3.connect(str(DB_PATH))
     
-    # STRICT BUDGET CONTROL: 9 adet tamamen ücretsiz anahtar * 1490 işlem = 13.410 photos limiti
+    # STRICT BUDGET CONTROL: 9 completely free keys * 1490 operations = 13,410 photo limit
     daily_count = con.execute("""
         SELECT count(*) FROM asset_index 
         WHERE vision_scan_status = 'done' 

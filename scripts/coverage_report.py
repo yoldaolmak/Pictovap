@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Destinasyon bazında photos kapsam raporu."""
+"""Photos coverage report by destination."""
 from __future__ import annotations
 
 import os
@@ -28,7 +28,7 @@ def main():
     """).fetchall()
     con.close()
 
-    print(f"{'Lokasyon':<28} {'Toplam':>7} {'Lokal':>7} {'iCloud':>7} {'Tarandı':>8}")
+    print(f"{'Location':<28} {'Total':>7} {'Local':>7} {'iCloud':>7} {'Scanned':>8}")
     print("-" * 60)
     for loc, total, local, icloud, scanned in rows:
         bar = "█" * min(int(local / 5), 20)

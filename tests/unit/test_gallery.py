@@ -80,8 +80,8 @@ def test_db(tmp_path):
 
 
 def test_gallery_search_returns_local_only(test_db):
-    from src.pictova.engine.gallery import gallery_search
-    with patch("src.pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
+    from pictova.engine.gallery import gallery_search
+    with patch("pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
         results = gallery_search("sinop", count=10, only_local=True)
     # Sinop'ta 2 lokal fotoğraf var (source_path dolu)
     assert len(results) == 2
@@ -89,31 +89,31 @@ def test_gallery_search_returns_local_only(test_db):
 
 
 def test_gallery_search_includes_icloud_when_not_only_local(test_db):
-    from src.pictova.engine.gallery import gallery_search
-    with patch("src.pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
+    from pictova.engine.gallery import gallery_search
+    with patch("pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
         results = gallery_search("antalya", count=10, only_local=False)
     assert len(results) == 1
     assert results[0]["source_path"] == ""
 
 
 def test_gallery_search_only_scanned(test_db):
-    from src.pictova.engine.gallery import gallery_search
-    with patch("src.pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
+    from pictova.engine.gallery import gallery_search
+    with patch("pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
         results = gallery_search("sinop", count=10, only_scanned=True)
     assert len(results) == 1
     assert results[0]["vision_scan_status"] == "done"
 
 
 def test_gallery_search_location_display(test_db):
-    from src.pictova.engine.gallery import gallery_search
-    with patch("src.pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
+    from pictova.engine.gallery import gallery_search
+    with patch("pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
         results = gallery_search("sinop", count=10)
     assert results[0]["location_display"] == "Sinop"
 
 
 def test_gallery_stats_counts(test_db):
-    from src.pictova.engine.gallery import gallery_stats
-    with patch("src.pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
+    from pictova.engine.gallery import gallery_stats
+    with patch("pictova.engine.gallery.get_visual_memory_db_path", return_value=Path(test_db)):
         stats = gallery_stats()
     assert stats["total"] == 3
     assert stats["local"] == 2

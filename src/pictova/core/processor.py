@@ -15,7 +15,7 @@ import subprocess
 import json
 import numpy as np
 
-from src.utils.config import get_vil_dir, load_project_env
+from pictova.utils.config import get_vil_dir, load_project_env
 
 load_project_env()
 
@@ -149,7 +149,7 @@ class YOImageProcessor:
         # Falls back to project-root module for legacy compatibility
         def _load_adaptive() -> "YOAdaptiveFilter":
             try:
-                from src.core.filter import YOAdaptiveFilter as _F
+                from pictova.core.filter import YOAdaptiveFilter as _F
                 return _F()
             except ImportError:
                 pass
@@ -162,7 +162,7 @@ class YOImageProcessor:
 
         if profile in {"yoldaolmak", "yo-yoldaolmak"}:
             try:
-                from src.core.filter import YOAdaptiveFilter
+                from pictova.core.filter import YOAdaptiveFilter
                 filter_obj = YOAdaptiveFilter()
             except ImportError:
                 filter_obj = _load_adaptive()

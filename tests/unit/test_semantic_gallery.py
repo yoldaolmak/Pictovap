@@ -1,11 +1,11 @@
 import pytest
 import json
 from unittest.mock import MagicMock, patch
-from src.main import search_semantic_assets
-from src.services.wordpress import YOWordPressUploader
+from pictova.main import search_semantic_assets
+from pictova.services.wordpress import YOWordPressUploader
 
 @patch('sqlite3.connect')
-@patch('src.main.get_visual_memory_db_path')
+@patch('pictova.main.get_visual_memory_db_path')
 def test_dynamic_sql_filters_portrait_person(mock_get_db_path, mock_connect):
     conn_mock = MagicMock()
     mock_connect.return_value = conn_mock
@@ -24,7 +24,7 @@ def test_dynamic_sql_filters_portrait_person(mock_get_db_path, mock_connect):
     assert "(a.ai_keywords_json LIKE ? OR a.description LIKE ? OR a.people_json LIKE ?)" in sql
     assert "%kemal kaya%" in params
 
-@patch('src.utils.config.load_project_env')
+@patch('pictova.utils.config.load_project_env')
 @patch.object(YOWordPressUploader, 'fetch_post_context')
 @patch('requests.Session.post')
 def test_append_media_to_post_content_creates_gallery(

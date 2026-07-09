@@ -140,6 +140,44 @@ Analyze a post, select 4 context-aware images, grade them, generate metadata, an
 pictova attach --site myblog --post 1042 --count 4 --engine native
 ```
 
+### 5. Programmatic SDK Usage
+
+Developers can import and build upon the Pictova engine directly in Python:
+
+```python
+from pictova import analyze_image_vision_chain, resolve_source_images
+from pictova.services.wordpress import YOWordPressUploader
+
+# 1. Resolve context-aware assets semantically
+assets = resolve_source_images(
+    source="auto",
+    count=2,
+    name=None,
+    query="Akyaka Plajı ve Deniz",
+    location_query="Akyaka",
+    content_filter=None,
+    post_context={"title": "Akyaka Gezi Rehberi"}
+)
+
+# 2. Analyze image using the Vision Chain fallback structure
+metadata = analyze_image_vision_chain(
+    image_path="docs/assets/pictova-banner.png",
+    location_hint="Akyaka",
+    post_context={"title": "Akyaka Gezi Rehberi"}
+)
+print(f"Alt tag: {metadata['alt']}")
+
+# 3. Direct WordPress publishing using YOWordPressUploader
+uploader = YOWordPressUploader(site="yoldaolmak")
+result = uploader.upload_media(
+    file_path="docs/assets/pictova-banner.png",
+    title=metadata["title"],
+    alt_text=metadata["alt"],
+    description=metadata["description"],
+    caption=metadata["caption"],
+)
+```
+
 ---
 
 ## 📚 Documentation Portal

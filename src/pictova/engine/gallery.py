@@ -6,13 +6,13 @@ import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from src.core.media_publish import (
+from pictova.core.media_publish import (
     build_publish_slug_candidates,
     embed_metadata,
     ensure_publish_path,
     ensure_unique_slug,
 )
-from src.pictova.config import get_visual_memory_db_path
+from pictova.config import get_visual_memory_db_path
 
 
 def gallery_search(

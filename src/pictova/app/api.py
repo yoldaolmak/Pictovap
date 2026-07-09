@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from src.pictova.app.health import run_health_check
-from src.pictova.app.jobs import run_attach_job
-from src.pictova.engine.attach import build_attach_plan, build_process_result, prepare_attach_request
-from src.pictova.providers.wordpress import fetch_post_context, guard_post_media
+from pictova.app.health import run_health_check
+from pictova.app.jobs import run_attach_job
+from pictova.engine.attach import build_attach_plan, build_process_result, prepare_attach_request
+from pictova.providers.wordpress import fetch_post_context, guard_post_media
 
 
 def gallery_query(payload: Dict[str, Any]) -> Dict[str, Any]:
     """POST /gallery — zengin fotoğraf galerisi araması."""
-    from src.pictova.engine.gallery import gallery_search, gallery_stats
+    from pictova.engine.gallery import gallery_search, gallery_stats
     query = str(payload.get("query", "")).strip()
     if not query:
         return {"status": "success", "stats": gallery_stats(), "results": []}
@@ -28,7 +28,7 @@ def gallery_query(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 def search_photos(payload: Dict[str, Any]) -> Dict[str, Any]:
     """POST /search — lokasyon bazlı fotoğraf arama."""
-    from src.main import search_semantic_assets
+    from pictova.main import search_semantic_assets
     query = str(payload.get("query", "")).strip()
     if not query:
         return {"status": "failed", "warning": "query gerekli"}
@@ -48,7 +48,7 @@ def review_post(payload: Dict[str, Any]) -> Dict[str, Any]:
     site = payload.get("site", "yoldaolmak")
     post_id = payload.get("post_id")
     try:
-        from src.main import search_semantic_assets
+        from pictova.main import search_semantic_assets
         ctx = fetch_post_context(post_id, site=site)
         slug = str(ctx.get("slug") or "").replace("-", " ")
         title = str(ctx.get("title") or "")
@@ -92,8 +92,8 @@ def guard_post(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 def stats_summary() -> Dict[str, Any]:
     """GET /stats — kısa istatistik özeti."""
-    from src.pictova.engine.gallery import gallery_stats
-    from src.pictova.engine.vision_chain import has_any_vision_source
+    from pictova.engine.gallery import gallery_stats
+    from pictova.engine.vision_chain import has_any_vision_source
     stats = gallery_stats()
     scan_pct = int(stats["scanned"] / stats["local"] * 100) if stats["local"] else 0
     return {

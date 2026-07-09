@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Pictova — Lokal photoslara toplu vision scan.
+"""Pictova — Bulk vision scan for local photos.
 
-Sadece source_path dolu (lokal mevcut) ve vision_scan_status='pending' kayıtları işler.
-Vision chain (Gemini→Codex→Claude) ile ai_keywords, scene, activity alanlarını doldurur.
+Processes only records where source_path is filled (locally available) and vision_scan_status='pending'.
+Fills ai_keywords, scene, and activity fields using the Vision chain (Gemini→Codex→Claude).
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ import sys
 import time
 from pathlib import Path
 
-# Proje root'unu path'e ekle
+# Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
@@ -46,7 +46,7 @@ WHERE source_id = :source_id
 
 
 def _extract_scene_activity(keywords: list[str]) -> tuple[str, str]:
-    """keyword listesinden scene ve activity tahmin et."""
+    """Estimate scene and activity from keyword list."""
     scene_words = {"coast", "beach", "mountain", "forest", "city", "urban", "rural",
                    "sea", "lake", "river", "valley", "castle", "mosque", "church",
                    "market", "bazaar", "harbor", "port", "ruins", "landscape", "nature"}
@@ -60,7 +60,7 @@ def _extract_scene_activity(keywords: list[str]) -> tuple[str, str]:
 
 def main():
     if not has_any_vision_source():
-        print("❌ No Vision source. GEMINI_API_KEY ekle veya codex/claude oturumu aç.", file=sys.stderr)
+        print("❌ No Vision source. Add GEMINI_API_KEY or open a codex/claude session.", file=sys.stderr)
         sys.exit(1)
 
     con = sqlite3.connect(str(DB_PATH))
@@ -76,10 +76,10 @@ def main():
     """).fetchall()
 
     total = len(rows)
-    print(f"🔍 {total} lokal photos vision scan bekliyor")
+    print(f"🔍 {total} local photos awaiting vision scan")
 
     if total == 0:
-        print("✅ Tümü taranmış.")
+        print("✅ All scanned.")
         con.close()
         return
 
@@ -89,7 +89,7 @@ def main():
         uid = row["source_id"]
         city = row["city"] or row["state_province"] or row["country"] or ""
 
-        # Dosya hâlâ mevcut mu?
+        # Is the file still available?
         if not Path(src).exists():
             con.execute(ERROR_SQL, {
                 "source_id": uid,
@@ -145,12 +145,12 @@ def main():
         source = result.get("source", "?")
         print(f"  ✓ [{i+1}/{total}] {row['filename']} ({source}) → {keywords[:4]}")
 
-        # Codex yavaş — rate limit yok ama biraz bekleyelim
+        # Codex is slow — no rate limit but let's wait a bit
         if source == "codex_cli":
             time.sleep(2)
 
     con.close()
-    print(f"\n✅ Tamamlandı: {done} tarandı, {errors} hata")
+    print(f"\n✅ Completed: {done} scanned, {errors} errors")
 
     if done > 0:
         print("\n🔄 Rebuilding FTS index...")

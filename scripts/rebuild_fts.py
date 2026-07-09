@@ -41,7 +41,7 @@ def main():
     con = sqlite3.connect(str(DB_PATH))
     con.row_factory = sqlite3.Row
 
-    print("🗑  FTS temizleniyor...")
+    print("🗑  Cleaning FTS...")
     con.execute("DROP TABLE IF EXISTS asset_search")
     con.execute("""
         CREATE VIRTUAL TABLE asset_search USING fts5(
