@@ -292,11 +292,11 @@ class YOAdaptiveFilter:
 
         # Diagnostic output
         temp_label = (
-            "soğuk"   if p['color_temp'] >  0.06 else
-            "sıcak"   if p['color_temp'] < -0.04 else
+            "soğuk" if p['color_temp'] > 0.06 else
+            "sıcak" if p['color_temp'] < -0.04 else
             "nötr"
         )
-        print(f"  📊 Analiz:")
+        print("  📊 Analiz:")
         print(f"     Brightness:   {p['brightness']:.2f}  → {p['brightness_factor']:.2f}x")
         print(f"     Saturation:   {p['avg_saturation']:.2f}  → {p['saturation_factor']:.2f}x")
         print(f"     Contrast:     {p['std_dev']:.3f} → {p['contrast_factor']:.2f}x")

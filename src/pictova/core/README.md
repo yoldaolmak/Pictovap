@@ -1,45 +1,36 @@
-# VIL Core - WordPress Otomatik Görsel Yerleştirme Motoru
+# Pictovap Core
 
-Bu paket, VIL (Visual Intelligence Layer) sisteminin çekirdek modüllerini içerir.
+Core modules of the Pictovap visual finishing engine: primitives, language
+detection, image processing/filtering, and metadata generation.
 
-## Modüller
+## Modules
 
-### Orkestrasyon
-- `yo_orchestrator.py`: Ana pipeline orkestrasyonu
-- `yo_process.py`: Süreç yönetimi ve tracking
+### Primitives
+- `primitives.py`: Visual Brief, Fit Score, Provenance Pack, CMS Placement — the
+  four core data structures the rest of the pipeline is built around.
+- `profile.py`: Publisher Profile loading (site name, CMS type, language,
+  output/filename/alt-text/caption rules, source adapters).
 
-### Görsel İşleme
-- `yo_image_processor.py`: Görsel optimizasyon ve transformasyon
-- `yo_metadata_generator.py`: AI tabanlı meta veri üretimi
+### Language
+- `language.py`: Deterministic local word-marker language detection (used by
+  the credential-free demo path). Currently recognizes English and Turkish.
 
-### Arama & Filtreleme
-- `yo_semantic_search.py`: Vektör tabanlı semantik arama
-- `yo_photo_filter.py`: Temel kalite filtreleme
-- `yo_advanced_filter.py`: Gelişmiş filtre kuralları
-- `yo_adaptive_filter.py`: Dinamik adaptif filtreleme
-- `yo_yoldaolmak_filter.py`: Domain-spesifik filtreler
+### Image processing
+- `processor.py`: Image load, crop, filter, resize, WebP export pipeline.
+- `filter.py`: Adaptive cinematic color-grading filter.
 
-### AI & Tagging
-- `yo_clip_tagger.py`: CLIP model entegrasyonu
-- `yo_semantic_tagger.py`: Semantik etiketleme
-- `yo_cloud_vision.py`: Google Cloud Vision entegrasyonu
-- `yo_face_detector.py`: Yüz algılama (opsiyonel)
-- `yo_tag_taxonomy.py`: Etiket taksonomisi yönetimi
+### Metadata
+- `demo_metadata.py`: Deterministic, localized alt-text/caption generation used
+  by the credential-free demo (no API calls, dictionary-based). Not to be
+  confused with `metadata_generator.py` (LLM-backed) or `engine/metadata.py`
+  (native engine, also LLM-backed) — see `docs/architecture/native-vs-legacy.md`.
+- `metadata_generator.py`: LLM-backed metadata generation (alt/title/caption/
+  description/keywords) with DB caching, used by the vision-chain-driven path.
+- `media_publish.py`: Slug/filename generation, scene-token normalization, and
+  publish-path utilities.
+- `media_quality.py`: Metadata/asset validation and quality checks.
 
-### WordPress Entegrasyonu
-- `yo_wp_uploader.py`: Media uploader
-- `yo_wp_draft_image_cycle.py`: Draft post image cycling
-- `yo_gutenberg_blocks.py`: Gutenberg block desteği
-
-### Yardımcı Araçlar
-- `media_publish.py`: Medya yayınlama utilities
-- `media_quality.py`: Kalite kontrol araçları
-- `yo_unsplash.py`: Unsplash API entegrasyonu
-- `yo_iphoto.py`: Apple Photos entegrasyonu
-- `yo_quality_comparison.py`: Kalite karşılaştırma
-- `yo_phase1_quick_tagger.py`: Hızlı etiketleme
-- `yo_full_tagger_pipeline.py`: Tam tagging pipeline
-- `yo_vision_daily_scan.py`: Günlük Vision taraması
-
-### Konfigürasyon
-- `settings.py`: Ana ayarlar ve environment yönetimi
+### Data
+- `database.py`: Visual Memory (SQLite) component — indexing and lookups for
+  previously processed assets.
+- `selection.py`: Candidate scoring/selection helpers.

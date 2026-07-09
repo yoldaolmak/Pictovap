@@ -98,7 +98,7 @@ def _kemal_voice_caption(summary: str, scene: str, location: str, keywords: list
                 and k.lower() not in (scene or "").lower()]
 
     scene_tr = scene_tr_map.get(scene.lower(), "") if (scene and scene.lower() not in _skip) else ""
-    
+
     if location and scene_tr:
         if kw_clean:
             caption = f"{location} yakınlarında, {', '.join(kw_clean[:2])} detayları içeren {scene_tr} manzarası."
@@ -272,8 +272,9 @@ def build_native_metadata_map(
         cached = _db_cached_metadata(image_file)
         if cached:
             # location_hint olarak heading_text'i kullan
-            # _enrich_from_cache içinde post_context kullanılıyor ama location orada post_context['title']'den çekiliyor.
-            # _enrich_from_cache override yapmak için özel bir location geçemiyoruz, o yüzden post_context kopyasını değiştirelim
+            # _enrich_from_cache içinde post_context kullanılıyor ama location orada
+            # post_context['title']'den çekiliyor. Özel bir location geçemediğimiz için
+            # post_context kopyasını değiştirip override ediyoruz.
             ctx = dict(post_context)
             if heading_text:
                 ctx["title"] = heading_text
@@ -281,12 +282,12 @@ def build_native_metadata_map(
             if h_info:
                 enriched["heading"] = h_info.get("text")
                 enriched["heading_level"] = h_info.get("level")
-                
+
             if "pictova_unsplash" in str(image_file):
                 parts = Path(image_file).stem.split("-by-")
                 publisher = parts[-1].replace("_", " ") if len(parts) > 1 else "Bilinmiyor"
                 enriched["caption"] = f"{enriched.get('caption', '').strip()} (Görsel: Unsplash, {publisher})"
-                
+
             metadata_dict[image_file] = enriched
             warnings.append(f"{Path(image_file).name}: OK (db_cache)")
             continue
@@ -308,12 +309,12 @@ def build_native_metadata_map(
             if h_info:
                 analysis["heading"] = h_info.get("text")
                 analysis["heading_level"] = h_info.get("level")
-                
+
             if "pictova_unsplash" in str(image_file):
                 parts = Path(image_file).stem.split("-by-")
                 publisher = parts[-1].replace("_", " ") if len(parts) > 1 else "Bilinmiyor"
                 analysis["caption"] = f"{analysis.get('caption', '').strip()} (Görsel: Unsplash, {publisher})"
-                
+
             metadata_dict[image_file] = analysis
             warnings.append(f"{Path(image_file).name}: OK ({source})")
         except RuntimeError as exc:

@@ -7,7 +7,17 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from typing import Any, Callable, Dict, Tuple
 
-from pictova.app.api import attach_images, gallery_query, guard_post, health_status, plan_attach, process_attach, review_post, search_photos, stats_summary
+from pictova.app.api import (
+    attach_images,
+    gallery_query,
+    guard_post,
+    health_status,
+    plan_attach,
+    process_attach,
+    review_post,
+    search_photos,
+    stats_summary,
+)
 from pictova.app.state import job_registry
 
 
@@ -90,7 +100,7 @@ def build_handler() -> type[BaseHTTPRequestHandler]:
                 return
 
             if self.path.startswith("/jobs/"):
-                job_id = self.path[len("/jobs/") :].strip()
+                job_id = self.path[len("/jobs/"):].strip()
                 try:
                     job = job_registry.get_job(job_id)
                 except KeyError:

@@ -5,7 +5,7 @@ Defines the brand, styling, and CMS configuration for a specific deployment.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 @dataclass
@@ -26,7 +26,7 @@ class PublisherProfile:
     caption_rules: Dict[str, str] = field(default_factory=dict)
     editorial_preferences: Dict[str, str] = field(default_factory=dict)
     forbidden_patterns: List[str] = field(default_factory=list)
-    
+
     @classmethod
     def get_default_profile(cls) -> "PublisherProfile":
         """Returns a generic fallback profile."""
@@ -51,7 +51,7 @@ class PublisherProfile:
                 continue
             indent = len(line) - len(line.lstrip())
             line_str = line.strip()
-            
+
             if line_str.startswith("-"):
                 val = line_str[1:].strip()
                 if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")):
@@ -74,7 +74,7 @@ class PublisherProfile:
                     v = False
                 elif v == "":
                     v = None
-                    
+
                 if indent == 0:
                     current_key = k
                     data[k] = v
@@ -83,7 +83,7 @@ class PublisherProfile:
                         if not isinstance(data.get(current_key), dict):
                             data[current_key] = {}
                         data[current_key][k] = v
-                        
+
         return cls(
             profile_id=data.get("profile_id", "unknown"),
             brand_name=data.get("brand_name", "Unknown Publisher"),

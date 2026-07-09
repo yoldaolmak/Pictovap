@@ -5,13 +5,11 @@ YO OS WordPress Uploader — REST API media upload and attachment
 
 import requests
 import json
-import os
 import re
 import html
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional
-import base64
 
 from pictova.services.post_media_guard import (
     assess_post_media,
@@ -34,7 +32,7 @@ class YOWordPressUploader:
     def __init__(self, site: str = "demo"):
         self.site = site
         prefix = f"{site.upper()}_" if site and site != "demo" else "WP_"
-        
+
         # Default to the WP_ prefix if site-specific is not found
         self.base_url = env_str(f"{prefix}URL", env_str("WP_URL", "http://localhost:8080"))
         self.user = env_str(f"{prefix}USER", env_str("WP_USER", "admin"))
@@ -51,7 +49,6 @@ class YOWordPressUploader:
             "User-Agent": "YO-OS-Media-Uploader/1.0",
         })
         return session
-
 
     def upload_media(
         self,
@@ -662,7 +659,7 @@ def _insert_block_after_heading(
         # Guardrail: skip insertion when an image already exists directly
         # above/below the heading, or with only one paragraph gap.
         before = content[: match.start()]
-        after = content[match.end() :]
+        after = content[match.end():]
         has_nearby_image_before = re.search(
             r"<!-- wp:image\b.*?<!-- /wp:image -->\s*(?:<!-- wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?$",
             before,
@@ -697,7 +694,7 @@ def _extract_available_headings(content: str) -> list[dict]:
         if not text:
             continue
         before = content[: match.start()]
-        after = content[match.end() :]
+        after = content[match.end():]
         # Reuse the same proximity guards used in _insert_block_after_heading
         has_image_before = re.search(
             r"<!-- wp:image\b.*?<!-- /wp:image -->\s*(?:<!-- wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?$",
@@ -764,7 +761,7 @@ def upload_images_batch(
 
         meta = metadata_dict.get(file_path, {})
         if not meta:
-            print(f"  ✗ No metadata found", file=sys.stderr)
+            print("  ✗ No metadata found", file=sys.stderr)
             results["failed"].append({
                 "file": file_path,
                 "error": "No metadata",

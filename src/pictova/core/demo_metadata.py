@@ -1,5 +1,16 @@
+"""Deterministic, credential-free metadata generation for the local demo.
+
+This is a small dictionary-based generator (English/Turkish only) used by
+``pictova.demo`` and the public ``pictovap plan`` command path — it never
+calls an external API. For LLM-backed metadata generation used by the
+production/native pipelines, see ``core.metadata_generator`` and
+``engine.metadata`` instead.
+"""
+
+from __future__ import annotations
+
 import re
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 TR_ALT_MAP = {
     "backpack": "Sırt çantası ve seyahat hazırlığını gösteren minimalist bir görsel.",
@@ -50,7 +61,7 @@ def generate_local_alt_text(candidate: Dict[str, Any], slot: Dict[str, Any], lan
     """
     keywords = [k.lower() for k in candidate.get("keywords", [])]
     target_heading = (slot.get("target_heading") or "").lower()
-    
+
     # Try keyword matching first
     if language == "tr":
         for kw in keywords:
@@ -79,7 +90,7 @@ def generate_local_caption(candidate: Dict[str, Any], slot: Dict[str, Any], lang
     """
     target_heading = slot.get("target_heading") or ""
     excerpt = slot.get("section_excerpt") or ""
-    
+
     # Clean excerpt and get first sentence
     first_sentence = ""
     if excerpt:
@@ -87,7 +98,7 @@ def generate_local_caption(candidate: Dict[str, Any], slot: Dict[str, Any], lang
         sentences = re.split(r'(?<=[.!?])\s+', excerpt.strip())
         if sentences:
             first_sentence = sentences[0].strip()
-            
+
     # Check for specific predefined cases to match requirement examples exactly
     th_lower = target_heading.lower().strip()
     if language == "tr":

@@ -232,6 +232,17 @@ GENERIC_SOURCE_TOKENS = {
     "india",
 }
 
+
+def _is_generic_token(token: str) -> bool:
+    """True if token carries no distinguishing meaning for a slug/filename."""
+    return (
+        token in BAD_SLUG_TOKENS
+        or token in GENERIC_POST_TOKENS
+        or token in GENERIC_SCENE_TOKENS
+        or token in GENERIC_SOURCE_TOKENS
+    )
+
+
 SCENE_REMAP = {
     "beach": "sahil",
     "coast": "kiyi",
@@ -254,7 +265,6 @@ SCENE_REMAP = {
     "sunset": "gunbatimi",
     "sunrise": "gundogumu",
     "night": "gece",
-    "market": "pazar",
     "temple": "tapinak",
     "pagoda": "pagoda",
     "palace": "saray",
@@ -296,8 +306,6 @@ SCENE_REMAP = {
     "park": "park",
     "street": "sokak",
     "alley": "sokak",
-    "port": "liman",
-    "harbor": "liman",
     "pier": "iskele",
     "dock": "iskele",
     "lighthouse": "denizfeneri",
@@ -438,7 +446,6 @@ def _clean_tokens(value: str) -> list[str]:
     return [token for token in slug.split("-") if token]
 
 
-
 def _extract_scene_phrases(text: str) -> list[str]:
     slug = slugify(text)
     phrases: list[str] = []
@@ -550,7 +557,7 @@ def _extract_source_destination_tokens(source_metadata: Dict) -> list[str]:
     description_text = str(source_metadata.get("description", ""))
     for source in (description_text,):
         for token in _clean_tokens(source):
-            if token in BAD_SLUG_TOKENS or token in GENERIC_POST_TOKENS or token in GENERIC_SCENE_TOKENS or token in GENERIC_SOURCE_TOKENS:
+            if _is_generic_token(token):
                 continue
             if token.isdigit():
                 continue
@@ -566,7 +573,6 @@ def _extract_source_destination_tokens(source_metadata: Dict) -> list[str]:
 
 
 def _extract_source_destination_variants(source_metadata: Dict) -> list[str]:
-    description_text = str(source_metadata.get("description", ""))
     variants: list[str] = []
     seen: set[str] = set()
 
@@ -611,7 +617,7 @@ def _extract_scene_tokens(metadata: Dict, destination_tokens: list[str]) -> list
             token = _normalize_scene_token(raw)
             if not token:
                 continue
-            if token in BAD_SLUG_TOKENS or token in GENERIC_POST_TOKENS or token in GENERIC_SCENE_TOKENS or token in GENERIC_SOURCE_TOKENS:
+            if _is_generic_token(token):
                 continue
             if token.isdigit():
                 continue
@@ -645,7 +651,7 @@ def _extract_vision_scene_tokens(metadata: Dict, destination_tokens: list[str]) 
         if not token:
             continue
         token = VISION_SCENE_REMAP.get(token, token)
-        if token in BAD_SLUG_TOKENS or token in GENERIC_POST_TOKENS or token in GENERIC_SCENE_TOKENS or token in GENERIC_SOURCE_TOKENS:
+        if _is_generic_token(token):
             continue
         if token in {"vietnam", "hanoi", "saygon", "halong", "halong-bay", "hoa-lu", "trang-an"}:
             continue
@@ -724,14 +730,15 @@ def build_publish_slug(metadata: Dict, post_context: Dict | None, original_path:
     # 1. Ana lokasyon (post slug) ve Heading bilgisi
     post_slug_tokens = _extract_destination_tokens(post_context)
     ana_lokasyon = post_slug_tokens[0] if post_slug_tokens else ""
-    
+
     heading = str(metadata.get("heading") or "").strip()
     heading_tokens = []
     if heading:
         # Başlıktaki numara prefixlerini temizle (örn. "10. Turgutreis" -> "Turgutreis")
         clean_heading = re.sub(r'^\d+[\.\)]\s*', '', heading)
         heading_slug = slugify(clean_heading)
-        heading_tokens = [t for t in heading_slug.split("-") if t and t not in BAD_SLUG_TOKENS and t not in GENERIC_POST_TOKENS]
+        heading_tokens = [t for t in heading_slug.split(
+            "-") if t and t not in BAD_SLUG_TOKENS and t not in GENERIC_POST_TOKENS]
 
     # Ana lokasyon ve heading birleştir
     destination_tokens = []
@@ -745,7 +752,7 @@ def build_publish_slug(metadata: Dict, post_context: Dict | None, original_path:
     if is_good_slug(original_stem):
         stem_slug = slugify(original_stem)
         stem_tokens = stem_slug.split("-")
-        
+
         # Eğer destination_tokens içindeki kelimeler orijinal slug'da yoksa başa ekle
         missing_dest = [t for t in destination_tokens if t not in stem_tokens]
         if missing_dest:
@@ -792,7 +799,7 @@ def build_publish_slug(metadata: Dict, post_context: Dict | None, original_path:
         if variants:
             return variants[0]
         return "-".join((destination_tokens + ["sahne"])[:4])
-        
+
     raw = "-".join((destination_tokens + scene_tokens)[:5])
     deduped: list[str] = []
     for token in raw.split("-"):

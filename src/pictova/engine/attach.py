@@ -8,8 +8,12 @@ import re
 from typing import Any, Dict, Tuple
 
 from pictova.main import YOOrchestrator
-from pictova.core.media_publish import build_publish_slug_candidates, embed_metadata, ensure_publish_path, ensure_unique_slug
-from pictova.profiles.yoldaolmak import apply_environment
+from pictova.core.media_publish import (
+    build_publish_slug_candidates,
+    embed_metadata,
+    ensure_publish_path,
+    ensure_unique_slug,
+)
 from pictova.engine.metadata import build_native_metadata_map
 from pictova.engine.quality import quality_gate_native_batch
 from pictova.providers.wordpress import fetch_post_context
@@ -69,7 +73,11 @@ def summarize_post_context(post_context: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def _compute_assigned_headings(processed_images: list[str], request: Dict[str, Any], post_context: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+def _compute_assigned_headings(
+    processed_images: list[str],
+    request: Dict[str, Any],
+    post_context: Dict[str, Any],
+) -> Dict[str, Dict[str, Any]]:
     assigned = {}
     force_heading = request.get("heading")
     if force_heading:
@@ -185,7 +193,7 @@ def normalize_attach_result(
 
 def prepare_attach_request(**kwargs: Any) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], VisualBrief]:
     site = kwargs.get("site", "demo")
-    
+
     request = dict(kwargs)
     post_id = request.get("post_id")
     post_context = {}
@@ -201,7 +209,7 @@ def prepare_attach_request(**kwargs: Any) -> Tuple[Dict[str, Any], Dict[str, Any
         request["location_query"] = location
 
     constraints = {
-        "language": request.pop("language", "tr"),
+        "language": request.pop("language", "en"),
         "people_first": bool(request.pop("people_first", False)),
     }
     if constraints["people_first"] and not request.get("content_filter"):
@@ -234,7 +242,10 @@ def validate_attach_request(
             request=request,
             post_context=post_context,
             constraints=constraints,
-            warning="location_query could not be derived; provide --location-query or ensure the post has a usable title/slug",
+            warning=(
+                "location_query could not be derived; provide --location-query "
+                "or ensure the post has a usable title/slug"
+            ),
         )
     if source == "unsplash" and not request.get("query"):
         return build_failed_attach_result(
@@ -391,7 +402,8 @@ def finalize_publish_assets(
     finalized_files: list[str] = []
     finalized_metadata: Dict[str, Dict[str, Any]] = {}
     finalized_details: Dict[str, Dict[str, Any]] = {}
-    target_dir = Path(work_dir) if work_dir else (Path(processed_images[0]).parent if processed_images else Path("/tmp"))
+    target_dir = Path(work_dir) if work_dir else (
+        Path(processed_images[0]).parent if processed_images else Path("/tmp"))
 
     for file in processed_images:
         meta = dict(metadata_dict.get(file, {}))

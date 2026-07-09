@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 """
-YO OS Metadata Generator — Semantic alt/title/caption/description
-Uses Claude Vision API to analyze images and generate SEO-friendly metadata
+Pictovap Metadata Generator — Semantic alt/title/caption/description
+Uses vision-capable LLMs to analyze images and generate SEO-friendly metadata.
 """
 
 import base64
@@ -15,6 +15,7 @@ from typing import Dict
 import os
 
 from pictova.utils.config import get_visual_memory_db_path, load_project_env
+from pictova.vision_templates import language_name
 
 load_project_env()
 
@@ -172,27 +173,30 @@ class YOMetadataGenerator:
         article_title = clean_text(post_context.get("title", ""))
         article_slug = clean_text(post_context.get("slug", ""))
         article_excerpt = clean_text(post_context.get("excerpt", ""), limit=220)
-        # Sadece excerpt, title ve focus term kullan — full content çok token
+        # Only excerpt, title and focus terms are used — full content costs too many tokens
         focus_terms = ", ".join(extract_focus_terms(post_context, location_hint))
         seq = f"{image_index + 1}/{total_images}" if (image_index is not None and total_images) else "?"
         vision_text = format_vision_hints(vision_hints)
+        lang = language_name(post_context.get("language"))
 
-        return f"""WordPress görsel metadatalarını seyahat blogu bağlamında üret. Sadece JSON döndür.
+        return f"""Generate WordPress image metadata in the context of a travel blog post. Return ONLY JSON.
 
-Bağlam: title={article_title or "?"} | slug={article_slug or "?"} | focus={focus_terms or "?"} | hint={location_hint or "?"} | dosya={Path(image_path).name} | sıra={seq}
+Context: title={article_title or "?"} | slug={article_slug or "?"} | focus={focus_terms or "?"} | hint={location_hint or "?"} | file={Path(image_path).name} | seq={seq}
 {f"Excerpt: {article_excerpt}" if article_excerpt else ""}
 {vision_text}
 
-Kurallar:
-- alt: Ekran okuyucu ve erişilebilirlik için sade görsel tanımı (maks 125 kr).
-- title: Arama motoru için lokasyon ve konuyu içeren SEO başlığı (maks 60 kr, örn: 'Gümüşlük Bodrum Dalgalı Deniz').
-- caption: İnsan okuyucu için fotoğrafa anlam, bağlam ve seyahat ruhu katan doğal, gerçekçi alt yazı (maks 180 kr, örn: 'Gümüşlük kıyılarında akşamüstü rüzgarıyla dalgalanan Ege suları.').
-- description: Görsel detaylarını lokasyon bağlamıyla birleştiren zengin açıklama (maks 300 kr).
-- keywords: 3-6 adet anahtar kelime.
-- evidence: Lokasyon kanıtı (1-4 adet).
-- confidence: Lokasyon eminlik skoru (0.0 - 1.0).
+Write all natural-language fields (alt, title, caption, description) in {lang}.
 
-{{"alt":"...","title":"...","caption":"...","description":"...","keywords":["k1"],"evidence":["kanıt"],"location_tokens":[],"scene_tokens":["sahne"],"confidence":0.8,"warnings":[]}}"""
+Rules:
+- alt: plain visual description for screen readers/accessibility (max 125 chars).
+- title: SEO title including location and subject (max 60 chars).
+- caption: natural, authentic caption for a human reader, adding meaning, context and travel spirit (max 180 chars).
+- description: rich description combining visual detail with location context (max 300 chars).
+- keywords: 3-6 keywords.
+- evidence: location evidence (1-4 items).
+- confidence: location confidence score (0.0 - 1.0).
+
+{{"alt":"...","title":"...","caption":"...","description":"...","keywords":["k1"],"evidence":["evidence"],"location_tokens":[],"scene_tokens":["scene"],"confidence":0.8,"warnings":[]}}"""
 
     def _analyze_gpt(self, image_data: str, media_type: str, prompt: str) -> Dict:
         """Analyze with GPT-4o Vision"""
@@ -515,7 +519,8 @@ def build_vision_assisted_metadata(
     focus_terms = extract_focus_terms(post_context, location_hint)
     labels = [translate_vision_label(item.get("description", "")) for item in analysis.get("labels", [])[:5]]
     labels = [label for label in labels if label and label not in {"seyahat", "gezi"}]
-    landmarks = [clean_text(item, limit=40).lower() for item in analysis.get("landmarks", [])[:2] if clean_text(item, limit=40)]
+    landmarks = [clean_text(item, limit=40).lower()
+                 for item in analysis.get("landmarks", [])[:2] if clean_text(item, limit=40)]
     scene = landmarks[0] if landmarks else (labels[0] if labels else "")
     qualifier = labels[1] if len(labels) > 1 and labels[1] != scene else ""
     visual_phrase = " ".join(part for part in [scene, qualifier] if part).strip()
@@ -577,28 +582,32 @@ def normalize_metadata(metadata: Dict, *, image_path: str, location_hint: str, p
         evidence = [part.strip() for part in evidence.split(",") if part.strip()]
     elif not isinstance(evidence, list):
         evidence = []
-    normalized["_evidence"] = [clean_text(str(item), limit=50).lower() for item in evidence if clean_text(str(item), limit=50)][:5]
+    normalized["_evidence"] = [clean_text(str(item), limit=50).lower()
+                               for item in evidence if clean_text(str(item), limit=50)][:5]
 
     location_tokens = metadata.get("location_tokens", [])
     if isinstance(location_tokens, str):
         location_tokens = [part.strip() for part in location_tokens.split(",") if part.strip()]
     elif not isinstance(location_tokens, list):
         location_tokens = []
-    normalized["_location_tokens"] = [clean_text(str(item), limit=50).lower() for item in location_tokens if clean_text(str(item), limit=50)][:3]
+    normalized["_location_tokens"] = [clean_text(str(item), limit=50).lower()
+                                      for item in location_tokens if clean_text(str(item), limit=50)][:3]
 
     scene_tokens = metadata.get("scene_tokens", [])
     if isinstance(scene_tokens, str):
         scene_tokens = [part.strip() for part in scene_tokens.split(",") if part.strip()]
     elif not isinstance(scene_tokens, list):
         scene_tokens = []
-    normalized["_scene_tokens"] = [clean_text(str(item), limit=50).lower() for item in scene_tokens if clean_text(str(item), limit=50)][:4]
+    normalized["_scene_tokens"] = [clean_text(str(item), limit=50).lower()
+                                   for item in scene_tokens if clean_text(str(item), limit=50)][:4]
 
     warnings = metadata.get("warnings", [])
     if isinstance(warnings, str):
         warnings = [part.strip() for part in warnings.split(",") if part.strip()]
     elif not isinstance(warnings, list):
         warnings = []
-    normalized["_warnings"] = [clean_text(str(item), limit=80) for item in warnings if clean_text(str(item), limit=80)][:4]
+    normalized["_warnings"] = [clean_text(str(item), limit=80)
+                               for item in warnings if clean_text(str(item), limit=80)][:4]
     raw_conf = metadata.get("confidence")
     if raw_conf is None:
         # Model didn't return confidence field → treat as neutral, not zero
@@ -666,7 +675,6 @@ if __name__ == "__main__":
         gen = YOMetadataGenerator()
         result = gen.analyze_image(str(test_image), location_hint="petra")
         print("\n✅ Metadata generated:")
-        import json
         print(json.dumps(result["analysis"], indent=2, ensure_ascii=False))
     else:
         print(f"Test image not found: {test_image}")

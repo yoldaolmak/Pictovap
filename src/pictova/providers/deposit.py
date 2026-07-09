@@ -61,7 +61,7 @@ def _login() -> str:
     user = os.getenv("DEPOSIT_LOGIN_USER", "your_username")
     pwd = os.getenv("DEPOSIT_LOGIN_PASSWORD", "")
     r = _post({"dp_command": "login", "dp_apikey": api_key,
-                "dp_login_user": user, "dp_login_password": pwd})
+               "dp_login_user": user, "dp_login_password": pwd})
     if r.get("type") != "success":
         raise RuntimeError(f"DepositPhotos login başarısız: {r.get('error', {}).get('errormsg', r)}")
     return str(r["sessionid"])

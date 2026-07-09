@@ -20,17 +20,26 @@ from pictova.utils.config import get_vil_dir, get_visual_memory_db_path, load_pr
 
 load_project_env()
 
-from pictova.core.media_publish import build_publish_slug_candidates, embed_metadata, ensure_publish_path, ensure_unique_slug
-from pictova.core.database import VisualMemoryComponent, VisualMemoryConfig, query_asset_from_visual_memory
-from pictova.core.processor import YOImageProcessor, get_vil_images
-from pictova.core.metadata_generator import (
+from pictova.core.media_publish import (  # noqa: E402
+    build_publish_slug_candidates,
+    embed_metadata,
+    ensure_publish_path,
+    ensure_unique_slug,
+)
+from pictova.core.database import (  # noqa: E402
+    VisualMemoryComponent,
+    VisualMemoryConfig,
+    query_asset_from_visual_memory,
+)
+from pictova.core.processor import YOImageProcessor, get_vil_images  # noqa: E402
+from pictova.core.metadata_generator import (  # noqa: E402
     YOMetadataGenerator,
     build_basic_metadata,
 )
-from pictova.services.wordpress import fetch_post_context, upload_images_batch
+from pictova.services.wordpress import fetch_post_context, upload_images_batch  # noqa: E402
 
 try:
-    from pictova.core.cloud_vision import YOCloudVisionClient, generate_metadata_for_files as generate_gv_metadata
+    from pictova.core.cloud_vision import YOCloudVisionClient  # noqa: E402
 except ImportError:
     generate_metadata_for_files = None
 
@@ -41,8 +50,8 @@ def _ascii_normalize(text: str) -> str:
     """Türkçe harfleri ASCII'ye çevir, küçük harf yap — path LIKE araması için."""
     result = str(text or "")
     for src, dst in [
-        ("İ","I"),("Ş","S"),("Ç","C"),("Ğ","G"),("Ü","U"),("Ö","O"),
-        ("ş","s"),("ç","c"),("ğ","g"),("ü","u"),("ö","o"),("ı","i"),
+        ("İ", "I"), ("Ş", "S"), ("Ç", "C"), ("Ğ", "G"), ("Ü", "U"), ("Ö", "O"),
+        ("ş", "s"), ("ç", "c"), ("ğ", "g"), ("ü", "u"), ("ö", "o"), ("ı", "i"),
     ]:
         result = result.replace(src, dst)
     return result.lower()
@@ -321,15 +330,15 @@ def search_semantic_assets(
     # İçerik filtresi SQL (Dinamik)
     content_sql_parts = []
     content_sql_params = []
-    
+
     if content_filter:
         for raw_item in str(content_filter).split(','):
             item = raw_item.strip().lower()
             if not item:
                 continue
-                
+
             norm_item = _ascii_normalize(item)
-            
+
             if norm_item == "dikey":
                 content_sql_parts.append("a.orientation = 'portrait'")
             elif norm_item == "yatay":
@@ -340,10 +349,11 @@ def search_semantic_assets(
                     content_sql_parts.append(CONTENT_FILTER_SQL[canonical_cf])
                 else:
                     # Serbest metin -> keyword / people / description araması
-                    content_sql_parts.append("(a.ai_keywords_json LIKE ? OR a.description LIKE ? OR a.people_json LIKE ?)")
+                    content_sql_parts.append(
+                        "(a.ai_keywords_json LIKE ? OR a.description LIKE ? OR a.people_json LIKE ?)")
                     like_val = f"%{item}%"
                     content_sql_params.extend([like_val, like_val, like_val])
-                    
+
     content_filter_clause = f"AND ({' AND '.join(content_sql_parts)})" if content_sql_parts else ""
 
     conn = sqlite3.connect(db_path)
@@ -371,21 +381,21 @@ def search_semantic_assets(
         try:
             params = [fts_query] + content_sql_params + [max(count * 4, 30)]
             rows = conn.execute(sql, params).fetchall()
-        except Exception as e:
+        except Exception:
             # FTS MATCH hatası (özel karakter vb.) → LIKE fallback
             rows = []
 
         # FTS sonuç yetersizse LIKE fallback (tek token, city/state_province)
         if len(rows) < count and tokens:
             like_clauses = " OR ".join(
-                f"LOWER(COALESCE(city,'')) LIKE ? OR LOWER(COALESCE(state_province,'')) LIKE ?"
+                "LOWER(COALESCE(city,'')) LIKE ? OR LOWER(COALESCE(state_province,'')) LIKE ?"
                 for _ in tokens
             )
             like_params = [f"%{t.lower()}%" for t in tokens for _ in range(2)]
-            
+
             # LIKE fallback için content filter alanlarındaki a. öneklerini kaldır
             fallback_content_clause = content_filter_clause.replace('a.', '') if content_filter_clause else ''
-            
+
             fb_sql = f"""
                 SELECT source_path, filename, quality_score, selection_score,
                        activity, scene, location, city, state_province,
@@ -521,16 +531,16 @@ class YOCommandParser:
       "Post: 1009 içinde insan olan 5 foto"       → post bağlamıyla semantic arama
     """
 
-    PATTERN_COUNT        = r"^(\d+)\s+foto\s+yo\s+(\d+)(?:\s+(\w+))?$"
-    PATTERN_VIL_POST     = r"^vil\s+(\d+)\s+post\s+(\d+)(?:\s+(\w+))?$"
-    PATTERN_UNSPLASH     = r"^unsplash:([^0-9]+)\s+(\d+)\s+foto\s+yo\s+(\d+)(?:\s+(\w+))?$"
+    PATTERN_COUNT = r"^(\d+)\s+foto\s+yo\s+(\d+)(?:\s+(\w+))?$"
+    PATTERN_VIL_POST = r"^vil\s+(\d+)\s+post\s+(\d+)(?:\s+(\w+))?$"
+    PATTERN_UNSPLASH = r"^unsplash:([^0-9]+)\s+(\d+)\s+foto\s+yo\s+(\d+)(?:\s+(\w+))?$"
     # Semantic + upload: "madura adası 5 foto insan yo 21312 [GE]"
     PATTERN_SEMANTIC_POST = r"^(.+?)\s+(\d+)\s+foto(?:\s+(?!yo\b)(\S+))?\s+yo\s+(\d+)(?:\s+(\w+))?$"
-    PATTERN_NAME         = r"^(.+?)\s+yo\s+(\d+)(?:\s+(\w+))?$"
+    PATTERN_NAME = r"^(.+?)\s+yo\s+(\d+)(?:\s+(\w+))?$"
     # Semantic yerel: "madura adası 5 foto insan"
     PATTERN_SEMANTIC_ONLY = r"^(.+?)\s+(\d+)\s+foto(?:\s+(\S+))?$"
     # Post bağlamı: "Post: 1009 içinde insan olan 5 foto"
-    PATTERN_POST_QUERY   = r"^[Pp]ost:\s*(\d+)\s+(.+?)\s+(\d+)\s+foto\w*$"
+    PATTERN_POST_QUERY = r"^[Pp]ost:\s*(\d+)\s+(.+?)\s+(\d+)\s+foto\w*$"
 
     SITE_ALIASES = {
         "yo": "yoldaolmak",
@@ -597,9 +607,9 @@ class YOCommandParser:
         # 4. Post bağlamı: "Post: 1009 içinde insan olan 5 foto"
         m = re.match(cls.PATTERN_POST_QUERY, command)
         if m:
-            post_id  = int(m.group(1))
+            post_id = int(m.group(1))
             raw_query = m.group(2).strip()
-            count    = int(m.group(3))
+            count = int(m.group(3))
             # query'den içerik filtresi çıkar (son kelime filtre olabilir)
             cf, loc = cls._split_filter_from_query(raw_query)
             return {"count": count, "name": None, "post_id": post_id,
@@ -610,9 +620,9 @@ class YOCommandParser:
         m = re.match(cls.PATTERN_SEMANTIC_POST, command)
         if m:
             location_query = m.group(1).strip()
-            count          = int(m.group(2))
-            filter_raw     = (m.group(3) or "").strip()
-            site           = cls.SITE_ALIASES.get((m.group(5) or "yo").lower())
+            count = int(m.group(2))
+            filter_raw = (m.group(3) or "").strip()
+            site = cls.SITE_ALIASES.get((m.group(5) or "yo").lower())
             if not site:
                 return None
             return {"count": count, "name": None, "post_id": int(m.group(4)),
@@ -634,8 +644,8 @@ class YOCommandParser:
         m = re.match(cls.PATTERN_SEMANTIC_ONLY, command)
         if m:
             location_query = m.group(1).strip()
-            count          = int(m.group(2))
-            filter_raw     = (m.group(3) or "").strip()
+            count = int(m.group(2))
+            filter_raw = (m.group(3) or "").strip()
             return {"count": count, "name": None, "post_id": None,
                     "site": "demo", "source": "semantic",
                     "location_query": location_query,
@@ -723,13 +733,13 @@ class YOOrchestrator:
         if source == "unsplash":
             self.log(f"\n📥 STEP 1: Download from Unsplash (query: '{query}')")
             try:
-                from pictova.providers.yo_unsplash import YOUnsplashDownloader
+                from pictova.providers.unsplash import YOUnsplashDownloader
 
                 downloader = YOUnsplashDownloader()
                 image_files = downloader.download(query, count=count)
 
                 if not image_files:
-                    self.log(f"  ✗ No images downloaded")
+                    self.log("  ✗ No images downloaded")
                     result["status"] = "failed"
                     result["error"] = f"No images found for '{query}'"
                     return result
@@ -802,16 +812,16 @@ class YOOrchestrator:
 
         else:
             # Load from VIL (Downloads)
-            self.log(f"\n📁 STEP 1: Load images from VIL")
+            self.log("\n📁 STEP 1: Load images from VIL")
             try:
                 image_files = load_vil_images_from_index_for_post(count=count, name=name, post_context=post_context)
                 if image_files:
                     self.log(f"  ✓ Loaded {len(image_files)} images from visual_memory index")
                 else:
-                    self.log(f"  ℹ visual_memory index had no matching assets, fallback to file scan")
+                    self.log("  ℹ visual_memory index had no matching assets, fallback to file scan")
                     image_files = get_vil_images(count=count, name=name)
                 if not image_files:
-                    self.log(f"  ✗ No images found")
+                    self.log("  ✗ No images found")
                     result["status"] = "failed"
                     result["error"] = "No images in Downloads"
                     return result
@@ -828,7 +838,7 @@ class YOOrchestrator:
                 return result
 
         # Step 2: Process images (crop, filter, export)
-        self.log(f"\n🎨 STEP 2: Process images (crop + YO filter)")
+        self.log("\n🎨 STEP 2: Process images (crop + YO filter)")
         processed_images = {}
         processed_details = {}
         panoramic_images = {}
@@ -864,7 +874,7 @@ class YOOrchestrator:
             self.log(f"  ✓ Processed {len(processed_images)} images (normal post'a)")
 
             if not processed_images and panoramic_images:
-                self.log(f"  ✗ Sadece panoramik resimler var - normal post'a uymuyor!")
+                self.log("  ✗ Sadece panoramik resimler var - normal post'a uymuyor!")
                 result["status"] = "warning"
                 result["warning"] = "All images are panoramic (2.0:1 or wider)"
                 return result
@@ -876,7 +886,7 @@ class YOOrchestrator:
             return result
 
         # Step 3: Generate metadata (GPT-4 Vision primary)
-        self.log(f"\n🧠 STEP 3: Generate semantic metadata")
+        self.log("\n🧠 STEP 3: Generate semantic metadata")
         metadata_dict = {}
 
         # Use first image's location hint
@@ -978,7 +988,7 @@ class YOOrchestrator:
                 metadata_source = "hybrid" if metadata_source != "fallback" else "fallback"
 
         # Step 3b: Finalize filename and embed metadata
-        self.log(f"\n🏷️  STEP 3b: Finalize filenames and embed metadata")
+        self.log("\n🏷️  STEP 3b: Finalize filenames and embed metadata")
         used_slugs: set[str] = set()
         finalized_files: list[str] = []
         finalized_metadata: dict[str, Dict] = {}
@@ -1039,7 +1049,7 @@ class YOOrchestrator:
         processed_details = finalized_details
 
         # Step 3c: quality gate
-        self.log(f"\n🛡️  STEP 3c: Validate crop, filter, metadata")
+        self.log("\n🛡️  STEP 3c: Validate crop, filter, metadata")
         allow_fallback_upload = os.getenv("YO_ALLOW_FALLBACK_UPLOAD", "0").strip().lower() in {"1", "true", "yes", "on"}
         title_counts: dict[str, int] = defaultdict(int)
         for meta in metadata_dict.values():
@@ -1113,7 +1123,7 @@ class YOOrchestrator:
             self.log(f"\n📤 STEP 4: Upload to WordPress ({site})")
             try:
                 if not processed_files:
-                    self.log(f"  ✗ No normal images to upload")
+                    self.log("  ✗ No normal images to upload")
                     result["status"] = "skipped"
                     result["uploaded_count"] = 0
                     result["panoramic_count"] = len(panoramic_images)
@@ -1132,7 +1142,7 @@ class YOOrchestrator:
                     if upload_result["failed"]:
                         self.log(f"  ⚠️  Failed: {len(upload_result['failed'])} images")
                     if panoramic_images:
-                        self.log(f"  ℹ️  Panoramik resimleri pillar pages'e manuel kopyala")
+                        self.log("  ℹ️  Panoramik resimleri pillar pages'e manuel kopyala")
             except Exception as e:
                 self.log(f"  ✗ Upload error: {e}")
                 result["status"] = "failed"
@@ -1140,7 +1150,7 @@ class YOOrchestrator:
 
         # Final summary
         self.log(f"\n{'='*60}")
-        self.log(f"✅ Pipeline complete!")
+        self.log("✅ Pipeline complete!")
         self.log(f"  Status: {result['status']}")
         self.log(f"  Uploaded: {result.get('uploaded_count', 0)}")
         self.log(f"  Failed: {result.get('failed_count', 0)}")
@@ -1182,7 +1192,7 @@ def main():
     params = YOCommandParser.parse(command)
     if not params:
         print(f"✗ Invalid command: {command}")
-        print(f"  Expected: '<count> foto yo <post_id> [site]'")
+        print("  Expected: '<count> foto yo <post_id> [site]'")
         sys.exit(1)
 
     print(f"✓ Parsed: {params}")

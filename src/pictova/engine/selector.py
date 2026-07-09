@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import json
 from pictova.core.processor import get_vil_images
@@ -31,7 +31,12 @@ def resolve_source_images(
             post_context=post_context,
         )
         if len(files) >= _count:
-            return {"source": "semantic", "query": location_query or "", "content_filter": content_filter, "files": files}
+            return {
+                "source": "semantic",
+                "query": location_query or "",
+                "content_filter": content_filter,
+                "files": files,
+            }
 
         # 2. iCloud aday fotoğraflar — önce destination index, sonra FTS fallback
         need = _count - len(files)
@@ -53,33 +58,33 @@ def resolve_source_images(
         if len(files) < _count:
             need = _count - len(files)
             base_q = location_query or _extract_location(post_context)
-            
+
             # Oran hesabı: %25 Unsplash (en az 1), kalanı Deposit
             uns_target = max(1, int(need * 0.25)) if need >= 4 else (1 if need > 1 else 0)
             dep_target = need - uns_target
 
             dep_q = _enrich_query_for_theme(base_q, post_context, content_filter, source="deposit")
             uns_q = _enrich_query_for_theme(base_q, post_context, content_filter, source="unsplash")
-            
+
             # Önce Deposit'i çek
             dep_files = _deposit_search_download(query=dep_q, count=dep_target) if dep_target > 0 else []
-            
+
             # Deposit bulamadıysa eksiği Unsplash'a devret
             missing_dep = dep_target - len(dep_files)
             if missing_dep > 0:
                 uns_target += missing_dep
-                
+
             # Unsplash'ı çek
             uns_files = _unsplash_search_download(query=uns_q, count=uns_target) if uns_target > 0 else []
-            
-            # Unsplash bulamadıysa ve Deposit daha önce eksik kalmadıysa Deposit'ten tekrar şansımızı denemek zor çünkü offset yok.
-            # O yüzden listeleri birleştiriyoruz.
+
+            # Unsplash bulamadıysa ve Deposit daha önce eksik kalmadıysa Deposit'ten tekrar
+            # şansımızı denemek zor çünkü offset yok. O yüzden listeleri birleştiriyoruz.
             # Interlace (Karıştırma): Arka arkaya aynı kaynaktan gelmemesi için
             merged = []
             for d, u in zip(dep_files, uns_files):
                 merged += [d, u]
             merged += dep_files[len(uns_files):] + uns_files[len(dep_files):]
-            
+
             files = files + merged
 
         return {"source": "auto", "query": location_query or "", "content_filter": content_filter, "files": files}
@@ -201,7 +206,7 @@ def _deposit_search_download(query: str, count: int) -> list[str]:
 def _unsplash_search_download(query: str, count: int) -> list[str]:
     """Unsplash'tan ara + indir. Hata olursa boş liste döner."""
     try:
-        from pictova.providers.yo_unsplash import YOUnsplashDownloader
+        from pictova.providers.unsplash import YOUnsplashDownloader
         d = YOUnsplashDownloader()
         # Kalite filtresi: min 3000px genişlik, önce likes>0
         results = d.search(query, count=count * 3)
@@ -221,7 +226,9 @@ def _unsplash_search_download(query: str, count: int) -> list[str]:
         downloaded = []
         for i, r in enumerate(best, 1):
             try:
-                import tempfile, requests as _req, pathlib as _pl
+                import tempfile
+                import requests as _req
+                import pathlib as _pl
                 dl_url = r["links"]["download"]
                 import os
                 access_key = os.environ.get("UNSPLASH_ACCESS_KEY", "")
@@ -231,7 +238,7 @@ def _unsplash_search_download(query: str, count: int) -> list[str]:
                 photographer = r.get("user", {}).get("name", "Bilinmiyor")
                 photographer_safe = re.sub(r'[^a-zA-Z0-9]', '_', photographer)
                 slug = query.split()[0].lower()
-                dest = _pl.Path(tempfile.gettempdir()) / f"pictova_unsplash" / f"{slug}-{i}-by-{photographer_safe}.jpg"
+                dest = _pl.Path(tempfile.gettempdir()) / "pictova_unsplash" / f"{slug}-{i}-by-{photographer_safe}.jpg"
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(resp.content)
                 downloaded.append(str(dest))

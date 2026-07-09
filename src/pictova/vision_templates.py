@@ -11,7 +11,38 @@ Built-in templates are provided as constants.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict
+
+# ISO 639-1 code -> English display name, used to tell the model which
+# natural language to write the generated fields in. Any code not listed
+# here is passed through as-is (most vision models understand ISO codes
+# and common language names directly).
+LANGUAGE_NAMES: dict[str, str] = {
+    "en": "English",
+    "tr": "Turkish",
+    "fr": "French",
+    "de": "German",
+    "es": "Spanish",
+    "it": "Italian",
+    "pt": "Portuguese",
+    "nl": "Dutch",
+    "ru": "Russian",
+    "ar": "Arabic",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "zh": "Chinese",
+}
+
+
+def language_name(code: str | None) -> str:
+    """Return the English display name for an ISO 639-1 language code.
+
+    Falls back to the code itself (or "English") when the code is unknown,
+    so unrecognized codes still degrade gracefully instead of raising.
+    """
+    if not code:
+        return "English"
+    return LANGUAGE_NAMES.get(code.lower(), code)
 
 
 @dataclass
@@ -56,23 +87,33 @@ class VisionTemplate:
 # ── Built-in templates ────────────────────────────────────────────────────────
 
 def _travel_blog_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
-    """Default Pictovap travel blog template (Turkish output)."""
+    """Default Pictovap travel blog template.
+
+    Output language is driven by ``post_context["language"]`` (an ISO 639-1
+    code, e.g. "en", "tr", "fr"). Defaults to English when not provided, so a
+    request from Turkey can ask for Turkish output, a request from France for
+    French, and so on, without any per-language hardcoding here.
+    """
     title = str(post_context.get("title") or "").strip()
     location_ctx = location_hint or title or ""
     apple_labels = post_context.get("apple_labels") or []
     apple_labels_ctx = ", ".join(apple_labels) if apple_labels else ""
+    lang = language_name(post_context.get("language"))
     return (
-        f"Görseli seyahat blogu bağlamında analiz et ve SADECE JSON döndür.\n"
-        f"Bağlam: Lokasyon={location_ctx or '?'}, Apple_Etiketleri={apple_labels_ctx or '?'}\n\n"
-        f"Kurallar:\n"
-        f"- alt: Ekran okuyucu ve erişilebilirlik için sade görsel tanımı (Türkçe, maks 120 kr)\n"
-        f"- title: Arama motoru için lokasyon ve konuyu içeren SEO başlığı (Türkçe, maks 60 kr)\n"
-        f"- caption: İnsan okuyucu için doğal, gerçekçi alt yazı (Türkçe, maks 150 kr)\n"
-        f"- description: Görsel detaylarını lokasyon bağlamıyla birleştiren zengin açıklama (Türkçe, maks 250 kr)\n"
-        f"- summary: Tek cümle özet (Türkçe, maks 120 kr)\n"
-        f"- keywords: 3-5 adet anahtar kelime (Türkçe)\n"
-        f"- scene/activity: Kategori ve aktivite (İngilizce)\n"
-        f"- story_score: Seyahat değeri (0.0 - 1.0)\n\n"
+        f"Analyze the image in the context of a travel blog post and return ONLY JSON.\n"
+        f"Context: Location={location_ctx or '?'}, Apple_Labels={apple_labels_ctx or '?'}\n\n"
+        f"Write all natural-language fields (alt, title, caption, description, summary, keywords) "
+        f"in {lang}.\n\n"
+        f"Rules:\n"
+        f"- alt: plain visual description for screen readers/accessibility ({lang}, max 120 chars)\n"
+        f"- title: SEO title including location and subject ({lang}, max 60 chars)\n"
+        f"- caption: natural, authentic caption for a human reader ({lang}, max 150 chars)\n"
+        f"- description: rich description combining visual detail with location context "
+        f"({lang}, max 250 chars)\n"
+        f"- summary: one-sentence summary ({lang}, max 120 chars)\n"
+        f"- keywords: 3-5 keywords ({lang})\n"
+        f"- scene/activity: category and activity (English)\n"
+        f"- story_score: travel value (0.0 - 1.0)\n\n"
         f"{{\"alt\":\"...\",\"title\":\"...\",\"caption\":\"...\",\"description\":\"...\","
         f"\"summary\":\"...\",\"keywords\":[],\"people\":[],\"scene\":\"...\","
         f"\"activity\":\"...\",\"story_score\":0.8}}"
@@ -133,7 +174,7 @@ def _ecommerce_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
 
 TRAVEL_BLOG = VisionTemplate(
     name="travel_blog",
-    description="Default Pictovap template — Turkish output, travel blog SEO.",
+    description="Default Pictovap template — travel blog SEO, language-aware output.",
     prompt_fn=_travel_blog_prompt,
 )
 

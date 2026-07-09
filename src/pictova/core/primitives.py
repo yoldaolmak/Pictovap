@@ -59,7 +59,7 @@ class VisualBrief:
         from pathlib import Path
         from pictova.core.language import detect_language
         text = Path(path).read_text(encoding="utf-8")
-        
+
         # Call our deterministic language detector
         lang = detect_language(text, fallback_lang=fallback_lang)
 

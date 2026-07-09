@@ -12,9 +12,11 @@ __all__ = [
     'setup_logging',
 ]
 
+
 def get_logger(name: str = 'vil') -> logging.Logger:
     """Basit logger factory."""
     return logging.getLogger(name)
+
 
 def setup_logging(level: str = 'INFO', json_format: bool = False):
     """Basit logging configuration."""

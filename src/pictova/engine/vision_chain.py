@@ -25,8 +25,10 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
+from pictova.vision_templates import TRAVEL_BLOG
 
-# ── Ortak yardımcılar ────────────────────────────────────────────────────────
+
+# ── Shared helpers ───────────────────────────────────────────────────────────
 
 def _image_b64(image_path: str, max_side: int = 0) -> tuple[str, str]:
     """(base64_str, mime_type). max_side>0 ise PIL ile thumbnail alır."""
@@ -74,27 +76,14 @@ def _vision_prompt(
     post_context: Dict,
     template=None,
 ) -> str:
-    """Build vision prompt. If a VisionTemplate is supplied, delegates to it."""
-    if template is not None:
-        return template.build_prompt(location_hint, post_context)
-    title = str(post_context.get("title") or "").strip()
-    location_ctx = location_hint or title or ""
-    apple_labels = post_context.get("apple_labels") or []
-    apple_labels_ctx = ", ".join(apple_labels) if apple_labels else ""
-    return (
-        f"Görseli seyahat blogu bağlamında analiz et ve SADECE JSON döndür.\n"
-        f"Bağlam: Lokasyon={location_ctx or '?'}, Apple_Etiketleri={apple_labels_ctx or '?'}\n\n"
-        f"Kurallar:\n"
-        f"- alt: Ekran okuyucu ve erişilebilirlik için sade görsel tanımı (Türkçe, maks 120 kr)\n"
-        f"- title: Arama motoru için lokasyon ve konuyu içeren SEO başlığı (Türkçe, maks 60 kr, örn: 'Gümüşlük Bodrum Dalgalı Deniz')\n"
-        f"- caption: İnsan okuyucu için fotoğrafa anlam, bağlam ve seyahat ruhu katan doğal, gerçekçi alt yazı (Türkçe, maks 150 kr, örn: 'Gümüşlük kıyılarında akşamüstü rüzgarıyla dalgalanan Ege suları.')\n"
-        f"- description: Görsel detaylarını lokasyon bağlamıyla birleştiren zengin açıklama (Türkçe, maks 250 kr)\n"
-        f"- summary: Tek cümle özet (Türkçe, maks 120 kr)\n"
-        f"- keywords: 3-5 adet anahtar kelime (Türkçe)\n"
-        f"- scene/activity: Kategori ve aktivite (İngilizce)\n"
-        f"- story_score: Seyahat değeri (0.0 - 1.0)\n\n"
-        f"{{\"alt\":\"...\",\"title\":\"...\",\"caption\":\"...\",\"description\":\"...\",\"summary\":\"...\",\"keywords\":[],\"people\":[],\"scene\":\"...\",\"activity\":\"...\",\"story_score\":0.8}}"
-    )
+    """Build the vision prompt.
+
+    Delegates to the supplied VisionTemplate, or to the built-in TRAVEL_BLOG
+    template otherwise. Output language is driven by
+    ``post_context["language"]`` — see ``vision_templates.TRAVEL_BLOG``.
+    """
+    active_template = template or TRAVEL_BLOG
+    return active_template.build_prompt(location_hint, post_context)
 
 
 # ── 1. Gemini Flash REST API ─────────────────────────────────────────────────
@@ -106,7 +95,7 @@ def _analyze_gemini_flash(
     template=None,
 ) -> Dict[str, Any]:
     keys_env = os.environ.get("GEMINI_API_KEYS", "").strip()
-    
+
     # Fallback to reading .env directly if not in environ
     if not keys_env:
         env_path = Path(__file__).parent.parent.parent.parent / ".env"
@@ -126,7 +115,7 @@ def _analyze_gemini_flash(
         api_key = random.choice(keys_list)
     else:
         api_key = os.environ.get("GEMINI_API_KEY", "").strip()
-        
+
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY veya GEMINI_API_KEYS yok")
 
@@ -158,7 +147,7 @@ def _analyze_gemini_flash(
         f"{model}:generateContent?key={api_key}"
     )
     import time
-    
+
     # Tüm kullanılabilir anahtarları hazırla (429'da farklı anahtar dene)
     all_keys = []
     keys_raw = os.environ.get("GEMINI_API_KEYS", "").strip()
@@ -171,7 +160,7 @@ def _analyze_gemini_flash(
                     break
     if keys_raw:
         all_keys = [k.strip() for k in keys_raw.split(",") if k.strip()]
-    
+
     for attempt in range(8):
         # Her denemede farklı anahtar seç
         if all_keys and attempt > 0:
@@ -192,7 +181,11 @@ def _analyze_gemini_flash(
             if e.code in (429, 503):
                 if attempt < 7:
                     wait = min(30 * (2 ** attempt), 300)  # 30s, 60s, 120s, 240s, 300s...
-                    print(f"  [!] Gemini {e.code} (key ...{api_key[-5:]}), {wait}s bekleniyor, farklı anahtar denenecek...", file=sys.stderr)
+                    print(
+                        f"  [!] Gemini {e.code} (key ...{api_key[-5:]}), waiting {wait}s, "
+                        f"trying a different key...",
+                        file=sys.stderr,
+                    )
                     time.sleep(wait)
                     continue
             raise
@@ -280,7 +273,6 @@ def _analyze_codex(
 def _prepare_image_for_cli(image_path: str, max_side: int = 512) -> str:
     """HEIC veya büyük dosyaları küçük JPEG thumbnail'e çevir. Path döner."""
     p = Path(image_path)
-    ext = p.suffix.lower()
     tmp = Path(tempfile.gettempdir()) / f"pictova_thumb_{p.stem}.jpg"
 
     # 1. PIL ile dönüşüm (en kaliteli)
@@ -358,7 +350,7 @@ def _analyze_lm_studio(
 ) -> Dict[str, Any]:
     url_models = "http://localhost:1234/v1/models"
     url_chat = "http://localhost:1234/v1/chat/completions"
-    
+
     try:
         req_models = urllib.request.Request(url_models)
         with urllib.request.urlopen(req_models, timeout=2) as resp:
@@ -408,7 +400,7 @@ def _analyze_lm_studio(
         data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json"}
     )
-    
+
     try:
         with urllib.request.urlopen(req, timeout=180) as resp:
             data = json.loads(resp.read().decode("utf-8"))
@@ -420,12 +412,12 @@ def _analyze_lm_studio(
         raise RuntimeError(f"LM Studio API Hatası: {e.code} - {err_body[:200]}")
     except Exception as e:
         raise RuntimeError(f"LM Studio API Bağlantı Hatası: {e}")
-        
+
     choice = data.get("choices", [{}])[0].get("message", {}).get("content", "")
     output = _strip_ansi(choice.strip())
     if not output:
         raise RuntimeError("LM Studio boş yanıt döndürdü")
-        
+
     return _parse_json_from_text(output)
 
 
@@ -517,9 +509,9 @@ def has_any_vision_source() -> bool:
     try:
         with urllib.request.urlopen("http://localhost:1234/v1/models", timeout=1):
             return True
-    except:
+    except Exception:
         pass
-        
+
     if os.environ.get("GEMINI_API_KEY", "").strip():
         return True
     if _codex_check_login() and _find_bin("codex"):

@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
 """
-YO OS Image Processor — Complete pipeline
+Pictovap Image Processor — Complete pipeline
 - Image load, crop, filter, metadata
-- Blue/Teal YO filter
+- Adaptive cinematic filter
 - Automatic saturation analysis
 - WebP export
 """
 
-import os
 from pathlib import Path
-from typing import Dict, List, Tuple
-from PIL import Image, ImageEnhance, ImageFilter, ImageOps
+from typing import Dict, List
+from PIL import Image, ImageFilter, ImageOps
 import subprocess
 import json
 import numpy as np
 
+from pictova.core.filter import YOAdaptiveFilter
 from pictova.utils.config import get_vil_dir, load_project_env
 
 load_project_env()
+
 
 class YOImageProcessor:
     """Image processing with YO Blue/Teal filter"""
@@ -134,7 +135,7 @@ class YOImageProcessor:
         return center_x, center_y
 
     def apply_yo_filter(self, img: Image.Image, saturation_mod: float = 0) -> tuple:
-        """Apply selected YO image filter profile.
+        """Apply the adaptive cinematic filter.
 
         Args:
             img: PIL Image (RGB)
@@ -143,36 +144,9 @@ class YOImageProcessor:
         Returns:
             tuple (filtered_image, params_dict)
         """
-        profile = os.getenv("YO_IMAGE_FILTER_PROFILE", "adaptive").strip().lower()
-
-        # Import filter from canonical location (src/core/filter.py)
-        # Falls back to project-root module for legacy compatibility
-        def _load_adaptive() -> "YOAdaptiveFilter":
-            try:
-                from pictova.core.filter import YOAdaptiveFilter as _F
-                return _F()
-            except ImportError:
-                pass
-            import importlib.util, pathlib
-            root = pathlib.Path(__file__).resolve().parents[2]  # project root
-            spec = importlib.util.spec_from_file_location("yo_adaptive_filter", root / "yo_adaptive_filter.py")
-            mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(mod)
-            return mod.YOAdaptiveFilter()
-
-        if profile in {"yoldaolmak", "yo-yoldaolmak"}:
-            try:
-                from pictova.core.filter import YOAdaptiveFilter
-                filter_obj = YOAdaptiveFilter()
-            except ImportError:
-                filter_obj = _load_adaptive()
-            img_filtered = filter_obj.apply_cinematic_grade(img)
-            print("  ✓ YO Filter applied (yoldaolmak profile → adaptive)")
-            return img_filtered, filter_obj.params
-
-        filter_obj = _load_adaptive()
+        filter_obj = YOAdaptiveFilter()
         img_filtered = filter_obj.apply_cinematic_grade(img)
-        print("  ✓ YO Adaptive Filter applied")
+        print("  ✓ Adaptive filter applied")
         return img_filtered, filter_obj.params
 
     def analyze_saturation_need(self, img: Image.Image) -> float:
@@ -234,7 +208,7 @@ class YOImageProcessor:
         # HEIC/HEIF → JPEG via sips (macOS) before PIL opens it
         if input_p.suffix.lower() in {".heic", ".heif"}:
             input_p = self._heic_to_jpeg(input_p)
-            print(f"  ✓ HEIC converted via sips")
+            print("  ✓ HEIC converted via sips")
 
         # Load
         # Normalize EXIF orientation first so rotated phone images are upright.
@@ -246,7 +220,7 @@ class YOImageProcessor:
         # This step reduces payload size for Cloud Vision API
         if img.width > 3000:
             img = self.resize_for_processing(img, max_width=2500)
-            print(f"  ✓ Pre-processed for API")
+            print("  ✓ Pre-processed for API")
 
         img, target_size = self.crop_image(img)
 
@@ -264,9 +238,9 @@ class YOImageProcessor:
             image_without_exif = Image.new(img.mode, img.size)
             image_without_exif.putdata(data)
             img = image_without_exif
-            print(f"  ✓ EXIF cleaned")
+            print("  ✓ EXIF cleaned")
         else:
-            print(f"  ✓ EXIF preserved")
+            print("  ✓ EXIF preserved")
 
         # Export WebP
         output_p.parent.mkdir(parents=True, exist_ok=True)
@@ -276,7 +250,7 @@ class YOImageProcessor:
         else:
             img.save(str(output_p), 'WEBP', quality=80, method=6)
             print("  ✓ WebP saved (lossy)")
-            
+
         file_size_kb = output_p.stat().st_size / 1024
         print(f"  ✓ File size: {file_size_kb:.1f} KB")
 

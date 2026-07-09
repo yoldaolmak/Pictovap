@@ -6,7 +6,7 @@ import pytest
 from pictova.core.language import detect_language
 from pictova.core.primitives import VisualBrief
 from pictova.core.profile import PublisherProfile
-from pictova.core.metadata import generate_local_alt_text, generate_local_caption
+from pictova.core.demo_metadata import generate_local_alt_text, generate_local_caption
 from pictova.demo import generate_markdown_report
 
 FIXTURE_DIR = Path(__file__).resolve().parents[1] / "fixtures"

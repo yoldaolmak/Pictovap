@@ -14,6 +14,7 @@ from pictova.providers.wordpress import fetch_post_context, guard_post_media
 from pictova.demo import run_demo, generate_report_from_file
 import sys
 
+
 def _print_json(payload: Dict[str, Any]) -> None:
     print(json.dumps(payload, ensure_ascii=False, indent=2))
 
@@ -22,8 +23,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pictova")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    demo = sub.add_parser("demo", help="Run the built-in credential-free example")
-    
+    sub.add_parser("demo", help="Run the built-in credential-free example")
+
     report = sub.add_parser("report", help="Generate an editor-readable Markdown report from a plan")
     report.add_argument("--plan", required=True, help="Path to visual-plan.json")
     report.add_argument("--output", required=True, help="Path to write the output report.md")
@@ -41,7 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
     attach.add_argument("--query")
     attach.add_argument("--location-query")
     attach.add_argument("--content-filter")
-    attach.add_argument("--lang", default="tr")
+    attach.add_argument("--lang", default="en")
     attach.add_argument("--people-first", action="store_true")
     attach.add_argument("--engine", default="legacy", choices=["legacy", "native"])
     attach.add_argument("--heading", help="Force all images after this heading text")
@@ -77,7 +78,7 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--query")
     plan.add_argument("--location-query")
     plan.add_argument("--content-filter")
-    plan.add_argument("--lang", default="tr")
+    plan.add_argument("--lang", default="en")
     plan.add_argument("--people-first", action="store_true")
     plan.add_argument("--heading", help="Force all images after this heading text")
     plan.add_argument("--heading-level", type=int, default=0, help="Heading level (2 or 3)")
@@ -95,7 +96,7 @@ def build_parser() -> argparse.ArgumentParser:
     process.add_argument("--query")
     process.add_argument("--location-query")
     process.add_argument("--content-filter")
-    process.add_argument("--lang", default="tr")
+    process.add_argument("--lang", default="en")
     process.add_argument("--people-first", action="store_true")
     process.add_argument("--heading", help="Force all images after this heading text")
     process.add_argument("--heading-level", type=int, default=0, help="Heading level (2 or 3)")

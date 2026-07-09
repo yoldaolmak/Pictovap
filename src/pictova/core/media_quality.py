@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-from pathlib import Path
 from typing import Dict
 
 
@@ -222,14 +221,14 @@ def validate_processed_asset(meta: Dict, process_info: Dict | None) -> list[str]
         errors.append("file too compressed")
     if file_size_kb >= 900:
         errors.append("file too heavy")
-        
+
     # Advanced Quality Gate
     blur_score = float(process_info.get("blur_score", 1000))
     if blur_score < 100:  # Genelde 100 altı belirgin bir bulanıklıktır (blur)
         errors.append("image is too blurry (low variance of laplacian)")
-        
+
     orig_w, orig_h = process_info.get("original_size", (0, 0))
     if orig_w > 0 and orig_h > 0 and (orig_w < 800 or orig_h < 600):
         errors.append("original image resolution is too low")
-        
+
     return errors

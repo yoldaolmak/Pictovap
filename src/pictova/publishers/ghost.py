@@ -170,7 +170,8 @@ class GhostPublisher:
                 "version": 1,
             })
             if "root" not in lexical:
-                lexical["root"] = {"children": nodes, "direction": None, "format": "", "indent": 0, "type": "root", "version": 1}
+                lexical["root"] = {"children": nodes, "direction": None,
+                                   "format": "", "indent": 0, "type": "root", "version": 1}
             else:
                 lexical["root"]["children"] = nodes
 

@@ -19,14 +19,14 @@ from pathlib import Path
 # Add src to path when run directly from repo root
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from pictova.core.primitives import (
+from pictova.core.primitives import (  # noqa: E402
     VisualBrief,
     FitScore,
     ProvenancePack,
     CMSPlacement,
     PlacementInstruction,
 )
-from pictova.core.profile import PublisherProfile
+from pictova.core.profile import PublisherProfile  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -184,16 +184,16 @@ def score_candidate(candidate: dict, slot: dict, brief: VisualBrief) -> FitScore
 def generate_markdown_report(output: dict) -> str:
     """Generate a human-readable Markdown report from the JSON output."""
     lines = []
-    
+
     brief = output.get("visual_brief", {})
     profile = output.get("profile", {})
     scores = output.get("fit_scores", {})
     packs = output.get("provenance_packs", [])
     placement = output.get("cms_placement", {})
-    
+
     lines.append("# Pictovap Visual Plan")
     lines.append("")
-    
+
     lines.append("## Article")
     lines.append(f"- **Title:** {brief.get('article_title', 'Unknown')}")
     lines.append(f"- **Language:** {brief.get('article_language', 'en')}")
@@ -201,7 +201,7 @@ def generate_markdown_report(output: dict) -> str:
     lines.append(f"- **Source path:** {source_path}")
     lines.append(f"- **Publisher profile:** {profile.get('brand', 'Unknown')} ({profile.get('id', 'unknown')})")
     lines.append("")
-    
+
     lines.append("## Visual Brief")
     lines.append(f"- **Detected sections:** {len(brief.get('sections', []))}")
     lines.append(f"- **Required image slots:** {len(brief.get('image_slots', []))}")
@@ -210,7 +210,7 @@ def generate_markdown_report(output: dict) -> str:
         if slot.get('section_excerpt'):
             lines.append(f"- **Section excerpt/context if available ({slot['slot_id']}):** {slot['section_excerpt']}")
     lines.append("")
-    
+
     lines.append("## Selected Images")
     for pack in packs:
         slot_id = pack['slot_id']
@@ -218,7 +218,7 @@ def generate_markdown_report(output: dict) -> str:
         lines.append(f"- **slot:** {slot_id}")
         lines.append(f"- **target section:** {pack.get('placement_target', 'top')}")
         lines.append(f"- **candidate ID:** {pack['image_id']}")
-        
+
         # Find score and reason
         final_score = "Unknown"
         reason = "Unknown"
@@ -227,7 +227,7 @@ def generate_markdown_report(output: dict) -> str:
                 final_score = str(s['final_score'])
                 reason = s['human_reason']
                 break
-                
+
         lines.append(f"- **final score:** {final_score}")
         lines.append(f"- **reason:** {reason}")
         lines.append(f"- **alt text:** {pack['generated_alt_text']}")
@@ -245,11 +245,11 @@ def generate_markdown_report(output: dict) -> str:
                 lines.append(f"- **reason:** {s['human_reason']}")
                 lines.append(f"- **score:** {s['final_score']}")
                 lines.append("")
-            
+
     if not has_review:
         lines.append("No candidates flagged for manual review.")
         lines.append("")
-        
+
     lines.append("## Provenance")
     for pack in packs:
         lines.append(f"- **source type:** {pack.get('source_type', 'local')}")
@@ -267,14 +267,15 @@ def generate_markdown_report(output: dict) -> str:
         lines.append(f"- **image role:** {instr['image_role']}")
         lines.append(f"- **output path:** {instr['output_path']}")
         lines.append("")
-    
+
     lines.append("## Editorial Review Checklist")
     lines.append("- Verify selected images fit the article context")
     lines.append("- Verify license/attribution before publishing")
     lines.append("- Review alt text and captions")
     lines.append("- Confirm CMS placement before live publishing")
-    
+
     return "\n".join(lines)
+
 
 def generate_report_from_file(plan_path: str, output_path: str):
     import sys
@@ -282,12 +283,12 @@ def generate_report_from_file(plan_path: str, output_path: str):
     if not plan_file.exists():
         print(f"Error: Plan file not found at {plan_path}", file=sys.stderr)
         sys.exit(1)
-    
+
     with open(plan_file, "r") as f:
         output = json.load(f)
-        
+
     report = generate_markdown_report(output)
-    
+
     out_file = Path(output_path)
     out_file.parent.mkdir(parents=True, exist_ok=True)
     out_file.write_text(report, encoding="utf-8")
@@ -297,7 +298,12 @@ def generate_report_from_file(plan_path: str, output_path: str):
 # ---------------------------------------------------------------------------
 # Demo runner
 # ---------------------------------------------------------------------------
-def run_demo(article_path_str: str = None, profile_path_str: str = None, output_path_str: str = None, report_path_str: str = None):
+def run_demo(
+    article_path_str: str = None,
+    profile_path_str: str = None,
+    output_path_str: str = None,
+    report_path_str: str = None,
+):
     """Run the full Pictovap demo pipeline."""
     print("=" * 60)
     print("  Pictovap Local Demo")
@@ -313,7 +319,7 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
         profile = PublisherProfile.from_yaml(str(profile_path))
     else:
         profile = PublisherProfile.get_default_profile()
-    
+
     print(f"\n[Profile] Loaded: {profile.brand_name} ({profile.profile_id})")
 
     # 2. Parse article into Visual Brief
@@ -327,26 +333,27 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
         if not article_path.exists():
             article_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-article.md"
             if not article_path.exists():
-                 print(f"Error: Default sample article not found.")
-                 sys.exit(1)
+                print("Error: Default sample article not found.")
+                sys.exit(1)
 
     brief = VisualBrief.from_markdown(str(article_path), fallback_lang=profile.language if profile else "en")
     brief.topic = "minimalist travel"
     brief.detected_location = None
-    
+
     # Override only if language_mode is override
     if profile and getattr(profile, "language_mode", "fallback") == "override" and profile.language:
         brief.article_language = profile.language
-        
+
     brief.article_id = "demo-article-001"
 
-    print(f"\n[1/4] Visual Brief")
+    print("\n[1/4] Visual Brief")
     print(f"  Title:    {brief.article_title}")
     print(f"  Sections: {len(brief.sections)}")
     print(f"  Slots:    {len(brief.image_slots)}")
     for slot in brief.image_slots:
         excerpt = slot.get('section_excerpt', '')
-        excerpt_disp = f" (Context: {excerpt[:40]}...)" if len(excerpt) > 40 else (f" (Context: {excerpt})" if excerpt else "")
+        excerpt_disp = f" (Context: {excerpt[:40]}...)" if len(
+            excerpt) > 40 else (f" (Context: {excerpt})" if excerpt else "")
         print(f"    - {slot['slot_id']}: {slot['purpose']} ({slot['preferred_type']}){excerpt_disp}")
 
     # 3. Score all candidates for each slot
@@ -360,14 +367,13 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
         slot_scores.sort(key=lambda s: s.final_score, reverse=True)
         all_scores.append((slot, slot_scores))
 
-        best = slot_scores[0]
         print(f"  Slot '{slot['slot_id']}':")
         for s in slot_scores:
             icon = "v" if s.decision == "selected" else ("x" if s.decision == "rejected" else "?")
             print(f"    {icon} {s.candidate_id}: {s.final_score:.1f} ({s.decision}) -- {s.human_reason}")
 
     # 4. Select best candidate per slot & build Provenance Packs
-    print(f"\n[3/4] Provenance Packs")
+    print("\n[3/4] Provenance Packs")
     packs = []
     selected_map = {}  # slot_id -> candidate
     used_ids = set()
@@ -383,7 +389,7 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
                 chash = hashlib.sha256(content.encode()).hexdigest()[:16]
                 gen_name = f"pictovap_{cand['filename'].rsplit('.', 1)[0]}.webp"
 
-                from pictova.core.metadata import generate_local_alt_text, generate_local_caption
+                from pictova.core.demo_metadata import generate_local_alt_text, generate_local_caption
                 alt_text = generate_local_alt_text(cand, slot, language=brief.article_language)
                 caption = generate_local_caption(cand, slot, language=brief.article_language)
 
@@ -411,7 +417,7 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
                 break
 
     # 5. Build CMS Placement plan
-    print(f"\n[4/4] CMS Placement Plan")
+    print("\n[4/4] CMS Placement Plan")
     instructions = []
     for pack in packs:
         slot = next((s for s in brief.image_slots if s["slot_id"] == pack.slot_id), {})
@@ -425,7 +431,10 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
             caption=pack.generated_caption,
         )
         instructions.append(instr)
-        print(f"  [{instr.image_role}] {instr.output_path} -> {instr.placement_strategy}:{instr.target_section or 'top'}")
+        print(
+            f"  [{instr.image_role}] {instr.output_path} -> "
+            f"{instr.placement_strategy}:{instr.target_section or 'top'}"
+        )
 
     placement = CMSPlacement(
         article_id=brief.article_id,
@@ -460,10 +469,10 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
         out_path = Path(__file__).parent / "sample-output.json"
         if not out_path.parent.exists() or out_path.parent.name == "pictova":
             out_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-output.json"
-    
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
-    
+
     # 8. Write Markdown report if requested
     if report_path_str:
         report_path = Path(report_path_str)
@@ -490,7 +499,8 @@ if __name__ == "__main__":
     parser.add_argument("--article", help="Path to a custom Markdown article", default=None)
     parser.add_argument("--profile", help="Path to a custom Publisher Profile YAML", default=None)
     parser.add_argument("--output", help="Path to write the JSON output", default=None)
-    parser.add_argument("--report", nargs='?', const="examples/sample-report.md", help="Path to write the human-readable Markdown report", default=None)
+    parser.add_argument("--report", nargs='?', const="examples/sample-report.md",
+                        help="Path to write the human-readable Markdown report", default=None)
     args = parser.parse_args()
 
     run_demo(

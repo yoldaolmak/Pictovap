@@ -9,7 +9,6 @@ import json
 import re
 import sqlite3
 from pathlib import Path
-from typing import Any
 
 from pictova.utils.config import get_visual_memory_db_path
 
@@ -18,8 +17,8 @@ def _ascii_normalize(text: str) -> str:
     """Türkçe → ASCII conversion for path searching."""
     result = str(text or "")
     for src, dst in [
-        ("İ","I"),("Ş","S"),("Ç","C"),("Ğ","G"),("Ü","U"),("Ö","O"),
-        ("ş","s"),("ç","c"),("ğ","g"),("ü","u"),("ö","o"),("ı","i"),
+        ("İ", "I"), ("Ş", "S"), ("Ç", "C"), ("Ğ", "G"), ("Ü", "U"), ("Ö", "O"),
+        ("ş", "s"), ("ç", "c"), ("ğ", "g"), ("ü", "u"), ("ö", "o"), ("ı", "i"),
     ]:
         result = result.replace(src, dst)
     return result.lower()
