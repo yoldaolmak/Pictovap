@@ -1,23 +1,31 @@
-# Authentic Italian Carbonara
+# Authentic Neapolitan Pizza Dough
 
-A classic Roman pasta dish that's incredibly simple yet deeply satisfying. No cream required!
+Creating the perfect Neapolitan pizza dough requires patience, high-quality ingredients, and attention to detail. This guide will walk you through the process.
 
 ## Ingredients
 
-* 400g spaghetti
-* 150g guanciale (or pancetta)
-* 4 large egg yolks
-* 50g Pecorino Romano, freshly grated
-* Freshly ground black pepper
+You only need four simple ingredients:
+- 500g Tipo 00 Flour
+- 325ml Water (room temperature)
+- 10g Fine Sea Salt
+- 3g Fresh Yeast (or 1g active dry yeast)
 
-## Instructions
+## The Mixing Process
 
-1. Bring a large pot of salted water to a boil. Cook the spaghetti until al dente.
-2. While the pasta cooks, slice the guanciale into strips and fry in a pan over medium heat until crispy.
-3. In a bowl, whisk the egg yolks with the grated Pecorino and a generous amount of black pepper.
-4. Drain the pasta, reserving a cup of pasta water. Add the pasta to the pan with the guanciale.
-5. Remove the pan from heat. Quickly stir in the egg and cheese mixture, adding pasta water a little at a time until a creamy sauce forms.
+Start by dissolving the salt in the water. Once dissolved, add the yeast and mix until integrated. Slowly incorporate the flour, mixing by hand.
 
-## Pro Tips
+### Kneading
 
-Never add the egg mixture while the pan is over direct heat, or you'll end up with scrambled eggs!
+Turn the dough out onto a lightly floured surface. Knead vigorously for about 15 minutes. The dough should become smooth, elastic, and slightly tacky, but not sticky.
+
+## Fermentation
+
+Place the dough in a lightly oiled bowl, cover it with a damp cloth, and let it rest at room temperature for 2 hours.
+
+### Shaping and Second Proof
+
+Divide the dough into 250g portions. Shape them into tight balls and place them in a proofing box. Let them rest for another 6 to 8 hours before stretching.
+
+## Baking Preparation
+
+A true Neapolitan pizza is baked in a wood-fired oven at 450°C (840°F) for just 60-90 seconds. If using a home oven, preheat your pizza stone to the highest possible temperature for at least an hour.

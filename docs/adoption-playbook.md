@@ -1,67 +1,82 @@
-# Pictovap Adoption Playbook
+# External Adoption Playbook
 
-Welcome to Pictovap. If you are reading this, you are likely among the first external users trying this project outside of its original dogfooding environment. 
+Welcome to Pictovap! This playbook is designed to help you quickly understand, run, and test Pictovap in your own environment without needing API keys, cloud accounts, or complex setup.
 
-This playbook is designed to help you understand if Pictovap is right for you, and how you can try it without complex setup or private credentials.
+## 1. Who Should Try Pictovap First
 
-## Who Should Try Pictovap First?
+Pictovap is an early-stage open-source infrastructure project. You are an ideal early tester if you are:
+- An independent publisher
+- A WordPress blogger
+- A travel or recipe publisher
+- A local guide publisher
+- Part of a small editorial team seeking to automate visual finishing
 
-Pictovap is an early infrastructure project. You should consider trying it if you belong to one of these groups and are comfortable with a command-line interface:
-* Independent publishers
-* WordPress bloggers
-* Travel publishers
-* Recipe publishers
-* Local guides
-* Affiliate publishers
-* Small editorial teams
+*Note: Pictovap does not currently provide a consumer-friendly UI. It is for publishers comfortable running Python scripts or integrating APIs.*
 
-## What You Can Do in 10 Minutes
+## 2. What You Can Test in 10 Minutes
 
-Without needing any API keys or CMS credentials, you can:
-1. Clone the repository and install the dependencies.
-2. Run the local deterministic demo to see how the engine scores and selects images.
-3. Test the engine against one of your own Markdown articles to see what visual brief it generates.
+In just 10 minutes, without any credentials, you can:
+- Clone the repository and install it locally.
+- Run the core pipeline (Visual Brief → Fit Score → Provenance Pack → CMS Placement).
+- Test how Pictovap evaluates images against a mock dataset.
+- Run a custom Markdown article through the engine.
 
-## How to Run the Demo
+## 3. Run the Default Demo
 
-Run the credential-free demo using the provided mock data:
+Clone the repo, set up a virtual environment, and run the standard demo:
+
 ```bash
+git clone https://github.com/yoldaolmak/Pictovap.git
+cd Pictovap
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+
 make demo
 ```
-This runs a complete simulation of the pipeline (analysis, selection, provenance tracking, and placement planning) and outputs a JSON file with the results.
 
-## How to Test Your Own Markdown Article
+This runs the engine against `examples/sample-article.md` using deterministic scoring.
 
-You can pass your own article to the demo to see how Pictovap parses its structure and generates a visual brief.
+## 4. Try Your Own Markdown Article
 
-```bash
-python -m pictova.demo --article path/to/your/article.md --output my-plan.json
-```
-*Note: This mode still uses the deterministic local mock image candidate pool, so the selected images will be placeholders, but the generated slots and placement instructions will be specific to your text.*
-
-## How to Create a Publisher Profile
-
-Publisher profiles define your site's specific rules (e.g., maximum images per post, preferred image aspect ratios, quality thresholds). Look at `examples/profiles/sample-publisher.yaml` to understand the schema. You can create your own YAML file and pass it to the demo:
+You can test Pictovap against your own content:
 
 ```bash
-python -m pictova.demo --article my-article.md --profile my-profile.yaml --output my-plan.json
+python -m pictova.demo --article path/to/your/article.md --profile examples/profiles/sample-publisher.yaml --output my-plan.json
 ```
 
-## How to Use Local Image Metadata
+It will parse your article, identify sections, and evaluate mock candidates for placement.
 
-If you want to simulate selection with your own images, you can place a JSON file containing mock image metadata into the pipeline. (Detailed documentation on the local provider adapter is pending).
+## 5. Create a Publisher Profile
 
-## How to Request a CMS Adapter
+Publisher profiles tell Pictovap about your site's tone and requirements. Try creating your own profile based on `examples/profiles/sample-publisher.yaml`. Copy the file, edit the tone rules, and pass it to the demo using the `--profile` flag.
 
-Currently, only the WordPress adapter is production-ready. If you use a different CMS (like Ghost, Strapi, or Hugo), please check the [Starter Issues](contributing/starter-issues.md) list. You can open an issue on GitHub requesting an adapter, providing details about the target CMS's REST or GraphQL API for media uploading and block injection.
+## 6. Review the Output JSON
 
-## How to Open a Useful Issue
+Open the generated JSON (e.g., `examples/sample-output.json` or your custom output). Look for the four primitives:
+- `visual_brief`: What the engine thinks your article needs.
+- `fit_scores`: How candidate images were ranked.
+- `provenance_packs`: The selected images and their audit trail.
+- `cms_placement`: The final placement instructions.
 
-If you encounter a bug or have a feature request:
-1. Use the provided Issue Templates in the repository.
-2. Include the output of the demo run or the specific error trace.
-3. If reporting an issue with a specific article structure, include an anonymized excerpt of the Markdown.
+## 7. Report a Useful Issue
 
-## How to Contribute a Sample Article or Profile
+If you encounter bugs or confusing outputs, please open an issue. Good issues include:
+- The `visual_brief` completely misunderstood my article structure.
+- The demo crashed when parsing a specific Markdown element.
 
-We welcome PRs that add diverse content types to the `examples/` directory. If you have a specific editorial format (like a complex recipe or a product review) that Pictovap struggles to parse, contributing a sanitized version of it helps improve the engine.
+## 8. Contribute a Sample Article/Profile
+
+Help us make Pictovap more publisher-agnostic! If you have a unique article format (e.g., a heavily structured recipe), consider opening a Pull Request to add it to `examples/articles/` along with a corresponding profile in `examples/profiles/`.
+
+## 9. Request an Adapter
+
+Pictovap is built around adapters. If you use a specific image source (like Openverse) or CMS (like Ghost or Strapi), open an "Adapter Request" issue. Check our existing requests before submitting.
+
+## 10. Current Limitations
+
+- The credential-free demo relies on mock assets and deterministic scoring, not live APIs.
+- Real API runs (with Gemini/Claude) require configuration not covered in this quick playbook.
+- We currently only offer a WordPress CMS adapter (reference implementation).
+- Pictovap has no external adoption yet; you are on the bleeding edge.

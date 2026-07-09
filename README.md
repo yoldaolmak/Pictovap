@@ -1,5 +1,7 @@
 # Pictovap
 
+[![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
+
 Open-source visual finishing for content publishers.
 
 Pictovap turns unfinished articles into visually complete, rights-aware, publish-ready CMS pages.

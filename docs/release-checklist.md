@@ -1,20 +1,23 @@
 # Release Checklist
 
-Follow these steps before publishing a new release:
+Follow this final pre-release sequence before publishing a new Pictovap release.
 
-- [ ] clean git status
-- [ ] version selected
-- [ ] changelog updated
-- [ ] README checked
-- [ ] docs links checked
-- [ ] tests pass
-- [ ] demo runs
-- [ ] CI green
-- [ ] package build succeeds
-- [ ] no secrets
-- [ ] no fake adoption claims
-- [ ] GitHub release notes drafted
-- [ ] tag created only with explicit approval
+## Final Pre-Release Sequence
+
+- [ ] 1. clean git status
+- [ ] 2. tests pass
+- [ ] 3. demo runs
+- [ ] 4. docs links pass
+- [ ] 5. package builds
+- [ ] 6. README checked
+- [ ] 7. changelog updated
+- [ ] 8. release notes prepared
+- [ ] 9. no secrets
+- [ ] 10. no fake adoption claims
+- [ ] 11. CI green
+- [ ] 12. tag created only after explicit approval
+- [ ] 13. GitHub release published manually
+- [ ] 14. Claude application not submitted until external evidence exists
 
 ## Package Build Verification
 
