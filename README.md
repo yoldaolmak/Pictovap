@@ -36,7 +36,7 @@ It is a CLI-first open-source core for article-aware visual planning and CMS pla
 Pictovap follows a simple lifecycle: `Configure → Plan → Review → Publish`
 
 1. **Configure**: A publisher profile defines site name, CMS type, language, output rules, filename rules, alt text rules, caption rules, and image source adapters.
-2. **Plan**: Pictovap reads an article and creates a machine-readable visual plan.
+2. **Plan**: Pictovap reads an article, automatically detects the article language using a deterministic local word-marker approach (falling back to the profile's configured language), extracts section excerpts for context, and creates a machine-readable visual plan with localized alt text and captions.
 3. **Review**: Editors review the visual plan through a Markdown report, not raw JSON.
 4. **Publish**: CMS adapters can use the plan to place selected images into WordPress or other CMS platforms. Live publishing is adapter-dependent and must be configured explicitly.
 
@@ -56,15 +56,16 @@ pip install -e .
 Run the local credential-free demo:
 
 ```bash
-make demo
+pictovap demo
 ```
 
 ## 7. Try your own article
 
 You can test the demo against your own article:
 ```bash
-python -m pictova.demo \
+pictovap plan \
   --article path/to/your/article.md \
+  --profile examples/profiles/sample-publisher.yaml \
   --output my-plan.json \
   --report my-report.md
 ```

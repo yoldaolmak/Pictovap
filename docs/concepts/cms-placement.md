@@ -60,8 +60,8 @@ placement = CMSPlacement(
             target_section="",
             placement_strategy="featured",
             image_role="featured",
-            alt_text="A backpack, travel, minimalist scene",
-            caption="Visual for: The Future of Minimalist Travel",
+            alt_text="A clean editorial image of travel packing and minimalist gear.",
+            caption="The Future of Minimalist Travel: Start by choosing a versatile color palette.",
         )
     ],
 )

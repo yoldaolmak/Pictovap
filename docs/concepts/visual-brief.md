@@ -30,18 +30,21 @@ A `VisualBrief` object contains:
 Pictovap builds a `VisualBrief` using a deterministic rule-based parser:
 
 1. Parse the article for H1 (title), H2, and H3 headings.
-2. Generate one featured image slot from the title.
-3. Generate one inline slot per H2 section.
-4. Apply publisher profile editorial preferences and avoid lists.
+2. Detect language based on simple word-markers (e.g. Turkish vs. English). If markers are ambiguous, fall back to the publisher profile language.
+3. Generate one featured image slot from the title.
+4. Generate one inline slot per H2 section, extracting the section's first few sentences as `section_excerpt` context.
+5. Apply publisher profile editorial preferences and avoid lists.
 
-This parser does not call any AI API. It is pure Python, stateless, and testable.
+This parser does not call any AI API. It is pure Python, stateless, and testable. Language detection is deterministic and simple; future iterations might introduce more advanced NLP detection models if required.
 
 ```python
 from pictova.core.primitives import VisualBrief
 
 brief = VisualBrief.from_markdown("examples/sample-article.md")
 print(brief.article_title)   # "The Future of Minimalist Travel"
+print(brief.article_language) # "en"
 print(len(brief.image_slots)) # 4 (featured + 3 section slots)
+print(brief.image_slots[1]["section_excerpt"]) # First few sentences context
 ```
 
 ## Where It Goes

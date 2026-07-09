@@ -11,7 +11,8 @@ from pictova.app.jobs import run_attach_job
 from pictova.app.api import plan_attach, process_attach
 from pictova.app.server import serve
 from pictova.providers.wordpress import fetch_post_context, guard_post_media
-
+from pictova.demo import run_demo, generate_report_from_file
+import sys
 
 def _print_json(payload: Dict[str, Any]) -> None:
     print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -20,6 +21,12 @@ def _print_json(payload: Dict[str, Any]) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pictova")
     sub = parser.add_subparsers(dest="command", required=True)
+
+    demo = sub.add_parser("demo", help="Run the built-in credential-free example")
+    
+    report = sub.add_parser("report", help="Generate an editor-readable Markdown report from a plan")
+    report.add_argument("--plan", required=True, help="Path to visual-plan.json")
+    report.add_argument("--output", required=True, help="Path to write the output report.md")
 
     attach = sub.add_parser("attach")
     attach.add_argument("--site", required=True, help="Target publisher profile/site name")
@@ -52,9 +59,14 @@ def build_parser() -> argparse.ArgumentParser:
     guard_mode.add_argument("--adopt", action="store_true")
     guard.add_argument("--media-id", dest="media_ids", action="append", type=int)
 
-    plan = sub.add_parser("plan")
-    plan.add_argument("--site", required=True, help="Target publisher profile/site name")
-    plan.add_argument("--post", type=int, required=True)
+    plan = sub.add_parser("plan", help="Create a visual plan for a Markdown article")
+    plan.add_argument("--article", help="Path to a Markdown article")
+    plan.add_argument("--profile", help="Path to a Publisher Profile YAML")
+    plan.add_argument("--output", help="Path to write the JSON output plan")
+    plan.add_argument("--report", help="Path to write the Markdown report")
+    # Legacy arguments
+    plan.add_argument("--site", help="Legacy: Target publisher profile/site name")
+    plan.add_argument("--post", type=int, help="Legacy: Post ID")
     plan.add_argument("--count", type=int, default=4)
     plan.add_argument("--name")
     plan.add_argument(
@@ -118,6 +130,18 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
 
+    if args.command == "demo":
+        run_demo()
+        return 0
+
+    if args.command == "report":
+        try:
+            generate_report_from_file(args.plan, args.output)
+            return 0
+        except Exception as e:
+            print(f"Error generating report: {e}", file=sys.stderr)
+            return 1
+
     if args.command == "attach":
         try:
             result = run_attach_job(**_attach_args_to_payload(args))
@@ -155,9 +179,28 @@ def main() -> int:
         return 0 if result.get("status") == "success" else 1
 
     if args.command == "plan":
-        result = plan_attach(_attach_args_to_payload(args))
-        _print_json(result)
-        return 0 if result.get("status") == "success" else 1
+        if getattr(args, "article", None):
+            if not getattr(args, "profile", None) or not getattr(args, "output", None):
+                print("Error: --profile and --output are required when using --article.", file=sys.stderr)
+                return 1
+            try:
+                run_demo(
+                    article_path_str=args.article,
+                    profile_path_str=args.profile,
+                    output_path_str=args.output,
+                    report_path_str=getattr(args, "report", None)
+                )
+                return 0
+            except Exception as e:
+                print(f"Error running plan: {e}", file=sys.stderr)
+                return 1
+        elif getattr(args, "site", None) and getattr(args, "post", None):
+            result = plan_attach(_attach_args_to_payload(args))
+            _print_json(result)
+            return 0 if result.get("status") == "success" else 1
+        else:
+            print("Error: Must provide either --article/--profile/--output OR --site/--post", file=sys.stderr)
+            return 1
 
     if args.command == "process":
         result = process_attach(_attach_args_to_payload(args))

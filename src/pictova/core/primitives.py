@@ -50,25 +50,18 @@ class VisualBrief:
         }
 
     @classmethod
-    def from_markdown(cls, path: str) -> "VisualBrief":
+    def from_markdown(cls, path: str, fallback_lang: str = "en") -> "VisualBrief":
         """Parse a markdown file and extract a VisualBrief.
 
         This is a deterministic, rule-based parser. It does not use AI.
         It extracts headings and builds image slots from the document structure.
         """
-        import re
         from pathlib import Path
+        from pictova.core.language import detect_language
         text = Path(path).read_text(encoding="utf-8")
-        # Simple language detection (heuristic)
-        text_lower = text.lower()
-        tr_words = {"bir", "ve", "için", "ile", "kahve", "seçimi", "nasıl", "ekipman", "demleme", "çekirdek", "su", "öğütme", "gerekir", "kullanılır"}
-        en_words = {"the", "and", "for", "with", "guide", "how", "travel", "coffee", "equipment", "section"}
-        words = set(re.findall(r'\b\w+\b', text_lower))
-        tr_count = len(words & tr_words)
-        en_count = len(words & en_words)
         
-        # fallback to "en" or profile language later, but detect primary here
-        lang = "tr" if tr_count > en_count else "en"
+        # Call our deterministic language detector
+        lang = detect_language(text, fallback_lang=fallback_lang)
 
         lines = text.strip().split("\n")
 

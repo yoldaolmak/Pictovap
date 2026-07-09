@@ -230,7 +230,7 @@ def test_demo_missing_article_exits(capsys):
     
     assert exc_info.value.code == 1
     captured = capsys.readouterr()
-    assert "Error: Article not found" in captured.out
+    assert "Error: Article not found" in captured.err
 
 
 def test_demo_with_markdown_report(tmp_path):

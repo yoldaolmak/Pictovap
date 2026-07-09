@@ -11,6 +11,7 @@ for a specific publisher. It decouples the core engine from site-specific hardco
 | `brand_name` | str | Human-readable name used in logging and metadata prompts |
 | `cms_type` | str | CMS target: `wordpress`, `ghost`, `strapi`, or `generic` |
 | `language` | str | ISO language code for generated text (e.g., `en`, `tr`) |
+| `language_mode` | str | Behavior for profile language: `fallback` (default) or `override` |
 | `image_sources` | list[str] | Ordered list of adapter names to query (e.g., `["local", "unsplash"]`) |
 | `output_rules` | dict | Image processing rules: `format`, `max_width`, `max_height`, `quality` |
 | `filename_rules` | dict | Output filename rules: `prefix`, `case`, `separator` |

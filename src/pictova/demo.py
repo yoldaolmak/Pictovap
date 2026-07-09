@@ -187,6 +187,9 @@ def generate_markdown_report(output: dict) -> str:
     
     brief = output.get("visual_brief", {})
     profile = output.get("profile", {})
+    scores = output.get("fit_scores", {})
+    packs = output.get("provenance_packs", [])
+    placement = output.get("cms_placement", {})
     
     lines.append("# Pictovap Visual Plan")
     lines.append("")
@@ -194,42 +197,54 @@ def generate_markdown_report(output: dict) -> str:
     lines.append("## Article")
     lines.append(f"- **Title:** {brief.get('article_title', 'Unknown')}")
     lines.append(f"- **Language:** {brief.get('article_language', 'en')}")
-    lines.append(f"- **Publisher Profile:** {profile.get('brand', 'Unknown')} ({profile.get('id', 'unknown')})")
+    source_path = output.get("source_path", "Unknown")
+    lines.append(f"- **Source path:** {source_path}")
+    lines.append(f"- **Publisher profile:** {profile.get('brand', 'Unknown')} ({profile.get('id', 'unknown')})")
     lines.append("")
     
     lines.append("## Visual Brief")
-    lines.append(f"Detected {len(brief.get('sections', []))} sections and {len(brief.get('image_slots', []))} required image slots.")
+    lines.append(f"- **Detected sections:** {len(brief.get('sections', []))}")
+    lines.append(f"- **Required image slots:** {len(brief.get('image_slots', []))}")
     for slot in brief.get('image_slots', []):
-        lines.append(f"- **{slot['slot_id']}**: {slot['purpose']}")
+        lines.append(f"- **Preferred image type per slot ({slot['slot_id']}):** {slot['preferred_type']}")
+        if slot.get('section_excerpt'):
+            lines.append(f"- **Section excerpt/context if available ({slot['slot_id']}):** {slot['section_excerpt']}")
     lines.append("")
     
     lines.append("## Selected Images")
-    scores = output.get("fit_scores", {})
-    packs = output.get("provenance_packs", [])
     for pack in packs:
         slot_id = pack['slot_id']
-        lines.append(f"### Slot: {slot_id}")
-        lines.append(f"**Image ID:** {pack['image_id']}")
-        lines.append(f"- **Alt text:** {pack['generated_alt_text']}")
-        lines.append(f"- **Caption:** {pack['generated_caption']}")
+        lines.append("For each selected image:")
+        lines.append(f"- **slot:** {slot_id}")
+        lines.append(f"- **target section:** {pack.get('placement_target', 'top')}")
+        lines.append(f"- **candidate ID:** {pack['image_id']}")
+        
+        # Find score and reason
+        final_score = "Unknown"
+        reason = "Unknown"
+        for s in scores.get(slot_id, []):
+            if s['candidate_id'] == pack['image_id']:
+                final_score = str(s['final_score'])
+                reason = s['human_reason']
+                break
+                
+        lines.append(f"- **final score:** {final_score}")
+        lines.append(f"- **reason:** {reason}")
+        lines.append(f"- **alt text:** {pack['generated_alt_text']}")
+        lines.append(f"- **caption:** {pack['generated_caption']}")
         lines.append("")
 
     lines.append("## Candidates Requiring Review")
     has_review = False
     for slot_id, slot_scores in scores.items():
-        review = [s for s in slot_scores if s['decision'] == 'needs_review']
-        rejected = [s for s in slot_scores if s['decision'] == 'rejected']
-        
-        if review or rejected:
-            lines.append(f"### Slot: {slot_id}")
-            has_review = True
-            if review:
-                for r in review:
-                    lines.append(f"- ⚠️ **Needs Review** ({r['candidate_id']}): {r['human_reason']}")
-            if rejected:
-                for r in rejected:
-                    lines.append(f"- ❌ **Rejected** ({r['candidate_id']}): {r['human_reason']}")
-            lines.append("")
+        for s in slot_scores:
+            if s['decision'] in ('needs_review', 'rejected'):
+                has_review = True
+                lines.append(f"- **candidate ID:** {s['candidate_id']}")
+                lines.append(f"- **slot:** {slot_id}")
+                lines.append(f"- **reason:** {s['human_reason']}")
+                lines.append(f"- **score:** {s['final_score']}")
+                lines.append("")
             
     if not has_review:
         lines.append("No candidates flagged for manual review.")
@@ -237,22 +252,46 @@ def generate_markdown_report(output: dict) -> str:
         
     lines.append("## Provenance")
     for pack in packs:
-        lines.append(f"- **{pack['slot_id']}**: {pack['image_id']} -> Provider: {pack['provider']}, License: {pack['license_status']}, Hash: {pack['content_hash']}")
-    lines.append("")
+        lines.append(f"- **source type:** {pack.get('source_type', 'local')}")
+        lines.append(f"- **provider:** {pack['provider']}")
+        lines.append(f"- **source URL/local path:** {pack.get('source_url') or pack.get('local_source_path')}")
+        lines.append(f"- **license status:** {pack['license_status']}")
+        lines.append(f"- **attribution:** {pack.get('attribution', 'None')}")
+        lines.append(f"- **content hash:** {pack['content_hash']}")
+        lines.append("")
 
     lines.append("## CMS Placement Plan")
-    placement = output.get("cms_placement", {})
     for instr in placement.get("placements", []):
-        lines.append(f"- **{instr['slot_id']}** -> `{instr['placement_strategy']}:{instr['target_section'] or 'top'}` (File: `{instr['output_path']}`)")
-    lines.append("")
+        lines.append(f"- **target section:** {instr['target_section'] or 'top'}")
+        lines.append(f"- **placement strategy:** {instr['placement_strategy']}")
+        lines.append(f"- **image role:** {instr['image_role']}")
+        lines.append(f"- **output path:** {instr['output_path']}")
+        lines.append("")
     
     lines.append("## Editorial Review Checklist")
-    lines.append("- [ ] Verify alt text correctly describes the image for accessibility.")
-    lines.append("- [ ] Ensure captions are editorially sound and not repetitive.")
-    lines.append("- [ ] Check that selected images match the brand's visual identity.")
-    lines.append("- [ ] Review any candidates flagged in the 'Candidates Requiring Review' section.")
+    lines.append("- Verify selected images fit the article context")
+    lines.append("- Verify license/attribution before publishing")
+    lines.append("- Review alt text and captions")
+    lines.append("- Confirm CMS placement before live publishing")
     
     return "\n".join(lines)
+
+def generate_report_from_file(plan_path: str, output_path: str):
+    import sys
+    plan_file = Path(plan_path)
+    if not plan_file.exists():
+        print(f"Error: Plan file not found at {plan_path}", file=sys.stderr)
+        sys.exit(1)
+    
+    with open(plan_file, "r") as f:
+        output = json.load(f)
+        
+    report = generate_markdown_report(output)
+    
+    out_file = Path(output_path)
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    out_file.write_text(report, encoding="utf-8")
+    print(f"Report written to {output_path}")
 
 
 # ---------------------------------------------------------------------------
@@ -269,7 +308,7 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
     if profile_path_str:
         profile_path = Path(profile_path_str)
         if not profile_path.exists():
-            print(f"Error: Profile not found at {profile_path_str}")
+            print(f"Error: Profile not found at {profile_path_str}", file=sys.stderr)
             sys.exit(1)
         profile = PublisherProfile.from_yaml(str(profile_path))
     else:
@@ -281,7 +320,7 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
     if article_path_str:
         article_path = Path(article_path_str)
         if not article_path.exists():
-            print(f"Error: Article not found at {article_path_str}")
+            print(f"Error: Article not found at {article_path_str}", file=sys.stderr)
             sys.exit(1)
     else:
         article_path = Path(__file__).parent / "sample-article.md"
@@ -291,12 +330,12 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
                  print(f"Error: Default sample article not found.")
                  sys.exit(1)
 
-    brief = VisualBrief.from_markdown(str(article_path))
+    brief = VisualBrief.from_markdown(str(article_path), fallback_lang=profile.language if profile else "en")
     brief.topic = "minimalist travel"
     brief.detected_location = None
     
-    # Allow publisher profile to override if explicitly set to something else
-    if profile.profile_id != "demo" and profile.language:
+    # Override only if language_mode is override
+    if profile and getattr(profile, "language_mode", "fallback") == "override" and profile.language:
         brief.article_language = profile.language
         
     brief.article_id = "demo-article-001"
@@ -344,19 +383,9 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
                 chash = hashlib.sha256(content.encode()).hexdigest()[:16]
                 gen_name = f"pictovap_{cand['filename'].rsplit('.', 1)[0]}.webp"
 
-                target = slot.get('target_heading') or brief.article_title
-                excerpt = slot.get('section_excerpt', '').strip()
-                
-                # Extract first sentence for an editorial caption
-                first_sentence = excerpt.split('.')[0] + "." if '.' in excerpt else excerpt
-                caption = first_sentence.strip() if first_sentence.strip() else target
-                
-                kw_str = ", ".join(cand.get('keywords', [])[:3])
-
-                if brief.article_language == "tr":
-                    alt_text = f"{target} ile ilgili görsel ({kw_str})"
-                else:
-                    alt_text = f"Visual showing {target.lower()} ({kw_str})"
+                from pictova.core.metadata import generate_local_alt_text, generate_local_caption
+                alt_text = generate_local_alt_text(cand, slot, language=brief.article_language)
+                caption = generate_local_caption(cand, slot, language=brief.article_language)
 
                 pack = ProvenancePack(
                     image_id=cand["id"],
@@ -415,6 +444,7 @@ def run_demo(article_path_str: str = None, profile_path_str: str = None, output_
         },
         "provenance_packs": [p.to_dict() for p in packs],
         "cms_placement": placement.to_dict(),
+        "source_path": str(article_path),
         "profile": {
             "id": profile.profile_id,
             "brand": profile.brand_name,

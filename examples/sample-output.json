@@ -52,7 +52,7 @@
     "avoid_list": [],
     "editorial_notes": "",
     "confidence": 0.8,
-    "source_path": "/Users/username/Projects/Pictovap/examples/sample-article.md"
+    "source_path": "/Users/yoldaolmak/Projects/Pictovap/examples/sample-article.md"
   },
   "fit_scores": {
     "featured": [
@@ -359,9 +359,9 @@
       "article_id": "demo-article-001",
       "slot_id": "featured",
       "placement_target": "featured_image",
-      "generated_alt_text": "Visual showing the future of minimalist travel (backpack, travel, minimalist)",
+      "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
       "generated_caption": "The Future of Minimalist Travel",
-      "timestamp": "2026-07-09T19:06:04.244224",
+      "timestamp": "2026-07-09T19:50:03.493412",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -382,9 +382,9 @@
       "article_id": "demo-article-001",
       "slot_id": "section_0",
       "placement_target": "inline_after_packing_smart",
-      "generated_alt_text": "Visual showing packing smart (forest, nature, path)",
-      "generated_caption": "The core of minimalism is the capsule wardrobe.",
-      "timestamp": "2026-07-09T19:06:04.244245",
+      "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
+      "generated_caption": "Packing Smart: The core of minimalism is the capsule wardrobe.",
+      "timestamp": "2026-07-09T19:50:03.493439",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -405,9 +405,9 @@
       "article_id": "demo-article-001",
       "slot_id": "section_1",
       "placement_target": "inline_after_finding_serenity_in_nature",
-      "generated_alt_text": "Visual showing finding serenity in nature (sunset, mountains, nature)",
-      "generated_caption": "When you travel with less, you have the physical and mental energy to explore further.",
-      "timestamp": "2026-07-09T19:06:04.244264",
+      "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+      "generated_caption": "Finding Serenity in Nature: When you travel with less, you have the physical and mental energy to explore further.",
+      "timestamp": "2026-07-09T19:50:03.493464",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -426,7 +426,7 @@
         "target_section": "",
         "placement_strategy": "featured",
         "image_role": "featured",
-        "alt_text": "Visual showing the future of minimalist travel (backpack, travel, minimalist)",
+        "alt_text": "A clean editorial image of travel packing and minimalist gear.",
         "caption": "The Future of Minimalist Travel"
       },
       {
@@ -435,8 +435,8 @@
         "target_section": "Packing Smart",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "Visual showing packing smart (forest, nature, path)",
-        "caption": "The core of minimalism is the capsule wardrobe."
+        "alt_text": "A serene nature image showing a forest path surrounded by trees.",
+        "caption": "Packing Smart: The core of minimalism is the capsule wardrobe."
       },
       {
         "slot_id": "section_1",
@@ -444,11 +444,12 @@
         "target_section": "Finding Serenity in Nature",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "Visual showing finding serenity in nature (sunset, mountains, nature)",
-        "caption": "When you travel with less, you have the physical and mental energy to explore further."
+        "alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+        "caption": "Finding Serenity in Nature: When you travel with less, you have the physical and mental energy to explore further."
       }
     ]
   },
+  "source_path": "/Users/yoldaolmak/Projects/Pictovap/examples/sample-article.md",
   "profile": {
     "id": "demo",
     "brand": "Demo Publisher",

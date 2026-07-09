@@ -29,10 +29,10 @@ You do not need image provider credentials to run the local demo.
 The demo requires no credentials, no external APIs, and no CMS connection. The demo uses deterministic local/mock candidates.
 
 ```bash
-make demo
+pictovap demo
 ```
 
-Or directly:
+Or using the legacy module syntax:
 
 ```bash
 python -m pictova.demo

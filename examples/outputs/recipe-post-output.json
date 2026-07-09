@@ -1,7 +1,7 @@
 {
   "pipeline": "Pictovap Visual Finishing Demo",
   "visual_brief": {
-    "article_title": "Authentic Italian Carbonara",
+    "article_title": "Authentic Neapolitan Pizza Dough",
     "article_id": "demo-article-001",
     "article_language": "en",
     "topic": "minimalist travel",
@@ -12,11 +12,23 @@
         "level": "h2"
       },
       {
-        "heading": "Instructions",
+        "heading": "The Mixing Process",
         "level": "h2"
       },
       {
-        "heading": "Pro Tips",
+        "heading": "Kneading",
+        "level": "h3"
+      },
+      {
+        "heading": "Fermentation",
+        "level": "h2"
+      },
+      {
+        "heading": "Shaping and Second Proof",
+        "level": "h3"
+      },
+      {
+        "heading": "Baking Preparation",
         "level": "h2"
       }
     ],
@@ -24,25 +36,36 @@
       {
         "slot_id": "featured",
         "purpose": "featured_image",
-        "preferred_type": "landscape"
+        "preferred_type": "landscape",
+        "section_excerpt": "Authentic Neapolitan Pizza Dough"
       },
       {
         "slot_id": "section_0",
         "purpose": "inline_after_ingredients",
         "preferred_type": "any",
-        "target_heading": "Ingredients"
+        "target_heading": "Ingredients",
+        "section_excerpt": "You only need four simple ingredients: - 500g Tipo 00 Flour - 325ml Water (room temperature) - 10g Fine Sea Salt - 3g Fresh Yeast (or 1g active dry yeast)"
       },
       {
         "slot_id": "section_1",
-        "purpose": "inline_after_instructions",
+        "purpose": "inline_after_the_mixing_process",
         "preferred_type": "any",
-        "target_heading": "Instructions"
+        "target_heading": "The Mixing Process",
+        "section_excerpt": "Start by dissolving the salt in the water. Once dissolved, add the yeast and mix until integrated. Slowly incorporate the flour, mixing by hand."
       },
       {
         "slot_id": "section_2",
-        "purpose": "inline_after_pro_tips",
+        "purpose": "inline_after_fermentation",
         "preferred_type": "any",
-        "target_heading": "Pro Tips"
+        "target_heading": "Fermentation",
+        "section_excerpt": "Place the dough in a lightly oiled bowl, cover it with a damp cloth, and let it rest at room temperature for 2 hours."
+      },
+      {
+        "slot_id": "section_3",
+        "purpose": "inline_after_baking_preparation",
+        "preferred_type": "any",
+        "target_heading": "Baking Preparation",
+        "section_excerpt": "A true Neapolitan pizza is baked in a wood-fired oven at 450°C (840°F) for just 60-90 seconds. If using a home oven, preheat your pizza stone to the highest possible temperature for at least an hour."
       }
     ],
     "avoid_list": [],
@@ -55,56 +78,56 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "featured",
-        "contextual_relevance": 2.0,
-        "section_relevance": 1.5,
+        "contextual_relevance": 1.67,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 12.5,
+        "final_score": 10.67,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
         "slot_id": "featured",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 10.5,
+        "final_score": 9.0,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "featured",
-        "contextual_relevance": 1.0,
-        "section_relevance": 1.5,
+        "contextual_relevance": 0.83,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 2.0,
-        "final_score": 10.5,
+        "final_score": 8.83,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "featured",
-        "contextual_relevance": 1.0,
-        "section_relevance": 1.5,
+        "contextual_relevance": 0.83,
+        "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 9.0,
+        "final_score": 7.33,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -112,31 +135,31 @@
         "candidate_id": "img-generic-03",
         "slot_id": "featured",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 2.0,
         "duplication_risk": 0.0,
         "source_trust": 1.0,
         "license_confidence": 0.5,
         "cms_suitability": 2.0,
-        "final_score": 7.0,
+        "final_score": 5.5,
         "decision": "needs_review",
-        "human_reason": "Moderate fit (score=7.0), manual review recommended"
+        "human_reason": "Moderate fit (score=5.5), manual review recommended"
       }
     ],
     "section_0": [
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_0",
-        "contextual_relevance": 2.0,
+        "contextual_relevance": 1.67,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.5,
+        "final_score": 10.17,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -155,28 +178,28 @@
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_0",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.83,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.5,
+        "final_score": 8.33,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_0",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.83,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 7.0,
+        "final_score": 6.83,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -199,16 +222,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_1",
-        "contextual_relevance": 2.0,
+        "contextual_relevance": 1.67,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.5,
+        "final_score": 10.17,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -227,28 +250,28 @@
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_1",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.83,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.5,
+        "final_score": 8.33,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_1",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.83,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 7.0,
+        "final_score": 6.83,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -271,16 +294,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_2",
-        "contextual_relevance": 2.0,
+        "contextual_relevance": 1.67,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.5,
+        "final_score": 10.17,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -299,34 +322,106 @@
       {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_2",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.83,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.5,
+        "final_score": 8.33,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_2",
-        "contextual_relevance": 1.0,
+        "contextual_relevance": 0.83,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 7.0,
+        "final_score": 6.83,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
       {
         "candidate_id": "img-generic-03",
         "slot_id": "section_2",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 2.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.0,
+        "license_confidence": 0.5,
+        "cms_suitability": 1.5,
+        "final_score": 5.0,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=5.0), manual review recommended"
+      }
+    ],
+    "section_3": [
+      {
+        "candidate_id": "img-backpack-01",
+        "slot_id": "section_3",
+        "contextual_relevance": 1.67,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 10.17,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-forest-02",
+        "slot_id": "section_3",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-sunset-05",
+        "slot_id": "section_3",
+        "contextual_relevance": 0.83,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.5,
+        "license_confidence": 1.5,
+        "cms_suitability": 1.5,
+        "final_score": 8.33,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
+      },
+      {
+        "candidate_id": "img-lowres-04",
+        "slot_id": "section_3",
+        "contextual_relevance": 0.83,
+        "section_relevance": 0.0,
+        "technical_quality": 0.5,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 6.83,
+        "decision": "rejected",
+        "human_reason": "Resolution too low (320x240)"
+      },
+      {
+        "candidate_id": "img-generic-03",
+        "slot_id": "section_3",
         "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 2.0,
@@ -355,9 +450,9 @@
       "article_id": "demo-article-001",
       "slot_id": "featured",
       "placement_target": "featured_image",
-      "generated_alt_text": "A backpack, travel, minimalist scene",
-      "generated_caption": "Visual for: Authentic Italian Carbonara",
-      "timestamp": "2026-07-09T12:27:37.571678",
+      "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
+      "generated_caption": "Authentic Neapolitan Pizza Dough",
+      "timestamp": "2026-07-09T19:45:57.868721",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -378,9 +473,9 @@
       "article_id": "demo-article-001",
       "slot_id": "section_0",
       "placement_target": "inline_after_ingredients",
-      "generated_alt_text": "A forest, nature, path scene",
-      "generated_caption": "Visual for: Ingredients",
-      "timestamp": "2026-07-09T12:27:37.571896",
+      "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
+      "generated_caption": "Ingredients: You only need four simple ingredients: - 500g Tipo 00 Flour - 325ml Water (room temperature) - 10g Fine Sea Salt - 3g Fresh Yeast (or 1g active dry yeast)",
+      "timestamp": "2026-07-09T19:45:57.868948",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -400,10 +495,10 @@
       "content_hash": "546a0986053c06d2",
       "article_id": "demo-article-001",
       "slot_id": "section_1",
-      "placement_target": "inline_after_instructions",
-      "generated_alt_text": "A sunset, mountains, nature scene",
-      "generated_caption": "Visual for: Instructions",
-      "timestamp": "2026-07-09T12:27:37.571906",
+      "placement_target": "inline_after_the_mixing_process",
+      "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+      "generated_caption": "The Mixing Process: Start by dissolving the salt in the water.",
+      "timestamp": "2026-07-09T19:45:57.868965",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -422,8 +517,8 @@
         "target_section": "",
         "placement_strategy": "featured",
         "image_role": "featured",
-        "alt_text": "A backpack, travel, minimalist scene",
-        "caption": "Visual for: Authentic Italian Carbonara"
+        "alt_text": "A clean editorial image of travel packing and minimalist gear.",
+        "caption": "Authentic Neapolitan Pizza Dough"
       },
       {
         "slot_id": "section_0",
@@ -431,24 +526,25 @@
         "target_section": "Ingredients",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A forest, nature, path scene",
-        "caption": "Visual for: Ingredients"
+        "alt_text": "A serene nature image showing a forest path surrounded by trees.",
+        "caption": "Ingredients: You only need four simple ingredients: - 500g Tipo 00 Flour - 325ml Water (room temperature) - 10g Fine Sea Salt - 3g Fresh Yeast (or 1g active dry yeast)"
       },
       {
         "slot_id": "section_1",
         "output_path": "pictovap_sunset-mountains.webp",
-        "target_section": "Instructions",
+        "target_section": "The Mixing Process",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A sunset, mountains, nature scene",
-        "caption": "Visual for: Instructions"
+        "alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+        "caption": "The Mixing Process: Start by dissolving the salt in the water."
       }
     ]
   },
+  "source_path": "examples/articles/recipe-post.md",
   "profile": {
-    "id": "demo",
-    "brand": "Demo Publisher",
-    "cms_type": "wordpress",
+    "id": "sample-publisher",
+    "brand": "Sample Publisher",
+    "cms_type": "generic",
     "language": "en"
   }
 }

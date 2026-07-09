@@ -58,8 +58,8 @@ pack = ProvenancePack(
     article_id="demo-article-001",
     slot_id="featured",
     placement_target="featured_image",
-    generated_alt_text="A backpack, travel, minimalist scene",
-    generated_caption="Visual for: The Future of Minimalist Travel",
+    generated_alt_text="A clean editorial image of travel packing and minimalist gear.",
+    generated_caption="The Future of Minimalist Travel: Start by choosing a versatile color palette.",
     processing_actions=["resize_1200", "webp_convert", "exif_strip"],
 )
 

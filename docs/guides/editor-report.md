@@ -11,19 +11,29 @@ Editors review the visual plan through a Markdown report, not raw JSON.
 
 ## Generating the Report
 
-The report can be generated optionally using the `--report` flag during the demo execution:
+The report can be generated either from an existing JSON plan:
 
 ```bash
-python -m pictova.demo --article path/to/article.md --output my-plan.json --report my-report.md
+pictovap report --plan my-plan.json --output my-report.md
+```
+
+Or generated optionally using the `--report` flag during the planning phase:
+
+```bash
+pictovap plan \
+  --article path/to/article.md \
+  --profile examples/profiles/sample-publisher.yaml \
+  --output my-plan.json \
+  --report my-report.md
 ```
 
 ## What the Report Contains
 
 A premium editor report contains:
-- Article Title, Language, and Publisher Profile summary
-- Visual Brief structure (sections and required image slots)
-- Selected image for each slot with generated alt text and captions
-- Candidates Requiring Review (images that were rejected or flagged by the Fit Score rules)
-- Provenance summary (license and source audit)
-- CMS Placement Plan
-- An Editorial Review Checklist for human sign-off
+- **Article Details** — Title, detected language, article source path, and Publisher Profile summary
+- **Visual Brief structure** — Detected sections, required image slots, preferred image type per slot, and section excerpts/context if available
+- **Selected image for each slot** — Selected candidates with localized, non-generic alt text and captions, along with their fitness scores and selection reasons
+- **Candidates Requiring Review** — Images that were rejected or flagged by the Fit Score rules (with candidate ID, slot, reason, and score)
+- **Provenance summary** — License status, provider, source URL/local path, attribution, and content hash audit
+- **CMS Placement Plan** — Placement strategy, target section, image role, and output path
+- **An Editorial Review Checklist** — Human sign-off steps to verify context, alt text, license, and placement before live publishing

@@ -14,17 +14,24 @@ Pictovap automates the visual workflow through this lifecycle:
 A publisher profile defines site name, CMS type, language, output rules, filename rules, alt text rules, caption rules, and image source adapters. (See [Publisher Profile](publisher-profile.md)).
 
 ### 2. Plan
-Pictovap reads an article and creates a machine-readable visual plan.
+Pictovap reads an article and creates a machine-readable visual plan. The planning process includes:
+- **Deterministic Language Detection**: Pictovap automatically detects the article's primary language (e.g., Turkish or English) based on simple local word-markers. It falls back to the publisher profile language if the text is short or ambiguous. Public-facing documentation, READMEs, and logs remain in English, but generated alt texts and captions match the detected article language.
+- **Section Context Extraction**: Pictovap extracts the first few sentences from each section as context (`section_excerpt`). This context is used to select relevant images, score candidates, and generate non-generic localized alt texts and captions.
+
 You do not need WordPress credentials to run the local demo. You do not need image provider credentials to run the local demo.
 
 To run the local credential-free demo:
 ```bash
-make demo
+pictovap demo
 ```
 
 To plan your own article:
 ```bash
-python -m pictova.demo --article path/to/article.md --output my-plan.json --report my-report.md
+pictovap plan \
+  --article path/to/article.md \
+  --profile examples/profiles/sample-publisher.yaml \
+  --output my-plan.json \
+  --report my-report.md
 ```
 
 ### 3. Review

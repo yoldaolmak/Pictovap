@@ -1,26 +1,30 @@
 {
   "pipeline": "Pictovap Visual Finishing Demo",
   "visual_brief": {
-    "article_title": "The Ultimate 3-Day Tokyo Itinerary",
+    "article_title": "The Ultimate 3-Day Kyoto Itinerary",
     "article_id": "demo-article-001",
     "article_language": "en",
     "topic": "minimalist travel",
     "detected_location": null,
     "sections": [
       {
-        "heading": "Day 1: Exploring Shinjuku and Shibuya",
+        "heading": "Day 1: The Eastern Mountains",
         "level": "h2"
       },
       {
-        "heading": "Where to Eat",
+        "heading": "Kiyomizu-dera",
         "level": "h3"
       },
       {
-        "heading": "Day 2: Culture in Asakusa and Ueno",
+        "heading": "Day 2: Bamboo and Zen",
         "level": "h2"
       },
       {
-        "heading": "Day 3: Modern Marvels in Odaiba",
+        "heading": "The Bamboo Grove",
+        "level": "h3"
+      },
+      {
+        "heading": "Conclusion",
         "level": "h2"
       }
     ],
@@ -28,25 +32,29 @@
       {
         "slot_id": "featured",
         "purpose": "featured_image",
-        "preferred_type": "landscape"
+        "preferred_type": "landscape",
+        "section_excerpt": "The Ultimate 3-Day Kyoto Itinerary"
       },
       {
         "slot_id": "section_0",
-        "purpose": "inline_after_day_1:_exploring_shinjuku_and_shibuya",
+        "purpose": "inline_after_day_1:_the_eastern_mountains",
         "preferred_type": "any",
-        "target_heading": "Day 1: Exploring Shinjuku and Shibuya"
+        "target_heading": "Day 1: The Eastern Mountains",
+        "section_excerpt": "Start your journey in Higashiyama, Kyoto's best-preserved historic district. The wooden machiya houses and narrow lanes leading up to Kiyomizu-dera temple are breathtaking."
       },
       {
         "slot_id": "section_1",
-        "purpose": "inline_after_day_2:_culture_in_asakusa_and_ueno",
+        "purpose": "inline_after_day_2:_bamboo_and_zen",
         "preferred_type": "any",
-        "target_heading": "Day 2: Culture in Asakusa and Ueno"
+        "target_heading": "Day 2: Bamboo and Zen",
+        "section_excerpt": "Head west to Arashiyama. This area is famous for its soaring bamboo groves and tranquil river settings."
       },
       {
         "slot_id": "section_2",
-        "purpose": "inline_after_day_3:_modern_marvels_in_odaiba",
+        "purpose": "inline_after_conclusion",
         "preferred_type": "any",
-        "target_heading": "Day 3: Modern Marvels in Odaiba"
+        "target_heading": "Conclusion",
+        "section_excerpt": "Three days is barely enough to scratch the surface of Kyoto, but by focusing on one region per day, you can experience the magic without feeling rushed."
       }
     ],
     "avoid_list": [],
@@ -60,13 +68,13 @@
         "candidate_id": "img-backpack-01",
         "slot_id": "featured",
         "contextual_relevance": 1.43,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 11.93,
+        "final_score": 10.43,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=1.4, quality=3.0, license=2.0"
       },
@@ -74,13 +82,13 @@
         "candidate_id": "img-forest-02",
         "slot_id": "featured",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 10.5,
+        "final_score": 9.0,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
@@ -88,13 +96,13 @@
         "candidate_id": "img-sunset-05",
         "slot_id": "featured",
         "contextual_relevance": 0.71,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 2.0,
-        "final_score": 10.21,
+        "final_score": 8.71,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=0.7, quality=3.0, license=1.5"
       },
@@ -102,13 +110,13 @@
         "candidate_id": "img-lowres-04",
         "slot_id": "featured",
         "contextual_relevance": 0.71,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 8.71,
+        "final_score": 7.21,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -116,15 +124,15 @@
         "candidate_id": "img-generic-03",
         "slot_id": "featured",
         "contextual_relevance": 0.0,
-        "section_relevance": 1.5,
+        "section_relevance": 0.0,
         "technical_quality": 2.0,
         "duplication_risk": 0.0,
         "source_trust": 1.0,
         "license_confidence": 0.5,
         "cms_suitability": 2.0,
-        "final_score": 7.0,
+        "final_score": 5.5,
         "decision": "needs_review",
-        "human_reason": "Moderate fit (score=7.0), manual review recommended"
+        "human_reason": "Moderate fit (score=5.5), manual review recommended"
       }
     ],
     "section_0": [
@@ -160,13 +168,13 @@
         "candidate_id": "img-sunset-05",
         "slot_id": "section_0",
         "contextual_relevance": 0.71,
-        "section_relevance": 0.0,
+        "section_relevance": 0.11,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.21,
+        "final_score": 8.33,
         "decision": "selected",
         "human_reason": "Strong fit: contextual=0.7, quality=3.0, license=1.5"
       },
@@ -359,9 +367,9 @@
       "article_id": "demo-article-001",
       "slot_id": "featured",
       "placement_target": "featured_image",
-      "generated_alt_text": "A backpack, travel, minimalist scene",
-      "generated_caption": "Visual for: The Ultimate 3-Day Tokyo Itinerary",
-      "timestamp": "2026-07-09T12:27:36.657892",
+      "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
+      "generated_caption": "The Ultimate 3-Day Kyoto Itinerary",
+      "timestamp": "2026-07-09T19:45:56.471942",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -381,10 +389,10 @@
       "content_hash": "0c8d86d771e6d03f",
       "article_id": "demo-article-001",
       "slot_id": "section_0",
-      "placement_target": "inline_after_day_1:_exploring_shinjuku_and_shibuya",
-      "generated_alt_text": "A forest, nature, path scene",
-      "generated_caption": "Visual for: Day 1: Exploring Shinjuku and Shibuya",
-      "timestamp": "2026-07-09T12:27:36.658148",
+      "placement_target": "inline_after_day_1:_the_eastern_mountains",
+      "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
+      "generated_caption": "Day 1: The Eastern Mountains: Start your journey in Higashiyama, Kyoto's best-preserved historic district.",
+      "timestamp": "2026-07-09T19:45:56.472175",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -404,10 +412,10 @@
       "content_hash": "546a0986053c06d2",
       "article_id": "demo-article-001",
       "slot_id": "section_1",
-      "placement_target": "inline_after_day_2:_culture_in_asakusa_and_ueno",
-      "generated_alt_text": "A sunset, mountains, nature scene",
-      "generated_caption": "Visual for: Day 2: Culture in Asakusa and Ueno",
-      "timestamp": "2026-07-09T12:27:36.658160",
+      "placement_target": "inline_after_day_2:_bamboo_and_zen",
+      "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+      "generated_caption": "Day 2: Bamboo and Zen: Head west to Arashiyama.",
+      "timestamp": "2026-07-09T19:45:56.472192",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -426,33 +434,34 @@
         "target_section": "",
         "placement_strategy": "featured",
         "image_role": "featured",
-        "alt_text": "A backpack, travel, minimalist scene",
-        "caption": "Visual for: The Ultimate 3-Day Tokyo Itinerary"
+        "alt_text": "A clean editorial image of travel packing and minimalist gear.",
+        "caption": "The Ultimate 3-Day Kyoto Itinerary"
       },
       {
         "slot_id": "section_0",
         "output_path": "pictovap_forest-path.webp",
-        "target_section": "Day 1: Exploring Shinjuku and Shibuya",
+        "target_section": "Day 1: The Eastern Mountains",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A forest, nature, path scene",
-        "caption": "Visual for: Day 1: Exploring Shinjuku and Shibuya"
+        "alt_text": "A serene nature image showing a forest path surrounded by trees.",
+        "caption": "Day 1: The Eastern Mountains: Start your journey in Higashiyama, Kyoto's best-preserved historic district."
       },
       {
         "slot_id": "section_1",
         "output_path": "pictovap_sunset-mountains.webp",
-        "target_section": "Day 2: Culture in Asakusa and Ueno",
+        "target_section": "Day 2: Bamboo and Zen",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A sunset, mountains, nature scene",
-        "caption": "Visual for: Day 2: Culture in Asakusa and Ueno"
+        "alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+        "caption": "Day 2: Bamboo and Zen: Head west to Arashiyama."
       }
     ]
   },
+  "source_path": "examples/articles/travel-guide.md",
   "profile": {
-    "id": "demo",
-    "brand": "Demo Publisher",
-    "cms_type": "wordpress",
+    "id": "sample-publisher",
+    "brand": "Sample Publisher",
+    "cms_type": "generic",
     "language": "en"
   }
 }
