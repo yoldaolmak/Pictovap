@@ -66,6 +66,7 @@ def test_has_any_vision_source_with_claude_bin():
 def test_has_any_vision_source_false_when_nothing():
     from src.pictova.engine.vision_chain import has_any_vision_source
     with patch.dict("os.environ", {"GEMINI_API_KEY": ""}), \
+         patch("src.pictova.engine.vision_chain.urllib.request.urlopen", side_effect=OSError), \
          patch("src.pictova.engine.vision_chain._codex_check_login", return_value=False), \
          patch("src.pictova.engine.vision_chain._find_bin", return_value=None):
         assert has_any_vision_source() is False

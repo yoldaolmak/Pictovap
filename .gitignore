@@ -23,6 +23,7 @@ node_modules/
 # Editors
 .vscode/
 .idea/
+.DS_Store
 
 # Coverage reports
 .coverage
@@ -45,4 +46,11 @@ dist/
 build/
 *.egg
 *.whl
+
+# Local app data & caches
+*.db
+data/
+.codebase-memory/
+/var/
+/tmp/
 ```

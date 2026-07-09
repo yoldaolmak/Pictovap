@@ -57,11 +57,34 @@ def resolve_icloud_files(files: list[str], warnings: list[str]) -> list[str]:
 
 
 def summarize_post_context(post_context: Dict[str, Any]) -> Dict[str, Any]:
+    if not post_context:
+        return {}
     return {
         "id": post_context.get("id"),
-        "title": post_context.get("title", ""),
-        "slug": post_context.get("slug", ""),
+        "title": post_context.get("title"),
+        "slug": post_context.get("slug"),
+        "excerpt_preview": str(post_context.get("excerpt", ""))[:100] + "...",
+        "headings_count": len(post_context.get("available_headings", [])),
     }
+
+
+def _compute_assigned_headings(processed_images: list[str], request: Dict[str, Any], post_context: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    assigned = {}
+    force_heading = request.get("heading")
+    if force_heading:
+        for img in processed_images:
+            assigned[img] = {"text": force_heading, "level": request.get("heading_level") or 0}
+        return assigned
+
+    available = post_context.get("available_headings") or []
+    if available:
+        n_images = len(processed_images)
+        n_heads = len(available)
+        step = n_heads / (n_images + 1)
+        for slot, img in enumerate(processed_images):
+            idx = min(int(step * (slot + 1)), n_heads - 1)
+            assigned[img] = available[idx]
+    return assigned
 
 
 _SLUG_GENERIC = {
@@ -86,7 +109,15 @@ def derive_location_query(post_context: Dict[str, Any]) -> str:
     if tokens:
         return " ".join(tokens[:2])
     title = str(post_context.get("title") or "").strip()
-    return re.sub(r"\s+", " ", title).strip()
+    title = re.split(r"\s+[—–|]\s+", title, maxsplit=1)[0]
+    title_tokens = []
+    for token in re.findall(r"[a-zA-Z0-9çğıöşüÇĞİÖŞÜ]+", title):
+        normalized = token.lower()
+        if normalized in _SLUG_GENERIC or len(normalized) < 3 or normalized.isdigit():
+            continue
+        if normalized not in title_tokens:
+            title_tokens.append(normalized)
+    return " ".join(title_tokens[:2])
 
 
 def build_failed_attach_result(
@@ -358,12 +389,20 @@ def finalize_publish_assets(
         process_info = dict(processed_details.get(file, {}))
         slug_source_path = str(process_info.get("input") or file)
         slug_candidates = build_publish_slug_candidates(meta, post_context, slug_source_path)
-        candidate_slug = ensure_unique_slug(slug_candidates[0], used_slugs)
+        # En iyi (ilk / konumlu) adayı bul.
+        # Aday zaten kullanılmamışsa direkt al; çakışıyorsa diğer adayları dene;
+        # hepsi çakışıyorsa en iyi adayın suffix'li versiyonunu kullan —
+        # böylece jenerik bir isme düşülmez (ör. 'gumusluk-bodrum-koy-kayalik-detay').
+        best_candidate = slug_candidates[0] if slug_candidates else "seyahat-kare"
+        candidate_slug = None
         for slug in slug_candidates:
             trial = ensure_unique_slug(slug, used_slugs)
             if trial == slug:
                 candidate_slug = trial
                 break
+        if candidate_slug is None:
+            # Tüm adaylar zaten kullanılmış — en iyi adayın suffix'li versiyonunu üret
+            candidate_slug = ensure_unique_slug(best_candidate, used_slugs)
         used_slugs.add(candidate_slug)
 
         final_path = ensure_publish_path(target_dir, candidate_slug)
@@ -413,12 +452,15 @@ def execute_native_attach(
     _resolved_files = resolve_icloud_files(selection.get("files", []), _icloud_warnings)
     processed = process_selected_images(_resolved_files)
     processed_images = processed.get("processed_images", [])
+    assigned_headings = _compute_assigned_headings(processed_images, request, post_context)
+
     metadata_dict, metadata_warnings = build_native_metadata_map(
         processed_images,
-        location_hint=request.get("location_query") or post_context.get("title", ""),
+        assigned_headings=assigned_headings,
         post_context=post_context,
         mode=request.get("metadata_mode", "auto"),
     )
+
     approved_files, approved_metadata, approved_details, blocked = quality_gate_native_batch(
         processed_images=processed_images,
         metadata_dict=metadata_dict,

@@ -20,7 +20,7 @@ from pictova.engine.vision_chain import analyze_image_vision_chain, has_any_visi
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Downloads/YO_OS_VIL/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
 ))
 
 UPDATE_SQL = """
@@ -29,6 +29,7 @@ UPDATE asset_index SET
     scene                = :scene,
     activity             = :activity,
     summary              = :summary,
+    people_json          = :people_json,
     vision_scan_status   = 'done',
     vision_last_scanned_at = :scanned_at,
     vision_last_error    = NULL
@@ -118,9 +119,15 @@ def main():
             continue
 
         keywords = result.get("keywords") or []
+        people = result.get("people") or []
         alt = result.get("alt") or ""
         caption = result.get("caption") or ""
-        scene, activity = _extract_scene_activity(keywords)
+        scene = result.get("scene") or ""
+        activity = result.get("activity") or ""
+        if not scene or not activity:
+            scene_f, activity_f = _extract_scene_activity(keywords)
+            scene = scene or scene_f
+            activity = activity or activity_f
         summary = alt or caption
 
         con.execute(UPDATE_SQL, {
@@ -129,6 +136,7 @@ def main():
             "scene": scene,
             "activity": activity,
             "summary": summary,
+            "people_json": json.dumps(people, ensure_ascii=False),
             "scanned_at": _now(),
         })
         con.commit()

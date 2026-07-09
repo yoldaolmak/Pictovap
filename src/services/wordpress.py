@@ -13,6 +13,13 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import base64
 
+from src.services.post_media_guard import (
+    assess_post_media,
+    load_post_media_manifest,
+    manifest_path as post_media_manifest_path,
+    media_items_from_content,
+    save_post_media_manifest,
+)
 from src.utils.config import env_str, load_project_env
 
 load_project_env()
@@ -186,67 +193,114 @@ class YOWordPressUploader:
             content_raw = _extract_post_field(data.get("content", {}), prefer="raw")
             return {
                 "id": post_id,
+                "status": str(data.get("status", "")).strip(),
+                "modified": str(data.get("modified", "")).strip(),
+                "modified_gmt": str(data.get("modified_gmt", "")).strip(),
                 "title": html.unescape(data.get("title", {}).get("rendered", "")).strip(),
                 "slug": str(data.get("slug", "")).strip(),
                 "excerpt": _strip_html(excerpt_raw),
                 "content": _strip_html(content_raw)[:2500],
                 "content_raw": content_raw,
+                "available_headings": _extract_available_headings(content_raw),
             }
         except requests.exceptions.RequestException:
             return {}
 
-    def append_media_to_post_content(self, post_id: int, media_items: List[Dict]) -> Dict:
+    def append_media_to_post_content(
+        self,
+        post_id: int,
+        media_items: List[Dict],
+        *,
+        allow_manifest_repair: bool = False,
+    ) -> Dict:
         post = self.fetch_post_context(post_id)
         if not post:
             return {"success": False, "error": "Post context could not be loaded"}
 
         current_content = post.get("content_raw", "") or ""
         original_content = current_content
-        current_content, removed_broken = self._remove_broken_local_image_blocks(current_content)
-        current_content = _remove_auto_media_region(current_content)
+        try:
+            manifest = load_post_media_manifest(self.site, post_id)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            return {
+                "success": False,
+                "code": "media_manifest_invalid",
+                "error": str(exc),
+            }
+        if manifest and not allow_manifest_repair:
+            integrity = assess_post_media(manifest, current_content)
+            if integrity["state"] == "drift":
+                return {
+                    "success": False,
+                    "code": "media_manifest_drift",
+                    "error": "Pictova-managed media blocks are missing; run guard --repair before attaching new media",
+                    **integrity,
+                }
 
-        # Auto-assign headings: for items that have no heading set, distribute
-        # evenly across H2/H3 headings in the post that don't already have a nearby image.
-        unheaded = [i for i, it in enumerate(media_items) if not str(it.get("heading", "")).strip()]
-        if unheaded:
-            available = _extract_available_headings(current_content)
-            media_items = list(media_items)
-            n_images = len(unheaded)
-            n_heads = len(available)
-            if n_heads > 0 and n_images > 0:
-                # Eşit aralıklı dağıtım: M heading içinde N resmi eşit böl
-                # step = M / (N+1) → resimler uç noktalara yığılmaz
-                step = n_heads / (n_images + 1)
-                for slot, item_idx in enumerate(unheaded):
-                    idx = min(int(step * (slot + 1)), n_heads - 1)
-                    h = available[idx]
-                    media_items[item_idx] = {**media_items[item_idx], "heading": h["text"], "heading_level": h["level"]}
+        current_content, removed_broken = self._remove_broken_local_image_blocks(current_content)
+        has_unanchored_items = any(not str(item.get("heading", "") or "").strip() for item in media_items)
+        if has_unanchored_items:
+            current_content = _remove_auto_media_region(current_content)
+
+        from collections import defaultdict
+
+        groups = defaultdict(list)
+        for item in media_items:
+            heading_text = str(item.get("heading", "") or "").strip()
+            heading_level = int(item.get("heading_level", 0) or 0)
+            groups[(heading_text, heading_level)].append(item)
 
         auto_blocks: list[str] = []
         inserted = 0
 
-        for item in media_items:
-            media_id = item.get("media_id")
-            url = item.get("url", "")
-            if not media_id or not url:
+        for (heading_text, heading_level), items in groups.items():
+            valid_items = []
+            for item in items:
+                media_id = item.get("media_id")
+                url = item.get("url", "")
+                if not media_id or not url:
+                    continue
+                marker = f"wp-image-{media_id}"
+                if marker in current_content or url in current_content:
+                    continue
+                valid_items.append(item)
+
+            if not valid_items:
                 continue
 
-            marker = f"wp-image-{media_id}"
-            if marker in current_content or url in current_content:
-                continue
-
-            alt_text = _escape_attr(item.get("alt", ""))
-            caption = _escape_html(item.get("caption", ""))
-            block = (
-                f'<!-- wp:image {{"id":{media_id},"sizeSlug":"full","linkDestination":"none"}} -->\n'
-                f'<figure class="wp-block-image size-full"><img src="{url}" alt="{alt_text}" '
-                f'class="wp-image-{media_id}"/>'
-            )
-            if caption:
-                block += f'<figcaption class="wp-element-caption">{caption}</figcaption>'
-            block += "</figure>\n<!-- /wp:image -->"
-            heading_text = str(item.get("heading", "") or "").strip()
-            heading_level = int(item.get("heading_level", 0) or 0)
+            if len(valid_items) == 1:
+                # Tekil wp:image
+                item = valid_items[0]
+                media_id = item.get("media_id")
+                url = item.get("url", "")
+                alt_text = _escape_attr(item.get("alt", ""))
+                caption = _escape_html(item.get("caption", ""))
+                block = (
+                    f'<!-- wp:image {{"id":{media_id},"sizeSlug":"full","linkDestination":"none"}} -->\n'
+                    f'<figure class="wp-block-image size-full"><img src="{url}" alt="{alt_text}" '
+                    f'class="wp-image-{media_id}"/>'
+                )
+                if caption:
+                    block += f'<figcaption class="wp-element-caption">{caption}</figcaption>'
+                block += "</figure>\n<!-- /wp:image -->"
+            else:
+                # Grup wp:gallery
+                block = '<!-- wp:gallery {"linkTo":"none"} -->\n'
+                block += '<figure class="wp-block-gallery has-nested-images columns-default is-cropped">\n'
+                for item in valid_items:
+                    media_id = item.get("media_id")
+                    url = item.get("url", "")
+                    alt_text = _escape_attr(item.get("alt", ""))
+                    caption = _escape_html(item.get("caption", ""))
+                    block += (
+                        f'<!-- wp:image {{"id":{media_id},"sizeSlug":"large","linkDestination":"none"}} -->\n'
+                        f'<figure class="wp-block-image size-large"><img src="{url}" alt="{alt_text}" '
+                        f'class="wp-image-{media_id}"/>'
+                    )
+                    if caption:
+                        block += f'<figcaption class="wp-element-caption">{caption}</figcaption>'
+                    block += "</figure>\n<!-- /wp:image -->\n"
+                block += '</figure>\n<!-- /wp:gallery -->'
 
             if heading_text:
                 updated_content = _insert_block_after_heading(
@@ -257,31 +311,69 @@ class YOWordPressUploader:
                 )
                 if updated_content != current_content:
                     current_content = updated_content
-                    inserted += 1
+                    inserted += len(valid_items)
                     continue
 
             auto_blocks.append(block)
-            inserted += 1
+            inserted += len(valid_items)
 
         if not auto_blocks:
             if current_content != original_content or removed_broken:
-                endpoint = f"{self.base_url}/wp-json/wp/v2/posts/{post_id}"
-                try:
-                    resp = self.session.post(
-                        endpoint,
-                        json={"content": current_content},
-                        timeout=30,
-                    )
-                    resp.raise_for_status()
-                    return {"success": True, "updated": True, "inserted": inserted, "removed_broken": removed_broken}
-                except requests.exceptions.RequestException as e:
-                    return {"success": False, "error": str(e)}
-            return {"success": True, "updated": False, "inserted": 0}
+                return self._commit_post_content(
+                    post_id=post_id,
+                    original_content=original_content,
+                    original_modified=post.get("modified", ""),
+                    new_content=current_content,
+                    media_items=media_items,
+                    inserted=inserted,
+                    removed_broken=removed_broken,
+                )
+            return self._record_verified_media(
+                post_id=post_id,
+                post=post,
+                media_items=media_items,
+                updated=False,
+                inserted=0,
+                removed_broken=removed_broken,
+            )
 
         combined_blocks = AUTO_MEDIA_START + "\n" + "\n\n".join(auto_blocks) + "\n" + AUTO_MEDIA_END
         new_content = _insert_before_first_h2(current_content, combined_blocks)
-        endpoint = f"{self.base_url}/wp-json/wp/v2/posts/{post_id}"
+        return self._commit_post_content(
+            post_id=post_id,
+            original_content=original_content,
+            original_modified=post.get("modified", ""),
+            new_content=new_content,
+            media_items=media_items,
+            inserted=inserted,
+            removed_broken=removed_broken,
+        )
 
+    def _commit_post_content(
+        self,
+        *,
+        post_id: int,
+        original_content: str,
+        original_modified: str,
+        new_content: str,
+        media_items: List[Dict],
+        inserted: int,
+        removed_broken: int,
+    ) -> Dict:
+        """Optimistic write followed by a read-after-write integrity check."""
+        latest = self.fetch_post_context(post_id)
+        if not latest:
+            return {"success": False, "error": "Post could not be reloaded before update"}
+        if (latest.get("content_raw", "") or "") != original_content:
+            return {
+                "success": False,
+                "code": "post_content_conflict",
+                "error": "Post changed while Pictova was preparing media blocks; no content was overwritten",
+                "expected_modified": original_modified,
+                "current_modified": latest.get("modified", ""),
+            }
+
+        endpoint = f"{self.base_url}/wp-json/wp/v2/posts/{post_id}"
         try:
             resp = self.session.post(
                 endpoint,
@@ -289,9 +381,161 @@ class YOWordPressUploader:
                 timeout=30,
             )
             resp.raise_for_status()
-            return {"success": True, "updated": True, "inserted": inserted, "removed_broken": removed_broken}
-        except requests.exceptions.RequestException as e:
-            return {"success": False, "error": str(e)}
+        except requests.exceptions.RequestException as exc:
+            return {"success": False, "error": str(exc)}
+
+        verified = self.fetch_post_context(post_id)
+        if not verified:
+            return {"success": False, "error": "Post update could not be verified"}
+        return self._record_verified_media(
+            post_id=post_id,
+            post=verified,
+            media_items=media_items,
+            updated=True,
+            inserted=inserted,
+            removed_broken=removed_broken,
+        )
+
+    def _record_verified_media(
+        self,
+        *,
+        post_id: int,
+        post: Dict,
+        media_items: List[Dict],
+        updated: bool,
+        inserted: int,
+        removed_broken: int,
+    ) -> Dict:
+        expected_ids = [int(item.get("media_id") or 0) for item in media_items if item.get("media_id")]
+        if not expected_ids:
+            return {
+                "success": True,
+                "updated": updated,
+                "inserted": inserted,
+                "removed_broken": removed_broken,
+            }
+
+        content_raw = post.get("content_raw", "") or ""
+        present_ids = {int(value) for value in re.findall(r"wp-image-(\d+)", content_raw)}
+        missing_ids = [media_id for media_id in expected_ids if media_id not in present_ids]
+        if missing_ids:
+            return {
+                "success": False,
+                "code": "post_update_verification_failed",
+                "error": "WordPress accepted the update but expected media blocks are missing",
+                "missing_media_ids": missing_ids,
+            }
+
+        try:
+            manifest = save_post_media_manifest(
+                site=self.site,
+                post_id=post_id,
+                media_items=media_items,
+                content_raw=content_raw,
+                post_modified=post.get("modified", ""),
+            )
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            return {
+                "success": False,
+                "code": "media_manifest_write_failed",
+                "error": str(exc),
+            }
+        return {
+            "success": True,
+            "updated": updated,
+            "inserted": inserted,
+            "removed_broken": removed_broken,
+            "manifest_path": manifest["manifest_path"],
+            "expected_media_ids": manifest["expected_media_ids"],
+        }
+
+    def guard_post_media(
+        self,
+        post_id: int,
+        *,
+        repair: bool = False,
+        adopt: bool = False,
+        media_ids: Optional[List[int]] = None,
+    ) -> Dict:
+        """Check, adopt, or safely reconstruct Pictova-managed media blocks."""
+        post = self.fetch_post_context(post_id)
+        if not post:
+            return {"command": "guard", "status": "failed", "error": "Post context could not be loaded"}
+
+        try:
+            manifest = load_post_media_manifest(self.site, post_id)
+            if adopt:
+                items = media_items_from_content(
+                    post.get("content_raw", "") or "",
+                    allowed_media_ids=media_ids,
+                )
+                if not items:
+                    return {
+                        "command": "guard",
+                        "status": "untracked",
+                        "state": "untracked",
+                        "post_id": post_id,
+                        "error": "No media blocks were available to adopt",
+                    }
+                manifest = save_post_media_manifest(
+                    site=self.site,
+                    post_id=post_id,
+                    media_items=items,
+                    content_raw=post.get("content_raw", "") or "",
+                    post_modified=post.get("modified", ""),
+                )
+            if manifest is None:
+                return {
+                    "command": "guard",
+                    "status": "untracked",
+                    "state": "untracked",
+                    "site": self.site,
+                    "post_id": post_id,
+                }
+
+            integrity = assess_post_media(manifest, post.get("content_raw", "") or "")
+            repaired = False
+            if integrity["state"] == "drift" and repair:
+                result = self.append_media_to_post_content(
+                    post_id,
+                    manifest.get("media_items", []),
+                    allow_manifest_repair=True,
+                )
+                if not result.get("success"):
+                    return {
+                        "command": "guard",
+                        "status": "failed",
+                        "state": "drift",
+                        "site": self.site,
+                        "post_id": post_id,
+                        "repair": result,
+                        **integrity,
+                    }
+                post = self.fetch_post_context(post_id)
+                manifest = load_post_media_manifest(self.site, post_id) or manifest
+                integrity = assess_post_media(manifest, post.get("content_raw", "") or "")
+                repaired = integrity["state"] == "healthy"
+
+            status = "success" if integrity["state"] in {"healthy", "empty"} else "drift"
+            return {
+                "command": "guard",
+                "status": status,
+                "state": integrity["state"],
+                "site": self.site,
+                "post_id": post_id,
+                "repaired": repaired,
+                "manifest_path": str(post_media_manifest_path(self.site, post_id)),
+                **integrity,
+            }
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            return {
+                "command": "guard",
+                "status": "failed",
+                "state": "invalid",
+                "site": self.site,
+                "post_id": post_id,
+                "error": str(exc),
+            }
 
     def cleanup_broken_media_from_post(self, post_id: int) -> Dict:
         post = self.fetch_post_context(post_id)
@@ -524,6 +768,15 @@ def upload_images_batch(
         "uploaded": [],
         "failed": [],
     }
+
+    guard = uploader.guard_post_media(post_id)
+    results["media_guard"] = guard
+    if guard.get("status") in {"drift", "failed"}:
+        results["failed"].append({
+            "error": "Post media integrity check failed before upload",
+            "guard": guard,
+        })
+        return results
 
     for i, file_path in enumerate(image_files, 1):
         print(f"\n[{i}/{len(image_files)}] Uploading: {Path(file_path).name}")

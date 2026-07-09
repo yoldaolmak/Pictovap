@@ -314,19 +314,6 @@ SCENE_REMAP = {
     "rice-field": "pirinc-tarlasi",
 }
 
-DESTINATION_PHRASES = {
-    "hanoi-old-quarter": "hanoi-old-quarter",
-    "halong-bay": "halong-bay",
-    "ha-long-bay": "halong-bay",
-    "trang-an": "trang-an",
-    "hoa-lu": "hoa-lu",
-    "ho-chi-minh-city": "saygon",
-    "ho-chi-minh": "saygon",
-    "saigon": "saygon",
-    "hanoi": "hanoi",
-    "vietnam": "vietnam",
-}
-
 # Bilinen destinasyonlar için sabit koordinatlar.
 # Kural:
 # - Spesifik destinasyon adı tespit edilirse (örn. Batum Botanik Bahçesi) onun koordinatı yazılır.
@@ -451,14 +438,6 @@ def _clean_tokens(value: str) -> list[str]:
     return [token for token in slug.split("-") if token]
 
 
-def _extract_compound_locations(text: str) -> list[str]:
-    slug = slugify(text)
-    compounds: list[str] = []
-    for needle, replacement in DESTINATION_PHRASES.items():
-        if needle in slug and replacement not in compounds:
-            compounds.append(replacement)
-    return compounds
-
 
 def _extract_scene_phrases(text: str) -> list[str]:
     slug = slugify(text)
@@ -569,15 +548,6 @@ def _extract_source_destination_tokens(source_metadata: Dict) -> list[str]:
     tokens: list[str] = []
     seen: set[str] = set()
     description_text = str(source_metadata.get("description", ""))
-    joined_text = description_text
-    for token in _extract_compound_locations(joined_text):
-        if any(token in existing or existing in token for existing in seen):
-            continue
-        if token not in seen:
-            seen.add(token)
-            tokens.append(token)
-        if len(tokens) >= 2:
-            return tokens
     for source in (description_text,):
         for token in _clean_tokens(source):
             if token in BAD_SLUG_TOKENS or token in GENERIC_POST_TOKENS or token in GENERIC_SCENE_TOKENS or token in GENERIC_SOURCE_TOKENS:
@@ -599,11 +569,6 @@ def _extract_source_destination_variants(source_metadata: Dict) -> list[str]:
     description_text = str(source_metadata.get("description", ""))
     variants: list[str] = []
     seen: set[str] = set()
-
-    for token in _extract_compound_locations(description_text):
-        if token not in seen:
-            seen.add(token)
-            variants.append(token)
 
     for token in _extract_source_destination_tokens(source_metadata):
         if token not in seen:
@@ -755,14 +720,52 @@ def build_publish_slug(metadata: Dict, post_context: Dict | None, original_path:
         source_metadata = read_embedded_source_metadata(original_path)
         if source_metadata:
             metadata["_source_embedded"] = source_metadata
-    if is_good_slug(original_stem):
-        return slugify(original_stem)
 
-    destination_tokens = _cleanup_destination_tokens(
-        _extract_source_destination_tokens(source_metadata or {})
-        or _extract_destination_tokens(post_context)
-        or _extract_path_destination_tokens(original_path)
-    )
+    # 1. Ana lokasyon (post slug) ve Heading bilgisi
+    post_slug_tokens = _extract_destination_tokens(post_context)
+    ana_lokasyon = post_slug_tokens[0] if post_slug_tokens else ""
+    
+    heading = str(metadata.get("heading") or "").strip()
+    heading_tokens = []
+    if heading:
+        # Başlıktaki numara prefixlerini temizle (örn. "10. Turgutreis" -> "Turgutreis")
+        clean_heading = re.sub(r'^\d+[\.\)]\s*', '', heading)
+        heading_slug = slugify(clean_heading)
+        heading_tokens = [t for t in heading_slug.split("-") if t and t not in BAD_SLUG_TOKENS and t not in GENERIC_POST_TOKENS]
+
+    # Ana lokasyon ve heading birleştir
+    destination_tokens = []
+    if ana_lokasyon:
+        destination_tokens.append(ana_lokasyon)
+    for token in heading_tokens:
+        if token not in destination_tokens:
+            destination_tokens.append(token)
+
+    # 2. is_good_slug bypass'ı (Eğer orijinal isim çok iyi bir SEO ismiyse, sadece destinasyon ekleyip kullan)
+    if is_good_slug(original_stem):
+        stem_slug = slugify(original_stem)
+        stem_tokens = stem_slug.split("-")
+        
+        # Eğer destination_tokens içindeki kelimeler orijinal slug'da yoksa başa ekle
+        missing_dest = [t for t in destination_tokens if t not in stem_tokens]
+        if missing_dest:
+            combined = missing_dest + stem_tokens
+            deduped: list[str] = []
+            for t in combined:
+                if t and t not in deduped:
+                    deduped.append(t)
+            return "-".join(deduped[:5]) or stem_slug
+        return stem_slug
+
+    # 3. Eğer is_good_slug değilse (örn. UUID veya IMG_1234), dinamik isimlendir
+    # Destination token'ları tamamla (heading yoksa normal lokasyonları al)
+    if not destination_tokens:
+        destination_tokens = _cleanup_destination_tokens(
+            _extract_source_destination_tokens(source_metadata or {})
+            or _extract_path_destination_tokens(original_path)
+        )
+
+    # Scene (sahne) token'larını çıkar
     scene_tokens = _cleanup_scene_tokens(_extract_scene_tokens(metadata, destination_tokens))
     if not scene_tokens:
         scene_tokens = _cleanup_scene_tokens(_extract_vision_scene_tokens(metadata, destination_tokens))
@@ -789,6 +792,7 @@ def build_publish_slug(metadata: Dict, post_context: Dict | None, original_path:
         if variants:
             return variants[0]
         return "-".join((destination_tokens + ["sahne"])[:4])
+        
     raw = "-".join((destination_tokens + scene_tokens)[:5])
     deduped: list[str] = []
     for token in raw.split("-"):

@@ -7,7 +7,7 @@ from typing import Any, Dict
 from src.pictova.app.health import run_health_check
 from src.pictova.app.jobs import run_attach_job
 from src.pictova.engine.attach import build_attach_plan, build_process_result, prepare_attach_request
-from src.pictova.providers.wordpress import fetch_post_context
+from src.pictova.providers.wordpress import fetch_post_context, guard_post_media
 
 
 def gallery_query(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -75,6 +75,19 @@ def review_post(payload: Dict[str, Any]) -> Dict[str, Any]:
             "post_context": {},
             "warnings": [str(exc)],
         }
+
+
+def guard_post(payload: Dict[str, Any]) -> Dict[str, Any]:
+    post_id = payload.get("post_id")
+    if not post_id:
+        return {"command": "guard", "status": "failed", "warning": "post_id gerekli"}
+    return guard_post_media(
+        int(post_id),
+        site=payload.get("site", "yoldaolmak"),
+        repair=bool(payload.get("repair", False)),
+        adopt=bool(payload.get("adopt", False)),
+        media_ids=payload.get("media_ids"),
+    )
 
 
 def stats_summary() -> Dict[str, Any]:

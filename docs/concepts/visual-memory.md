@@ -30,7 +30,7 @@ Mac Photos stores originals with UUID-based paths that change across devices and
 
 Visual Memory operates across two runtimes:
 
-**Index Runtime** (separate, in `/Users/yoldaolmak/Downloads/YO_OS_VIL`):
+**Index Runtime** (separate, in `/Users/yoldaolmak/Projects/Pictova`):
 - Scans Photos originals
 - Applies quality gate
 - Reads Apple Photos `.sqlite` for ML metadata
@@ -46,7 +46,7 @@ This separation keeps the indexer and the selection engine independently deploya
 ## Indexing
 
 ```bash
-cd /path/to/YO_OS_VIL
+cd /Users/yoldaolmak/Projects/Pictova
 ./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 0
 ./.venv/bin/python extract_apple_photos_ml.py
 ```

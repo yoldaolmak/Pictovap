@@ -76,7 +76,7 @@ curl -s http://127.0.0.1:8040/jobs
 Run after importing new photos:
 
 ```bash
-cd /path/to/YO_OS_VIL
+cd /Users/yoldaolmak/Projects/Pictova
 ./.venv/bin/python index_memory_daily.py --mode photos --daily-limit 100
 ./.venv/bin/python extract_apple_photos_ml.py
 ```
@@ -100,3 +100,10 @@ See [Indexing](indexing.md) for full details.
 - Quality gate is blocking — images are blurry or wrong aspect ratio
 - Try `--source unsplash` for a different pool of candidates
 - Lower `MIN_QUALITY_SCORE` in the site profile temporarily
+
+## Financial Controls & Limits
+
+**CRITICAL RULE: PERMANENT BAN ON PAID GEMINI API USAGE.**
+- We absolutely do not use the paid Gemini API.
+- The primary (first) Gemini API key must only be run up to exactly 90% of the free budget (1,350 requests per day out of the 1,500 free limit).
+- `fast_scan.py` is hardcoded to halt execution if the daily scanned items exceed 1,350 to prevent accidental billing.

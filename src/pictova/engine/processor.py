@@ -13,6 +13,8 @@ def process_selected_images(
     *,
     work_dir: str | None = None,
     auto_saturation: bool = True,
+    webp_mode: str = "lossy",
+    preserve_exif: bool = False,
 ) -> Dict[str, Any]:
     processor = YOImageProcessor(work_dir=Path(work_dir) if work_dir else None)
     processed_images: List[str] = []
@@ -26,6 +28,8 @@ def process_selected_images(
                 input_path=src_file,
                 output_path=str(dest_file),
                 auto_saturation=auto_saturation,
+                webp_mode=webp_mode,
+                preserve_exif=preserve_exif,
             )
         except PermissionError as exc:
             import sys

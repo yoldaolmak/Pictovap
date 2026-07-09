@@ -12,7 +12,7 @@ from pathlib import Path
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Downloads/YO_OS_VIL/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
 ))
 
 
@@ -24,7 +24,7 @@ def _build_doc(row: sqlite3.Row) -> str:
         if v:
             parts.append(str(v))
 
-    for json_col in ("ai_keywords_json", "metadata_keywords_json"):
+    for json_col in ("ai_keywords_json", "metadata_keywords_json", "apple_labels_json"):
         raw = row[json_col]
         if raw:
             try:
@@ -54,7 +54,7 @@ def main():
     rows = con.execute("""
         SELECT source_id, city, state_province, sub_admin_area, country, location,
                scene, activity, summary, title, description,
-               ai_keywords_json, metadata_keywords_json
+               ai_keywords_json, metadata_keywords_json, apple_labels_json
         FROM asset_index
     """).fetchall()
 

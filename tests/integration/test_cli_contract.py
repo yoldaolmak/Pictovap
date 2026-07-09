@@ -108,6 +108,28 @@ def test_run_attach_job_fails_when_semantic_query_cannot_be_derived(monkeypatch)
     assert "location_query could not be derived" in result["warnings"][0]
 
 
+def test_derive_location_query_uses_destination_from_branded_title():
+    from src.pictova.engine.attach import derive_location_query
+
+    assert derive_location_query({"slug": "", "title": "Karaburun Gezi Rehberi — Penovate"}) == "karaburun"
+    assert derive_location_query({"slug": "", "title": "Karaburun Gezi Rehberi: Karaburun Gezilecek Yerler"}) == "karaburun"
+
+
+def test_cli_parser_exposes_native_local_and_auto_sources():
+    from src.pictova.app.cli import build_parser
+
+    parser = build_parser()
+    local_args = parser.parse_args([
+        "attach", "--post", "267970", "--source", "local", "--query", "/tmp/a.jpg",
+    ])
+    auto_args = parser.parse_args(["plan", "--post", "267970", "--source", "auto"])
+    guard_args = parser.parse_args(["guard", "--post", "267970", "--repair"])
+
+    assert local_args.source == "local"
+    assert auto_args.source == "auto"
+    assert guard_args.repair is True
+
+
 def test_api_attach_images_reuses_job_contract(monkeypatch):
     from src.pictova.app import api
 
@@ -387,7 +409,6 @@ def test_build_native_metadata_map_raises_without_any_vision_source(monkeypatch)
     with pytest.raises(RuntimeError, match="Hiç vision kaynağı bulunamadı"):
         metadata_engine.build_native_metadata_map(
             ["roma-1_yo.webp"],
-            location_hint="Roma",
             post_context={"title": "Roma Rehberi", "slug": "roma-rehberi"},
         )
 
@@ -434,6 +455,42 @@ def test_http_server_attach_route_uses_api_contract(monkeypatch):
             payload = json.loads(response.read().decode("utf-8"))
         assert payload["status"] == "success"
         assert payload["request"]["post_id"] == 264459
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_http_server_guard_route_uses_api_contract(monkeypatch):
+    from src.pictova.app import server as server_module
+
+    monkeypatch.setattr(
+        server_module,
+        "guard_post",
+        lambda payload: {
+            "command": "guard",
+            "status": "success",
+            "state": "healthy",
+            "request": payload,
+        },
+    )
+
+    server = server_module.serve(host="127.0.0.1", port=0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        host, port = server.server_address
+        request = Request(
+            f"http://{host}:{port}/guard",
+            data=json.dumps({"site": "yoldaolmak", "post_id": 267970}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urlopen(request) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        assert payload["status"] == "success"
+        assert payload["state"] == "healthy"
+        assert payload["request"]["post_id"] == 267970
     finally:
         server.shutdown()
         server.server_close()

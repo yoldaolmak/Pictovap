@@ -15,13 +15,13 @@ import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
+from src.pictova.engine.vision_chain import analyze_image_vision_chain, has_any_vision_source
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Downloads/YO_OS_VIL/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
 ))
 
 _lock = threading.Lock()
@@ -36,6 +36,14 @@ def _now() -> str:
 
 def _update_done(con_path: str, source_id: str, result: dict) -> None:
     kws = result.get("keywords") or []
+    people = result.get("people") or []
+    scene = result.get("scene", "")
+    activity = result.get("activity", "")
+    if not scene or not activity:
+        from src.pictova.engine.vision_chain import _extract_scene_activity  # type: ignore
+        _s, _a = _extract_scene_activity(kws) if kws else ("", "")
+        scene = scene or _s
+        activity = activity or _a
     con = sqlite3.connect(con_path)
     con.execute("""
         UPDATE asset_index SET
@@ -43,15 +51,19 @@ def _update_done(con_path: str, source_id: str, result: dict) -> None:
             scene = ?,
             activity = ?,
             summary = ?,
+            people_json = ?,
+            story_score = ?,
             vision_scan_status = 'done',
             vision_last_scanned_at = ?,
             vision_last_error = NULL
         WHERE source_id = ?
     """, [
         json.dumps(kws, ensure_ascii=False),
-        result.get("scene", ""),
-        result.get("activity", ""),
+        scene,
+        activity,
         result.get("alt") or result.get("caption") or "",
+        json.dumps(people, ensure_ascii=False),
+        float(result.get("story_score", 0.0)),
         _now(),
         source_id,
     ])
@@ -84,7 +96,19 @@ def _worker(rows: list, db_str: str, idx: int) -> None:
                 _errors += 1
                 print(f"  ✗ [{idx}] {Path(src).name}: dosya yok")
             continue
-        post_ctx = {"title": city, "slug": city.lower().replace(" ", "-")}
+        
+        apple_labels = []
+        if len(row) > 5 and row[5]:
+            try:
+                apple_labels = json.loads(row[5])
+            except Exception:
+                pass
+        
+        post_ctx = {
+            "title": city,
+            "slug": city.lower().replace(" ", "-"),
+            "apple_labels": apple_labels
+        }
         try:
             result = analyze_image_vision_chain(src, location_hint=city, post_context=post_ctx)
             _update_done(db_str, uid, result)
@@ -111,8 +135,21 @@ def main():
         sys.exit(1)
 
     con = sqlite3.connect(str(DB_PATH))
+    
+    # KESİN VE NET BÜTÇE KONTROLÜ: 9 adet tamamen ücretsiz anahtar * 1490 işlem = 13.410 fotoğraf limiti
+    daily_count = con.execute("""
+        SELECT count(*) FROM asset_index 
+        WHERE vision_scan_status = 'done' 
+          AND date(vision_last_scanned_at) = date('now')
+    """).fetchone()[0]
+    
+    if daily_count >= 13410:
+        print(f"🛑 GÜNLÜK LİMİT AŞILDI: Bugün ücretsiz kotanın sınırı ({daily_count}/13410) dolduruldu. Kredi kartı olan anahtar havuzdan çıkarıldı ve tarama durduruldu.", file=sys.stderr)
+        con.close()
+        sys.exit(0)
+
     q = """
-        SELECT source_id, source_path, city, state_province, country
+        SELECT source_id, source_path, city, state_province, country, apple_labels_json
         FROM asset_index
         WHERE vision_scan_status = 'pending'
           AND source_path != '' AND source_path IS NOT NULL

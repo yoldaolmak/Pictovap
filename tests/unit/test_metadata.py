@@ -91,7 +91,6 @@ def test_build_native_metadata_map_uses_cache(tmp_path):
          patch("src.pictova.engine.metadata.analyze_image_vision_chain") as mock_chain:
         meta, warnings = build_native_metadata_map(
             [str(fake_img)],
-            location_hint="Sinop",
             post_context={"title": "Sinop Gezisi"},
         )
 
@@ -110,7 +109,14 @@ def test_build_native_metadata_map_falls_back_to_vision(tmp_path):
 
     from src.pictova.engine.metadata import build_native_metadata_map
 
-    mock_result = {"alt": "a" * 20, "title": "T" * 10, "caption": "C" * 15, "description": "D" * 25, "keywords": ["k"]}
+    mock_result = {
+        "alt": "a" * 20,
+        "title": "T" * 10,
+        "caption": "Karaburun'da bu görselde akşam ışığı kıyıya vuruyor.",
+        "description": "D" * 25,
+        "keywords": ["kıyı"],
+        "scene": "coast",
+    }
     with patch("src.pictova.config.get_visual_memory_db_path", return_value=Path(db)), \
          patch("src.pictova.engine.metadata.has_any_vision_source", return_value=True), \
          patch("src.pictova.engine.metadata.analyze_image_vision_chain", return_value=dict(mock_result)) as mock_chain:
@@ -120,3 +126,6 @@ def test_build_native_metadata_map_falls_back_to_vision(tmp_path):
         )
 
     mock_chain.assert_called_once()
+    caption = meta[str(fake_img)]["caption"].lower()
+    assert "görselde" not in caption
+    assert caption == "karaburun'da akşam ışığı kıyıya vuruyor."

@@ -26,7 +26,7 @@ EXCLUDE_ALBUMS = {
 
 DB_PATH = Path(os.environ.get(
     "YO_VISUAL_MEMORY_DB",
-    "/Users/yoldaolmak/Downloads/YO_OS_VIL/data/visual_memory.db",
+    "/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db",
 ))
 
 UPSERT_SQL = """
@@ -40,7 +40,7 @@ INSERT INTO asset_index (
     summary, scene, location, activity,
     objects_json, ai_keywords_json, places_json, people_json, story_tags_json,
     capture_context, exif_metadata_json, raw_metadata_json,
-    state_province, sub_admin_area
+    state_province, sub_admin_area, apple_labels_json
 ) VALUES (
     :source_id, 'mac_photos', :source_path, :folder_path, :filename, :file_extension,
     '', :width, :height, :created_at, :camera_make, :camera_model,
@@ -51,7 +51,7 @@ INSERT INTO asset_index (
     '', '', :location, '',
     '[]', '[]', '[]', '[]', '[]',
     '', '{}', '{}',
-    :state_province, :sub_admin
+    :state_province, :sub_admin, :apple_labels_json
 )
 ON CONFLICT(source_id) DO UPDATE SET
     source_path = excluded.source_path,
@@ -63,7 +63,8 @@ ON CONFLICT(source_id) DO UPDATE SET
     width = excluded.width,
     height = excluded.height,
     state_province = excluded.state_province,
-    sub_admin_area = excluded.sub_admin_area;
+    sub_admin_area = excluded.sub_admin_area,
+    apple_labels_json = excluded.apple_labels_json;
 """
 
 
@@ -168,6 +169,7 @@ def main():
             "location": location_str,
             "state_province": state_province,
             "sub_admin": sub_admin,
+            "apple_labels_json": json.dumps(getattr(photo, "labels", None) or [], ensure_ascii=False),
         }
         try:
             con.execute(UPSERT_SQL, row)

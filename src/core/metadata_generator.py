@@ -177,19 +177,20 @@ class YOMetadataGenerator:
         seq = f"{image_index + 1}/{total_images}" if (image_index is not None and total_images) else "?"
         vision_text = format_vision_hints(vision_hints)
 
-        return f"""WordPress medya metadata üret. Sadece JSON döndür.
+        return f"""WordPress görsel metadatalarını seyahat blogu bağlamında üret. Sadece JSON döndür.
 
 Bağlam: title={article_title or "?"} | slug={article_slug or "?"} | focus={focus_terms or "?"} | hint={location_hint or "?"} | dosya={Path(image_path).name} | sıra={seq}
 {f"Excerpt: {article_excerpt}" if article_excerpt else ""}
 {vision_text}
 
 Kurallar:
-- Türkçe yaz. Gördüğünü yaz, uydurma. Lokasyon adını ancak kuvvetli kanıtla ekle.
-- alt: Türkçe, ekran okuyucu için sade tanım, "Fotoğraf:" ile başlama, max 125 char.
-- title: Türkçe, SEO dostu, lokasyon + sahne, max 60 char.
-- caption: Türkçe, Kemal Kaya üslubu — BBC Travel tonu. Kısa cümle, gözlem odaklı, "Bu fotoğrafta" / "Görselde" gibi AI kalıpları YASAK. Sanki sahneyi hatırlıyorsun gibi yaz.
-- description: Türkçe, lokasyon bağlamı + sahne detayı, SEO uyumlu, max 300 char.
-alt≤125 | title≤60 | caption≤180 | description≤300 | keywords 3-6 | evidence 1-4 | confidence 0-1
+- alt: Ekran okuyucu ve erişilebilirlik için sade görsel tanımı (maks 125 kr).
+- title: Arama motoru için lokasyon ve konuyu içeren SEO başlığı (maks 60 kr, örn: 'Gümüşlük Bodrum Dalgalı Deniz').
+- caption: İnsan okuyucu için fotoğrafa anlam, bağlam ve seyahat ruhu katan doğal, gerçekçi alt yazı (maks 180 kr, örn: 'Gümüşlük kıyılarında akşamüstü rüzgarıyla dalgalanan Ege suları.').
+- description: Görsel detaylarını lokasyon bağlamıyla birleştiren zengin açıklama (maks 300 kr).
+- keywords: 3-6 adet anahtar kelime.
+- evidence: Lokasyon kanıtı (1-4 adet).
+- confidence: Lokasyon eminlik skoru (0.0 - 1.0).
 
 {{"alt":"...","title":"...","caption":"...","description":"...","keywords":["k1"],"evidence":["kanıt"],"location_tokens":[],"scene_tokens":["sahne"],"confidence":0.8,"warnings":[]}}"""
 

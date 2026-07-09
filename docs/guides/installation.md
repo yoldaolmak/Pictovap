@@ -78,7 +78,7 @@ See [Mac Photos Setup](mac-photos-setup.md) for the full guide.
 Once indexed, add to `.env`:
 
 ```bash
-YO_VISUAL_MEMORY_DB=/path/to/YO_OS_VIL/data/visual_memory.db
+YO_VISUAL_MEMORY_DB=/Users/yoldaolmak/Projects/Pictova/data/visual_memory.db
 ```
 
 ## Optional: HTTP Service

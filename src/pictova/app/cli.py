@@ -10,7 +10,7 @@ from src.pictova.app.health import run_health_check
 from src.pictova.app.jobs import run_attach_job
 from src.pictova.app.api import plan_attach, process_attach
 from src.pictova.app.server import serve
-from src.pictova.providers.wordpress import fetch_post_context
+from src.pictova.providers.wordpress import fetch_post_context, guard_post_media
 
 
 def _print_json(payload: Dict[str, Any]) -> None:
@@ -26,7 +26,11 @@ def build_parser() -> argparse.ArgumentParser:
     attach.add_argument("--post", type=int, required=True)
     attach.add_argument("--count", type=int, default=4)
     attach.add_argument("--name")
-    attach.add_argument("--source", default="semantic", choices=["semantic", "vil", "unsplash"])
+    attach.add_argument(
+        "--source",
+        default="semantic",
+        choices=["semantic", "auto", "vil", "local", "unsplash", "deposit"],
+    )
     attach.add_argument("--query")
     attach.add_argument("--location-query")
     attach.add_argument("--content-filter")
@@ -40,29 +44,49 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--site", default="yoldaolmak")
     review.add_argument("--post", type=int, required=True)
 
+    guard = sub.add_parser("guard")
+    guard.add_argument("--site", default="yoldaolmak")
+    guard.add_argument("--post", type=int, required=True)
+    guard_mode = guard.add_mutually_exclusive_group()
+    guard_mode.add_argument("--repair", action="store_true")
+    guard_mode.add_argument("--adopt", action="store_true")
+    guard.add_argument("--media-id", dest="media_ids", action="append", type=int)
+
     plan = sub.add_parser("plan")
     plan.add_argument("--site", default="yoldaolmak")
     plan.add_argument("--post", type=int, required=True)
     plan.add_argument("--count", type=int, default=4)
     plan.add_argument("--name")
-    plan.add_argument("--source", default="semantic", choices=["semantic", "vil", "unsplash"])
+    plan.add_argument(
+        "--source",
+        default="semantic",
+        choices=["semantic", "auto", "vil", "local", "unsplash", "deposit"],
+    )
     plan.add_argument("--query")
     plan.add_argument("--location-query")
     plan.add_argument("--content-filter")
     plan.add_argument("--lang", default="tr")
     plan.add_argument("--people-first", action="store_true")
+    plan.add_argument("--heading", help="Force all images after this heading text")
+    plan.add_argument("--heading-level", type=int, default=0, help="Heading level (2 or 3)")
 
     process = sub.add_parser("process")
     process.add_argument("--site", default="yoldaolmak")
     process.add_argument("--post", type=int, required=True)
     process.add_argument("--count", type=int, default=4)
     process.add_argument("--name")
-    process.add_argument("--source", default="semantic", choices=["semantic", "vil", "unsplash"])
+    process.add_argument(
+        "--source",
+        default="semantic",
+        choices=["semantic", "auto", "vil", "local", "unsplash", "deposit"],
+    )
     process.add_argument("--query")
     process.add_argument("--location-query")
     process.add_argument("--content-filter")
     process.add_argument("--lang", default="tr")
     process.add_argument("--people-first", action="store_true")
+    process.add_argument("--heading", help="Force all images after this heading text")
+    process.add_argument("--heading-level", type=int, default=0, help="Heading level (2 or 3)")
 
     serve_cmd = sub.add_parser("serve")
     serve_cmd.add_argument("--host", default="127.0.0.1")
@@ -118,6 +142,17 @@ def main() -> int:
             }
         _print_json(result)
         return 0 if result["status"] == "success" else 1
+
+    if args.command == "guard":
+        result = guard_post_media(
+            args.post,
+            site=args.site,
+            repair=args.repair,
+            adopt=args.adopt,
+            media_ids=args.media_ids,
+        )
+        _print_json(result)
+        return 0 if result.get("status") == "success" else 1
 
     if args.command == "plan":
         result = plan_attach(_attach_args_to_payload(args))

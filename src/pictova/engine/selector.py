@@ -49,24 +49,37 @@ def resolve_source_images(
         if icloud_uuids:
             files = files + icloud_uuids[:need]
 
-        # 3. Dış kaynaklar: Deposit + Unsplash 50:50 — hâlâ eksikse
+        # 3. Dış kaynaklar: %75-80 DepositPhotos, %20-25 Unsplash
         if len(files) < _count:
             need = _count - len(files)
             base_q = location_query or _extract_location(post_context)
-            dep_n = (need + 1) // 2        # üst yarı Deposit
-            uns_n = need // 2              # alt yarı Unsplash
+            
+            # Oran hesabı: %25 Unsplash (en az 1), kalanı Deposit
+            uns_target = max(1, int(need * 0.25)) if need >= 4 else (1 if need > 1 else 0)
+            dep_target = need - uns_target
 
             dep_q = _enrich_query_for_theme(base_q, post_context, content_filter, source="deposit")
             uns_q = _enrich_query_for_theme(base_q, post_context, content_filter, source="unsplash")
-
-            dep_files = _deposit_search_download(query=dep_q, count=dep_n) if dep_n else []
-            uns_files = _unsplash_search_download(query=uns_q, count=uns_n) if uns_n else []
-
-            # İnterlace: D U D U sıralaması
+            
+            # Önce Deposit'i çek
+            dep_files = _deposit_search_download(query=dep_q, count=dep_target) if dep_target > 0 else []
+            
+            # Deposit bulamadıysa eksiği Unsplash'a devret
+            missing_dep = dep_target - len(dep_files)
+            if missing_dep > 0:
+                uns_target += missing_dep
+                
+            # Unsplash'ı çek
+            uns_files = _unsplash_search_download(query=uns_q, count=uns_target) if uns_target > 0 else []
+            
+            # Unsplash bulamadıysa ve Deposit daha önce eksik kalmadıysa Deposit'ten tekrar şansımızı denemek zor çünkü offset yok.
+            # O yüzden listeleri birleştiriyoruz.
+            # Interlace (Karıştırma): Arka arkaya aynı kaynaktan gelmemesi için
             merged = []
             for d, u in zip(dep_files, uns_files):
                 merged += [d, u]
             merged += dep_files[len(uns_files):] + uns_files[len(dep_files):]
+            
             files = files + merged
 
         return {"source": "auto", "query": location_query or "", "content_filter": content_filter, "files": files}
@@ -214,8 +227,11 @@ def _unsplash_search_download(query: str, count: int) -> list[str]:
                 access_key = os.environ.get("UNSPLASH_ACCESS_KEY", "")
                 resp = _req.get(dl_url, headers={"Authorization": f"Client-ID {access_key}"}, timeout=30)
                 resp.raise_for_status()
+                import re
+                photographer = r.get("user", {}).get("name", "Bilinmiyor")
+                photographer_safe = re.sub(r'[^a-zA-Z0-9]', '_', photographer)
                 slug = query.split()[0].lower()
-                dest = _pl.Path(tempfile.gettempdir()) / f"pictova_unsplash" / f"{slug}-{i}.jpg"
+                dest = _pl.Path(tempfile.gettempdir()) / f"pictova_unsplash" / f"{slug}-{i}-by-{photographer_safe}.jpg"
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(resp.content)
                 downloaded.append(str(dest))

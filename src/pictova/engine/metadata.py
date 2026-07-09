@@ -66,6 +66,15 @@ def _kemal_voice_caption(summary: str, scene: str, location: str, keywords: list
             r"^(This (image|photo|picture) (shows|depicts|features|captures))[,\s]*",
         ):
             s = re.sub(pat, "", s, flags=re.IGNORECASE).strip()
+        # Kalıp cümlenin ortasında da üretilebiliyor; yalnız prefix temizliği yeterli değil.
+        s = re.sub(
+            r"\b(?:bu\s+)?(?:fotoğrafta|görselde|resimde)\b[:,]?\s*",
+            "",
+            s,
+            flags=re.IGNORECASE,
+        )
+        s = re.sub(r"\bçekilmiş\b", "", s, flags=re.IGNORECASE)
+        s = re.sub(r"\s+", " ", s).replace(" ,", ",").strip(" ,")
         if s and s[0].islower():
             s = s[0].upper() + s[1:]
         if s and not s.endswith((".", "!", "?")):
@@ -88,18 +97,32 @@ def _kemal_voice_caption(summary: str, scene: str, location: str, keywords: list
                 and k.lower() not in (location or "").lower()
                 and k.lower() not in (scene or "").lower()]
 
-    parts = []
-    if location:
-        parts.append(location)
-    if scene and scene.lower() not in _skip:
-        parts.append(scene_tr_map.get(scene.lower(), scene))
-    if kw_clean:
-        parts.append(", ".join(kw_clean[:2]))
+    scene_tr = scene_tr_map.get(scene.lower(), "") if (scene and scene.lower() not in _skip) else ""
+    
+    if location and scene_tr:
+        if kw_clean:
+            caption = f"{location} yakınlarında, {', '.join(kw_clean[:2])} detayları içeren {scene_tr} manzarası."
+        else:
+            caption = f"{location} yakınlarındaki {scene_tr} manzarası."
+    elif location:
+        if kw_clean:
+            caption = f"{location} manzarasında {', '.join(kw_clean[:2])} detayları."
+        else:
+            caption = f"{location} manzarası."
+    elif scene_tr:
+        if kw_clean:
+            caption = f"{scene_tr.capitalize()} karesinde {', '.join(kw_clean[:2])} öne çıkıyor."
+        else:
+            caption = f"{scene_tr.capitalize()} manzarası."
+    else:
+        if kw_clean:
+            caption = f"Seyahat karesi: {', '.join(kw_clean[:2])}."
+        else:
+            caption = "Seyahat karesi."
 
-    caption = ", ".join(parts)
     if caption and not caption.endswith((".", "!", "?")):
         caption += "."
-    return caption[:180] or "Seyahat karesi."
+    return caption[:180]
 
 
 def _enrich_from_cache(cached: Dict, post_context: Dict) -> Dict:
@@ -111,12 +134,41 @@ def _enrich_from_cache(cached: Dict, post_context: Dict) -> Dict:
     location = str(post_context.get("title") or "").strip()
     kw_str = ", ".join(kws[:5]) if kws else location
 
-    # alt: ekran okuyucu için sade, tanımlayıcı
-    alt = summary or (f"{scene} — {location}".strip(" —") if scene or location else kw_str)
+    # İngilizce sahne terimlerini Türkçeye çevir
+    _scene_tr: dict[str, str] = {
+        "coast": "kıyı", "coastal": "kıyı", "shore": "kıyı",
+        "beach": "plaj", "bay": "koy", "harbor": "liman", "harbour": "liman",
+        "port": "liman", "sea": "deniz", "ocean": "deniz",
+        "island": "ada", "peninsula": "yarımada",
+        "mountain": "dağ", "hill": "tepe", "cliff": "uçurum",
+        "valley": "vadi", "plateau": "yayla", "cave": "mağara",
+        "waterfall": "şelale", "lake": "göl", "river": "nehir",
+        "forest": "orman", "nature": "doğa", "landscape": "manzara",
+        "village": "köy", "town": "kasaba", "city": "şehir",
+        "street": "sokak", "market": "çarşı", "square": "meydan",
+        "castle": "kale", "fortress": "kale", "ruins": "harabe",
+        "mosque": "cami", "church": "kilise", "temple": "tapınak",
+        "bridge": "köprü", "lighthouse": "deniz feneri",
+        "garden": "bahçe", "park": "park",
+        "food": "yemek", "restaurant": "restoran",
+        "sunset": "gün batımı", "sunrise": "gün doğumu", "night": "gece",
+    }
+    scene_tr = _scene_tr.get(scene.lower(), scene) if scene else ""
 
-    # title: SEO, lokasyon + sahne (generic scene kelimeleri atla)
+    # alt: ekran okuyucu için sade, tanımlayıcı
+    # summary Türkçe ise doğrudan kullan; İngilizce ise lokasyon+sahne birleştir
+    if summary and _is_turkish(summary):
+        alt = summary
+    elif scene_tr and location:
+        alt = f"{location} {scene_tr}"
+    elif location:
+        alt = location
+    else:
+        alt = kw_str
+
+    # title: SEO, lokasyon + sahne (Türkçe, generic scene kelimeleri atla)
     _skip_scenes = {"general", "other", "unknown", "various", "misc"}
-    meaningful_scene = scene if scene and scene.lower() not in _skip_scenes else ""
+    meaningful_scene = scene_tr if scene and scene.lower() not in _skip_scenes else ""
     if meaningful_scene and location:
         title = f"{location} — {meaningful_scene.title()}"
     elif location:
@@ -129,8 +181,9 @@ def _enrich_from_cache(cached: Dict, post_context: Dict) -> Dict:
 
     caption = _kemal_voice_caption(summary, scene, location, kws)
 
-    # description: lokasyon + içerik bağlamı
-    desc_parts = [p for p in [location, activity or scene, kw_str] if p]
+    # description: lokasyon + içerik bağlamı (Türkçe scene tercih et)
+    activity_or_scene = _scene_tr.get(activity.lower(), activity) if activity else scene_tr
+    desc_parts = [p for p in [location, activity_or_scene, kw_str] if p]
     description = ". ".join(dict.fromkeys(desc_parts))
 
     return {
@@ -146,19 +199,23 @@ def _enrich_from_cache(cached: Dict, post_context: Dict) -> Dict:
 def build_basic_metadata_map(
     image_files: List[str],
     *,
-    location_hint: str = "",
+    assigned_headings: Dict[str, Dict[str, Any]] | None = None,
     post_context: Dict[str, Any] | None = None,
 ) -> Dict[str, Dict[str, Any]]:
     post_context = post_context or {}
+    assigned_headings = assigned_headings or {}
     metadata_dict: Dict[str, Dict[str, Any]] = {}
     for image_file in image_files:
+        h_info = assigned_headings.get(image_file, {})
+        heading_text = str(h_info.get("text", "")).strip() or str(post_context.get("title", "")).strip()
         metadata = build_basic_metadata(
             image_path=image_file,
-            location_hint=location_hint,
+            location_hint=heading_text,
             post_context=post_context,
         )
-        metadata["heading"] = post_context.get("title", "") or Path(image_file).stem
-        metadata["heading_level"] = 2
+        if h_info:
+            metadata["heading"] = h_info.get("text")
+            metadata["heading_level"] = h_info.get("level")
         metadata_dict[image_file] = metadata
     return metadata_dict
 
@@ -166,7 +223,7 @@ def build_basic_metadata_map(
 def build_native_metadata_map(
     image_files: List[str],
     *,
-    location_hint: str = "",
+    assigned_headings: Dict[str, Dict[str, Any]] | None = None,
     post_context: Dict[str, Any] | None = None,
     mode: str = "auto",
 ) -> Tuple[Dict[str, Dict[str, Any]], List[str]]:
@@ -180,9 +237,10 @@ def build_native_metadata_map(
     Basic fallback YOK — hiçbiri çalışmıyorsa RuntimeError.
     """
     post_context = post_context or {}
+    assigned_headings = assigned_headings or {}
     metadata_dict = build_basic_metadata_map(
         image_files,
-        location_hint=location_hint,
+        assigned_headings=assigned_headings,
         post_context=post_context,
     )
 
@@ -207,12 +265,28 @@ def build_native_metadata_map(
 
     warnings: List[str] = []
     for image_file in image_files:
+        h_info = assigned_headings.get(image_file, {})
+        heading_text = str(h_info.get("text", "")).strip() or str(post_context.get("title", "")).strip()
+
         # 0. DB cache kontrolü
         cached = _db_cached_metadata(image_file)
         if cached:
-            enriched = _enrich_from_cache(cached, post_context)
-            enriched["heading"] = post_context.get("title", "") or Path(image_file).stem
-            enriched["heading_level"] = 2
+            # location_hint olarak heading_text'i kullan
+            # _enrich_from_cache içinde post_context kullanılıyor ama location orada post_context['title']'den çekiliyor.
+            # _enrich_from_cache override yapmak için özel bir location geçemiyoruz, o yüzden post_context kopyasını değiştirelim
+            ctx = dict(post_context)
+            if heading_text:
+                ctx["title"] = heading_text
+            enriched = _enrich_from_cache(cached, ctx)
+            if h_info:
+                enriched["heading"] = h_info.get("text")
+                enriched["heading_level"] = h_info.get("level")
+                
+            if "pictova_unsplash" in str(image_file):
+                parts = Path(image_file).stem.split("-by-")
+                publisher = parts[-1].replace("_", " ") if len(parts) > 1 else "Bilinmiyor"
+                enriched["caption"] = f"{enriched.get('caption', '').strip()} (Görsel: Unsplash, {publisher})"
+                
             metadata_dict[image_file] = enriched
             warnings.append(f"{Path(image_file).name}: OK (db_cache)")
             continue
@@ -221,12 +295,25 @@ def build_native_metadata_map(
         try:
             analysis = analyze_image_vision_chain(
                 image_file,
-                location_hint=location_hint,
+                location_hint=heading_text,
                 post_context=post_context,
             )
             source = analysis.pop("source", "vision_chain")
-            analysis["heading"] = post_context.get("title", "") or Path(image_file).stem
-            analysis["heading_level"] = 2
+            analysis["caption"] = _kemal_voice_caption(
+                str(analysis.get("caption") or analysis.get("summary") or ""),
+                str(analysis.get("scene") or ""),
+                heading_text,
+                list(analysis.get("keywords") or []),
+            )
+            if h_info:
+                analysis["heading"] = h_info.get("text")
+                analysis["heading_level"] = h_info.get("level")
+                
+            if "pictova_unsplash" in str(image_file):
+                parts = Path(image_file).stem.split("-by-")
+                publisher = parts[-1].replace("_", " ") if len(parts) > 1 else "Bilinmiyor"
+                analysis["caption"] = f"{analysis.get('caption', '').strip()} (Görsel: Unsplash, {publisher})"
+                
             metadata_dict[image_file] = analysis
             warnings.append(f"{Path(image_file).name}: OK ({source})")
         except RuntimeError as exc:
