@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.11
-"""Pictova — Ülke bazlı fotoğraf indeksleyici.
+"""Pictova — Country-based photo indexer.
 
-TR dışındaki ülkeler için. Kişisel albümleri hariç tutar.
+For countries outside TR. Excludes personal albums.
 Kullanım: python3.11 scripts/index_country_photos.py --country IT --limit 5000
 """
 from __future__ import annotations
@@ -87,22 +87,22 @@ def _quality(photo: osxphotos.PhotoInfo) -> float:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--country", required=True, help="ISO country code, örn: IT, GR, HR")
-    parser.add_argument("--limit", type=int, default=0, help="Maksimum fotoğraf sayısı")
+    parser.add_argument("--limit", type=int, default=0, help="Maximum number of photos")
     args = parser.parse_args()
 
     country_code = args.country.upper()
-    print(f"📸 Photos Library yükleniyor (hedef: {country_code})...")
+    print(f"📸 Loading Photos Library (target: {country_code})...")
     db_photos = osxphotos.PhotosDB()
     all_photos = db_photos.photos(movies=False)
-    print(f"   Toplam: {len(all_photos):,} fotoğraf")
+    print(f"   Total: {len(all_photos):,} photos")
 
     con = sqlite3.connect(str(DB_PATH))
-    # asset_index tablosu zaten mevcut (index_turkey_photos.py tarafından oluşturuldu)
+    # asset_index table already exists (index_turkey_photos.py tarafından oluşturuldu)
 
     included = skipped = errors = 0
     processed = 0
 
-    print(f"\n🔍 {country_code} filtresi uygulanıyor...")
+    print(f"\n🔍 {country_code} filter applied...")
     for photo in all_photos:
         if args.limit and included >= args.limit:
             break
@@ -118,7 +118,7 @@ def main():
                 skipped += 1
                 continue
 
-            # Kişisel albüm kontrolü
+            # Personal album check
             photo_albums = {a.title for a in (photo.album_info or [])}
             if photo_albums & EXCLUDE_ALBUMS:
                 skipped += 1
@@ -181,15 +181,15 @@ def main():
         processed += 1
         if processed % 200 == 0:
             con.commit()
-            print(f"   {processed:,} işlendi — {included} dahil, {skipped} atlandı")
+            print(f"   {processed:,} processed — {included} included, {skipped} skipped")
 
     con.commit()
     con.close()
 
-    print(f"\n✅ {country_code} indeksleme tamamlandı")
-    print(f"   Dahil   : {included:,}")
-    print(f"   Atlandı : {skipped:,}")
-    print(f"   Hata    : {errors:,}")
+    print(f"\n✅ {country_code} indexing completed")
+    print(f"   Included : {included:,}")
+    print(f"   Skipped  : {skipped:,}")
+    print(f"   Error    : {errors:,}")
     print(f"   DB      : {DB_PATH}")
 
 

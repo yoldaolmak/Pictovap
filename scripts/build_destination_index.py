@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Her destinasyon için en iyi fotoğrafların UUID önbelleği.
+"""Her destinasyon için en iyi photosların UUID önbelleği.
 
 visual_memory.db → destination_index.json
 Format: {"Sinop": ["uuid1","uuid2",...], "Antalya": [...], ...}

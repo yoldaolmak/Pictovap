@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""asset_search FTS5 indeksini asset_index'ten yeniden oluşturur.
+"""Rebuilds asset_search FTS5 index from asset_index.
 
 document = city + state_province + country + location + keywords + ai_keywords + scene + activity
 """
@@ -58,7 +58,7 @@ def main():
         FROM asset_index
     """).fetchall()
 
-    print(f"📄 {len(rows):,} kayıt FTS'e yazılıyor...")
+    print(f"📄 {len(rows):,} records being written to FTS...")
     batch = []
     for row in rows:
         doc = _build_doc(row)
@@ -68,7 +68,7 @@ def main():
     con.executemany("INSERT INTO asset_search (source_id, document) VALUES (?, ?)", batch)
     con.commit()
     con.close()
-    print(f"✅ FTS hazır — {len(batch):,} belge")
+    print(f"✅ FTS ready — {len(batch):,} documents")
 
 
 if __name__ == "__main__":

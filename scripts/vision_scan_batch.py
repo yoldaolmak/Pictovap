@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pictova — Lokal fotoğraflara toplu vision scan.
+"""Pictova — Lokal photoslara toplu vision scan.
 
 Sadece source_path dolu (lokal mevcut) ve vision_scan_status='pending' kayıtları işler.
 Vision chain (Gemini→Codex→Claude) ile ai_keywords, scene, activity alanlarını doldurur.
@@ -60,7 +60,7 @@ def _extract_scene_activity(keywords: list[str]) -> tuple[str, str]:
 
 def main():
     if not has_any_vision_source():
-        print("❌ Vision kaynağı yok. GEMINI_API_KEY ekle veya codex/claude oturumu aç.", file=sys.stderr)
+        print("❌ No Vision source. GEMINI_API_KEY ekle veya codex/claude oturumu aç.", file=sys.stderr)
         sys.exit(1)
 
     con = sqlite3.connect(str(DB_PATH))
@@ -76,7 +76,7 @@ def main():
     """).fetchall()
 
     total = len(rows)
-    print(f"🔍 {total} lokal fotoğraf vision scan bekliyor")
+    print(f"🔍 {total} lokal photos vision scan bekliyor")
 
     if total == 0:
         print("✅ Tümü taranmış.")
@@ -153,7 +153,7 @@ def main():
     print(f"\n✅ Tamamlandı: {done} tarandı, {errors} hata")
 
     if done > 0:
-        print("\n🔄 FTS indeksi yeniden oluşturuluyor...")
+        print("\n🔄 Rebuilding FTS index...")
         import importlib.util, pathlib
         spec = importlib.util.spec_from_file_location(
             "rebuild_fts",

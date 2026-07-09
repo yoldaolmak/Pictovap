@@ -1,16 +1,16 @@
 #!/usr/bin/env python3.11
-"""Pictova — Global fotoğraf & video indeksleyici (Mac Photos).
+"""Pictova — Global photos & video indeksleyici (Mac Photos).
 
-Hiyerarşi: Kıta → Ülke → Şehir (Meridyen harita yapısı ile uyumlu)
+Hierarchy: Continent → Country → City (Meridyen harita yapısı ile uyumlu)
 
 Filtre:
-  DAHIL : Tüm GPS'li ve GPS'siz fotoğraf ve videolar
-  Kişisel: Aile albümleri ve aile fertlerinin olduğu fotoğraflar
-           is_personal=1 olarak kaydedilir (AI taranmaz, DB'de kalır)
-  Değerli: Sadece Kemal Kaya olan fotoğraflar is_personal=0 (tam AI tarama)
+  DAHIL : Tüm GPS'li ve GPS'siz photos ve videolar
+  Kişisel: Aile albümleri ve aile fertlerinin olduğu photoslar
+           is_personal=1 saved as (no AI scan, stays in DB)
+  Değerli: Sadece Kemal Kaya olan photoslar is_personal=0 (full AI scan)
   Video : is_video=1 olarak kaydedilir (AI taranmaz, on-demand analiz)
 
-Çıktı: visual_memory.db günceller (upsert).
+Output: updates visual_memory.db (upsert).
 """
 from __future__ import annotations
 
@@ -25,22 +25,22 @@ import osxphotos
 
 # ── Sabitler ─────────────────────────────────────────────────────────────────
 
-# Aile/kişisel albümler — bunlar artık atlanmıyor, is_personal=1 olarak kaydediliyor
+# Family/personal albums — no longer skipped, is_personal=1 olarak kaydediliyor
 PERSONAL_ALBUMS = {
     "Ayşa", "Ella", "Kemal", "Pamuk", "Kıymet",
     "Gömbe 🏡", "Home",
 }
 
-# Sosyal medya / import albümleri — bunlar tamamen atlanır (düşük kalite)
+# Social media / import albums — completely skipped (düşük kalite)
 SKIP_ALBUMS = {
     "Instagram", "Twitter", "WhatsApp", "InShot", "Import",
 }
 
-# Aile fertleri — Kemal hariç, diğerleri kişisel filtre
-OWNER_NAME = "Kemal"  # Fotoğraf sahibi — sadece o varsa değerlidir
+# Family members — excluding Kemal, others are personal filter
+OWNER_NAME = "Kemal"  # Photo owner — only valuable if he is the only one
 FAMILY_PERSONS = {"Ayşe", "Ayşa", "Ella", "Luka", "Pamuk", "Kıymet"}
 
-# İzmir ev şehri — seyahat içeriği değil, ama yine de indeksle (is_personal=1)
+# Izmir home city — not travel content, but still index (is_personal=1)
 HOME_CITIES = {
     "Karsiyaka", "Karşıyaka", "Menemen", "Balcova", "Balçova",
     "Cigli", "Çiğli", "Yesilyurt", "Yeşilyurt", "Buca",
@@ -263,7 +263,7 @@ def _classify_photo(photo: osxphotos.PhotoInfo) -> tuple[str, int, str]:
     is_personal = 0
     personal_reason = ""
 
-    # Kişisel albüm kontrolü — atlamak yerine is_personal=1 olarak işaretle
+    # Personal album check — atlamak yerine is_personal=1 olarak işaretle
     personal_albums = photo_albums & PERSONAL_ALBUMS
     if personal_albums:
         is_personal = 1
@@ -316,12 +316,12 @@ def _quality(photo: osxphotos.PhotoInfo) -> float:
 # ── Ana akış ──────────────────────────────────────────────────────────────────
 
 def main():
-    print(f"📸 Photos Library yükleniyor (fotoğraf + video)...")
+    print(f"📸 Photos Library yükleniyor (photos + video)...")
     db_photos = osxphotos.PhotosDB()
     all_photos = db_photos.photos(movies=False)
     all_videos = db_photos.photos(movies=True, images=False)
     all_items = all_photos + all_videos
-    print(f"   Toplam: {len(all_photos):,} fotoğraf + {len(all_videos):,} video = {len(all_items):,}")
+    print(f"   Total: {len(all_photos):,} photos + {len(all_videos):,} video = {len(all_items):,}")
 
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(str(DB_PATH))
@@ -360,7 +360,7 @@ def main():
             video_count += 1
 
         path = photo.path or ""
-        # iCloud fotoğraflar path=None olabilir — metadata yine de indeksle
+        # iCloud photoslar path=None olabilir — metadata yine de indeksle
         is_icloud = 1 if not path else 0
 
         p = Path(path)
@@ -389,7 +389,7 @@ def main():
 
         location_str = city or state_province or country or ""
 
-        # Video ise AI taranmaz, fotoğraf ise kişisel değilse taranır
+        # Video ise AI taranmaz, photos ise kişisel değilse taranır
         if is_video:
             scan_status = "skipped_video"
         elif is_personal:
@@ -449,7 +449,7 @@ def main():
 
         if (i + 1) % 500 == 0:
             con.commit()
-            print(f"   {i+1:,}/{len(all_items):,} işlendi — {included} dahil ({personal_count} kişisel, {video_count} video), {skipped} atlandı")
+            print(f"   {i+1:,}/{len(all_items):,} processed — {included} dahil ({personal_count} kişisel, {video_count} video), {skipped} skipped")
 
     con.commit()
     con.close()

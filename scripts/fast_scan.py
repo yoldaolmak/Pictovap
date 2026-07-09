@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Paralel vision scan — birden fazla Claude CLI süreci eşzamanlı çalıştırır.
+"""Parallel vision scan — runs multiple Claude CLI processes concurrently.
 
 Kullanım:
   python3 scripts/fast_scan.py --workers 3 --limit 120
@@ -131,12 +131,12 @@ def main():
     args = parser.parse_args()
 
     if not has_any_vision_source():
-        print("❌ Vision kaynağı yok.", file=sys.stderr)
+        print("❌ No Vision source.", file=sys.stderr)
         sys.exit(1)
 
     con = sqlite3.connect(str(DB_PATH))
     
-    # KESİN VE NET BÜTÇE KONTROLÜ: 9 adet tamamen ücretsiz anahtar * 1490 işlem = 13.410 fotoğraf limiti
+    # STRICT BUDGET CONTROL: 9 adet tamamen ücretsiz anahtar * 1490 işlem = 13.410 photos limiti
     daily_count = con.execute("""
         SELECT count(*) FROM asset_index 
         WHERE vision_scan_status = 'done' 
@@ -144,7 +144,7 @@ def main():
     """).fetchone()[0]
     
     if daily_count >= 13410:
-        print(f"🛑 GÜNLÜK LİMİT AŞILDI: Bugün ücretsiz kotanın sınırı ({daily_count}/13410) dolduruldu. Kredi kartı olan anahtar havuzdan çıkarıldı ve tarama durduruldu.", file=sys.stderr)
+        print(f"🛑 DAILY LIMIT EXCEEDED: Today's free quota limit ({daily_count}/13410) reached. Key with credit card removed from pool and scanning stopped.", file=sys.stderr)
         con.close()
         sys.exit(0)
 
@@ -161,9 +161,9 @@ def main():
     con.close()
 
     _total = len(rows)
-    print(f"🔍 {_total} fotoğraf → {args.workers} paralel worker")
+    print(f"🔍 {_total} photos → {args.workers} parallel workers")
 
-    # Satırları worker'lara böl (round-robin)
+    # Split rows to workers (round-robin)
     buckets: list[list] = [[] for _ in range(args.workers)]
     for i, row in enumerate(rows):
         buckets[i % args.workers].append(row)
@@ -178,10 +178,10 @@ def main():
     for t in threads:
         t.join()
 
-    print(f"\n✅ Tamamlandı: {_done} başarılı, {_errors} hata")
+    print(f"\n✅ Completed: successful, errors")
 
     if _done > 0:
-        print("\n🔄 FTS indeksi yeniden oluşturuluyor...")
+        print("\n🔄 Rebuilding FTS index...")
         import importlib.util
 
         def _run_script(name: str) -> None:
@@ -194,7 +194,7 @@ def main():
 
         _run_script("rebuild_fts")
 
-        print("\n🗺  Destination index güncelleniyor...")
+        print("\n🗺  Updating destination index...")
         _run_script("build_destination_index")
 
 

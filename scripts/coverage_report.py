@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Destinasyon bazında fotoğraf kapsam raporu."""
+"""Destinasyon bazında photos kapsam raporu."""
 from __future__ import annotations
 
 import os
