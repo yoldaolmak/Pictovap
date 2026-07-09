@@ -26,7 +26,17 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-    # Will be merged from requirements.txt, but typically we would list them here.
+    "Pillow>=9.0.0",
+    "anthropic>=0.3.0",
+    "requests>=2.25.0",
+    "numpy>=1.20.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
 ]
 
 [project.urls]
