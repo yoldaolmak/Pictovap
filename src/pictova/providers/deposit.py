@@ -1,4 +1,4 @@
-"""DepositPhotos provider — arama + lisanslı indirme."""
+"""DepositPhotos image source adapter — search + licensed download."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional
 
 _API_URL = "https://api.depositphotos.com/"
 
-# Başlıkta bu kelimeler varsa reddet
+# Reject any result whose title contains one of these fragments.
 _BLOCKED_TITLE_FRAGMENTS = (
     "hotel", "resort", "spa ", "waterpark", "water park",
     "bikini", "young woman", "woman smiling", "man smiling",
@@ -23,10 +23,10 @@ _BLOCKED_TITLE_FRAGMENTS = (
     "3d render", "3d model", "rendering",
 )
 
-# Minimum kalite eşiği
-_MIN_WIDTH = 3000      # piksel — küçük stok fotoğrafları elenir
-_MIN_DOWNLOADS = 2     # neredeyse hiç indirilmemiş = düşük kalite sinyali
-_MIN_SCORE = 2         # toplam puan eşiği
+# Minimum quality thresholds.
+_MIN_WIDTH = 3000      # pixels — filters out small/low-res stock photos
+_MIN_DOWNLOADS = 2     # near-zero downloads is a low-quality signal
+_MIN_SCORE = 2         # total score threshold
 
 
 def _post(payload: Dict) -> Dict:
@@ -46,28 +46,28 @@ def _post(payload: Dict) -> Dict:
 def _api_key() -> str:
     key = os.getenv("DEPOSIT_API_KEY", "")
     if not key:
-        raise RuntimeError("DEPOSIT_API_KEY bulunamadı — .env dosyasını kontrol et")
+        raise RuntimeError("DEPOSIT_API_KEY not found — check your .env file")
     return key
 
 
 def _login() -> str:
-    """Session ID döner (her çağrıda yeni session açar)."""
+    """Return a session ID (opens a new session on every call)."""
     api_key = _api_key()
     user = os.getenv("DEPOSIT_LOGIN_USER", "your_username")
     pwd = os.getenv("DEPOSIT_LOGIN_PASSWORD", "")
     r = _post({"dp_command": "login", "dp_apikey": api_key,
                "dp_login_user": user, "dp_login_password": pwd})
     if r.get("type") != "success":
-        raise RuntimeError(f"DepositPhotos login başarısız: {r.get('error', {}).get('errormsg', r)}")
+        raise RuntimeError(f"DepositPhotos login failed: {r.get('error', {}).get('errormsg', r)}")
     return str(r["sessionid"])
 
 
 def _score(result: Dict, query_words: list[str]) -> int:
-    """Fotoğrafı puanla. Yüksek = daha iyi. Negatif = elenir."""
+    """Score a photo. Higher is better. Negative means reject."""
     title = (result.get("title") or "").lower()
     tags = " ".join(result.get("tags") or []).lower()
 
-    # Hard reddetler
+    # Hard rejects.
     if any(frag in title for frag in _BLOCKED_TITLE_FRAGMENTS):
         return -99
     if result.get("isIllustration") or result.get("nudity"):
@@ -77,23 +77,23 @@ def _score(result: Dict, query_words: list[str]) -> int:
         return -99
     downloads = int(result.get("downloads") or 0)
     if downloads < _MIN_DOWNLOADS:
-        return -1  # düşük ama tamamen reddetme
+        return -1  # low signal, but not an outright reject
 
     score = 0
 
-    # Boyut bonusu
+    # Resolution bonus.
     if width >= 5000:
         score += 2
     elif width >= 4000:
         score += 1
 
-    # Popülerlik
+    # Popularity.
     if downloads >= 100:
         score += 2
     elif downloads >= 30:
         score += 1
 
-    # Query kelimeleri başlık/tag'de geçiyor mu
+    # Do the query words appear in the title/tags?
     for word in query_words:
         if len(word) >= 4:
             if word in title:
@@ -101,7 +101,7 @@ def _score(result: Dict, query_words: list[str]) -> int:
             elif word in tags:
                 score += 1
 
-    # Editorial fotoğraflar genelde daha otantik
+    # Editorial photos tend to be more authentic.
     if result.get("iseditorial") or result.get("is_editorial"):
         score += 1
 
@@ -114,13 +114,13 @@ def _is_usable(result: Dict) -> bool:
 
 
 def search(query: str, count: int = 8, orientation: str = "horizontal") -> List[Dict[str, Any]]:
-    """DepositPhotos'ta arama yapar, puanlar ve sıralar.
+    """Search DepositPhotos, score, and rank the results.
 
-    Her sonuç: {id, title, score, preview_url, width, downloads}
-    Sadece _MIN_SCORE üzerindeki fotoğraflar döner.
+    Each result: {id, title, score, preview_url, width, downloads}
+    Only photos scoring at or above _MIN_SCORE are returned.
     """
     api_key = _api_key()
-    # Fazla çek — filtreleme sonrası count kadar kalsın
+    # Over-fetch so there's still `count` left after filtering.
     fetch_limit = max(count * 4, 20)
     r = _post({
         "dp_command": "search",
@@ -132,7 +132,7 @@ def search(query: str, count: int = 8, orientation: str = "horizontal") -> List[
         "dp_search_nudity": 0,
     })
     if r.get("type") != "success":
-        raise RuntimeError(f"DepositPhotos arama hatası: {r.get('error', {}).get('errormsg', r)}")
+        raise RuntimeError(f"DepositPhotos search error: {r.get('error', {}).get('errormsg', r)}")
 
     results = r.get("result", [])
     if isinstance(results, dict):
@@ -140,14 +140,14 @@ def search(query: str, count: int = 8, orientation: str = "horizontal") -> List[
 
     query_words = query.lower().split()
 
-    # Puanla ve filtrele
+    # Score and filter.
     scored = []
     for v in results:
         s = _score(v, query_words)
         if s >= _MIN_SCORE:
             scored.append((s, v))
 
-    # Skora göre sırala
+    # Sort by score, best first.
     scored.sort(key=lambda x: x[0], reverse=True)
 
     return [
@@ -164,7 +164,7 @@ def search(query: str, count: int = 8, orientation: str = "horizontal") -> List[
 
 
 def download(asset_id: str, session_id: str, dest_dir: Optional[str] = None) -> str:
-    """Lisanslı XL dosyayı indir, yerel path döner."""
+    """Download the licensed XL file, return its local path."""
     api_key = _api_key()
     r = _post({
         "dp_command": "getMedia",
@@ -176,10 +176,10 @@ def download(asset_id: str, session_id: str, dest_dir: Optional[str] = None) -> 
     })
     if r.get("type") != "success":
         err = r.get("error", {})
-        raise RuntimeError(f"DepositPhotos indirme hatası ({asset_id}): {err.get('errormsg', err)}")
+        raise RuntimeError(f"DepositPhotos download error ({asset_id}): {err.get('errormsg', err)}")
 
     dl_url = r["downloadLink"]
-    out_dir = Path(dest_dir) if dest_dir else Path(tempfile.mkdtemp(prefix="pictova_dep_"))
+    out_dir = Path(dest_dir) if dest_dir else Path(tempfile.mkdtemp(prefix="pictovap_deposit_"))
     out_dir.mkdir(parents=True, exist_ok=True)
     dest = out_dir / f"deposit_{asset_id}.jpg"
 
@@ -196,11 +196,11 @@ def search_and_download(
     dest_dir: Optional[str] = None,
     orientation: str = "horizontal",
 ) -> List[str]:
-    """Arama + indirme birleşik. Yerel dosya path listesi döner."""
+    """Combined search + download. Returns a list of local file paths."""
     session_id = _login()
     results = search(query, count=count, orientation=orientation)
     if not results:
-        raise RuntimeError(f"DepositPhotos'ta sonuç bulunamadı: {query!r}")
+        raise RuntimeError(f"No DepositPhotos results found for: {query!r}")
 
     paths = []
     for r in results[:count]:
@@ -208,7 +208,7 @@ def search_and_download(
             path = download(r["id"], session_id, dest_dir=dest_dir)
             paths.append(path)
         except RuntimeError as e:
-            print(f"  ⚠ Atlandı ({r['id']}): {e}")
+            print(f"  Skipped ({r['id']}): {e}")
     return paths
 
 
@@ -242,4 +242,27 @@ def search_candidates(query: str, count: int = 8) -> List[Dict[str, Any]]:
     ]
 
 
-__all__ = ["search", "download", "search_and_download", "search_candidates", "_login"]
+class DepositPhotosSource:
+    """Class wrapper around the module-level DepositPhotos functions.
+
+    `search`/`download`/`search_and_download`/`search_candidates` above are
+    kept as free functions since they predate the ImageSourceAdapter
+    protocol and existing callers rely on them directly. This thin wrapper
+    exists so DepositPhotos can be instantiated and checked the same way as
+    `LocalFolderSource` and `YOUnsplashDownloader`
+    (`issubclass(DepositPhotosSource, ImageSourceAdapter)`), and is the
+    preferred entry point for new code.
+    """
+
+    def search_candidates(self, query: str, count: int) -> List[Dict[str, Any]]:
+        return search_candidates(query, count)
+
+
+__all__ = [
+    "search",
+    "download",
+    "search_and_download",
+    "search_candidates",
+    "DepositPhotosSource",
+    "_login",
+]

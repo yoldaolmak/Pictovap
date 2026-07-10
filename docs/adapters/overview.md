@@ -17,8 +17,7 @@ metadata (dimensions, license, keywords, source URL).
 Current adapters:
 - **Local** — reads image files from a configured directory (production-ready)
 - **Unsplash** — queries the Unsplash API (requires `UNSPLASH_ACCESS_KEY`)
-- **DepositPhotos** — queries licensed stock (requires `DEPOSITPHOTOS_API_KEY`)
-- **Visual Memory DB** — queries the local SQLite semantic index
+- **DepositPhotos** — queries licensed stock (requires `DEPOSIT_API_KEY`)
 
 The demo uses mock candidates that do not call any adapter.
 

@@ -29,15 +29,20 @@ This keeps scoring deterministic and adapter-independent.
 
 ## Existing Adapters
 
-### Local Files (`src/pictova/providers/`)
+All three are classes implementing `search_candidates(query, count)` and are
+verified against `ImageSourceAdapter` directly
+(`issubclass(LocalFolderSource, ImageSourceAdapter)` and so on) in
+`tests/unit/test_sources.py`.
+
+### Local Files — `LocalFolderSource` (`src/pictova/providers/local.py`)
 
 Reads images from a local directory. No credentials required.
 
 ```python
-LOCAL_IMAGE_DIR=/path/to/images  # .env or environment variable
+PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images  # .env or environment variable
 ```
 
-### Unsplash (`src/pictova/providers/`)
+### Unsplash — `YOUnsplashDownloader` (`src/pictova/providers/unsplash.py`)
 
 Queries the Unsplash API using keyword terms derived from the Visual Brief.
 
@@ -45,29 +50,25 @@ Queries the Unsplash API using keyword terms derived from the Visual Brief.
 UNSPLASH_ACCESS_KEY=your_key_here  # .env
 ```
 
-### DepositPhotos (`src/pictova/providers/`)
+### DepositPhotos — `DepositPhotosSource` (`src/pictova/providers/deposit.py`)
 
 Queries licensed stock images. Requires an active account.
 
 ```python
-DEPOSITPHOTOS_API_KEY=your_key_here  # .env
-```
-
-### Visual Memory DB (`src/pictova/providers/`)
-
-Queries the local SQLite semantic index built from indexed image libraries.
-
-```python
-YO_VISUAL_MEMORY_DB=/path/to/visual_memory.db  # .env
+DEPOSIT_API_KEY=your_key_here  # .env
 ```
 
 ## Writing a New Adapter
 
 1. Create a new file in `src/pictova/providers/`, e.g. `openverse.py`.
-2. Implement a function or class that accepts a `VisualBrief` (or its relevant fields)
-   and returns a list of candidate dicts matching the contract above.
-3. Register the adapter in `src/pictova/config.py` so it can be enabled via a profile.
-4. Add a publisher profile key in `examples/profiles/` to demonstrate usage.
+2. Implement a class with a `search_candidates(self, query: str, count: int) -> List[Dict]`
+   method matching the contract above. The constructor must never raise or require
+   credentials — a missing API key should only ever surface as an empty result once a
+   search is actually attempted (see `ImageSourceAdapter` in `core/adapters.py`).
+3. Add a dispatch branch for the adapter's source name in
+   `core/sources.py::_fetch_from_source`, so it can be enabled per-publisher via
+   `PublisherProfile.image_sources`.
+4. Add a publisher profile example in `examples/profiles/` to demonstrate usage.
 5. Write unit tests that mock the external API and assert the returned dict shape.
 
 See the [Adapter Contribution Guide](../contributing/adapters.md) for step-by-step instructions.

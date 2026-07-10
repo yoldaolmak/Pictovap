@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""YO OS Unsplash downloader."""
+"""Unsplash image source adapter."""
 
 from __future__ import annotations
 
@@ -19,14 +19,18 @@ class YOUnsplashDownloader:
     """Download travel photos from Unsplash by query."""
 
     def __init__(self):
+        # Per the ImageSourceAdapter contract (core/adapters.py), construction
+        # must never require credentials — a missing UNSPLASH_ACCESS_KEY is
+        # only surfaced as an empty result once a search is attempted, so
+        # this class stays usable in a credential-free pipeline.
         self.access_key = os.environ.get("UNSPLASH_ACCESS_KEY")
         self.api_url = os.environ.get("UNSPLASH_API_URL", "https://api.unsplash.com")
         self.vil_dir = get_vil_dir()
         self.vil_dir.mkdir(parents=True, exist_ok=True)
-        if not self.access_key:
-            raise ValueError("UNSPLASH_ACCESS_KEY not set")
 
     def search(self, query: str, count: int = 5, page: int = 1) -> List[Dict]:
+        if not self.access_key:
+            return []
         url = f"{self.api_url}/search/photos"
         params = {
             "client_id": self.access_key,

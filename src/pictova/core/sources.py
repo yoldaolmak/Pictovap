@@ -45,8 +45,8 @@ def _fetch_from_source(source_name: str, query: str, count: int) -> List[Dict[st
             return YOUnsplashDownloader().search_candidates(query, count)
 
         if name in ("deposit", "depositphotos"):
-            from pictova.providers.deposit import search_candidates
-            return search_candidates(query, count)
+            from pictova.providers.deposit import DepositPhotosSource
+            return DepositPhotosSource().search_candidates(query, count)
 
         # Unknown/unimplemented source name (e.g. "openverse", planned but
         # not yet built) — skip rather than fail the whole pipeline.
