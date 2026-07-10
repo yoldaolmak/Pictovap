@@ -404,6 +404,11 @@ def sanitize_source_words(value: str) -> str:
 
 
 def _lookup_indexed_asset_context(image_path: str) -> Dict[str, str]:
+    """Optional enrichment: look up pre-computed context for `image_path`
+    from an external, user-populated index (see `get_visual_memory_db_path`
+    in `utils/config.py`). No such index ships with Pictovap — this always
+    degrades to an empty dict when the configured path doesn't exist, which
+    is the default, so `build_basic_metadata` works with zero setup."""
     db_path = get_visual_memory_db_path()
     if not db_path.exists():
         return {}

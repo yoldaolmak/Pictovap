@@ -13,7 +13,7 @@ authors = [
     {name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}
 ]
 keywords = [
-    "wordpress", "image automation", "llm", "vision", "seo", "cms", "mac photos", "unsplash"
+    "wordpress", "image automation", "llm", "vision", "seo", "cms", "unsplash"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

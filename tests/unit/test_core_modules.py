@@ -10,14 +10,6 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 
-def test_visual_memory_exports():
-    from pictova.visual_memory import VisualMemoryComponent, VisualMemoryConfig
-
-    config = VisualMemoryConfig(database_path=Path(":memory:"))
-    component = VisualMemoryComponent(config)
-    assert component is not None
-
-
 def test_processor_filter_path():
     from pictova.core.processor import YOImageProcessor
 

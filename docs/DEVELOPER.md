@@ -109,4 +109,4 @@ pictova --help
 5. Open a Pull Request and describe the problem you are solving.
 
 > [!TIP]
-> If you are adding a new Provider (e.g., a new Stock Photo API), please update `docs/guides/adding-sources.md` alongside your PR.
+> If you are adding a new image source adapter (e.g., a new stock photo API), please update `docs/adapters/image-sources.md` alongside your PR.

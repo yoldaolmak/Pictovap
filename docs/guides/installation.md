@@ -6,8 +6,7 @@ Full setup guide covering all Pictovap components.
 
 - macOS or Linux
 - Python 3.9 or higher
-- WordPress 5.8+ with Application Passwords enabled
-- (Optional) Mac Photos library for visual memory
+- WordPress 5.8+ with Application Passwords enabled (only if using the WordPress CMS adapter)
 
 ## Step 1: Clone the Repository
 
@@ -69,18 +68,6 @@ python3 -m pytest -q
 
 Expected: `19 passed, 1 warning` (or better).
 
-## Optional: Mac Photos Visual Memory
-
-If you want Pictovap to draw images from your Mac Photos library, you need to set up the visual memory index separately.
-
-See [Mac Photos Setup](mac-photos-setup.md) for the full guide.
-
-Once indexed, add to `.env`:
-
-```bash
-YO_VISUAL_MEMORY_DB=/Users/username/Projects/Pictovap/data/visual_memory.db
-```
-
 ## Optional: HTTP Service
 
 To run Pictovap as an HTTP service:
@@ -100,4 +87,5 @@ Make sure your virtualenv is active and you ran `pip install -e .`.
 Verify `WP_USER` and `WP_PASSWORD`. Application Password format: `xxxx xxxx xxxx xxxx xxxx xxxx`.
 
 **`plan` returns empty candidates**  
-Either `UNSPLASH_ACCESS_KEY` is missing, or `YO_VISUAL_MEMORY_DB` points to an empty or nonexistent database. Run `pictova health` and check the output for source status.
+Check that at least one entry in the profile's `image_sources` is actually configured
+(e.g. `UNSPLASH_ACCESS_KEY` set, or `PICTOVAP_LOCAL_IMAGE_DIR` pointing at a real directory).

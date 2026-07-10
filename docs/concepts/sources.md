@@ -11,7 +11,7 @@ metadata-enriched candidates for the Fit Score stage.
 Reads image files from a local directory. No credentials required.
 
 ```
-LOCAL_IMAGE_DIR=/path/to/images  # environment variable
+PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images  # environment variable
 ```
 
 This is the only source used by the local demo. No API key needed.
@@ -29,21 +29,8 @@ UNSPLASH_ACCESS_KEY=your_key_here  # .env
 Queries DepositPhotos for licensed stock images.
 
 ```
-DEPOSITPHOTOS_API_KEY=your_key_here  # .env
+DEPOSIT_API_KEY=your_key_here  # .env
 ```
-
-### Visual Memory DB (Local Semantic Index)
-
-Queries a local SQLite database of indexed images. The database is built by a
-separate indexer process and enriched with semantic metadata (location, scene,
-activity, quality score).
-
-```
-YO_VISUAL_MEMORY_DB=/path/to/visual_memory.db  # .env
-```
-
-This source enables semantic matching against a personal or organizational image library.
-It is optional; the demo and core pipeline do not require it.
 
 ## How Sources Are Combined
 

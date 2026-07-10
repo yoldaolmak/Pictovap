@@ -1,7 +1,5 @@
-"""Yeni iyileştirmeleri kapsayan unit testler:
-- build_publish_slug: destinasyon prefix ekleme (gumusluk + bodrum-koy-kayalik)
-- _enrich_from_cache: İngilizce scene → Türkçe çeviri
-"""
+"""Unit tests for build_publish_slug: destination-prefix insertion
+(e.g. gumusluk + bodrum-koy-kayalik)."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -76,66 +74,3 @@ def test_slug_incorporates_heading_if_present(tmp_path):
     assert "turgutreis" in slug, f"Heading slug'a eklenmeli: {slug}"
     assert "bodrum" in slug, f"Post slug prefix'i (bodrum) korunmalı: {slug}"
     assert "10" not in slug, f"Numara prefix'leri atılmalı: {slug}"
-
-
-
-# ── _enrich_from_cache: Scene İngilizce → Türkçe çeviri ──────────────────────
-
-def test_enrich_from_cache_translates_english_scene_to_turkish():
-    """DB'den 'coast' geldiğinde title/alt Türkçe 'kıyı' içermeli."""
-    from pictova.engine.metadata import _enrich_from_cache
-
-    cached = {
-        "keywords": ["bodrum", "koy"],
-        "scene": "coast",
-        "activity": "travel",
-        "summary": "",
-    }
-    post_ctx = {"title": "Gümüşlük Gezilecek Yerler"}
-    result = _enrich_from_cache(cached, post_ctx)
-
-    assert "coast" not in result["title"].lower(), (
-        f"title Türkçe olmalı, 'coast' içermemeli: {result['title']}"
-    )
-    assert "coast" not in result["alt"].lower(), (
-        f"alt Türkçe olmalı, 'coast' içermemeli: {result['alt']}"
-    )
-    assert "kıyı" in result["title"].lower() or "kıyı" in result["alt"].lower(), (
-        f"'kıyı' title veya alt'ta bulunmalı: title={result['title']}, alt={result['alt']}"
-    )
-
-
-def test_enrich_from_cache_uses_turkish_summary_directly():
-    """Summary Türkçe ise alt'a doğrudan koymalı."""
-    from pictova.engine.metadata import _enrich_from_cache
-
-    cached = {
-        "keywords": ["bodrum"],
-        "scene": "bay",
-        "activity": "",
-        "summary": "Teknelerin sığındığı sakin bir koy manzarası.",
-    }
-    post_ctx = {"title": "Gümüşlük"}
-    result = _enrich_from_cache(cached, post_ctx)
-
-    assert "Tekneler" in result["alt"], (
-        f"Türkçe summary alt'a doğrudan gitmeli: {result['alt']}"
-    )
-
-
-def test_enrich_from_cache_skips_generic_scenes():
-    """scene='general' generic → title'da yalnızca lokasyon olmalı."""
-    from pictova.engine.metadata import _enrich_from_cache
-
-    cached = {
-        "keywords": ["bodrum"],
-        "scene": "general",
-        "activity": "",
-        "summary": "",
-    }
-    post_ctx = {"title": "Bodrum"}
-    result = _enrich_from_cache(cached, post_ctx)
-
-    assert result["title"] == "Bodrum", (
-        f"Generic scene'de title yalnızca lokasyon olmalı: {result['title']}"
-    )
