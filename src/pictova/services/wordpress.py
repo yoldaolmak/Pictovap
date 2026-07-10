@@ -34,12 +34,20 @@ class YOWordPressUploader:
         self.site = site
         prefix = f"{site.upper()}_" if site and site != "demo" else "WP_"
 
-        # Default to the WP_ prefix if site-specific is not found
-        self.base_url = env_str(f"{prefix}URL", env_str("WP_URL", "http://localhost:8080"))
-        self.user = env_str(f"{prefix}USER", env_str("WP_USER", "admin"))
-        self.password = env_str(f"{prefix}APP_PASSWORD", env_str("WP_APP_PASSWORD", "password"))
+        # Default to the WP_ prefix if site-specific is not found. Note:
+        # these must stay `None`, not placeholder strings -- a non-empty
+        # fallback here would make the check below unreachable and let a
+        # misconfigured deployment silently try to talk to a guessed
+        # localhost server instead of failing clearly.
+        self.base_url = env_str(f"{prefix}URL", env_str("WP_URL"))
+        self.user = env_str(f"{prefix}USER", env_str("WP_USER"))
+        self.password = env_str(f"{prefix}APP_PASSWORD", env_str("WP_APP_PASSWORD"))
         if not self.base_url or not self.user or not self.password:
-            raise ValueError(f"Missing WordPress credentials for site: {site}")
+            raise ValueError(
+                f"Missing WordPress credentials for site: {site} "
+                f"(expected {prefix}URL/{prefix}USER/{prefix}APP_PASSWORD "
+                "or WP_URL/WP_USER/WP_APP_PASSWORD in .env)"
+            )
         self.session = self._create_session()
 
     def _create_session(self) -> requests.Session:
