@@ -1,5 +1,7 @@
 """Tests for image source adapters and the fetch_candidates orchestrator."""
 
+from unittest.mock import patch
+
 from PIL import Image
 
 from pictova.core.adapters import ImageSourceAdapter
@@ -7,13 +9,17 @@ from pictova.core.profile import PublisherProfile
 from pictova.core.sources import fetch_candidates
 from pictova.providers.deposit import DepositPhotosSource
 from pictova.providers.local import LocalFolderSource
+from pictova.providers.openverse import OpenverseSource
+from pictova.providers.pexels import PexelsSource
 from pictova.providers.unsplash import YOUnsplashDownloader
 
 
-def test_all_three_source_adapters_conform_to_protocol():
+def test_all_source_adapters_conform_to_protocol():
     assert issubclass(LocalFolderSource, ImageSourceAdapter)
     assert issubclass(YOUnsplashDownloader, ImageSourceAdapter)
     assert issubclass(DepositPhotosSource, ImageSourceAdapter)
+    assert issubclass(OpenverseSource, ImageSourceAdapter)
+    assert issubclass(PexelsSource, ImageSourceAdapter)
 
 
 def test_unsplash_construction_never_raises_without_credentials(monkeypatch):
@@ -84,6 +90,41 @@ def test_fetch_candidates_skips_unknown_source_names():
     profile = PublisherProfile(
         profile_id="test",
         brand_name="Test Publisher",
-        image_sources=["openverse"],  # documented as planned, not yet implemented
+        image_sources=["pixabay"],  # documented as a good-first-issue, not yet implemented
     )
     assert fetch_candidates(profile, query="travel", count=5) == []
+
+
+def test_fetch_candidates_uses_openverse_when_configured():
+    """Openverse needs no credentials, so this exercises fetch_candidates()
+    against a mocked network layer rather than a real request."""
+    fake_response = {
+        "results": [
+            {
+                "id": "xyz",
+                "creator": "A. Photographer",
+                "license": "cc0",
+                "url": "https://example.org/a.jpg",
+                "width": 1200,
+                "height": 800,
+                "tags": [],
+            }
+        ]
+    }
+    import json
+    from unittest.mock import MagicMock
+
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = json.dumps(fake_response).encode()
+    mock_resp.__enter__.return_value = mock_resp
+
+    profile = PublisherProfile(
+        profile_id="test",
+        brand_name="Test Publisher",
+        image_sources=["openverse"],
+    )
+    with patch("pictova.providers.openverse.urllib.request.urlopen", return_value=mock_resp):
+        candidates = fetch_candidates(profile, query="travel", count=5)
+
+    assert len(candidates) == 1
+    assert candidates[0]["provider"] == "openverse"

@@ -8,18 +8,6 @@ Each item links to the relevant code and documentation so you can get started im
 These adapters supply candidate images to the pipeline. Each follows the same interface
 contract described in [Image Source Adapters](../adapters/image-sources.md).
 
-### Openverse Adapter
-- **Scope:** New file in `src/pictova/providers/openverse.py`
-- **API:** https://api.openverse.org/ (no key required for basic use)
-- **What it does:** Queries Openverse for CC-licensed images matching the Visual Brief topic
-- **Good for:** First adapter contribution; the API is open and simple
-
-### Pexels Adapter
-- **Scope:** New file in `src/pictova/providers/pexels.py`
-- **API:** https://www.pexels.com/api/ (free key)
-- **What it does:** Queries Pexels for royalty-free images
-- **Good for:** Adapter contributors familiar with REST APIs
-
 ### Pixabay Adapter
 - **Scope:** New file in `src/pictova/providers/pixabay.py`
 - **API:** https://pixabay.com/api/docs/ (free key)
@@ -38,12 +26,6 @@ contract described in [Image Source Adapters](../adapters/image-sources.md).
 
 These adapters read the `CMSPlacement` plan and place images in a target CMS.
 The interface is described in [CMS Adapters](../adapters/cms-adapters.md).
-
-### Ghost Adapter (Complete the Stub)
-- **Scope:** Expand `src/pictova/publishers/ghost_publisher.py` from stub to working
-- **API:** https://ghost.org/docs/admin-api/ (local Ghost instance for testing)
-- **What it does:** Uploads images and attaches them to Ghost posts via Admin API
-- **Good for:** Contributors with a Ghost instance available for testing
 
 ### Hugo Static Site Adapter
 - **Scope:** New file in `src/pictova/publishers/hugo_adapter.py`

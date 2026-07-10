@@ -114,8 +114,11 @@ review before anything gets published.
 Pictovap connects to the outside world only through adapters — the core
 pipeline has no hardcoded dependency on any specific image provider or CMS.
 
-**Image sources:** local folder, Unsplash, DepositPhotos are implemented;
-Openverse is planned. See [Image Source Adapters](docs/adapters/image-sources.md).
+**Image sources:** local folder, Unsplash, DepositPhotos, Openverse (no key
+required), and Pexels are implemented. Pixabay and Wikimedia Commons are
+open contribution opportunities — see
+[Good First Issues](docs/contributing/good-first-issues.md). See
+[Image Source Adapters](docs/adapters/image-sources.md).
 
 **CMS placement:** WordPress (production-tested), Ghost and Strapi (reference
 implementations, real but with documented limitations). See

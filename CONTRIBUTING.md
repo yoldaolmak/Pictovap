@@ -24,7 +24,7 @@ Have an idea that would make Pictovap better? Open a [discussion](https://github
 ### 3. Submitting Pull Requests
 We love Pull Requests. To ensure a smooth review process:
 1. **Fork the repository** and create your branch from `main`.
-2. **Set up your environment** by following the [Developer Guide](docs/DEVELOPER.md).
+2. **Set up your environment** by following the [Installation Guide](docs/guides/installation.md).
 3. **Write tests** for any new logic (all existing and new tests must pass via `pytest`).
 4. **Update Documentation** if you change CLI arguments, API endpoints, or core architecture.
 5. **Update the CHANGELOG.md** under the `[Unreleased]` section.
@@ -34,18 +34,27 @@ We love Pull Requests. To ensure a smooth review process:
 
 ## 🏛 Architecture Rules
 
-Pictovap is a production-grade project, and we strictly enforce layering to prevent "spaghetti code".
+Pictovap's core pipeline is adapter-agnostic: `core/` defines the domain
+primitives and formal `Protocol` contracts, and every integration with the
+outside world (an image provider, a CMS) is an adapter that implements one
+of those contracts.
 
-| Layer | Directory | Enforcement Rule |
-| :--- | :--- | :--- |
-| **App** | `src/pictova/app/` | HTTP/CLI entry points only. Absolutely no business logic. |
-| **Core** | `src/pictova/core/` | Defines core domain primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`). |
-| **Engine** | `src/pictova/engine/` | Core logic and pipeline processing. Cannot import from `app/`. |
-| **Providers** | `src/pictova/providers/` | Data sources and APIs. Cannot import from `engine/`. |
-| **Publishers** | `src/pictova/publishers/` | Adapters for CMS targets implementing `PublisherProtocol`. |
+| Directory | Purpose |
+| :--- | :--- |
+| `src/pictova/app/` | CLI entry points (`demo`, `plan`, `report`). No business logic. |
+| `src/pictova/core/` | Domain primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`) and the `ImageSourceAdapter` / `CMSAdapter` protocols in `core/adapters.py`. |
+| `src/pictova/engine/` | Pipeline logic that operates only on `core/` primitives — no adapter-specific code. |
+| `src/pictova/providers/` | Image source adapters (Local, Unsplash, DepositPhotos, Openverse, Pexels). Each implements `search_candidates(query, count)` and must construct without credentials. |
+| `src/pictova/publishers/`, `src/pictova/services/` | CMS adapters (Ghost, Strapi, WordPress). Each implements `place(placement)` returning `{placed, failed, warnings}`. |
+
+Before adding a new adapter, read the
+[Adapter Contribution Guide](docs/contributing/adapters.md) — it covers the
+exact interface contract, credential-handling rules, and test expectations.
 
 > [!WARNING]
-> Pull Requests that violate these architectural boundaries will not be merged. If you are unsure where a piece of logic belongs, please ask in your PR!
+> A new adapter that doesn't conform to `ImageSourceAdapter` or `CMSAdapter`
+> (see `src/pictova/core/adapters.py`) will not be merged. If you're unsure
+> where a piece of logic belongs, ask in your PR.
 
 ---
 

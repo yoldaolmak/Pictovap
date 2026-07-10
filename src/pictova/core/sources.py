@@ -48,8 +48,18 @@ def _fetch_from_source(source_name: str, query: str, count: int) -> List[Dict[st
             from pictova.providers.deposit import DepositPhotosSource
             return DepositPhotosSource().search_candidates(query, count)
 
-        # Unknown/unimplemented source name (e.g. "openverse", planned but
-        # not yet built) — skip rather than fail the whole pipeline.
+        if name == "openverse":
+            from pictova.providers.openverse import OpenverseSource
+            return OpenverseSource().search_candidates(query, count)
+
+        if name == "pexels":
+            from pictova.providers.pexels import PexelsSource
+            return PexelsSource().search_candidates(query, count)
+
+        # Unknown/unimplemented source name — skip rather than fail the
+        # whole pipeline. See docs/contributing/good-first-issues.md for
+        # sources that are documented but not yet built (e.g. Pixabay,
+        # Wikimedia Commons).
         return []
     except Exception:
         return []

@@ -15,7 +15,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Using Pictovap](guides/using-pictovap.md) — The full user journey from configure to publish
 - [Editor Report](guides/editor-report.md) — How humans review visual plans
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
-- [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos)
+- [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos, Openverse, Pexels)
 - [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS
 
 ### Reference

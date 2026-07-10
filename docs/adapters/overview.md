@@ -18,6 +18,8 @@ Current adapters:
 - **Local** — reads image files from a configured directory (production-ready)
 - **Unsplash** — queries the Unsplash API (requires `UNSPLASH_ACCESS_KEY`)
 - **DepositPhotos** — queries licensed stock (requires `DEPOSIT_API_KEY`)
+- **Openverse** — queries openly licensed/CC media (no key required)
+- **Pexels** — queries the Pexels API (requires `PEXELS_API_KEY`)
 
 The demo uses mock candidates that do not call any adapter.
 

@@ -14,7 +14,10 @@ Real image providers such as Openverse, Unsplash, DepositPhotos, or private arch
   credential-free demo uses, via deterministic mock candidates.
 - **Implemented**: Unsplash (`UNSPLASH_ACCESS_KEY`).
 - **Implemented**: DepositPhotos (`DEPOSIT_API_KEY`).
-- **Planned**: Openverse (free, CC-licensed images).
+- **Implemented**: Openverse (no key required — free, CC-licensed images).
+- **Implemented**: Pexels (`PEXELS_API_KEY`).
+- **Open for contribution**: Pixabay, Wikimedia Commons — see
+  [Good First Issues](../contributing/good-first-issues.md).
 
 See [Image Source Adapters](../adapters/image-sources.md) for the exact interface
 contract and how to write a new one.

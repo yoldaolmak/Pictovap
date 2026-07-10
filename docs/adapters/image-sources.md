@@ -29,10 +29,10 @@ This keeps scoring deterministic and adapter-independent.
 
 ## Existing Adapters
 
-All three are classes implementing `search_candidates(query, count)` and are
+All five are classes implementing `search_candidates(query, count)` and are
 verified against `ImageSourceAdapter` directly
 (`issubclass(LocalFolderSource, ImageSourceAdapter)` and so on) in
-`tests/unit/test_sources.py`.
+`tests/unit/test_sources.py` and `tests/unit/test_adapter_contracts.py`.
 
 ### Local Files — `LocalFolderSource` (`src/pictova/providers/local.py`)
 
@@ -58,9 +58,28 @@ Queries licensed stock images. Requires an active account.
 DEPOSIT_API_KEY=your_key_here  # .env
 ```
 
+### Openverse — `OpenverseSource` (`src/pictova/providers/openverse.py`)
+
+Queries openverse.org, which aggregates openly licensed and public domain
+media from many sources. No API key required — requests are restricted to
+results licensed for commercial use and modification.
+
+```python
+# No .env variable needed. Add "openverse" to a profile's image_sources.
+```
+
+### Pexels — `PexelsSource` (`src/pictova/providers/pexels.py`)
+
+Queries the Pexels API. Requires a free API key (sign up at
+https://www.pexels.com/api/, approval is typically instant).
+
+```python
+PEXELS_API_KEY=your_key_here  # .env
+```
+
 ## Writing a New Adapter
 
-1. Create a new file in `src/pictova/providers/`, e.g. `openverse.py`.
+1. Create a new file in `src/pictova/providers/`, e.g. `pixabay.py`.
 2. Implement a class with a `search_candidates(self, query: str, count: int) -> List[Dict]`
    method matching the contract above. The constructor must never raise or require
    credentials — a missing API key should only ever surface as an empty result once a

@@ -24,6 +24,8 @@ from pictova.core.adapters import CMSAdapter, ImageSourceAdapter
 from pictova.core.primitives import CMSPlacement, PlacementInstruction
 from pictova.providers.deposit import DepositPhotosSource
 from pictova.providers.local import LocalFolderSource
+from pictova.providers.openverse import OpenverseSource
+from pictova.providers.pexels import PexelsSource
 from pictova.providers.unsplash import YOUnsplashDownloader
 from pictova.publishers.ghost import GhostPublisher
 from pictova.publishers.strapi import StrapiPublisher
@@ -33,7 +35,17 @@ REQUIRED_CANDIDATE_FIELDS = {
     "license", "attribution", "keywords", "width", "height",
 }
 
-IMAGE_SOURCE_ADAPTERS = [LocalFolderSource, YOUnsplashDownloader, DepositPhotosSource]
+# Every image source adapter: must conform to the protocol and never raise
+# on construction, credentialed or not.
+IMAGE_SOURCE_ADAPTERS = [
+    LocalFolderSource, YOUnsplashDownloader, DepositPhotosSource, OpenverseSource, PexelsSource,
+]
+# Subset that is credential-gated: calling search_candidates() with no
+# credentials configured must degrade to [] without making a network call.
+# Openverse is excluded here because it needs no credentials at all -- an
+# unconfigured call to it is a real network request, which is covered with
+# a mocked failure in test_openverse_pexels.py instead.
+CREDENTIAL_GATED_IMAGE_SOURCES = [YOUnsplashDownloader, DepositPhotosSource, PexelsSource]
 CMS_ADAPTER_CLASSES = [GhostPublisher, StrapiPublisher]  # constructor-credentialed adapters
 
 
@@ -52,15 +64,17 @@ def test_image_source_construction_never_requires_credentials(adapter_cls, monke
     monkeypatch.delenv("UNSPLASH_ACCESS_KEY", raising=False)
     monkeypatch.delenv("DEPOSIT_API_KEY", raising=False)
     monkeypatch.delenv("PICTOVAP_LOCAL_IMAGE_DIR", raising=False)
+    monkeypatch.delenv("PEXELS_API_KEY", raising=False)
     instance = adapter_cls()  # must not raise
     assert instance is not None
 
 
-@pytest.mark.parametrize("adapter_cls", IMAGE_SOURCE_ADAPTERS)
+@pytest.mark.parametrize("adapter_cls", CREDENTIAL_GATED_IMAGE_SOURCES)
 def test_image_source_degrades_to_empty_list_when_unconfigured(adapter_cls, monkeypatch):
     monkeypatch.delenv("UNSPLASH_ACCESS_KEY", raising=False)
     monkeypatch.delenv("DEPOSIT_API_KEY", raising=False)
     monkeypatch.delenv("PICTOVAP_LOCAL_IMAGE_DIR", raising=False)
+    monkeypatch.delenv("PEXELS_API_KEY", raising=False)
     instance = adapter_cls()
     assert instance.search_candidates("anything", 5) == []
 
