@@ -16,7 +16,6 @@ detection, image processing/filtering, and metadata generation.
   the credential-free demo path). Currently recognizes English and Turkish.
 
 ### Image processing
-- `processor.py`: Image load, crop, filter, resize, WebP export pipeline.
 - `filter.py`: Adaptive cinematic color-grading filter.
 
 ### Metadata

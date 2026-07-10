@@ -25,8 +25,11 @@ class YOUnsplashDownloader:
         # this class stays usable in a credential-free pipeline.
         self.access_key = os.environ.get("UNSPLASH_ACCESS_KEY")
         self.api_url = os.environ.get("UNSPLASH_API_URL", "https://api.unsplash.com")
+        # Optional local staging directory for download(); unset by default
+        # (no personal-machine path), only created when actually configured.
         self.vil_dir = get_vil_dir()
-        self.vil_dir.mkdir(parents=True, exist_ok=True)
+        if self.vil_dir:
+            self.vil_dir.mkdir(parents=True, exist_ok=True)
 
     def search(self, query: str, count: int = 5, page: int = 1) -> List[Dict]:
         if not self.access_key:
@@ -49,6 +52,11 @@ class YOUnsplashDownloader:
     def download(
         self, query: str, count: int = 5, naming_template: str = "{location}-{number}"
     ) -> List[str]:
+        if not self.vil_dir:
+            raise RuntimeError(
+                "download() requires a local staging directory. Set YO_VIL_DIR "
+                "in .env to enable it — search_candidates() does not need this."
+            )
         results = self.search(query, count=count)
         downloaded = []
         for i, result in enumerate(results[:count], 1):

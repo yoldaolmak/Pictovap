@@ -278,6 +278,40 @@ def generate_markdown_report(output: dict) -> str:
     return "\n".join(lines)
 
 
+def _resolve_sample_article() -> Path | None:
+    """Locate the credential-free demo's default sample article.
+
+    Preference order:
+    1. The repo-relative ``examples/sample-article.md``. This is the file
+       contributors actually edit when iterating on the example in a source
+       checkout (plain clone or ``pip install -e .``); preferring it means
+       their edits are picked up immediately, with no reinstall/resync step.
+    2. The packaged copy at ``pictova/data/sample-article.md``, shipped as
+       real package data (see ``[tool.setuptools.package-data]`` in
+       pyproject.toml). This is what makes ``pictovap demo`` work for a
+       genuine ``pip install pictovap`` from PyPI: ``examples/`` is a
+       top-level repo directory that is never installed alongside the
+       package, so it doesn't exist relative to site-packages — only the
+       packaged copy does.
+
+    Returns None if neither is found (should not happen for a correctly
+    packaged install).
+    """
+    repo_relative = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-article.md"
+    if repo_relative.exists():
+        return repo_relative
+
+    try:
+        import importlib.resources as resources
+        packaged = resources.files("pictova.data").joinpath("sample-article.md")
+        if packaged.is_file():
+            return Path(str(packaged))
+    except (ModuleNotFoundError, FileNotFoundError, TypeError):
+        pass
+
+    return None
+
+
 def generate_report_from_file(plan_path: str, output_path: str):
     import sys
     plan_file = Path(plan_path)
@@ -569,12 +603,10 @@ def run_demo(
             print(f"Error: Article not found at {article_path_str}", file=sys.stderr)
             sys.exit(1)
     else:
-        article_path = Path(__file__).parent / "sample-article.md"
-        if not article_path.exists():
-            article_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-article.md"
-            if not article_path.exists():
-                print("Error: Default sample article not found.")
-                sys.exit(1)
+        article_path = _resolve_sample_article()
+        if article_path is None:
+            print("Error: Default sample article not found.")
+            sys.exit(1)
 
     output = _build_plan_output(article_path, profile, use_real_sources=False)
     out_path = _write_plan_files(output, output_path_str, report_path_str)

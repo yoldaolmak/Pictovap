@@ -1,1 +1,1 @@
-"""Native engine surface: selector -> processor -> quality -> metadata -> publisher."""
+"""Native engine surface: selector -> quality -> metadata -> publisher."""

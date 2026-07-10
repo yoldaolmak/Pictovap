@@ -53,3 +53,6 @@ pictovap = "pictova.app.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 namespaces = false
+
+[tool.setuptools.package-data]
+"pictova.data" = ["*.md"]

@@ -53,4 +53,9 @@ data/
 .codebase-memory/
 /var/
 /tmp/
+
+# Exception: packaged sample data shipped with the wheel (real code, not
+# personal/local app data — see [tool.setuptools.package-data] in pyproject.toml)
+!src/pictova/data/
+!src/pictova/data/**
 ```
