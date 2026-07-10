@@ -278,6 +278,16 @@ def generate_markdown_report(output: dict) -> str:
     return "\n".join(lines)
 
 
+def _is_dev_install() -> bool:
+    """Check if we're running in a dev/source-tree context vs. a real installed package.
+
+    Returns True if repo-relative examples/ directory exists (indicating a source checkout
+    with pip install -e . or direct repo clone), False for a real PyPI install.
+    """
+    repo_examples = Path(__file__).resolve().parent.parent.parent / "examples"
+    return repo_examples.exists() and repo_examples.is_dir()
+
+
 def _resolve_sample_article() -> Path | None:
     """Locate the credential-free demo's default sample article.
 
@@ -490,15 +500,24 @@ def _write_plan_files(output: dict, output_path_str: str | None, report_path_str
     if output_path_str:
         out_path = Path(output_path_str)
     else:
-        out_path = Path(__file__).parent / "sample-output.json"
-        if not out_path.parent.exists() or out_path.parent.name == "pictova":
+        # Detect context: dev/source tree vs. real installed package
+        if _is_dev_install():
+            # Dev context: write to repo-relative examples/ directory (preserves existing test expectations)
             out_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-output.json"
+        else:
+            # Real install: write to current working directory where user can reliably find it
+            out_path = Path.cwd() / "sample-output.json"
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
     if report_path_str:
         report_path = Path(report_path_str)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(generate_markdown_report(output), encoding="utf-8")
+    elif _is_dev_install():
+        # Implicit report path in dev context only (consistency with JSON output)
+        report_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-report.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(generate_markdown_report(output), encoding="utf-8")
 
@@ -634,7 +653,7 @@ if __name__ == "__main__":
     parser.add_argument("--article", help="Path to a custom Markdown article", default=None)
     parser.add_argument("--profile", help="Path to a custom Publisher Profile YAML", default=None)
     parser.add_argument("--output", help="Path to write the JSON output", default=None)
-    parser.add_argument("--report", nargs='?', const="examples/sample-report.md",
+    parser.add_argument("--report", nargs='?', const=None,
                         help="Path to write the human-readable Markdown report", default=None)
     args = parser.parse_args()
 
