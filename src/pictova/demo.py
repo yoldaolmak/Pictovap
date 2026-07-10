@@ -511,13 +511,11 @@ def _write_plan_files(output: dict, output_path_str: str | None, report_path_str
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    # Only write a report when the caller actually asked for one (an explicit
+    # path, or the CLI's `--report` bare-flag default resolved upstream in
+    # __main__). No implicit/unconditional report on every demo run.
     if report_path_str:
         report_path = Path(report_path_str)
-        report_path.parent.mkdir(parents=True, exist_ok=True)
-        report_path.write_text(generate_markdown_report(output), encoding="utf-8")
-    elif _is_dev_install():
-        # Implicit report path in dev context only (consistency with JSON output)
-        report_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-report.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(generate_markdown_report(output), encoding="utf-8")
 
@@ -649,11 +647,18 @@ def run_demo(
 
 
 if __name__ == "__main__":
+    # `--report` with no value (a bare flag) should still resolve to a real,
+    # writable path -- consistent with where _write_plan_files() puts the
+    # JSON output: examples/ in a dev/source checkout, cwd for a real install.
+    _bare_report_default = (
+        "examples/sample-report.md" if _is_dev_install() else str(Path.cwd() / "sample-report.md")
+    )
+
     parser = argparse.ArgumentParser(description="Pictovap Local Demo")
     parser.add_argument("--article", help="Path to a custom Markdown article", default=None)
     parser.add_argument("--profile", help="Path to a custom Publisher Profile YAML", default=None)
     parser.add_argument("--output", help="Path to write the JSON output", default=None)
-    parser.add_argument("--report", nargs='?', const=None,
+    parser.add_argument("--report", nargs='?', const=_bare_report_default,
                         help="Path to write the human-readable Markdown report", default=None)
     args = parser.parse_args()
 
