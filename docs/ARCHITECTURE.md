@@ -79,9 +79,11 @@ that consumes the `CMSPlacement` primitive.
 ## 7. Yoldaolmak.com as Dogfooding Case Study
 
 Pictovap was extracted from the production infrastructure of a travel publisher,
-yoldaolmak.com. The site's profile (`src/pictova/profiles/yoldaolmak.py`) and
-specific constraints represent a dogfooding case study and one possible
-configuration, not the default path or product center.
+yoldaolmak.com. That site's original profile (`examples/profiles/yoldaolmak.py`)
+and specific constraints represent a dogfooding case study and one possible
+configuration, not the default path or product center. See
+[Publisher Profiles](reference/publisher-profiles.md) for the current,
+supported YAML-based configuration format.
 
 ## 8. Metadata Generation as Optional Adapter Behavior
 
@@ -90,30 +92,32 @@ exact mechanism is source-agnostic. It may be generated via an AI metadata
 adapter (e.g., via external model providers) or fall back to rule-based templates.
 No specific AI model or "Vision Chain" is a required architectural component.
 
-## 9. Legacy Package/CLI Compatibility
+## 9. Package/CLI Naming
 
 - **Product name:** Pictovap.
-- Python package, directories (e.g., `src/pictova/`), and legacy CLI commands
-  may remain `pictova` for backward compatibility.
+- Python package (`src/pictova/`), import name, and console-script entry
+  points may remain `pictova` for backward compatibility.
+- See [Brand & Naming](architecture/naming.md) for the full reasoning.
 
 ## 10. Current Limitations
 
-- Core logic was recently extracted from production; some internal dict passing
-  is still being migrated to strict primitives.
-- Only the WordPress CMS adapter is production-hardened; others are reference stubs.
-- Publisher profiles exist as Python dataclasses but are not yet fully loadable
-  from YAML in all pipeline paths.
+- Only the WordPress CMS adapter is production-hardened; Ghost and Strapi are
+  reference implementations (see [CMS Adapters](adapters/cms-adapters.md)
+  for exactly what each one does and doesn't do yet).
+- Vision-backed metadata generation (`engine/vision_chain.py`) and the
+  demo/plan pipeline's deterministic metadata generator
+  (`core/demo_metadata.py`) are not yet unified into one code path.
 
-## Engine Layout
+## Package Layout
 
 ```
 src/
   pictova/
-    app/          # CLI and REST API entrypoints
-    core/         # Primitives and shared data structures
-    engine/       # The pipeline (Analysis, Selection, Processing)
-    filters/      # Image processing algorithms
-    profiles/     # Publisher configurations
-    providers/    # Image source adapters
-    publishers/   # CMS integration adapters
+    app/          # CLI entrypoint (demo / plan / report)
+    core/         # Primitives, adapters, profile, pipeline sources
+    engine/       # Vision chain (multi-provider image analysis)
+    providers/    # Image source adapters (local, Unsplash, DepositPhotos)
+    publishers/   # CMS placement adapters (Ghost, Strapi)
+    services/     # WordPress CMS adapter + supporting Gutenberg logic
+    vision_templates.py  # Prompt templates for vision-backed metadata
 ```

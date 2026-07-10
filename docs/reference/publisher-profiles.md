@@ -71,13 +71,14 @@ forbidden_patterns:
 
 ## Using Profiles in Practice
 
-Pass the profile to the engine when running a non-demo pipeline. In the current
-version, profiles are loaded from the `PublisherProfile` dataclass or from a
-YAML file. Full YAML loading from `src/pictova/profiles/` is planned.
+Pass a YAML profile path to `pictovap plan --profile <path>`, or construct a
+`PublisherProfile` directly and pass it to `create_visual_plan()` from Python.
+`PublisherProfile.from_yaml(path)` is the loader used by both.
 
 ## Compatibility Note
 
-Product name: Pictovap.
-Python package and legacy CLI may remain `pictova` for backward compatibility.
-The `yoldaolmak` profile in `src/pictova/profiles/` is one example publisher
-configuration, not the only supported site.
+Product name: Pictovap. Python package and CLI import name may remain `pictova`
+for backward compatibility. `examples/profiles/sample-publisher.yaml` is a
+reference example, not the only supported configuration --
+`examples/profiles/yoldaolmak.py` shows the older, pre-`PublisherProfile`
+per-site convention this format replaced.

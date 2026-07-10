@@ -11,11 +11,9 @@ The WordPress adapter should consume a CMS Placement plan. WordPress is one adap
 In your project root, copy `.env.example` to `.env` and fill in the values:
 
 ```env
-# Optional CMS adapter configuration
-CMS_TYPE=wordpress
-CMS_URL=
-CMS_USER=
-CMS_APP_PASSWORD=
+WP_URL=https://yoursite.com
+WP_USER=your-wordpress-username
+WP_APP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
 ```
 
 ### Application Passwords

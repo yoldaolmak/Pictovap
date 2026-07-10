@@ -10,11 +10,14 @@ Real image providers such as Openverse, Unsplash, DepositPhotos, or private arch
 
 ### Current Implementation Status
 
-- **Implemented**: Local mock folder (used in the credential-free demo).
+- **Implemented**: Local folder (`PICTOVAP_LOCAL_IMAGE_DIR`) — also what the
+  credential-free demo uses, via deterministic mock candidates.
+- **Implemented**: Unsplash (`UNSPLASH_ACCESS_KEY`).
+- **Implemented**: DepositPhotos (`DEPOSIT_API_KEY`).
 - **Planned**: Openverse (free, CC-licensed images).
-- **Planned**: Unsplash.
-- **Planned**: DepositPhotos (*Planned adapter, not active in the credential-free demo.*)
-- **Planned**: Visual Memory (local semantic private archive).
+
+See [Image Source Adapters](../adapters/image-sources.md) for the exact interface
+contract and how to write a new one.
 
 ## Provenance Packs
 

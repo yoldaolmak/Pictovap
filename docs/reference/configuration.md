@@ -1,66 +1,53 @@
 # Configuration Reference
 
 All configuration is via environment variables, loaded from `.env` in the repo root.
+None of them are required — `pictovap demo` runs with zero configuration, and
+`pictovap plan` runs against whichever sources/adapters you've actually configured.
 
-## WordPress
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `WP_USER` | Yes | WordPress username |
-| `WP_PASSWORD` | Yes | WordPress Application Password |
-
-## Image Sources
+## Image Source Adapters
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `UNSPLASH_ACCESS_KEY` | For Unsplash source | Unsplash API access key |
-| `DEPOSITPHOTOS_API_KEY` | For Deposit source | DepositPhotos API key |
-| `LOCAL_IMAGE_DIR` | For local source | Path to local image directory |
-| `YO_VISUAL_MEMORY_DB` | For semantic source | Path to visual memory SQLite database |
+| `PICTOVAP_LOCAL_IMAGE_DIR` | For the local source | Path to a directory of local image files |
+| `UNSPLASH_ACCESS_KEY` | For the Unsplash source | Unsplash API access key |
+| `DEPOSIT_API_KEY` | For the DepositPhotos source | DepositPhotos API key |
+| `DEPOSIT_LOGIN_USER` | For the DepositPhotos source | DepositPhotos account username |
+| `DEPOSIT_LOGIN_PASSWORD` | For the DepositPhotos source | DepositPhotos account password |
 
-## AI / Vision
+See [Image Source Adapters](../adapters/image-sources.md) for the full contract.
+
+## CMS Adapters
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `ANTHROPIC_API_KEY` | No | Enables vision-backed metadata generation (via external provider) |
-| `OPENAI_API_KEY` | No | Alternative vision provider |
+| `WP_URL`, `WP_USER`, `WP_APP_PASSWORD` | For the WordPress adapter | WordPress site URL, username, and Application Password |
+| `GHOST_URL`, `GHOST_ADMIN_API_KEY` | For the Ghost adapter | Ghost Admin API URL and key (`<id>:<secret>`) |
+| `STRAPI_URL`, `STRAPI_API_TOKEN` | For the Strapi adapter | Strapi site URL and API token |
 
-Without a vision key, Pictovap falls back to deterministic metadata (filename, index fields). Vision keys improve alt text and caption quality.
+See [CMS Adapters](../adapters/cms-adapters.md) for the full contract.
 
-## Database
+## Vision-Backed Metadata (optional)
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | SQLite in repo | Override database connection (PostgreSQL for production) |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GEMINI_API_KEY` | No | Enables Gemini Flash vision analysis for alt text/captions |
 
-## HTTP Server
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PICTOVA_HOST` | `127.0.0.1` | Default bind address for `pictova serve` |
-| `PICTOVA_PORT` | `8040` | Default port |
-
-## Defaults
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PICTOVA_DEFAULT_COUNT` | `4` | Images per post when `--count` is omitted |
-| `PICTOVA_DEFAULT_ENGINE` | `legacy` | Engine path: `legacy` or `native` |
+If neither `GEMINI_API_KEY` nor a local LM Studio instance (`localhost:1234`) is
+available, `pictovap plan` falls back to the deterministic, dictionary-based
+metadata generator — no vision key is required to run the pipeline.
 
 ## Example .env
 
 ```bash
-# WordPress
-WP_USER=myusername
-WP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
-
-# Image sources
+# Image sources (all optional)
+PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images
 UNSPLASH_ACCESS_KEY=abc123
-YO_VISUAL_MEMORY_DB=/Users/username/Projects/Pictovap/data/visual_memory.db
 
-# Vision (optional, improves metadata quality)
-ANTHROPIC_API_KEY=sk-ant-...
+# CMS adapter (optional; pick whichever you're publishing to)
+WP_URL=https://example.com
+WP_USER=myusername
+WP_APP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
 
-# Server
-PICTOVA_PORT=8040
+# Vision-backed metadata (optional)
+GEMINI_API_KEY=your-key-here
 ```
