@@ -16,33 +16,47 @@ Those steps happen in the core pipeline before the adapter is called.
 
 ## Existing Adapters
 
-### WordPress / Gutenberg (`src/pictova/publishers/`)
+### WordPress / Gutenberg (`src/pictova/services/wordpress.py`)
 
 **Status: production-tested**
 
-Uploads each image to the WordPress media library via REST API, then inserts a
-Gutenberg image block at the correct position in the article content.
+`YOWordPressUploader.place()` uploads each image to the WordPress media
+library via REST API, then inserts a Gutenberg image block at the position
+matching `target_section` (by heading text). This is the most complete of
+the three adapters: it is the only one that honors placement targeting
+rather than always appending to the end of the post.
 
 Required environment variables:
 ```
-WORDPRESS_URL=https://yoursite.com
-WORDPRESS_USERNAME=your_user
-WORDPRESS_APP_PASSWORD=your_app_password
+WP_URL=https://yoursite.com
+WP_USER=your_user
+WP_APP_PASSWORD=your_app_password
 ```
 
 WordPress is one adapter among many. Nothing in the core engine is specific to WordPress.
 
-### Ghost (`src/pictova/publishers/`)
+### Ghost (`src/pictova/publishers/ghost.py`)
 
-**Status: stub / reference implementation**
+**Status: reference implementation, not production-tested**
 
-Demonstrates the expected interface for a Ghost adapter. Not production-tested.
+`GhostPublisher.place()` uploads each image and appends it as an image card
+at the end of the post's Lexical body. It does not yet honor
+`target_section` or `placement_strategy` — every image lands at the bottom,
+in placement order.
 
-### Strapi (`src/pictova/publishers/`)
+### Strapi (`src/pictova/publishers/strapi.py`)
 
-**Status: stub / reference implementation**
+**Status: reference implementation, not production-tested**
 
-Demonstrates the expected interface for a Strapi adapter. Not production-tested.
+`StrapiPublisher.place()` uploads every image, but Strapi content-types are
+user-defined, so this generic adapter only knows how to attach one media
+field on one content-type per entry (`content_type`/`field_name`,
+configurable in the constructor, default `articles`/`cover`). If a
+`CMSPlacement` contains more than one instruction, every image still
+uploads successfully, but only the last one wins the field — the adapter
+reports this back through `place()`'s `warnings`, it does not fail silently.
+Projects with a gallery/repeatable media field should subclass
+`StrapiPublisher` and override `place()`.
 
 ### Mock (`src/pictova/demo.py`)
 

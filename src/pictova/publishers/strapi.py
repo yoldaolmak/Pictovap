@@ -16,10 +16,11 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import requests
 
+from pictova.core.primitives import CMSPlacement
 from pictova.utils.config import load_project_env
 
 load_project_env()
@@ -45,6 +46,9 @@ class StrapiPublisher:
         self,
         strapi_url: str | None = None,
         api_token: str | None = None,
+        *,
+        content_type: str = "articles",
+        field_name: str = "cover",
     ) -> None:
         self.base_url = (strapi_url or os.environ.get("STRAPI_URL", "")).rstrip("/")
         self._token = api_token or os.environ.get("STRAPI_API_TOKEN", "")
@@ -55,6 +59,10 @@ class StrapiPublisher:
             )
         self._session = requests.Session()
         self._session.headers.update({"Authorization": f"Bearer {self._token}"})
+        # Defaults used by place(); a single Strapi content-type field can only
+        # ever hold one media reference at a time (see place() docstring).
+        self._content_type = content_type
+        self._field_name = field_name
 
     # ------------------------------------------------------------------
     # Public interface (PublisherProtocol)
@@ -178,6 +186,70 @@ class StrapiPublisher:
             }
         except requests.RequestException as exc:
             return {"title": "", "slug": "", "content_raw": "", "error": str(exc)}
+
+    # ------------------------------------------------------------------
+    # Public interface (CMSAdapter)
+    # ------------------------------------------------------------------
+
+    def place(self, placement: CMSPlacement) -> Dict[str, Any]:
+        """Execute a CMS-agnostic placement plan against this Strapi entry.
+
+        `placement.article_id` is interpreted as the Strapi entry ID.
+
+        Strapi content-types are user-defined, so this generic adapter only
+        knows about a single media field (`field_name`, default ``"cover"``)
+        on a single content-type (`content_type`, default ``"articles"``).
+        Every image is uploaded to the media library regardless, but only
+        one placement can end up attached to that field — if `placement`
+        contains more than one instruction, every upload still happens and
+        succeeds, but only the *last* `attach_to_post` call wins the field,
+        and the earlier ones are reported back as warnings rather than
+        silently dropped. Projects with a gallery/repeatable media field
+        should subclass this adapter and override `place()`.
+        """
+        placed: List[Dict[str, Any]] = []
+        failed: List[Dict[str, Any]] = []
+        warnings: List[str] = []
+
+        uploads: List[Dict[str, Any]] = []
+        for instr in placement.placements:
+            upload = self.upload_media(
+                file_path=instr.output_path,
+                title=instr.slot_id,
+                alt_text=instr.alt_text,
+                caption=instr.caption,
+            )
+            if not upload.get("success"):
+                failed.append({"slot_id": instr.slot_id, "stage": "upload", "error": upload.get("error")})
+                continue
+            uploads.append({"instr": instr, "upload": upload})
+
+        if len(uploads) > 1:
+            warnings.append(
+                f"{len(uploads)} images uploaded, but StrapiPublisher only attaches one media field "
+                f"({self._content_type}.{self._field_name}) per entry; only the last placement below "
+                "will actually be attached to the entry."
+            )
+
+        for entry in uploads:
+            instr, upload = entry["instr"], entry["upload"]
+            attach = self.attach_to_post(
+                upload["media_id"],
+                placement.article_id,
+                content_type=self._content_type,
+                field_name=self._field_name,
+            )
+            if not attach.get("success"):
+                failed.append({"slot_id": instr.slot_id, "stage": "attach", "error": attach.get("error")})
+                continue
+            placed.append({
+                "slot_id": instr.slot_id,
+                "media_id": upload["media_id"],
+                "url": upload.get("url"),
+                "image_role": instr.image_role,
+            })
+
+        return {"placed": placed, "failed": failed, "warnings": warnings}
 
 
 __all__ = ["StrapiPublisher"]

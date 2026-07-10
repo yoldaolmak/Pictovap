@@ -9,8 +9,9 @@ import re
 import html
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
+from pictova.core.primitives import CMSPlacement
 from pictova.services.post_media_guard import (
     assess_post_media,
     load_post_media_manifest,
@@ -183,6 +184,76 @@ class YOWordPressUploader:
             }
         except requests.exceptions.RequestException:
             return {}
+
+    # ------------------------------------------------------------------
+    # Public interface (CMSAdapter)
+    # ------------------------------------------------------------------
+
+    def place(self, placement: CMSPlacement) -> Dict[str, Any]:
+        """Execute a CMS-agnostic placement plan against this WordPress site.
+
+        `placement.article_id` is interpreted as the numeric WordPress post
+        ID. Each `PlacementInstruction.output_path` must point to a real,
+        already processed image file on disk.
+
+        Internally delegates to `upload_images_batch`, which uploads every
+        image, attaches it to the post, and inserts a Gutenberg image block
+        at `target_section` (matched by heading text) — this is the same
+        path used by the production WordPress integration, so placement
+        here honors `target_section` in a way the Ghost/Strapi adapters
+        currently do not.
+        """
+        try:
+            post_id = int(placement.article_id)
+        except (TypeError, ValueError):
+            return {
+                "placed": [],
+                "failed": [],
+                "warnings": [
+                    f"CMSPlacement.article_id={placement.article_id!r} is not a valid WordPress post ID"
+                ],
+            }
+
+        slot_by_filename = {Path(instr.output_path).name: instr.slot_id for instr in placement.placements}
+        metadata_dict = {
+            instr.output_path: {
+                "title": instr.slot_id,
+                "alt": instr.alt_text,
+                "caption": instr.caption,
+                "heading": instr.target_section,
+            }
+            for instr in placement.placements
+        }
+
+        batch_result = upload_images_batch(
+            image_files=list(metadata_dict.keys()),
+            metadata_dict=metadata_dict,
+            post_id=post_id,
+            site=self.site,
+        )
+
+        placed: List[Dict[str, Any]] = []
+        failed: List[Dict[str, Any]] = list(batch_result.get("failed", []))
+        for item in batch_result.get("uploaded", []):
+            entry = {
+                "slot_id": slot_by_filename.get(item.get("file", ""), item.get("title", "")),
+                "media_id": item.get("media_id"),
+                "url": item.get("url", ""),
+            }
+            if item.get("attach_error"):
+                failed.append({**entry, "error": item["attach_error"]})
+            else:
+                placed.append(entry)
+
+        warnings: List[str] = []
+        guard = batch_result.get("media_guard", {})
+        if guard.get("status") in {"drift", "failed"}:
+            warnings.append(f"media integrity guard reported status={guard.get('status')!r}")
+        content_result = batch_result.get("content_update", {})
+        if content_result and not content_result.get("success"):
+            warnings.append(f"post content update failed: {content_result.get('error', 'unknown error')}")
+
+        return {"placed": placed, "failed": failed, "warnings": warnings}
 
     def append_media_to_post_content(
         self,

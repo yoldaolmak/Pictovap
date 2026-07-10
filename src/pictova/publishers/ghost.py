@@ -17,10 +17,11 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import requests
 
+from pictova.core.primitives import CMSPlacement
 from pictova.utils.config import load_project_env
 
 load_project_env()
@@ -203,6 +204,53 @@ class GhostPublisher:
             }
         except requests.RequestException as exc:
             return {"title": "", "slug": "", "content_raw": "", "error": str(exc)}
+
+    # ------------------------------------------------------------------
+    # Public interface (CMSAdapter)
+    # ------------------------------------------------------------------
+
+    def place(self, placement: CMSPlacement) -> Dict[str, Any]:
+        """Execute a CMS-agnostic placement plan against this Ghost site.
+
+        `placement.article_id` is interpreted as the Ghost post UUID. Each
+        `PlacementInstruction.output_path` must point to a real, already
+        processed image file on disk — this method uploads and attaches it,
+        it does not run any image processing itself.
+        """
+        placed: List[Dict[str, Any]] = []
+        failed: List[Dict[str, Any]] = []
+        warnings: List[str] = []
+
+        for instr in placement.placements:
+            upload = self.upload_media(
+                file_path=instr.output_path,
+                title=instr.slot_id,
+                alt_text=instr.alt_text,
+                caption=instr.caption,
+            )
+            if not upload.get("success"):
+                failed.append({"slot_id": instr.slot_id, "stage": "upload", "error": upload.get("error")})
+                continue
+
+            attach = self.attach_to_post(upload["media_id"], placement.article_id)
+            if not attach.get("success"):
+                failed.append({"slot_id": instr.slot_id, "stage": "attach", "error": attach.get("error")})
+                continue
+
+            placed.append({
+                "slot_id": instr.slot_id,
+                "media_id": upload["media_id"],
+                "url": upload.get("url"),
+                "image_role": instr.image_role,
+            })
+
+        if placed:
+            warnings.append(
+                "GhostPublisher.place() appends every image as a card at the end of the post body; "
+                "PlacementInstruction.target_section and placement_strategy are not yet honored for Ghost."
+            )
+
+        return {"placed": placed, "failed": failed, "warnings": warnings}
 
 
 __all__ = ["GhostPublisher"]
