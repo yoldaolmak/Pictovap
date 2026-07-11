@@ -7,7 +7,7 @@ from pictova.services.post_media_guard import (
     media_items_from_content,
     save_post_media_manifest,
 )
-from pictova.services.wordpress import YOWordPressUploader
+from pictova.services.wordpress import WordPressUploader
 
 
 def test_media_items_from_content_keeps_nearest_heading():
@@ -39,23 +39,23 @@ def test_manifest_round_trip_merges_and_detects_drift(tmp_path, monkeypatch):
     second_content = first_content + '<img src="https://example.com/12.webp" class="wp-image-12"/>'
 
     save_post_media_manifest(
-        site="yoldaolmak",
+        site="demoblog",
         post_id=267970,
         media_items=[{"media_id": 11, "url": "https://example.com/11.webp", "heading": "Koy"}],
         content_raw=first_content,
     )
     saved = save_post_media_manifest(
-        site="yoldaolmak",
+        site="demoblog",
         post_id=267970,
         media_items=[{"media_id": 12, "url": "https://example.com/12.webp", "heading": "Fener"}],
         content_raw=second_content,
     )
 
-    loaded = load_post_media_manifest("yoldaolmak", 267970)
+    loaded = load_post_media_manifest("demoblog", 267970)
     assert loaded is not None
     assert loaded["expected_media_ids"] == [11, 12]
-    assert saved["manifest_path"].endswith("yoldaolmak-267970.json")
-    assert json.loads((tmp_path / "yoldaolmak-267970.json").read_text())["version"] == 1
+    assert saved["manifest_path"].endswith("demoblog-267970.json")
+    assert json.loads((tmp_path / "demoblog-267970.json").read_text())["version"] == 1
 
     healthy = assess_post_media(loaded, second_content)
     drift = assess_post_media(loaded, first_content)
@@ -68,13 +68,13 @@ def test_manifest_replaces_unanchored_auto_region_items(tmp_path, monkeypatch):
     monkeypatch.setenv("PICTOVA_POST_MANIFEST_DIR", str(tmp_path))
     both = '<i class="wp-image-1"></i><i class="wp-image-2"></i>'
     save_post_media_manifest(
-        site="yoldaolmak",
+        site="demoblog",
         post_id=1,
         media_items=[{"media_id": 1, "url": "https://example.com/1.webp"}],
         content_raw=both,
     )
     saved = save_post_media_manifest(
-        site="yoldaolmak",
+        site="demoblog",
         post_id=1,
         media_items=[{"media_id": 2, "url": "https://example.com/2.webp"}],
         content_raw=both,
@@ -88,7 +88,7 @@ def test_guard_repairs_manifest_drift(tmp_path, monkeypatch):
     healthy_content = '<i class="wp-image-1"></i><i class="wp-image-2"></i>'
     drifted_content = '<i class="wp-image-1"></i>'
     save_post_media_manifest(
-        site="yoldaolmak",
+        site="demoblog",
         post_id=99,
         media_items=[
             {"media_id": 1, "url": "https://example.com/1.webp", "heading": "Koy"},
@@ -97,8 +97,8 @@ def test_guard_repairs_manifest_drift(tmp_path, monkeypatch):
         content_raw=healthy_content,
     )
 
-    uploader = object.__new__(YOWordPressUploader)
-    uploader.site = "yoldaolmak"
+    uploader = object.__new__(WordPressUploader)
+    uploader.site = "demoblog"
     uploader.fetch_post_context = MagicMock(side_effect=[
         {"content_raw": drifted_content},
         {"content_raw": healthy_content},
@@ -115,8 +115,8 @@ def test_guard_repairs_manifest_drift(tmp_path, monkeypatch):
 
 
 def test_commit_aborts_when_post_changed_concurrently():
-    uploader = object.__new__(YOWordPressUploader)
-    uploader.site = "yoldaolmak"
+    uploader = object.__new__(WordPressUploader)
+    uploader.site = "demoblog"
     uploader.base_url = "https://example.com"
     uploader.session = MagicMock()
     uploader.fetch_post_context = MagicMock(return_value={

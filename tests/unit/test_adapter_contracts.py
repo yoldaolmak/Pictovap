@@ -104,8 +104,8 @@ def test_cms_adapter_conforms_to_protocol(adapter_cls):
 
 
 def test_wordpress_conforms_to_cms_adapter_protocol():
-    from pictova.services.wordpress import YOWordPressUploader
-    assert issubclass(YOWordPressUploader, CMSAdapter)
+    from pictova.services.wordpress import WordPressUploader
+    assert issubclass(WordPressUploader, CMSAdapter)
 
 
 @pytest.mark.parametrize("adapter_cls,env_keys", [
@@ -123,11 +123,11 @@ def test_cms_adapter_raises_clear_error_without_credentials(adapter_cls, env_key
 
 
 def test_wordpress_raises_clear_error_without_credentials(monkeypatch):
-    from pictova.services.wordpress import YOWordPressUploader
+    from pictova.services.wordpress import WordPressUploader
     for key in ("WP_URL", "WP_USER", "WP_APP_PASSWORD"):
         monkeypatch.delenv(key, raising=False)
     with pytest.raises(ValueError, match="Missing WordPress credentials"):
-        YOWordPressUploader(site="demo")
+        WordPressUploader(site="demo")
 
 
 def _one_instruction():

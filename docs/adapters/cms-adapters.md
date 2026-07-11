@@ -20,7 +20,7 @@ Those steps happen in the core pipeline before the adapter is called.
 
 **Status: production-tested**
 
-`YOWordPressUploader.place()` uploads each image to the WordPress media
+`WordPressUploader.place()` uploads each image to the WordPress media
 library via REST API, then inserts a Gutenberg image block at the position
 matching `target_section` (by heading text). This is the most complete of
 the three adapters: it is the only one that honors placement targeting

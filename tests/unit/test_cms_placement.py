@@ -1,7 +1,7 @@
 """Contract tests for CMSAdapter.place() across all three CMS integrations.
 
 These tests exercise the `place(placement: CMSPlacement) -> dict` method that
-makes GhostPublisher, StrapiPublisher, and YOWordPressUploader conform to the
+makes GhostPublisher, StrapiPublisher, and WordPressUploader conform to the
 `CMSAdapter` protocol (src/pictova/core/adapters.py). No network calls are
 made; every HTTP boundary is mocked.
 """
@@ -45,8 +45,8 @@ def test_ghost_strapi_conform_to_cms_adapter_protocol():
 
 
 def test_wordpress_conforms_to_cms_adapter_protocol():
-    from pictova.services.wordpress import YOWordPressUploader
-    assert issubclass(YOWordPressUploader, CMSAdapter)
+    from pictova.services.wordpress import WordPressUploader
+    assert issubclass(WordPressUploader, CMSAdapter)
 
 
 # ── GhostPublisher.place() ────────────────────────────────────────────────────
@@ -166,15 +166,15 @@ class TestStrapiPlace:
         )
 
 
-# ── YOWordPressUploader.place() ───────────────────────────────────────────────
+# ── WordPressUploader.place() ───────────────────────────────────────────────
 
 class TestWordPressPlace:
     def _pub(self, monkeypatch):
         monkeypatch.setenv("WP_URL", "https://example.com")
         monkeypatch.setenv("WP_USER", "editor")
         monkeypatch.setenv("WP_APP_PASSWORD", "app-password-value")
-        from pictova.services.wordpress import YOWordPressUploader
-        return YOWordPressUploader(site="demo")
+        from pictova.services.wordpress import WordPressUploader
+        return WordPressUploader(site="demo")
 
     def test_place_delegates_to_upload_images_batch(self, monkeypatch):
         pub = self._pub(monkeypatch)

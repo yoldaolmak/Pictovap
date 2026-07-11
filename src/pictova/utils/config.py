@@ -4,9 +4,25 @@ import os
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_VISUAL_MEMORY_DB = PROJECT_ROOT / "data" / "visual_memory.db"
 _ENV_LOADED = False
+
+
+def get_workspace_root() -> Path:
+    """Root directory for Pictovap's runtime files (`.env` lookup, `data/`).
+
+    Defaults to the current working directory — the user's own project —
+    never the package installation directory. Resolving paths relative to
+    this module would point inside site-packages for a real
+    `pip install pictovap`, which is unwritable and wrong.
+
+    Override with the ``PICTOVA_WORKSPACE_DIR`` environment variable. This
+    is read from the process environment directly (not `.env`), because the
+    `.env` location itself depends on this value.
+    """
+    configured = os.environ.get("PICTOVA_WORKSPACE_DIR", "").strip()
+    if configured:
+        return Path(configured).expanduser()
+    return Path.cwd()
 
 
 def load_project_env() -> None:
@@ -14,7 +30,7 @@ def load_project_env() -> None:
     if _ENV_LOADED:
         return
 
-    env_path = PROJECT_ROOT / ".env"
+    env_path = get_workspace_root() / ".env"
     if env_path.exists():
         for line in env_path.read_text().splitlines():
             if "=" not in line or line.startswith("#"):
@@ -49,10 +65,3 @@ def get_vil_dir() -> Path | None:
     if configured:
         return Path(configured).expanduser()
     return None
-
-
-def get_visual_memory_db_path() -> Path:
-    configured = env_str("YO_VISUAL_MEMORY_DB")
-    if configured:
-        return Path(configured).expanduser()
-    return DEFAULT_VISUAL_MEMORY_DB

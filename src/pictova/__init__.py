@@ -5,7 +5,7 @@ This package provides modules to select, process, generate metadata for, and
 publish images across various CMS platforms.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 # Public library API — the framework entry point.
 from .demo import create_visual_plan

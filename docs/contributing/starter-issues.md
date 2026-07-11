@@ -20,7 +20,7 @@ These issues are not yet active on our GitHub board but are ready to be opened. 
 
 ## 3. Add Markdown frontmatter support
 **Problem:** The `VisualBrief` relies heavily on headings. It should also read standard YAML frontmatter for metadata (e.g., categories, target audience).
-**Expected files:** `src/pictova/core/metadata_generator.py`
+**Expected files:** `src/pictova/core/primitives.py` (where `VisualBrief` is built)
 **Acceptance Criteria:** Frontmatter variables pass into the Vision context block.
 **Difficulty:** Low
 **Credentials required:** No

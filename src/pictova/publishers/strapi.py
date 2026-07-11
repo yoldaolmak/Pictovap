@@ -34,9 +34,9 @@ class StrapiPublisher:
         pub = StrapiPublisher()
         result = pub.upload_media(
             file_path="path/to/photo.webp",
-            title="Akyaka Beach",
-            alt_text="Turquoise water at Akyaka beach",
-            caption="Calm waters at Akyaka, Muğla.",
+            title="Riverside Park",
+            alt_text="Morning mist over the riverside park",
+            caption="Calm waters at the riverside park.",
         )
         media_id = result["media_id"]  # Strapi numeric file ID
         media_url = result["url"]

@@ -58,4 +58,4 @@ data/
 # personal/local app data — see [tool.setuptools.package-data] in pyproject.toml)
 !src/pictova/data/
 !src/pictova/data/**
-```
+```/sample-output.json

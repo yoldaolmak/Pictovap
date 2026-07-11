@@ -1,20 +1,31 @@
+"""Lightweight language detection for article text.
+
+This is a deliberately dependency-free heuristic: it counts hits against
+small sets of high-frequency function words (stopwords) per language and
+picks the language with more hits. It currently distinguishes Turkish and
+English; anything else falls back to ``fallback_lang``. For finer-grained
+detection, callers can swap in a dedicated library and pass the result
+through ``fallback_lang`` / profile language overrides.
+"""
+
 import re
 
 TURKISH_MARKERS = {
-    "bir", "ve", "için", "ile", "kahve", "seçimi", "nasıl", "ekipman",
-    "demleme", "çekirdek", "su", "öğütme", "gerekir", "kullanılır",
-    "nerede", "gezilecek", "lezzet", "fiyat", "rota"
+    "bir", "ve", "için", "ile", "bu", "ama", "gibi", "daha", "çok",
+    "ne", "nasıl", "neden", "olarak", "olan", "sonra", "önce", "kadar",
+    "her", "veya", "çünkü", "değil", "var", "yok", "gerekir", "olur",
 }
 
 ENGLISH_MARKERS = {
-    "the", "and", "for", "with", "guide", "how", "travel", "coffee",
-    "equipment", "section", "local", "route", "food", "recipe", "place", "city"
+    "the", "and", "for", "with", "this", "that", "from", "are", "was",
+    "were", "has", "have", "had", "not", "but", "you", "your", "they",
+    "will", "can", "more", "when", "which", "about", "into", "than",
 }
 
 
 def detect_language(text: str, fallback_lang: str = "en") -> str:
     """
-    Detects language (tr or en) based on word count markers.
+    Detects language (tr or en) based on stopword marker counts.
     If markers are equal or no markers are matched, falls back to fallback_lang.
     """
     if not text:

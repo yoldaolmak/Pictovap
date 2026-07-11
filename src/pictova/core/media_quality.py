@@ -224,7 +224,7 @@ def validate_processed_asset(meta: Dict, process_info: Dict | None) -> list[str]
 
     # Advanced Quality Gate
     blur_score = float(process_info.get("blur_score", 1000))
-    if blur_score < 100:  # Genelde 100 altı belirgin bir bulanıklıktır (blur)
+    if blur_score < 100:  # values below ~100 usually indicate visible blur
         errors.append("image is too blurry (low variance of laplacian)")
 
     orig_w, orig_h = process_info.get("original_size", (0, 0))

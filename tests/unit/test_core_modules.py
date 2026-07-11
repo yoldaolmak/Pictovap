@@ -7,18 +7,31 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 
-def test_config_visual_memory_db_path_is_a_path():
-    from pictova.utils.config import PROJECT_ROOT, get_visual_memory_db_path
+def test_workspace_root_defaults_to_cwd(monkeypatch, tmp_path):
+    """Runtime files must resolve relative to the user's working directory,
+    never the package installation directory — for a real
+    `pip install pictovap`, module-relative paths land inside site-packages,
+    which is unwritable and wrong (a past release-blocking bug class)."""
+    monkeypatch.delenv("PICTOVA_WORKSPACE_DIR", raising=False)
+    monkeypatch.chdir(tmp_path)
+    from pictova.utils.config import get_workspace_root
 
-    # PROJECT_ROOT is computed from utils/config.py's own installed
-    # location, so it only equals the source checkout root in a dev/editable
-    # install — for a real `pip install pictovap`, it resolves to some
-    # site-packages-relative directory instead. That's fine: it only backs
-    # a fully optional, gracefully-degrading local DB lookup (see
-    # `_lookup_indexed_asset_context` in metadata_generator.py), so this test
-    # only checks the type, not equality with the checkout root.
-    assert isinstance(PROJECT_ROOT, Path)
-    assert isinstance(get_visual_memory_db_path(), Path)
+    assert get_workspace_root() == tmp_path
+
+
+def test_workspace_root_honors_env_override(monkeypatch, tmp_path):
+    monkeypatch.setenv("PICTOVA_WORKSPACE_DIR", str(tmp_path / "workspace"))
+    from pictova.utils.config import get_workspace_root
+
+    assert get_workspace_root() == tmp_path / "workspace"
+
+
+def test_manifest_dir_is_under_workspace_root(monkeypatch, tmp_path):
+    monkeypatch.delenv("PICTOVA_POST_MANIFEST_DIR", raising=False)
+    monkeypatch.setenv("PICTOVA_WORKSPACE_DIR", str(tmp_path))
+    from pictova.services.post_media_guard import get_manifest_dir
+
+    assert get_manifest_dir() == tmp_path / "data" / "post_media_manifests"
 
 
 def test_config_vil_dir_has_no_personal_machine_default(monkeypatch):
@@ -40,3 +53,16 @@ def test_config_vil_dir_honors_env_override(monkeypatch, tmp_path):
 
 def test_wordpress_module_import():
     import pictova.services.wordpress  # noqa: F401
+
+
+def test_package_version_matches_pyproject():
+    """pictova.__version__ must stay in sync with pyproject.toml — it
+    drifted once (package said 0.2.0 while pyproject said 0.2.1)."""
+    import re
+
+    import pictova
+
+    pyproject = (REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    match = re.search(r'^version\s*=\s*"([^"]+)"', pyproject, flags=re.M)
+    assert match is not None, "version not found in pyproject.toml"
+    assert pictova.__version__ == match.group(1)

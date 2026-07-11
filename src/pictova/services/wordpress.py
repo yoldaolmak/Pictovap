@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-YO OS WordPress Uploader — REST API media upload and attachment
+Pictovap WordPress uploader — REST API media upload and attachment.
 """
 
 import requests
@@ -23,11 +23,18 @@ from pictova.utils.config import env_str, load_project_env
 
 load_project_env()
 
+try:
+    from importlib.metadata import version as _dist_version
+
+    _USER_AGENT = f"Pictovap-Media-Uploader/{_dist_version('pictovap')}"
+except Exception:  # pragma: no cover - package metadata unavailable (source tree)
+    _USER_AGENT = "Pictovap-Media-Uploader/dev"
+
 AUTO_MEDIA_START = "<!-- yo:auto-media:start -->"
 AUTO_MEDIA_END = "<!-- yo:auto-media:end -->"
 
 
-class YOWordPressUploader:
+class WordPressUploader:
     """Upload processed images to WordPress via REST API"""
 
     def __init__(self, site: str = "demo"):
@@ -55,7 +62,7 @@ class YOWordPressUploader:
         session = requests.Session()
         session.auth = (self.user, self.password)
         session.headers.update({
-            "User-Agent": "YO-OS-Media-Uploader/1.0",
+            "User-Agent": _USER_AGENT,
         })
         return session
 
@@ -68,7 +75,6 @@ class YOWordPressUploader:
         caption: str = "",
     ) -> Dict:
         """Upload single image to WordPress media library.
-        If old media with the same slug exists, it deletes it first (to avoid slug conflicts / -1 -2 issues).
 
         Returns:
             dict with media_id and details
@@ -653,7 +659,7 @@ def _strip_html(value: str) -> str:
 
 
 def fetch_post_context(post_id: int, site: str = "demo") -> Dict:
-    uploader = YOWordPressUploader(site=site)
+    uploader = WordPressUploader(site=site)
     return uploader.fetch_post_context(post_id)
 
 
@@ -813,12 +819,14 @@ def upload_images_batch(
         image_files: list of WebP file paths
         metadata_dict: metadata per file
         post_id: target WordPress post ID
-        site: site name (yoldaolmak, gezievreni, etc)
+        site: site name prefix for env-based credentials (e.g. "myblog"
+            reads MYBLOG_URL / MYBLOG_USER / MYBLOG_APP_PASSWORD;
+            "demo" falls back to WP_*)
 
     Returns:
         dict with results
     """
-    uploader = YOWordPressUploader(site=site)
+    uploader = WordPressUploader(site=site)
     results = {
         "site": site,
         "post_id": post_id,
@@ -912,7 +920,7 @@ def upload_images_batch(
 
 if __name__ == "__main__":
     # Test authentication
-    uploader = YOWordPressUploader(site="demo")
+    uploader = WordPressUploader(site="demo")
     print(f"✓ Connected to {uploader.base_url}")
     print(f"  User: {uploader.user}")
     print("\nReady for image uploads")

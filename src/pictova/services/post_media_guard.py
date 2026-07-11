@@ -12,7 +12,7 @@ import re
 import tempfile
 from typing import Any, Dict, Iterable, List, Optional
 
-from pictova.utils.config import PROJECT_ROOT, env_str
+from pictova.utils.config import env_str, get_workspace_root
 
 
 MANIFEST_VERSION = 1
@@ -28,7 +28,7 @@ def get_manifest_dir() -> Path:
     configured = env_str("PICTOVA_POST_MANIFEST_DIR")
     if configured:
         return Path(configured).expanduser()
-    return PROJECT_ROOT / "data" / "post_media_manifests"
+    return get_workspace_root() / "data" / "post_media_manifests"
 
 
 def manifest_path(site: str, post_id: int) -> Path:

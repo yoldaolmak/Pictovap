@@ -230,3 +230,47 @@ def test_yoldaolmak_references_only_in_allowed_locations():
     assert not violations, (
         "Personal path references found outside allowed files:\n" + "\n".join(violations)
     )
+
+
+# ---------------------------------------------------------------------------
+# 6. src/ and tests/ stay free of personal-legacy infrastructure
+# ---------------------------------------------------------------------------
+
+def test_src_and_tests_free_of_personal_legacy_references():
+    """
+    The legacy personal project ("Pictova") must not leak into the pipeline:
+    no personal machine paths, personal site names, or personal-blog
+    geography in src/ or tests/ Python files. The public GitHub repo URL is
+    the only allowed appearance of the maintainer's handle. This has slipped
+    past cleanup passes before, so it is enforced here permanently.
+    """
+    indicators = [
+        "/users/",           # personal machine paths
+        "downloads/",        # ad-hoc debug paths (e.g. ~/Downloads/IMG_*.jpeg)
+        "gezievreni",        # personal site name
+        "hamal",             # personal WordPress username
+        "batum",             # personal-blog geography from the legacy slug engine
+        "kapadokya",
+        "gumusluk",
+    ]
+    violations = []
+    for base in (REPO_ROOT / "src", REPO_ROOT / "tests"):
+        for fpath in base.rglob("*.py"):
+            if fpath.name == "test_security_hygiene.py":
+                continue  # this file names the forbidden patterns themselves
+            rel = fpath.relative_to(REPO_ROOT)
+            for lineno, line in enumerate(
+                fpath.read_text(encoding="utf-8").splitlines(), start=1
+            ):
+                lower = line.lower()
+                for needle in indicators:
+                    if needle in lower:
+                        violations.append(f"  {rel}:{lineno}: contains {needle!r}")
+                if "yoldaolmak" in lower and "github.com/yoldaolmak" not in lower:
+                    violations.append(
+                        f"  {rel}:{lineno}: personal handle outside repo URL"
+                    )
+
+    assert not violations, (
+        "Personal-legacy references found in src/ or tests/:\n" + "\n".join(violations)
+    )
