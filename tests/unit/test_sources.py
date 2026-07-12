@@ -57,6 +57,25 @@ def test_local_folder_source_reads_real_images(tmp_path):
     assert cand["height"] == 1000
 
 
+def test_local_folder_source_reads_exif_metadata(tmp_path):
+    image_path = tmp_path / "exif-travel.jpg"
+    img = Image.new("RGB", (100, 100), color="blue")
+    exif = img.getexif()
+    # 271 is Make, 272 is Model
+    exif[271] = "FakeCamera"
+    exif[272] = "ModelX"
+    img.save(image_path, exif=exif)
+
+    source = LocalFolderSource(directory=str(tmp_path))
+    candidates = source.search_candidates("exif", 5)
+
+    assert len(candidates) == 1
+    cand = candidates[0]
+    assert "exif" in cand
+    assert cand["exif"].get("Make") == "FakeCamera"
+    assert cand["exif"].get("Model") == "ModelX"
+
+
 def test_fetch_candidates_falls_back_to_empty_when_nothing_configured(monkeypatch):
     monkeypatch.delenv("UNSPLASH_ACCESS_KEY", raising=False)
     monkeypatch.delenv("DEPOSIT_API_KEY", raising=False)
