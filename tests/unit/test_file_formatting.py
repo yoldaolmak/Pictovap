@@ -18,7 +18,7 @@ MINIMUM_LINES = {
     "docs/README.md": 20,
     "docs/ARCHITECTURE.md": 40,
     "examples/profiles/sample-publisher.yaml": 25,
-    "src/pictova/demo.py": 120,
+    "src/pictovap/demo.py": 120,
     "tests/unit/test_demo.py": 80,
     "tests/unit/test_file_formatting.py": 25,
     "pyproject.toml": 30,

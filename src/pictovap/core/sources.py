@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-from pictova.core.profile import PublisherProfile
+from pictovap.core.profile import PublisherProfile
 
 
 def fetch_candidates(profile: PublisherProfile, query: str, count: int) -> List[Dict[str, Any]]:
@@ -37,23 +37,23 @@ def _fetch_from_source(source_name: str, query: str, count: int) -> List[Dict[st
     name = source_name.strip().lower()
     try:
         if name == "local":
-            from pictova.providers.local import LocalFolderSource
+            from pictovap.providers.local import LocalFolderSource
             return LocalFolderSource().search_candidates(query, count)
 
         if name == "unsplash":
-            from pictova.providers.unsplash import YOUnsplashDownloader
+            from pictovap.providers.unsplash import YOUnsplashDownloader
             return YOUnsplashDownloader().search_candidates(query, count)
 
         if name in ("deposit", "depositphotos"):
-            from pictova.providers.deposit import DepositPhotosSource
+            from pictovap.providers.deposit import DepositPhotosSource
             return DepositPhotosSource().search_candidates(query, count)
 
         if name == "openverse":
-            from pictova.providers.openverse import OpenverseSource
+            from pictovap.providers.openverse import OpenverseSource
             return OpenverseSource().search_candidates(query, count)
 
         if name == "pexels":
-            from pictova.providers.pexels import PexelsSource
+            from pictovap.providers.pexels import PexelsSource
             return PexelsSource().search_candidates(query, count)
 
         # Unknown/unimplemented source name — skip rather than fail the

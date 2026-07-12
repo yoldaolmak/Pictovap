@@ -11,7 +11,7 @@ Real-world article formats vary widely. Testing with diverse input helps identif
 **Proposed approach:**
 Anyone who is willing can:
 1. Clone the repository and follow the Quickstart.
-2. Run: `python -m pictova.demo --article path/to/your/article.md --output my-plan.json`
+2. Run: `python -m pictovap.demo --article path/to/your/article.md --output my-plan.json`
 3. Inspect the JSON output and answer:
    - Did the demo run without errors?
    - Did the Visual Brief correctly identify sections and image slots?

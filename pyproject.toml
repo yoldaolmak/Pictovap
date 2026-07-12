@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pictovap"
-version = "0.2.2"
+version = "0.3.0"
 description = "Open-source visual finishing engine for content publishers."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -48,12 +48,12 @@ Documentation = "https://github.com/yoldaolmak/Pictovap/blob/main/docs/README.md
 Repository = "https://github.com/yoldaolmak/Pictovap.git"
 
 [project.scripts]
-pictova = "pictova.app.cli:main"
-pictovap = "pictova.app.cli:main"
+pictova = "pictovap.app.cli:main"
+pictovap = "pictovap.app.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 namespaces = false
 
 [tool.setuptools.package-data]
-"pictova.data" = ["*.md"]
+"pictovap.data" = ["*.md"]

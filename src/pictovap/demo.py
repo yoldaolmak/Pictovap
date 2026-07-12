@@ -5,7 +5,7 @@ Pictovap Local Demo
 Runs the full visual finishing pipeline with no external credentials.
 
 Usage:
-    python -m pictova.demo
+    python -m pictovap.demo
     python examples/demo.py
     make demo
 """
@@ -21,15 +21,15 @@ from pathlib import Path
 # Add src to path when run directly from repo root
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from pictova.core.primitives import (  # noqa: E402
+from pictovap.core.primitives import (  # noqa: E402
     VisualBrief,
     FitScore,
     ProvenancePack,
     CMSPlacement,
     PlacementInstruction,
 )
-from pictova.core.profile import PublisherProfile  # noqa: E402
-from pictova.core.sources import fetch_candidates  # noqa: E402
+from pictovap.core.profile import PublisherProfile  # noqa: E402
+from pictovap.core.sources import fetch_candidates  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -298,7 +298,7 @@ def _resolve_sample_article() -> Path | None:
        contributors actually edit when iterating on the example in a source
        checkout (plain clone or ``pip install -e .``); preferring it means
        their edits are picked up immediately, with no reinstall/resync step.
-    2. The packaged copy at ``pictova/data/sample-article.md``, shipped as
+    2. The packaged copy at ``pictovap/data/sample-article.md``, shipped as
        real package data (see ``[tool.setuptools.package-data]`` in
        pyproject.toml). This is what makes ``pictovap demo`` work for a
        genuine ``pip install pictovap`` from PyPI: ``examples/`` is a
@@ -315,7 +315,7 @@ def _resolve_sample_article() -> Path | None:
 
     try:
         import importlib.resources as resources
-        packaged = resources.files("pictova.data").joinpath("sample-article.md")
+        packaged = resources.files("pictovap.data").joinpath("sample-article.md")
         if packaged.is_file():
             return Path(str(packaged))
     except (ModuleNotFoundError, FileNotFoundError, TypeError):
@@ -421,7 +421,7 @@ def _build_plan_output(article_path: Path, profile: PublisherProfile, *, use_rea
                 chash = hashlib.sha256(content.encode()).hexdigest()[:16]
                 gen_name = f"pictovap_{cand['filename'].rsplit('.', 1)[0]}.webp"
 
-                from pictova.core.demo_metadata import generate_local_alt_text, generate_local_caption
+                from pictovap.core.demo_metadata import generate_local_alt_text, generate_local_caption
                 alt_text = generate_local_alt_text(cand, slot, language=brief.article_language)
                 caption = generate_local_caption(cand, slot, language=brief.article_language)
 

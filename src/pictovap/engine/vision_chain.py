@@ -25,8 +25,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
-from pictova.utils.config import env_str, load_project_env
-from pictova.vision_templates import TRAVEL_BLOG
+from pictovap.utils.config import env_str, load_project_env
+from pictovap.vision_templates import TRAVEL_BLOG
 
 load_project_env()
 
@@ -238,7 +238,7 @@ def analyze_image_vision_chain(
         image_path:    Path to the image file.
         location_hint: Geographic context hint (e.g. "Akyaka").
         post_context:  Dict with ``title``, ``slug``, ``language``, etc.
-        template:      Optional :class:`~pictova.vision_templates.VisionTemplate`
+        template:      Optional :class:`~pictovap.vision_templates.VisionTemplate`
                        or template name string (e.g. ``"technical"``).
                        Defaults to the built-in ``travel_blog`` template.
 
@@ -251,8 +251,8 @@ def analyze_image_vision_chain(
 
     Example::
 
-        from pictova.engine.vision_chain import analyze_image_vision_chain
-        from pictova.vision_templates import TECHNICAL
+        from pictovap.engine.vision_chain import analyze_image_vision_chain
+        from pictovap.vision_templates import TECHNICAL
 
         meta = analyze_image_vision_chain(
             "photo.webp",
@@ -261,7 +261,7 @@ def analyze_image_vision_chain(
         )
     """
     if isinstance(template, str):
-        from pictova.vision_templates import get_template
+        from pictovap.vision_templates import get_template
         template = get_template(template)
     post_context = post_context or {}
     errors: list[str] = []

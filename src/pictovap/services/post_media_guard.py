@@ -12,7 +12,7 @@ import re
 import tempfile
 from typing import Any, Dict, Iterable, List, Optional
 
-from pictova.utils.config import env_str, get_workspace_root
+from pictovap.utils.config import env_str, get_workspace_root
 
 
 MANIFEST_VERSION = 1

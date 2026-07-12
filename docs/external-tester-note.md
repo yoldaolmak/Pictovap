@@ -27,7 +27,7 @@ make demo
 **Try your own article:**
 
 ```bash
-python -m pictova.demo --article path/to/your/article.md --output my-plan.json
+python -m pictovap.demo --article path/to/your/article.md --output my-plan.json
 ```
 
 **Then:**

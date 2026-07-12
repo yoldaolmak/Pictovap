@@ -57,7 +57,7 @@ class VisualBrief:
         It extracts headings and builds image slots from the document structure.
         """
         from pathlib import Path
-        from pictova.core.language import detect_language
+        from pictovap.core.language import detect_language
         text = Path(path).read_text(encoding="utf-8")
 
         # Call our deterministic language detector

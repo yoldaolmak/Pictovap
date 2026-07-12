@@ -1,10 +1,6 @@
 [flake8]
 max-line-length = 120
-# metadata_generator.py: long natural-language LLM prompt strings (context
-# line, JSON schema examples). Splitting them mid-line risks corrupting the
-# literal text sent to the metadata model.
 # wordpress.py: long regex patterns matching Gutenberg block markup. Splitting
 # them mid-pattern risks silently breaking the match.
 per-file-ignores =
-    src/pictova/core/metadata_generator.py:E501
-    src/pictova/services/wordpress.py:E501
+    src/pictovap/services/wordpress.py:E501

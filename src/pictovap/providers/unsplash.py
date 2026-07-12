@@ -10,7 +10,7 @@ from typing import Dict, List
 
 import requests
 
-from pictova.utils.config import get_vil_dir, load_project_env
+from pictovap.utils.config import get_vil_dir, load_project_env
 
 load_project_env()
 

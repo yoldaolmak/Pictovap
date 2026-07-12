@@ -1,7 +1,7 @@
 """Deterministic, credential-free metadata generation for the local demo.
 
 This is a small dictionary-based generator (English/Turkish only) used by
-``pictova.demo`` and the public ``pictovap plan`` command path — it never
+``pictovap.demo`` and the public ``pictovap plan`` command path — it never
 calls an external API. For LLM-backed, vision-capable metadata generation,
 see ``engine.vision_chain`` instead.
 """

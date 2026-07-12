@@ -161,9 +161,9 @@ Specifically:
 
 ## Compatibility Note
 
-Product name: Pictovap. The Python package, import name, and console-script
-entry point may remain `pictova` for backward compatibility — see
-[Brand & Naming](docs/architecture/naming.md).
+Product name: Pictovap. Since 0.3.0 the Python package, import name, and
+console-script entry point are all `pictovap`; `pictova` remains a deprecated
+alias — see [Brand & Naming](docs/architecture/naming.md).
 
 ## Contributing
 

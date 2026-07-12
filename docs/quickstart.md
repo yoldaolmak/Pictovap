@@ -35,7 +35,7 @@ pictovap demo
 Or using the legacy module syntax:
 
 ```bash
-python -m pictova.demo
+python -m pictovap.demo
 ```
 
 This will:

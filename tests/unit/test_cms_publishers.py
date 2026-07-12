@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from pictova.publishers.ghost import GhostPublisher
-from pictova.publishers.strapi import StrapiPublisher
+from pictovap.publishers.ghost import GhostPublisher
+from pictovap.publishers.strapi import StrapiPublisher
 
 
 # ── GhostPublisher ────────────────────────────────────────────────────────────

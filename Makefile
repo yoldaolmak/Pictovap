@@ -14,7 +14,7 @@ help:
 	@echo "  security-check  Run security hygiene tests"
 
 demo:
-	python3 -m pictova.demo
+	python3 -m pictovap.demo
 
 install:
 	pip install -r requirements.txt

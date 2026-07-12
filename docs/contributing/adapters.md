@@ -15,7 +15,7 @@ Image source adapters add new ways to supply candidate images to the pipeline.
 ### File Location
 
 ```
-src/pictova/providers/<your_source_name>.py
+src/pictovap/providers/<your_source_name>.py
 ```
 
 ### Required Output Shape
@@ -47,7 +47,7 @@ Every adapter must have a test that:
 
 ### Checklist
 
-- [ ] Adapter file in `src/pictova/providers/`
+- [ ] Adapter file in `src/pictovap/providers/`
 - [ ] Credentials (if any) come from environment variables only
 - [ ] `.env.example` updated with credential key names
 - [ ] Unit tests with mocked HTTP
@@ -61,13 +61,13 @@ CMS adapters consume the `CMSPlacement` plan and place images in a target CMS.
 ### File Location
 
 ```
-src/pictova/publishers/<your_cms_name>_adapter.py
+src/pictovap/publishers/<your_cms_name>_adapter.py
 ```
 
 ### Required Interface
 
 ```python
-from pictova.core.primitives import CMSPlacement
+from pictovap.core.primitives import CMSPlacement
 
 class MyCMSAdapter:
     def __init__(self, profile):
@@ -93,7 +93,7 @@ Every adapter must have a test that:
 
 ### Checklist
 
-- [ ] Adapter file in `src/pictova/publishers/`
+- [ ] Adapter file in `src/pictovap/publishers/`
 - [ ] Credentials from environment only
 - [ ] `.env.example` updated
 - [ ] Unit tests with mocked HTTP

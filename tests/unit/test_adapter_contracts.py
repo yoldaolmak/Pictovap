@@ -20,15 +20,15 @@ from unittest.mock import patch
 
 import pytest
 
-from pictova.core.adapters import CMSAdapter, ImageSourceAdapter
-from pictova.core.primitives import CMSPlacement, PlacementInstruction
-from pictova.providers.deposit import DepositPhotosSource
-from pictova.providers.local import LocalFolderSource
-from pictova.providers.openverse import OpenverseSource
-from pictova.providers.pexels import PexelsSource
-from pictova.providers.unsplash import YOUnsplashDownloader
-from pictova.publishers.ghost import GhostPublisher
-from pictova.publishers.strapi import StrapiPublisher
+from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter
+from pictovap.core.primitives import CMSPlacement, PlacementInstruction
+from pictovap.providers.deposit import DepositPhotosSource
+from pictovap.providers.local import LocalFolderSource
+from pictovap.providers.openverse import OpenverseSource
+from pictovap.providers.pexels import PexelsSource
+from pictovap.providers.unsplash import YOUnsplashDownloader
+from pictovap.publishers.ghost import GhostPublisher
+from pictovap.publishers.strapi import StrapiPublisher
 
 REQUIRED_CANDIDATE_FIELDS = {
     "id", "filename", "provider", "source_type", "local_path", "source_url",
@@ -104,7 +104,7 @@ def test_cms_adapter_conforms_to_protocol(adapter_cls):
 
 
 def test_wordpress_conforms_to_cms_adapter_protocol():
-    from pictova.services.wordpress import WordPressUploader
+    from pictovap.services.wordpress import WordPressUploader
     assert issubclass(WordPressUploader, CMSAdapter)
 
 
@@ -123,7 +123,7 @@ def test_cms_adapter_raises_clear_error_without_credentials(adapter_cls, env_key
 
 
 def test_wordpress_raises_clear_error_without_credentials(monkeypatch):
-    from pictova.services.wordpress import WordPressUploader
+    from pictovap.services.wordpress import WordPressUploader
     for key in ("WP_URL", "WP_USER", "WP_APP_PASSWORD"):
         monkeypatch.delenv(key, raising=False)
     with pytest.raises(ValueError, match="Missing WordPress credentials"):

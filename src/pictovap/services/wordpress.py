@@ -11,15 +11,15 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from pictova.core.primitives import CMSPlacement
-from pictova.services.post_media_guard import (
+from pictovap.core.primitives import CMSPlacement
+from pictovap.services.post_media_guard import (
     assess_post_media,
     load_post_media_manifest,
     manifest_path as post_media_manifest_path,
     media_items_from_content,
     save_post_media_manifest,
 )
-from pictova.utils.config import env_str, load_project_env
+from pictovap.utils.config import env_str, load_project_env
 
 load_project_env()
 

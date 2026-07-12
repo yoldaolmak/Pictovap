@@ -33,7 +33,7 @@ Each `PlacementInstruction` describes one image placement:
 
 ## CMS Adapters
 
-CMS-specific adapters (in `src/pictova/publishers/`) read the `CMSPlacement` plan
+CMS-specific adapters (in `src/pictovap/publishers/`) read the `CMSPlacement` plan
 and execute the native API calls for their platform:
 
 - **WordPress** (production-tested): uploads to media library, inserts Gutenberg image blocks
@@ -47,7 +47,7 @@ adapter that reads the same `CMSPlacement` plan — the core engine is unchanged
 ## Example
 
 ```python
-from pictova.core.primitives import CMSPlacement, PlacementInstruction
+from pictovap.core.primitives import CMSPlacement, PlacementInstruction
 
 placement = CMSPlacement(
     article_id="demo-article-001",
@@ -69,6 +69,6 @@ placement = CMSPlacement(
 print(placement.to_dict())
 ```
 
-**Source:** `src/pictova/core/primitives.py` — `CMSPlacement` and `PlacementInstruction` classes.
+**Source:** `src/pictovap/core/primitives.py` — `CMSPlacement` and `PlacementInstruction` classes.
 
 See also: [Adapter Architecture](../adapters/overview.md) for how to add a new CMS target.

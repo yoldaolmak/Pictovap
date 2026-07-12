@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-12
+
+### Changed
+* **Breaking (soft):** the importable package was renamed from `pictova`
+  to `pictovap`, matching the product and PyPI distribution name.
+  Old imports keep working through a deprecation alias — `import pictova`
+  and `from pictova.core... import ...` resolve to the same module
+  objects as their `pictovap` counterparts and emit a
+  `DeprecationWarning`. The alias will be removed in a future major
+  version.
+
+  Migration: replace `pictova` with `pictovap` in imports; nothing else
+  changes. The `pictova` console script also remains as an alias of
+  `pictovap`.
+
+### Added
+* runnable adapter examples under `examples/adapters/` (image source and
+  CMS adapter skeletons that plug into the real pipeline without
+  credentials)
+
 ## [0.2.2] - 2026-07-12
 
 ### Fixed

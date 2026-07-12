@@ -9,7 +9,7 @@ Runs the local credential-free demo using the sample article and mock candidates
 ```bash
 pictovap demo
 ```
-*(Also available via `python -m pictova.demo` for backward compatibility).*
+*(Also available via `python -m pictovap.demo` for backward compatibility).*
 
 ### Run with a Custom Article
 Executes the visual finishing pipeline on a specific Markdown article and outputs the canonical JSON plan.

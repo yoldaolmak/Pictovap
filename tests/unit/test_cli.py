@@ -8,7 +8,7 @@ def test_pictovap_demo():
     assert "Pictovap Local Demo" in result.stdout
 
 def test_python_m_pictova_demo():
-    result = subprocess.run(["python", "-m", "pictova.demo"], capture_output=True, text=True)
+    result = subprocess.run(["python", "-m", "pictovap.demo"], capture_output=True, text=True)
     assert result.returncode == 0
     assert "Pictovap Local Demo" in result.stdout
 

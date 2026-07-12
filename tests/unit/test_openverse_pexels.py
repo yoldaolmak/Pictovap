@@ -4,9 +4,9 @@ from __future__ import annotations
 import json
 from unittest.mock import MagicMock, patch
 
-from pictova.core.adapters import ImageSourceAdapter
-from pictova.providers.openverse import OpenverseSource, search_candidates as openverse_search
-from pictova.providers.pexels import PexelsSource, search_candidates as pexels_search
+from pictovap.core.adapters import ImageSourceAdapter
+from pictovap.providers.openverse import OpenverseSource, search_candidates as openverse_search
+from pictovap.providers.pexels import PexelsSource, search_candidates as pexels_search
 
 
 # ── Openverse ──────────────────────────────────────────────────────────────────
@@ -20,7 +20,7 @@ def test_openverse_requires_no_credentials_to_construct():
 
 
 def test_openverse_returns_empty_list_on_network_error():
-    with patch("pictova.providers.openverse.urllib.request.urlopen", side_effect=OSError("refused")):
+    with patch("pictovap.providers.openverse.urllib.request.urlopen", side_effect=OSError("refused")):
         assert openverse_search("beach", 5) == []
 
 
@@ -43,7 +43,7 @@ def test_openverse_parses_real_shaped_response():
     mock_resp.read.return_value = json.dumps(fake_response).encode()
     mock_resp.__enter__.return_value = mock_resp
 
-    with patch("pictova.providers.openverse.urllib.request.urlopen", return_value=mock_resp):
+    with patch("pictovap.providers.openverse.urllib.request.urlopen", return_value=mock_resp):
         candidates = openverse_search("bay", 5)
 
     assert len(candidates) == 1
@@ -72,7 +72,7 @@ def test_pexels_returns_empty_list_without_api_key(monkeypatch):
 
 def test_pexels_returns_empty_list_on_network_error(monkeypatch):
     monkeypatch.setenv("PEXELS_API_KEY", "test-key")
-    with patch("pictova.providers.pexels.urllib.request.urlopen", side_effect=OSError("refused")):
+    with patch("pictovap.providers.pexels.urllib.request.urlopen", side_effect=OSError("refused")):
         assert pexels_search("mountains", 5) == []
 
 
@@ -94,7 +94,7 @@ def test_pexels_parses_real_shaped_response(monkeypatch):
     mock_resp.read.return_value = json.dumps(fake_response).encode()
     mock_resp.__enter__.return_value = mock_resp
 
-    with patch("pictova.providers.pexels.urllib.request.urlopen", return_value=mock_resp):
+    with patch("pictovap.providers.pexels.urllib.request.urlopen", return_value=mock_resp):
         candidates = pexels_search("mountains", 5)
 
     assert len(candidates) == 1

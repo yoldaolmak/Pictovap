@@ -44,7 +44,7 @@ It does not depend on any specific AI provider.
 ## Example
 
 ```python
-from pictova.core.primitives import ProvenancePack
+from pictovap.core.primitives import ProvenancePack
 
 pack = ProvenancePack(
     image_id="img-backpack-01",
@@ -71,4 +71,4 @@ print(pack.to_dict())
 The `ProvenancePack` passes into the `CMSPlacement` stage, which reads it to
 construct the final placement instructions, including alt text and captions.
 
-**Source:** `src/pictova/core/primitives.py` — `ProvenancePack` class.
+**Source:** `src/pictovap/core/primitives.py` — `ProvenancePack` class.

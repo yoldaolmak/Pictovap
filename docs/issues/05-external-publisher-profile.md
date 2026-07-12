@@ -16,7 +16,7 @@ Showing that Pictovap handles non-travel content helps potential adopters evalua
 **Acceptance criteria:**
 - A new profile YAML exists in `examples/profiles/`.
 - A matching sample article exists in `examples/articles/`.
-- `python -m pictova.demo --article examples/articles/<new>.md --profile examples/profiles/<new>.yaml` runs without errors.
+- `python -m pictovap.demo --article examples/articles/<new>.md --profile examples/profiles/<new>.yaml` runs without errors.
 - The output demonstrates reasonable image slots for the content type.
 
 **Credentials required:** No

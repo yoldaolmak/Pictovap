@@ -21,8 +21,8 @@ from typing import Any, Dict, List
 
 import requests
 
-from pictova.core.primitives import CMSPlacement
-from pictova.utils.config import load_project_env
+from pictovap.core.primitives import CMSPlacement
+from pictovap.utils.config import load_project_env
 
 load_project_env()
 

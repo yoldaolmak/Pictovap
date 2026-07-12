@@ -9,7 +9,7 @@ Different image APIs return licenses in different string formats (e.g., `"cc0"`,
 License handling is safety-critical for publishers. A unified enum reduces the risk of misclassified licenses and makes the Provenance Pack more trustworthy as an audit trail.
 
 **Proposed approach:**
-- Define a `LicenseType` enum in `src/pictova/core/primitives.py`.
+- Define a `LicenseType` enum in `src/pictovap/core/primitives.py`.
 - Map common license strings from supported providers to the enum.
 - Update the Provenance Pack to use `LicenseType` instead of raw strings.
 - Add unit tests for mapping edge cases.

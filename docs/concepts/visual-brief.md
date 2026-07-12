@@ -38,7 +38,7 @@ Pictovap builds a `VisualBrief` using a deterministic rule-based parser:
 This parser does not call any AI API. It is pure Python, stateless, and testable. Language detection is deterministic and simple; future iterations might introduce more advanced NLP detection models if required.
 
 ```python
-from pictova.core.primitives import VisualBrief
+from pictovap.core.primitives import VisualBrief
 
 brief = VisualBrief.from_markdown("examples/sample-article.md")
 print(brief.article_title)   # "The Future of Minimalist Travel"
@@ -52,9 +52,9 @@ print(brief.image_slots[1]["section_excerpt"]) # First few sentences context
 The `VisualBrief` feeds into the `FitScore` stage, where candidate images are evaluated
 against each slot's requirements.
 
-**Source:** `src/pictova/core/primitives.py` — `VisualBrief` class.
+**Source:** `src/pictovap/core/primitives.py` — `VisualBrief` class.
 
 ## Compatibility Note
 
 Product name: Pictovap.
-Python package and legacy CLI may remain `pictova` for backward compatibility.
+The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias.

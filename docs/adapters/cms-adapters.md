@@ -16,7 +16,7 @@ Those steps happen in the core pipeline before the adapter is called.
 
 ## Existing Adapters
 
-### WordPress / Gutenberg (`src/pictova/services/wordpress.py`)
+### WordPress / Gutenberg (`src/pictovap/services/wordpress.py`)
 
 **Status: production-tested**
 
@@ -35,7 +35,7 @@ WP_APP_PASSWORD=your_app_password
 
 WordPress is one adapter among many. Nothing in the core engine is specific to WordPress.
 
-### Ghost (`src/pictova/publishers/ghost.py`)
+### Ghost (`src/pictovap/publishers/ghost.py`)
 
 **Status: reference implementation, not production-tested**
 
@@ -44,7 +44,7 @@ at the end of the post's Lexical body. It does not yet honor
 `target_section` or `placement_strategy` — every image lands at the bottom,
 in placement order.
 
-### Strapi (`src/pictova/publishers/strapi.py`)
+### Strapi (`src/pictovap/publishers/strapi.py`)
 
 **Status: reference implementation, not production-tested**
 
@@ -58,7 +58,7 @@ reports this back through `place()`'s `warnings`, it does not fail silently.
 Projects with a gallery/repeatable media field should subclass
 `StrapiPublisher` and override `place()`.
 
-### Mock (`src/pictova/demo.py`)
+### Mock (`src/pictovap/demo.py`)
 
 **Status: used by the credential-free demo**
 
@@ -67,7 +67,7 @@ no credentials, no network calls.
 
 ## Writing a New CMS Adapter
 
-1. Create a new file in `src/pictova/publishers/`, e.g. `ghost_adapter.py`.
+1. Create a new file in `src/pictovap/publishers/`, e.g. `ghost_adapter.py`.
 2. Implement a class with a `place(placement: CMSPlacement) -> dict` method.
 3. The method should:
    - Upload each image via the CMS's media API

@@ -42,7 +42,7 @@ jobs:
         run: pytest tests/unit -v
 
       - name: Demo smoke test
-        run: python -m pictova.demo
+        run: python -m pictovap.demo
 
   lint:
     runs-on: ubuntu-latest

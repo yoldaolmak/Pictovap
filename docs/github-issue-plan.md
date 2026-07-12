@@ -17,7 +17,7 @@ These issues are ready to be opened manually on GitHub after the v0.2.0 release.
 Pictovap currently supports Unsplash, DepositPhotos (stub), and a local visual memory database as image sources. Openverse is a large, free, CC-licensed image search API maintained by WordPress.org that would expand the candidate pool significantly.
 
 **Scope:**
-- Implement `src/pictova/providers/openverse.py` following the existing provider interface.
+- Implement `src/pictovap/providers/openverse.py` following the existing provider interface.
 - Handle pagination and rate limiting.
 - Map results to Pictovap's `candidate` model (source path, metadata, license info).
 - Add unit tests with mock responses.
@@ -29,7 +29,7 @@ Pictovap currently supports Unsplash, DepositPhotos (stub), and a local visual m
 - Pagination is handled for queries returning many results.
 - License information is mapped into the Provenance Pack format.
 - Unit tests pass with mocked API responses.
-- The adapter is registered in `src/pictova/config.py`.
+- The adapter is registered in `src/pictovap/config.py`.
 
 ---
 
@@ -47,7 +47,7 @@ We'd like early feedback from anyone willing to try Pictovap's demo with their o
 
 **Steps:**
 1. Clone the repository and follow the [Quickstart](README.md#quickstart).
-2. Run: `python -m pictova.demo --article path/to/your/article.md --output my-plan.json`
+2. Run: `python -m pictovap.demo --article path/to/your/article.md --output my-plan.json`
 3. Inspect the JSON output.
 
 **What we'd like to know:**
@@ -86,7 +86,7 @@ Pictovap currently has a WordPress CMS adapter extracted from production use. Gh
 
 **Acceptance criteria:**
 - Discussion produces a clear implementation plan.
-- If implemented: `src/pictova/publishers/ghost.py` translates `CMSPlacement` into Ghost Admin API payload with tests.
+- If implemented: `src/pictovap/publishers/ghost.py` translates `CMSPlacement` into Ghost Admin API payload with tests.
 
 ---
 
@@ -103,7 +103,7 @@ Pictovap currently has a WordPress CMS adapter extracted from production use. Gh
 Different image APIs return licenses in different string formats (e.g., `"cc0"`, `"CC0 1.0"`, `"creative_commons"`, `"unsplash"`). Pictovap currently passes these as raw strings. A unified `LicenseType` enum would make license handling more reliable and auditable.
 
 **Scope:**
-- Define a `LicenseType` enum in `src/pictova/core/primitives.py`.
+- Define a `LicenseType` enum in `src/pictovap/core/primitives.py`.
 - Map common license strings from supported providers to the enum.
 - Update the Provenance Pack to use `LicenseType` instead of raw strings.
 - Add unit tests for mapping edge cases.
@@ -140,5 +140,5 @@ Pictovap's current examples are focused on travel blogging (the dogfooding case)
 **Acceptance criteria:**
 - A new profile YAML exists in `examples/profiles/`.
 - A matching sample article exists in `examples/articles/`.
-- `python -m pictova.demo --article examples/articles/<new>.md --profile examples/profiles/<new>.yaml` runs without errors.
+- `python -m pictovap.demo --article examples/articles/<new>.md --profile examples/profiles/<new>.yaml` runs without errors.
 - The output demonstrates reasonable image slots for the content type.

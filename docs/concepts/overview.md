@@ -58,5 +58,5 @@ no credentials, no CMS, and no external APIs.
 ## Compatibility Note
 
 Product name: Pictovap.
-Python package and legacy CLI may remain `pictova` for backward compatibility.
+The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias.
 Preferred public product name is Pictovap.

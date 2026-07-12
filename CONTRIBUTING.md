@@ -41,11 +41,11 @@ of those contracts.
 
 | Directory | Purpose |
 | :--- | :--- |
-| `src/pictova/app/` | CLI entry points (`demo`, `plan`, `report`). No business logic. |
-| `src/pictova/core/` | Domain primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`) and the `ImageSourceAdapter` / `CMSAdapter` protocols in `core/adapters.py`. |
-| `src/pictova/engine/` | Pipeline logic that operates only on `core/` primitives — no adapter-specific code. |
-| `src/pictova/providers/` | Image source adapters (Local, Unsplash, DepositPhotos, Openverse, Pexels). Each implements `search_candidates(query, count)` and must construct without credentials. |
-| `src/pictova/publishers/`, `src/pictova/services/` | CMS adapters (Ghost, Strapi, WordPress). Each implements `place(placement)` returning `{placed, failed, warnings}`. |
+| `src/pictovap/app/` | CLI entry points (`demo`, `plan`, `report`). No business logic. |
+| `src/pictovap/core/` | Domain primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`) and the `ImageSourceAdapter` / `CMSAdapter` protocols in `core/adapters.py`. |
+| `src/pictovap/engine/` | Pipeline logic that operates only on `core/` primitives — no adapter-specific code. |
+| `src/pictovap/providers/` | Image source adapters (Local, Unsplash, DepositPhotos, Openverse, Pexels). Each implements `search_candidates(query, count)` and must construct without credentials. |
+| `src/pictovap/publishers/`, `src/pictovap/services/` | CMS adapters (Ghost, Strapi, WordPress). Each implements `place(placement)` returning `{placed, failed, warnings}`. |
 
 Before adding a new adapter, read the
 [Adapter Contribution Guide](docs/contributing/adapters.md) — it covers the
@@ -53,7 +53,7 @@ exact interface contract, credential-handling rules, and test expectations.
 
 > [!WARNING]
 > A new adapter that doesn't conform to `ImageSourceAdapter` or `CMSAdapter`
-> (see `src/pictova/core/adapters.py`) will not be merged. If you're unsure
+> (see `src/pictovap/core/adapters.py`) will not be merged. If you're unsure
 > where a piece of logic belongs, ask in your PR.
 
 ---
@@ -62,8 +62,8 @@ exact interface contract, credential-handling rules, and test expectations.
 
 When writing documentation or code comments, please adhere to our naming conventions:
 - **Product Name:** Pictovap (Always capitalized).
-- **CLI Command:** `pictova` (Always lowercase, kept for backward compatibility).
-- **Package Root:** `src.pictova`.
+- **CLI Command:** `pictovap` (always lowercase; `pictova` remains a deprecated alias).
+- **Package Root:** `src/pictovap`.
 
 ---
 

@@ -9,13 +9,13 @@ These adapters supply candidate images to the pipeline. Each follows the same in
 contract described in [Image Source Adapters](../adapters/image-sources.md).
 
 ### Pixabay Adapter
-- **Scope:** New file in `src/pictova/providers/pixabay.py`
+- **Scope:** New file in `src/pictovap/providers/pixabay.py`
 - **API:** https://pixabay.com/api/docs/ (free key)
 - **What it does:** Queries Pixabay for CC0 images
 - **Good for:** Similar to Pexels; straightforward REST pattern
 
 ### Wikimedia Commons Adapter
-- **Scope:** New file in `src/pictova/providers/wikimedia.py`
+- **Scope:** New file in `src/pictovap/providers/wikimedia.py`
 - **API:** https://commons.wikimedia.org/wiki/API:Main_page (no key)
 - **What it does:** Searches freely licensed media for editorial and factual content
 - **Good for:** Contributors interested in open knowledge and licensing
@@ -28,7 +28,7 @@ These adapters read the `CMSPlacement` plan and place images in a target CMS.
 The interface is described in [CMS Adapters](../adapters/cms-adapters.md).
 
 ### Hugo Static Site Adapter
-- **Scope:** New file in `src/pictova/publishers/hugo_adapter.py`
+- **Scope:** New file in `src/pictovap/publishers/hugo_adapter.py`
 - **What it does:** Writes images to the Hugo `static/` directory and generates shortcodes
 - **Good for:** Static site enthusiasts; no external API required
 

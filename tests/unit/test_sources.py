@@ -4,14 +4,14 @@ from unittest.mock import patch
 
 from PIL import Image
 
-from pictova.core.adapters import ImageSourceAdapter
-from pictova.core.profile import PublisherProfile
-from pictova.core.sources import fetch_candidates
-from pictova.providers.deposit import DepositPhotosSource
-from pictova.providers.local import LocalFolderSource
-from pictova.providers.openverse import OpenverseSource
-from pictova.providers.pexels import PexelsSource
-from pictova.providers.unsplash import YOUnsplashDownloader
+from pictovap.core.adapters import ImageSourceAdapter
+from pictovap.core.profile import PublisherProfile
+from pictovap.core.sources import fetch_candidates
+from pictovap.providers.deposit import DepositPhotosSource
+from pictovap.providers.local import LocalFolderSource
+from pictovap.providers.openverse import OpenverseSource
+from pictovap.providers.pexels import PexelsSource
+from pictovap.providers.unsplash import YOUnsplashDownloader
 
 
 def test_all_source_adapters_conform_to_protocol():
@@ -123,7 +123,7 @@ def test_fetch_candidates_uses_openverse_when_configured():
         brand_name="Test Publisher",
         image_sources=["openverse"],
     )
-    with patch("pictova.providers.openverse.urllib.request.urlopen", return_value=mock_resp):
+    with patch("pictovap.providers.openverse.urllib.request.urlopen", return_value=mock_resp):
         candidates = fetch_candidates(profile, query="travel", count=5)
 
     assert len(candidates) == 1

@@ -49,7 +49,7 @@ While the current engine uses rule-based heuristics, the `FitScore` primitive is
 ## Example
 
 ```python
-from pictova.core.primitives import FitScore
+from pictovap.core.primitives import FitScore
 
 score = FitScore(
     candidate_id="img-001",
@@ -69,4 +69,4 @@ print(score.to_dict())
 Selected candidates from FitScore pass into the `ProvenancePack` stage.
 Rejected candidates are logged with their reason.
 
-**Source:** `src/pictova/core/primitives.py` — `FitScore` class.
+**Source:** `src/pictovap/core/primitives.py` — `FitScore` class.

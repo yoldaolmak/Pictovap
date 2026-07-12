@@ -21,7 +21,7 @@ places the images into the CMS.
 ## 2. Core Primitives
 
 The architecture revolves around four core data primitives
-(defined in `src/pictova/core/primitives.py`) that move sequentially
+(defined in `src/pictovap/core/primitives.py`) that move sequentially
 through the pipeline:
 
 1. **[Visual Brief](concepts/visual-brief.md)**: Structured extraction of what
@@ -52,9 +52,9 @@ orchestrates this flow without any hardcoded dependencies on external systems.
 
 Pictovap connects to the outside world via two types of adapters:
 
-- **Image Source Adapters** (`src/pictova/providers/`): Supply candidate images.
+- **Image Source Adapters** (`src/pictovap/providers/`): Supply candidate images.
   Examples: Local directory, Unsplash, DepositPhotos.
-- **CMS Placement Adapters** (`src/pictova/publishers/`): Consume the CMS
+- **CMS Placement Adapters** (`src/pictovap/publishers/`): Consume the CMS
   Placement plan and execute native API calls.
   Examples: WordPress, Ghost, Strapi.
 
@@ -95,8 +95,8 @@ No specific AI model or "Vision Chain" is a required architectural component.
 ## 9. Package/CLI Naming
 
 - **Product name:** Pictovap.
-- Python package (`src/pictova/`), import name, and console-script entry
-  points may remain `pictova` for backward compatibility.
+- Python package (`src/pictovap/`), import name, and console-script entry
+  points are `pictovap` since 0.3.0; `pictova` remains a deprecated alias.
 - See [Brand & Naming](architecture/naming.md) for the full reasoning.
 
 ## 10. Current Limitations
@@ -112,7 +112,7 @@ No specific AI model or "Vision Chain" is a required architectural component.
 
 ```
 src/
-  pictova/
+  pictovap/
     app/          # CLI entrypoint (demo / plan / report)
     core/         # Primitives, adapters, profile, pipeline sources
     engine/       # Vision chain (multi-provider image analysis)

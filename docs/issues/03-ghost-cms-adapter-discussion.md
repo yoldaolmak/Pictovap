@@ -16,7 +16,7 @@ Discuss the following before starting implementation:
 
 **Acceptance criteria:**
 - Discussion produces a clear implementation plan.
-- If implemented: `src/pictova/publishers/ghost.py` translates `CMSPlacement` into Ghost Admin API payload with tests.
+- If implemented: `src/pictovap/publishers/ghost.py` translates `CMSPlacement` into Ghost Admin API payload with tests.
 
 **Credentials required:** Yes (Local Ghost instance for testing)
 **Difficulty:** Medium

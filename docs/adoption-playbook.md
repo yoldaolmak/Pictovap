@@ -43,7 +43,7 @@ This runs the engine against `examples/sample-article.md` using deterministic sc
 You can test Pictovap against your own content:
 
 ```bash
-python -m pictova.demo --article path/to/your/article.md --profile examples/profiles/sample-publisher.yaml --output my-plan.json
+python -m pictovap.demo --article path/to/your/article.md --profile examples/profiles/sample-publisher.yaml --output my-plan.json
 ```
 
 It will parse your article, identify sections, and evaluate mock candidates for placement.

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-from pictova.services.wordpress import fetch_post_context, upload_images_batch
+from pictovap.services.wordpress import fetch_post_context, upload_images_batch
 
 
 def publish_processed_images(

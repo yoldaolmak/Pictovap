@@ -46,9 +46,9 @@ You can restrict to a single source by configuring `image_sources` in the publis
 
 ## Adding a New Source
 
-Sources are implemented as adapters under `src/pictova/providers/`. A new source needs:
+Sources are implemented as adapters under `src/pictovap/providers/`. A new source needs:
 
-1. A file in `src/pictova/providers/` implementing the candidate dict interface.
+1. A file in `src/pictovap/providers/` implementing the candidate dict interface.
 2. Registration in the profile system.
 3. A credential key in `.env.example` (if credentials are needed).
 4. Unit tests with mocked external calls.
@@ -65,4 +65,4 @@ when their environment variable is unset.
 ## Compatibility Note
 
 Product name: Pictovap.
-Python package and legacy CLI may remain `pictova` for backward compatibility.
+The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias.

@@ -2,17 +2,17 @@
 
 These tests exercise the `place(placement: CMSPlacement) -> dict` method that
 makes GhostPublisher, StrapiPublisher, and WordPressUploader conform to the
-`CMSAdapter` protocol (src/pictova/core/adapters.py). No network calls are
+`CMSAdapter` protocol (src/pictovap/core/adapters.py). No network calls are
 made; every HTTP boundary is mocked.
 """
 from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from pictova.core.adapters import CMSAdapter
-from pictova.core.primitives import CMSPlacement, PlacementInstruction
-from pictova.publishers.ghost import GhostPublisher
-from pictova.publishers.strapi import StrapiPublisher
+from pictovap.core.adapters import CMSAdapter
+from pictovap.core.primitives import CMSPlacement, PlacementInstruction
+from pictovap.publishers.ghost import GhostPublisher
+from pictovap.publishers.strapi import StrapiPublisher
 
 
 def _two_instructions() -> list[PlacementInstruction]:
@@ -45,7 +45,7 @@ def test_ghost_strapi_conform_to_cms_adapter_protocol():
 
 
 def test_wordpress_conforms_to_cms_adapter_protocol():
-    from pictova.services.wordpress import WordPressUploader
+    from pictovap.services.wordpress import WordPressUploader
     assert issubclass(WordPressUploader, CMSAdapter)
 
 
@@ -173,7 +173,7 @@ class TestWordPressPlace:
         monkeypatch.setenv("WP_URL", "https://example.com")
         monkeypatch.setenv("WP_USER", "editor")
         monkeypatch.setenv("WP_APP_PASSWORD", "app-password-value")
-        from pictova.services.wordpress import WordPressUploader
+        from pictovap.services.wordpress import WordPressUploader
         return WordPressUploader(site="demo")
 
     def test_place_delegates_to_upload_images_batch(self, monkeypatch):
@@ -190,7 +190,7 @@ class TestWordPressPlace:
             "content_update": {"success": True, "updated": True, "inserted": 2},
         }
 
-        with patch("pictova.services.wordpress.upload_images_batch", return_value=fake_batch_result) as mock_batch:
+        with patch("pictovap.services.wordpress.upload_images_batch", return_value=fake_batch_result) as mock_batch:
             result = pub.place(placement)
 
         mock_batch.assert_called_once()
@@ -219,7 +219,7 @@ class TestWordPressPlace:
             "content_update": {"success": True, "updated": False},
         }
 
-        with patch("pictova.services.wordpress.upload_images_batch", return_value=fake_batch_result):
+        with patch("pictovap.services.wordpress.upload_images_batch", return_value=fake_batch_result):
             result = pub.place(placement)
 
         assert result["placed"] == []
@@ -230,7 +230,7 @@ class TestWordPressPlace:
         pub = self._pub(monkeypatch)
         placement = CMSPlacement(article_id="not-a-post-id", placements=_two_instructions()[:1])
 
-        with patch("pictova.services.wordpress.upload_images_batch") as mock_batch:
+        with patch("pictovap.services.wordpress.upload_images_batch") as mock_batch:
             result = pub.place(placement)
 
         mock_batch.assert_not_called()
@@ -248,7 +248,7 @@ class TestWordPressPlace:
             "media_guard": {"status": "drift"},
         }
 
-        with patch("pictova.services.wordpress.upload_images_batch", return_value=fake_batch_result):
+        with patch("pictovap.services.wordpress.upload_images_batch", return_value=fake_batch_result):
             result = pub.place(placement)
 
         assert any("drift" in w for w in result["warnings"])

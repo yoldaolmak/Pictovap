@@ -2,7 +2,7 @@
 
 Three commands, matching the public library API 1:1:
     demo    - run the credential-free example pipeline
-    plan    - create a visual plan for a real article (pictova.create_visual_plan)
+    plan    - create a visual plan for a real article (pictovap.create_visual_plan)
     report  - render an existing JSON plan as a Markdown editor report
 """
 
@@ -13,7 +13,7 @@ import json
 import sys
 from typing import Any, Dict
 
-from pictova.demo import create_visual_plan, generate_report_from_file, run_demo
+from pictovap.demo import create_visual_plan, generate_report_from_file, run_demo
 
 
 def _print_json(payload: Dict[str, Any]) -> None:

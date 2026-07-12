@@ -3,14 +3,14 @@ Unit tests for the core Pictovap primitives.
 Ensures that the models can be instantiated and serialized correctly.
 """
 
-from pictova.core.primitives import (
+from pictovap.core.primitives import (
     VisualBrief,
     FitScore,
     ProvenancePack,
     CMSPlacement,
     PlacementInstruction
 )
-from pictova.core.profile import PublisherProfile
+from pictovap.core.profile import PublisherProfile
 
 
 def test_visual_brief_serialization():

@@ -42,7 +42,7 @@ See: [CMS Adapters](cms-adapters.md)
 
 ```
 src/
-└── pictova/
+└── pictovap/
     ├── providers/    # Image source adapters
     └── publishers/   # CMS placement adapters
 ```
@@ -50,7 +50,7 @@ src/
 ## The Core Engine Is Adapter-Free
 
 The four primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`)
-and the demo pipeline (`src/pictova/demo.py`) have no dependencies on any specific
+and the demo pipeline (`src/pictovap/demo.py`) have no dependencies on any specific
 adapter. They can be tested and run in complete isolation.
 
 ## Adding a New Adapter

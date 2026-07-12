@@ -9,11 +9,11 @@ Pictovap currently supports Unsplash, DepositPhotos (stub), and a local visual m
 Adds a high-quality, free image source that doesn't require paid API keys, lowering the barrier for new users to run Pictovap with real (non-mock) candidates.
 
 **Proposed approach:**
-- Implement `src/pictova/providers/openverse.py` following the existing provider interface.
+- Implement `src/pictovap/providers/openverse.py` following the existing provider interface.
 - Handle pagination and rate limiting.
 - Map results to Pictovap's `candidate` model (source path, metadata, license info).
 - Add unit tests with mock responses.
-- Register the adapter in `src/pictova/config.py`.
+- Register the adapter in `src/pictovap/config.py`.
 
 **Acceptance criteria:**
 - Adapter connects to the Openverse API and returns candidates.

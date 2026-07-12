@@ -25,7 +25,7 @@ for a specific publisher. It decouples the core engine from site-specific hardco
 The built-in default profile is used by the local demo:
 
 ```python
-from pictova.core.profile import PublisherProfile
+from pictovap.core.profile import PublisherProfile
 
 profile = PublisherProfile.get_default_profile()
 print(profile.profile_id)    # "demo"
@@ -77,7 +77,7 @@ Pass a YAML profile path to `pictovap plan --profile <path>`, or construct a
 
 ## Compatibility Note
 
-Product name: Pictovap. Python package and CLI import name may remain `pictova`
+Product name: Pictovap. The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias
 for backward compatibility. `examples/profiles/sample-publisher.yaml` is a
 reference example, not the only supported configuration --
 `examples/profiles/yoldaolmak.py` shows the older, pre-`PublisherProfile`

@@ -58,7 +58,7 @@ class VisionTemplate:
 
     Example::
 
-        from pictova.vision_templates import VisionTemplate
+        from pictovap.vision_templates import VisionTemplate
 
         my_template = VisionTemplate(
             name="technical",

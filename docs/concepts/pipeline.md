@@ -59,7 +59,7 @@ Run the full pipeline with no credentials:
 ```bash
 make demo
 # or
-python -m pictova.demo
+python -m pictovap.demo
 ```
 
 This runs all four stages against `examples/sample-article.md`, using mock candidate
@@ -71,7 +71,7 @@ Because each stage produces a serializable object, you can inspect the output at
 any point:
 
 ```python
-from pictova.core.primitives import VisualBrief
+from pictovap.core.primitives import VisualBrief
 
 brief = VisualBrief.from_markdown("examples/sample-article.md")
 print(brief.to_dict())
@@ -81,7 +81,7 @@ print(brief.to_dict())
 
 ```
 src/
-└── pictova/
+└── pictovap/
     ├── core/         # Primitives and shared data structures
     ├── engine/       # Pipeline orchestration
     ├── providers/    # Image source adapters
@@ -93,4 +93,4 @@ src/
 ## Compatibility Note
 
 Product name: Pictovap.
-Python package and legacy CLI may remain `pictova` for backward compatibility.
+The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias.

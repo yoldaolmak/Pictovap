@@ -1,0 +1,460 @@
+{
+  "pipeline": "Pictovap Visual Finishing Demo",
+  "visual_brief": {
+    "article_title": "The Future of Minimalist Travel",
+    "article_id": "demo-article-001",
+    "article_language": "en",
+    "topic": "minimalist travel",
+    "detected_location": null,
+    "sections": [
+      {
+        "heading": "Packing Smart",
+        "level": "h2"
+      },
+      {
+        "heading": "Finding Serenity in Nature",
+        "level": "h2"
+      },
+      {
+        "heading": "Conclusion",
+        "level": "h2"
+      }
+    ],
+    "image_slots": [
+      {
+        "slot_id": "featured",
+        "purpose": "featured_image",
+        "preferred_type": "landscape",
+        "section_excerpt": "The Future of Minimalist Travel"
+      },
+      {
+        "slot_id": "section_0",
+        "purpose": "inline_after_packing_smart",
+        "preferred_type": "any",
+        "target_heading": "Packing Smart",
+        "section_excerpt": "The core of minimalism is the capsule wardrobe. By selecting versatile, neutral-colored clothing, travelers can mix and match outfits for any occasion without carrying excess weight."
+      },
+      {
+        "slot_id": "section_1",
+        "purpose": "inline_after_finding_serenity_in_nature",
+        "preferred_type": "any",
+        "target_heading": "Finding Serenity in Nature",
+        "section_excerpt": "When you travel with less, you have the physical and mental energy to explore further. Walking through ancient forests or hiking coastal trails becomes the focus of the trip, rather than managing lugg"
+      },
+      {
+        "slot_id": "section_2",
+        "purpose": "inline_after_conclusion",
+        "preferred_type": "any",
+        "target_heading": "Conclusion",
+        "section_excerpt": "Embracing this mindset transforms the journey. The world opens up when you carry only what you need."
+      }
+    ],
+    "avoid_list": [],
+    "editorial_notes": "",
+    "confidence": 0.8,
+    "source_path": "/private/tmp/claude-501/-Users-yoldaolmak-Projects-Pictovap--claude-worktrees-claude-md-review-5bc4a5/898b820f-759e-4bac-b399-5688e16a52b9/scratchpad/venv1/lib/python3.9/site-packages/pictovap/data/sample-article.md"
+  },
+  "fit_scores": {
+    "featured": [
+      {
+        "candidate_id": "img-backpack-01",
+        "slot_id": "featured",
+        "contextual_relevance": 2.0,
+        "section_relevance": 1.2,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 2.0,
+        "final_score": 12.2,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-sunset-05",
+        "slot_id": "featured",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.6,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.5,
+        "license_confidence": 1.5,
+        "cms_suitability": 2.0,
+        "final_score": 9.6,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+      },
+      {
+        "candidate_id": "img-forest-02",
+        "slot_id": "featured",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 2.0,
+        "final_score": 9.0,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-lowres-04",
+        "slot_id": "featured",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.6,
+        "technical_quality": 0.5,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 2.0,
+        "final_score": 8.1,
+        "decision": "rejected",
+        "human_reason": "Resolution too low (320x240)"
+      },
+      {
+        "candidate_id": "img-generic-03",
+        "slot_id": "featured",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 2.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.0,
+        "license_confidence": 0.5,
+        "cms_suitability": 2.0,
+        "final_score": 5.5,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=5.5), manual review recommended"
+      }
+    ],
+    "section_0": [
+      {
+        "candidate_id": "img-backpack-01",
+        "slot_id": "section_0",
+        "contextual_relevance": 2.0,
+        "section_relevance": 0.11,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 10.61,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-forest-02",
+        "slot_id": "section_0",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-sunset-05",
+        "slot_id": "section_0",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.5,
+        "license_confidence": 1.5,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+      },
+      {
+        "candidate_id": "img-lowres-04",
+        "slot_id": "section_0",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.0,
+        "technical_quality": 0.5,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 7.0,
+        "decision": "rejected",
+        "human_reason": "Resolution too low (320x240)"
+      },
+      {
+        "candidate_id": "img-generic-03",
+        "slot_id": "section_0",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 2.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.0,
+        "license_confidence": 0.5,
+        "cms_suitability": 1.5,
+        "final_score": 5.0,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=5.0), manual review recommended"
+      }
+    ],
+    "section_1": [
+      {
+        "candidate_id": "img-backpack-01",
+        "slot_id": "section_1",
+        "contextual_relevance": 2.0,
+        "section_relevance": 0.09,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 10.59,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-forest-02",
+        "slot_id": "section_1",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.18,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.68,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-sunset-05",
+        "slot_id": "section_1",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.18,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.5,
+        "license_confidence": 1.5,
+        "cms_suitability": 1.5,
+        "final_score": 8.68,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+      },
+      {
+        "candidate_id": "img-lowres-04",
+        "slot_id": "section_1",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.09,
+        "technical_quality": 0.5,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 7.09,
+        "decision": "rejected",
+        "human_reason": "Resolution too low (320x240)"
+      },
+      {
+        "candidate_id": "img-generic-03",
+        "slot_id": "section_1",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 2.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.0,
+        "license_confidence": 0.5,
+        "cms_suitability": 1.5,
+        "final_score": 5.0,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=5.0), manual review recommended"
+      }
+    ],
+    "section_2": [
+      {
+        "candidate_id": "img-backpack-01",
+        "slot_id": "section_2",
+        "contextual_relevance": 2.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 10.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=2.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-forest-02",
+        "slot_id": "section_2",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
+        "candidate_id": "img-sunset-05",
+        "slot_id": "section_2",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.5,
+        "license_confidence": 1.5,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=1.0, quality=3.0, license=1.5"
+      },
+      {
+        "candidate_id": "img-lowres-04",
+        "slot_id": "section_2",
+        "contextual_relevance": 1.0,
+        "section_relevance": 0.0,
+        "technical_quality": 0.5,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 7.0,
+        "decision": "rejected",
+        "human_reason": "Resolution too low (320x240)"
+      },
+      {
+        "candidate_id": "img-generic-03",
+        "slot_id": "section_2",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 2.0,
+        "duplication_risk": 0.0,
+        "source_trust": 1.0,
+        "license_confidence": 0.5,
+        "cms_suitability": 1.5,
+        "final_score": 5.0,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=5.0), manual review recommended"
+      }
+    ]
+  },
+  "provenance_packs": [
+    {
+      "image_id": "img-backpack-01",
+      "source_type": "local",
+      "provider": "local",
+      "source_url": null,
+      "local_source_path": "examples/assets/minimal-backpack.jpg",
+      "license_status": "CC0",
+      "attribution": null,
+      "original_filename": "minimal-backpack.jpg",
+      "generated_filename": "pictovap_minimal-backpack.webp",
+      "content_hash": "66007ff9d92b261c",
+      "article_id": "demo-article-001",
+      "slot_id": "featured",
+      "placement_target": "featured_image",
+      "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
+      "generated_caption": "The Future of Minimalist Travel",
+      "timestamp": "2026-07-12T19:19:30.967395",
+      "processing_actions": [
+        "resize_1200",
+        "webp_convert",
+        "exif_strip"
+      ]
+    },
+    {
+      "image_id": "img-forest-02",
+      "source_type": "local",
+      "provider": "local",
+      "source_url": null,
+      "local_source_path": "examples/assets/forest-path.jpg",
+      "license_status": "CC0",
+      "attribution": null,
+      "original_filename": "forest-path.jpg",
+      "generated_filename": "pictovap_forest-path.webp",
+      "content_hash": "0c8d86d771e6d03f",
+      "article_id": "demo-article-001",
+      "slot_id": "section_0",
+      "placement_target": "inline_after_packing_smart",
+      "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
+      "generated_caption": "Packing Smart: The core of minimalism is the capsule wardrobe.",
+      "timestamp": "2026-07-12T19:19:30.967425",
+      "processing_actions": [
+        "resize_1200",
+        "webp_convert",
+        "exif_strip"
+      ]
+    },
+    {
+      "image_id": "img-sunset-05",
+      "source_type": "api",
+      "provider": "unsplash_mock",
+      "source_url": "https://unsplash.com/photos/mock-sunset",
+      "local_source_path": null,
+      "license_status": "unsplash",
+      "attribution": "Photo by Jane Doe on Unsplash",
+      "original_filename": "sunset-mountains.jpg",
+      "generated_filename": "pictovap_sunset-mountains.webp",
+      "content_hash": "546a0986053c06d2",
+      "article_id": "demo-article-001",
+      "slot_id": "section_1",
+      "placement_target": "inline_after_finding_serenity_in_nature",
+      "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+      "generated_caption": "Finding Serenity in Nature: When you travel with less, you have the physical and mental energy to explore further.",
+      "timestamp": "2026-07-12T19:19:30.967450",
+      "processing_actions": [
+        "resize_1200",
+        "webp_convert",
+        "exif_strip"
+      ]
+    }
+  ],
+  "cms_placement": {
+    "article_id": "demo-article-001",
+    "adapter_target": "mock_adapter",
+    "target_platform": "demo",
+    "placements": [
+      {
+        "slot_id": "featured",
+        "output_path": "pictovap_minimal-backpack.webp",
+        "target_section": "",
+        "placement_strategy": "featured",
+        "image_role": "featured",
+        "alt_text": "A clean editorial image of travel packing and minimalist gear.",
+        "caption": "The Future of Minimalist Travel"
+      },
+      {
+        "slot_id": "section_0",
+        "output_path": "pictovap_forest-path.webp",
+        "target_section": "Packing Smart",
+        "placement_strategy": "after_heading",
+        "image_role": "content",
+        "alt_text": "A serene nature image showing a forest path surrounded by trees.",
+        "caption": "Packing Smart: The core of minimalism is the capsule wardrobe."
+      },
+      {
+        "slot_id": "section_1",
+        "output_path": "pictovap_sunset-mountains.webp",
+        "target_section": "Finding Serenity in Nature",
+        "placement_strategy": "after_heading",
+        "image_role": "content",
+        "alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+        "caption": "Finding Serenity in Nature: When you travel with less, you have the physical and mental energy to explore further."
+      }
+    ]
+  },
+  "source_path": "/private/tmp/claude-501/-Users-yoldaolmak-Projects-Pictovap--claude-worktrees-claude-md-review-5bc4a5/898b820f-759e-4bac-b399-5688e16a52b9/scratchpad/venv1/lib/python3.9/site-packages/pictovap/data/sample-article.md",
+  "candidates_evaluated": 5,
+  "profile": {
+    "id": "demo",
+    "brand": "Demo Publisher",
+    "cms_type": "wordpress",
+    "language": "en"
+  }
+}
