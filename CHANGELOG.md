@@ -2,6 +2,48 @@
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-12
+
+### Fixed
+* package could not be imported on Python 3.9 (`X | Y` annotation without
+  `from __future__ import annotations` in `demo.py`) despite declaring
+  `requires-python >= 3.9`; CI now tests 3.9 as well
+* runtime paths (`.env` lookup, post-media manifests) resolved relative to
+  the installed package and landed inside site-packages for a real
+  `pip install`; they now resolve from the working directory, with a
+  `PICTOVA_WORKSPACE_DIR` override
+* `pictova.__version__` reported 0.2.0 while the package was 0.2.1; now
+  synced and guarded by a test
+* `upload_media()` docstring promised slug-conflict handling that does
+  not exist
+
+### Changed
+* `YOWordPressUploader` renamed to `WordPressUploader`; the HTTP
+  User-Agent is now a version-aware `Pictovap-Media-Uploader/<version>`
+* language detection markers replaced with general-purpose Turkish and
+  English stopwords instead of topic-specific vocabulary
+* CI installs the package the way PyPI users get it
+  (`pip install ".[test]"` instead of an editable install), and a hygiene
+  test permanently scans `src/` and `tests/` for personal-legacy leftovers
+
+### Removed
+* ~2,400 lines of dead code inherited from the legacy personal project
+  (unused slug engine, unused metadata generator, unused image filter,
+  hardcoded geography aliases), none of it reachable from the pipeline
+
+## [0.2.1] - 2026-07-11
+
+### Fixed
+* missing `services/__init__.py` silently excluded the services module
+  from built packages
+* demo sample article only existed in a source checkout and crashed for
+  installed users; it now ships as package data
+* demo output path landed inside site-packages for a real install
+* report generation regressed to unconditional; it is opt-in again
+
+Note: the `v0.2.0` tag was never published to PyPI (its publish run
+failed before these fixes); 0.2.1 is the first release available on PyPI.
+
 ## [0.2.0] - 2026-07-09
 
 ### Added
