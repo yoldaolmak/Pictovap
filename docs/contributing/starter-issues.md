@@ -2,7 +2,7 @@
 
 This document maintains a backlog of verified, scope-controlled issues suitable for first-time contributors.
 
-These issues are not yet active on our GitHub board but are ready to be opened. If you want to work on one of these, please open an issue referencing this document!
+These are now open on the [GitHub issue board](https://github.com/yoldaolmak/Pictovap/issues). To claim one, comment on the issue with your intended approach.
 
 ## 1. Add Pixabay image source adapter
 **Problem:** We need another free, CC0 public image source alongside Openverse.
