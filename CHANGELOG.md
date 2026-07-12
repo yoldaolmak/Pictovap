@@ -10,6 +10,7 @@
 
 ### Changed
 * package metadata now uses the SPDX `MIT` expression and declares the shipped license file through current setuptools metadata
+* provider license strings are normalized with `LicenseType` in provenance records
 
 ## [0.3.1] - 2026-07-13
 

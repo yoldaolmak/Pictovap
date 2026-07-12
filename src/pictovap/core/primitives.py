@@ -9,9 +9,37 @@ the visual finishing pipeline:
 All primitives are serializable to JSON via their to_dict() methods.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 from datetime import datetime
+from enum import Enum
+
+
+class LicenseType(str, Enum):
+    CC0 = "cc0"
+    CC_BY = "cc_by"
+    CC_BY_SA = "cc_by_sa"
+    CC_BY_NC = "cc_by_nc"
+    UNSPLASH = "unsplash"
+    EDITORIAL = "editorial"
+    UNKNOWN = "unknown"
+
+    @classmethod
+    def from_string(cls, value: Any) -> "LicenseType":
+        if isinstance(value, cls):
+            return value
+        normalized = str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
+        aliases = {
+            "cc0_1.0": cls.CC0, "public_domain": cls.CC0,
+            "creative_commons": cls.CC_BY, "cc_by_4.0": cls.CC_BY,
+            "cc_by_sa_4.0": cls.CC_BY_SA, "cc_by_nc_4.0": cls.CC_BY_NC,
+        }
+        try:
+            return cls(normalized)
+        except ValueError:
+            return aliases.get(normalized, cls.UNKNOWN)
 
 
 @dataclass
@@ -166,7 +194,10 @@ class ProvenancePack:
     provider: str = ""
     source_url: Optional[str] = None
     local_source_path: Optional[str] = None
-    license_status: Optional[str] = None
+    license_status: LicenseType | str | None = LicenseType.UNKNOWN
+
+    def __post_init__(self) -> None:
+        self.license_status = LicenseType.from_string(self.license_status)
     attribution: Optional[str] = None
     original_filename: str = ""
     generated_filename: str = ""
@@ -186,7 +217,7 @@ class ProvenancePack:
             "provider": self.provider,
             "source_url": self.source_url,
             "local_source_path": self.local_source_path,
-            "license_status": self.license_status,
+            "license_status": LicenseType.from_string(self.license_status).value,
             "attribution": self.attribution,
             "original_filename": self.original_filename,
             "generated_filename": self.generated_filename,
