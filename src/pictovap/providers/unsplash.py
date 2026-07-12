@@ -15,7 +15,7 @@ from pictovap.utils.config import get_vil_dir, load_project_env
 load_project_env()
 
 
-class YOUnsplashDownloader:
+class UnsplashSource:
     """Download travel photos from Unsplash by query."""
 
     def __init__(self):

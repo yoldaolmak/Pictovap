@@ -249,7 +249,7 @@ class DepositPhotosSource:
     kept as free functions since they predate the ImageSourceAdapter
     protocol and existing callers rely on them directly. This thin wrapper
     exists so DepositPhotos can be instantiated and checked the same way as
-    `LocalFolderSource` and `YOUnsplashDownloader`
+    `LocalFolderSource` and `UnsplashSource`
     (`issubclass(DepositPhotosSource, ImageSourceAdapter)`), and is the
     preferred entry point for new code.
     """

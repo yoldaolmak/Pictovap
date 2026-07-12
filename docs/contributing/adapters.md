@@ -8,6 +8,15 @@ adapters (new providers) or CMS adapters (new publishing targets).
 Read the [Adapter Architecture Overview](../adapters/overview.md) to understand
 the two adapter types and where they live in the codebase.
 
+**Prefer starting from running code?** [`examples/adapters/`](../../examples/adapters/README.md)
+contains a runnable skeleton for each adapter type — both execute the real
+contracts with zero credentials:
+
+```bash
+python examples/adapters/custom_image_source.py
+python examples/adapters/custom_cms_adapter.py
+```
+
 ## Image Source Adapters
 
 Image source adapters add new ways to supply candidate images to the pipeline.

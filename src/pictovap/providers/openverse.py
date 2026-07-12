@@ -67,7 +67,7 @@ def search_candidates(query: str, count: int) -> List[Dict[str, Any]]:
 
 class OpenverseSource:
     """Class wrapper matching the pattern used by LocalFolderSource,
-    YOUnsplashDownloader, and DepositPhotosSource, so this adapter can be
+    UnsplashSource, and DepositPhotosSource, so this adapter can be
     checked against ImageSourceAdapter the same way."""
 
     def search_candidates(self, query: str, count: int) -> List[Dict[str, Any]]:

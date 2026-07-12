@@ -11,12 +11,12 @@ from pictovap.providers.deposit import DepositPhotosSource
 from pictovap.providers.local import LocalFolderSource
 from pictovap.providers.openverse import OpenverseSource
 from pictovap.providers.pexels import PexelsSource
-from pictovap.providers.unsplash import YOUnsplashDownloader
+from pictovap.providers.unsplash import UnsplashSource
 
 
 def test_all_source_adapters_conform_to_protocol():
     assert issubclass(LocalFolderSource, ImageSourceAdapter)
-    assert issubclass(YOUnsplashDownloader, ImageSourceAdapter)
+    assert issubclass(UnsplashSource, ImageSourceAdapter)
     assert issubclass(DepositPhotosSource, ImageSourceAdapter)
     assert issubclass(OpenverseSource, ImageSourceAdapter)
     assert issubclass(PexelsSource, ImageSourceAdapter)
@@ -27,7 +27,7 @@ def test_unsplash_construction_never_raises_without_credentials(monkeypatch):
     ever surface as an empty result — never as a raised exception from
     __init__ or search_candidates()."""
     monkeypatch.delenv("UNSPLASH_ACCESS_KEY", raising=False)
-    source = YOUnsplashDownloader()  # must not raise
+    source = UnsplashSource()  # must not raise
     assert source.search_candidates("travel", 5) == []
 
 

@@ -26,7 +26,7 @@ from pictovap.providers.deposit import DepositPhotosSource
 from pictovap.providers.local import LocalFolderSource
 from pictovap.providers.openverse import OpenverseSource
 from pictovap.providers.pexels import PexelsSource
-from pictovap.providers.unsplash import YOUnsplashDownloader
+from pictovap.providers.unsplash import UnsplashSource
 from pictovap.publishers.ghost import GhostPublisher
 from pictovap.publishers.strapi import StrapiPublisher
 
@@ -38,14 +38,14 @@ REQUIRED_CANDIDATE_FIELDS = {
 # Every image source adapter: must conform to the protocol and never raise
 # on construction, credentialed or not.
 IMAGE_SOURCE_ADAPTERS = [
-    LocalFolderSource, YOUnsplashDownloader, DepositPhotosSource, OpenverseSource, PexelsSource,
+    LocalFolderSource, UnsplashSource, DepositPhotosSource, OpenverseSource, PexelsSource,
 ]
 # Subset that is credential-gated: calling search_candidates() with no
 # credentials configured must degrade to [] without making a network call.
 # Openverse is excluded here because it needs no credentials at all -- an
 # unconfigured call to it is a real network request, which is covered with
 # a mocked failure in test_openverse_pexels.py instead.
-CREDENTIAL_GATED_IMAGE_SOURCES = [YOUnsplashDownloader, DepositPhotosSource, PexelsSource]
+CREDENTIAL_GATED_IMAGE_SOURCES = [UnsplashSource, DepositPhotosSource, PexelsSource]
 CMS_ADAPTER_CLASSES = [GhostPublisher, StrapiPublisher]  # constructor-credentialed adapters
 
 

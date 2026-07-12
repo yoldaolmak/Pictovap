@@ -16,6 +16,8 @@
   Migration: replace `pictova` with `pictovap` in imports; nothing else
   changes. The `pictova` console script also remains as an alias of
   `pictovap`.
+* `YOUnsplashDownloader` renamed to `UnsplashSource`, completing the
+  removal of legacy "YO" branding from adapter class names
 
 ### Added
 * runnable adapter examples under `examples/adapters/` (image source and

@@ -41,8 +41,8 @@ def _fetch_from_source(source_name: str, query: str, count: int) -> List[Dict[st
             return LocalFolderSource().search_candidates(query, count)
 
         if name == "unsplash":
-            from pictovap.providers.unsplash import YOUnsplashDownloader
-            return YOUnsplashDownloader().search_candidates(query, count)
+            from pictovap.providers.unsplash import UnsplashSource
+            return UnsplashSource().search_candidates(query, count)
 
         if name in ("deposit", "depositphotos"):
             from pictovap.providers.deposit import DepositPhotosSource

@@ -42,7 +42,7 @@ Reads images from a local directory. No credentials required.
 PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images  # .env or environment variable
 ```
 
-### Unsplash — `YOUnsplashDownloader` (`src/pictovap/providers/unsplash.py`)
+### Unsplash — `UnsplashSource` (`src/pictovap/providers/unsplash.py`)
 
 Queries the Unsplash API using keyword terms derived from the Visual Brief.
 
