@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed
+* demo smoke tests now write into isolated temporary directories and verify the file they actually generate
+* the bundled demo serializes a stable `sample-article.md` source label instead of a machine-specific `site-packages` path
+* restored the complete canonical MIT license text so GitHub and package registries can identify the OSI-approved license
+* package initialization now loads `create_visual_plan` lazily, removing the runtime warning from `python -m pictovap.demo`
+
+### Changed
+* package metadata now uses the SPDX `MIT` expression and declares the shipped license file through current setuptools metadata
+
 ## [0.3.1] - 2026-07-13
 
 ### Changed

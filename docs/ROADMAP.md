@@ -2,7 +2,7 @@
 
 Pictovap is open-source publisher infrastructure. Our goal is to provide the most reliable, extensible, and high-quality headless visual finishing engine.
 
-## Phase 1: Public Core (Current)
+## Phase 1: Public Core
 - [x] Pictovap identity cleanup
 - [x] Local credential-free demo
 - [x] Four primitives (Visual Brief, Fit Score, Provenance Pack, CMS Placement)
@@ -11,12 +11,12 @@ Pictovap is open-source publisher infrastructure. Our goal is to provide the mos
 - [x] Core documentation
 
 ## Phase 2: Adapter Ecosystem
-- [ ] Local folder source
-- [ ] Openverse source adapter
-- [ ] WordPress adapter hardening
-- [ ] Ghost adapter prototype
-- [ ] Strapi adapter prototype
-- [ ] Adapter contribution guide
+- [x] Local folder source
+- [x] Openverse source adapter
+- [x] WordPress adapter hardening
+- [x] Ghost adapter prototype
+- [x] Strapi adapter prototype
+- [x] Adapter contribution guide
 
 ## Phase 3: Provenance & Safety
 - [ ] Stronger license metadata
@@ -27,12 +27,13 @@ Pictovap is open-source publisher infrastructure. Our goal is to provide the mos
 - [ ] Provenance export tools
 
 ## Phase 4: Contributor Growth
-- [ ] Good first issues
-- [ ] Example integrations
-- [ ] Public demos
-- [ ] Small starter tasks
+- [x] Good first issues
+- [x] Example integrations
+- [x] Public credential-free demo
+- [x] Small starter tasks
+- [x] CodeQL, dependency review, and OpenSSF Scorecard workflows
 - [ ] Release cadence established
-- [ ] Package publishing on PyPI
+- [x] Package publishing on PyPI
 
 ## Phase 5: Publisher Adoption
 - [ ] First external publisher examples

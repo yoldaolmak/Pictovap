@@ -52,7 +52,7 @@
     "avoid_list": [],
     "editorial_notes": "",
     "confidence": 0.8,
-    "source_path": "/private/tmp/claude-501/-Users-yoldaolmak-Projects-Pictovap--claude-worktrees-claude-md-review-5bc4a5/898b820f-759e-4bac-b399-5688e16a52b9/scratchpad/venv1/lib/python3.9/site-packages/pictovap/data/sample-article.md"
+    "source_path": "sample-article.md"
   },
   "fit_scores": {
     "featured": [
@@ -449,7 +449,7 @@
       }
     ]
   },
-  "source_path": "/private/tmp/claude-501/-Users-yoldaolmak-Projects-Pictovap--claude-worktrees-claude-md-review-5bc4a5/898b820f-759e-4bac-b399-5688e16a52b9/scratchpad/venv1/lib/python3.9/site-packages/pictovap/data/sample-article.md",
+  "source_path": "sample-article.md",
   "candidates_evaluated": 5,
   "profile": {
     "id": "demo",

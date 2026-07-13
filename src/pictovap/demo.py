@@ -345,7 +345,13 @@ def generate_report_from_file(plan_path: str, output_path: str):
 # ---------------------------------------------------------------------------
 # Core pipeline (shared by the CLI runner and the public library API)
 # ---------------------------------------------------------------------------
-def _build_plan_output(article_path: Path, profile: PublisherProfile, *, use_real_sources: bool) -> dict:
+def _build_plan_output(
+    article_path: Path,
+    profile: PublisherProfile,
+    *,
+    use_real_sources: bool,
+    source_label: str | None = None,
+) -> dict:
     """Run the visual finishing pipeline for an already-resolved article path
     and profile, and return the JSON-shaped plan output.
 
@@ -360,6 +366,8 @@ def _build_plan_output(article_path: Path, profile: PublisherProfile, *, use_rea
     credentials happen to be present in the environment/.env.
     """
     brief = VisualBrief.from_markdown(str(article_path), fallback_lang=profile.language if profile else "en")
+    serialized_source = source_label or str(article_path)
+    brief.source_path = serialized_source
     brief.topic = "minimalist travel"
     brief.detected_location = None
 
@@ -485,7 +493,7 @@ def _build_plan_output(article_path: Path, profile: PublisherProfile, *, use_rea
         },
         "provenance_packs": [p.to_dict() for p in packs],
         "cms_placement": placement.to_dict(),
-        "source_path": str(article_path),
+        "source_path": serialized_source,
         "candidates_evaluated": len(candidates),
         "profile": {
             "id": profile.profile_id,
@@ -627,7 +635,13 @@ def run_demo(
             print("Error: Default sample article not found.")
             sys.exit(1)
 
-    output = _build_plan_output(article_path, profile, use_real_sources=False)
+    source_label = None if article_path_str else "sample-article.md"
+    output = _build_plan_output(
+        article_path,
+        profile,
+        use_real_sources=False,
+        source_label=source_label,
+    )
     out_path = _write_plan_files(output, output_path_str, report_path_str)
 
     print(f"\n{'=' * 60}")

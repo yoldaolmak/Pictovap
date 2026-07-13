@@ -2,15 +2,23 @@ import json
 import subprocess
 from pathlib import Path
 
-def test_pictovap_demo():
-    result = subprocess.run(["pictovap", "demo"], capture_output=True, text=True)
+
+def test_pictovap_demo(tmp_path):
+    result = subprocess.run(
+        ["pictovap", "demo"], cwd=tmp_path, capture_output=True, text=True
+    )
     assert result.returncode == 0
     assert "Pictovap Local Demo" in result.stdout
 
-def test_python_m_pictova_demo():
-    result = subprocess.run(["python", "-m", "pictovap.demo"], capture_output=True, text=True)
+
+def test_python_m_pictova_demo(tmp_path):
+    result = subprocess.run(
+        ["python", "-m", "pictovap.demo"], cwd=tmp_path, capture_output=True, text=True
+    )
     assert result.returncode == 0
     assert "Pictovap Local Demo" in result.stdout
+    assert "found in sys.modules" not in result.stderr
+
 
 def test_pictovap_plan(tmp_path):
     output_json = tmp_path / "output.json"

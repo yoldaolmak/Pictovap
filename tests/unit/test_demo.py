@@ -19,7 +19,6 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 DOCS_README = REPO_ROOT / "docs" / "README.md"
-EXAMPLES_OUTPUT = REPO_ROOT / "examples" / "sample-output.json"
 
 
 # ---------------------------------------------------------------------------
@@ -62,23 +61,26 @@ def test_demo_runs_without_env(tmp_path, monkeypatch):
 # 3. sample-output.json is produced
 # ---------------------------------------------------------------------------
 
-def test_sample_output_produced():
+def test_sample_output_produced(tmp_path, monkeypatch):
     """
-    After running the demo, examples/sample-output.json must exist and be
-    valid JSON containing the four primitive keys.
+    After running the demo, its default sample-output.json must exist and
+    contain all four primitive keys.
     """
+    monkeypatch.chdir(tmp_path)
+
     from pictovap.demo import run_demo
     run_demo()
 
-    assert EXAMPLES_OUTPUT.exists(), (
-        f"Expected {EXAMPLES_OUTPUT} to exist after demo run"
-    )
+    output_path = tmp_path / "sample-output.json"
+    assert output_path.exists(), f"Expected {output_path} to exist after demo run"
 
-    data = json.loads(EXAMPLES_OUTPUT.read_text(encoding="utf-8"))
+    data = json.loads(output_path.read_text(encoding="utf-8"))
     assert "visual_brief" in data, "Output must contain visual_brief"
     assert "fit_scores" in data, "Output must contain fit_scores"
     assert "provenance_packs" in data, "Output must contain provenance_packs"
     assert "cms_placement" in data, "Output must contain cms_placement"
+    assert data["source_path"] == "sample-article.md"
+    assert data["visual_brief"]["source_path"] == "sample-article.md"
 
 
 # ---------------------------------------------------------------------------
@@ -266,4 +268,3 @@ def test_demo_with_markdown_report(tmp_path):
     # Must not contain raw JSON dumped (a heuristic is no top-level brace or quoting)
     assert '{"visual_brief":' not in report_text
     assert '}' not in report_text  # Simple heuristic for raw JSON formatting
-

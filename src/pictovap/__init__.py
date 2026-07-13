@@ -5,10 +5,12 @@ This package provides modules to select, process, generate metadata for, and
 publish images across various CMS platforms.
 """
 
+from typing import TYPE_CHECKING, Any
+
 __version__ = "0.3.1"
 
-# Public library API — the framework entry point.
-from .demo import create_visual_plan
+if TYPE_CHECKING:
+    from .demo import create_visual_plan as create_visual_plan
 
 # Adapter contracts
 from .core.adapters import ImageSourceAdapter, CMSAdapter, ReportRenderer
@@ -23,6 +25,16 @@ from .vision_templates import (
     get_template,
     register_template,
 )
+
+
+def __getattr__(name: str) -> Any:
+    """Load the demo-backed public API without importing it during package initialization."""
+    if name == "create_visual_plan":
+        from .demo import create_visual_plan
+
+        return create_visual_plan
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 __all__ = [
     "create_visual_plan",
