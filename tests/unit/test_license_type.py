@@ -1,3 +1,5 @@
+import pytest
+
 from pictovap.core.primitives import LicenseType, ProvenancePack
 
 
@@ -10,6 +12,25 @@ def test_common_license_aliases_are_normalized():
 def test_provider_license_values_are_preserved():
     assert LicenseType.from_string("owned") is LicenseType.OWNED
     assert LicenseType.from_string("pexels") is LicenseType.PEXELS
+
+
+@pytest.mark.parametrize(
+    ("raw_value", "expected"),
+    [
+        ("by", LicenseType.CC_BY),
+        ("by-sa", LicenseType.CC_BY_SA),
+        ("by-nc", LicenseType.CC_BY_NC),
+        ("by-nc-sa", LicenseType.CC_BY_NC_SA),
+        ("by-nd", LicenseType.CC_BY_ND),
+        ("by-nc-nd", LicenseType.CC_BY_NC_ND),
+        ("cc0", LicenseType.CC0),
+        ("pdm", LicenseType.PDM),
+        ("sampling+", LicenseType.SAMPLING_PLUS),
+        ("nc-sampling+", LicenseType.NC_SAMPLING_PLUS),
+    ],
+)
+def test_openverse_license_values_are_preserved(raw_value, expected):
+    assert LicenseType.from_string(raw_value) is expected
 
 
 def test_provenance_pack_serializes_license_enum_value():

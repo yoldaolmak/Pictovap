@@ -22,6 +22,12 @@ class LicenseType(str, Enum):
     CC_BY = "cc_by"
     CC_BY_SA = "cc_by_sa"
     CC_BY_NC = "cc_by_nc"
+    CC_BY_NC_SA = "cc_by_nc_sa"
+    CC_BY_ND = "cc_by_nd"
+    CC_BY_NC_ND = "cc_by_nc_nd"
+    PDM = "pdm"
+    SAMPLING_PLUS = "sampling_plus"
+    NC_SAMPLING_PLUS = "nc_sampling_plus"
     OWNED = "owned"
     UNSPLASH = "unsplash"
     PEXELS = "pexels"
@@ -35,8 +41,15 @@ class LicenseType(str, Enum):
         normalized = str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
         aliases = {
             "cc0_1.0": cls.CC0, "public_domain": cls.CC0,
-            "creative_commons": cls.CC_BY, "cc_by_4.0": cls.CC_BY,
-            "cc_by_sa_4.0": cls.CC_BY_SA, "cc_by_nc_4.0": cls.CC_BY_NC,
+            "creative_commons": cls.CC_BY, "by": cls.CC_BY,
+            "cc_by_4.0": cls.CC_BY,
+            "by_sa": cls.CC_BY_SA, "cc_by_sa_4.0": cls.CC_BY_SA,
+            "by_nc": cls.CC_BY_NC, "cc_by_nc_4.0": cls.CC_BY_NC,
+            "by_nc_sa": cls.CC_BY_NC_SA,
+            "by_nd": cls.CC_BY_ND,
+            "by_nc_nd": cls.CC_BY_NC_ND,
+            "sampling+": cls.SAMPLING_PLUS,
+            "nc_sampling+": cls.NC_SAMPLING_PLUS,
         }
         try:
             return cls(normalized)
