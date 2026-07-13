@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-14
+
+### Added
+* provider license strings are normalized with `LicenseType`, including the
+  values emitted by local, Pexels, Unsplash, DepositPhotos, and Openverse sources
+* local image candidates expose JSON-safe EXIF metadata while excluding precise
+  GPS information by default
+
 ### Fixed
 * demo smoke tests now write into isolated temporary directories and verify the file they actually generate
 * the bundled demo serializes a stable `sample-article.md` source label instead of a machine-specific `site-packages` path
@@ -11,8 +19,7 @@
 
 ### Changed
 * package metadata now uses the SPDX `MIT` expression and declares the shipped license file through current setuptools metadata
-* provider license strings are normalized with `LicenseType` in provenance records
-* the supported Python floor is now 3.10 because Python 3.9 is end-of-life and
+* **Breaking:** the supported Python floor is now 3.10 because Python 3.9 is end-of-life and
   current security-fixed Pillow, Requests, and pytest releases require 3.10
 * runtime dependencies now declare security-fixed minimums; unused NumPy and
   provider SDK dependencies and the duplicate `requirements.txt` manifest were removed
