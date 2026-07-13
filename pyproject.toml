@@ -7,7 +7,7 @@ name = "pictovap"
 version = "0.3.1"
 description = "Open-source visual finishing engine for content publishers."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
@@ -23,25 +23,25 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Multimedia :: Graphics",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "Pillow>=9.0.0",
-    "requests>=2.25.0",
-    "numpy>=1.20.0",
+    "Pillow>=12.3.0",
+    "requests>=2.33.0",
 ]
 
 [project.optional-dependencies]
-providers = [
-    "anthropic>=0.3.0",
-]
 test = [
-    "pytest>=7.4.0",
-    "pytest-cov>=4.1.0",
-    "pytest-asyncio>=0.21.0",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "pytest-asyncio>=1.4.0",
+]
+lint = [
+    "flake8>=7.3.0",
 ]
 
 [project.urls]

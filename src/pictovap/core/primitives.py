@@ -12,9 +12,9 @@ All primitives are serializable to JSON via their to_dict() methods.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class LicenseType(str, Enum):
@@ -222,7 +222,7 @@ class ProvenancePack:
     placement_target: str = ""
     generated_alt_text: str = ""
     generated_caption: str = ""
-    timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     processing_actions: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:

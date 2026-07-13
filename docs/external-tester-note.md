@@ -15,13 +15,10 @@ I'd appreciate it if you could spend a few minutes trying the demo and letting m
 **What to do:**
 
 ```bash
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-make demo
+python -m pip install pictovap
+pictovap demo
 ```
 
 **Try your own article:**
