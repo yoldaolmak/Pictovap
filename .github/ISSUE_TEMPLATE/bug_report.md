@@ -20,7 +20,7 @@ A clear and concise description of what you expected to happen.
 
 **Environment (please complete the following information):**
  - OS: [e.g. macOS, Ubuntu]
- - Python Version: [e.g. 3.9]
+ - Python Version: [e.g. 3.10]
  - CMS Target (if applicable): [e.g. WordPress, Ghost]
 
 **Additional context**

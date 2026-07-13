@@ -7,10 +7,15 @@
 * the bundled demo serializes a stable `sample-article.md` source label instead of a machine-specific `site-packages` path
 * restored the complete canonical MIT license text so GitHub and package registries can identify the OSI-approved license
 * package initialization now loads `create_visual_plan` lazily, removing the runtime warning from `python -m pictovap.demo`
+* provenance and Unsplash metadata timestamps are timezone-aware UTC values
 
 ### Changed
 * package metadata now uses the SPDX `MIT` expression and declares the shipped license file through current setuptools metadata
 * provider license strings are normalized with `LicenseType` in provenance records
+* the supported Python floor is now 3.10 because Python 3.9 is end-of-life and
+  current security-fixed Pillow, Requests, and pytest releases require 3.10
+* runtime dependencies now declare security-fixed minimums; unused NumPy and
+  provider SDK dependencies and the duplicate `requirements.txt` manifest were removed
 
 ## [0.3.1] - 2026-07-13
 

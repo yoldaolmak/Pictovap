@@ -1,27 +1,28 @@
-# 💻 Developer Guide
+# Developer Guide
 
-Welcome to the Pictovapp developer guide. This document outlines everything you need to set up your local development environment, understand our tooling, and contribute high-quality code.
+This guide covers the local environment, tests, and contribution workflow for
+Pictovap.
 
 ---
 
-## 🛠 Local Environment Setup
+## Local Environment Setup
 
-Pictovapp is built with Python 3.9+ and relies heavily on a clean, isolated virtual environment.
+Pictovap supports Python 3.10+ and should be developed in an isolated virtual
+environment.
 
 ### 1. Bootstrap the Project
 
 ```bash
 # Clone the repository
-git clone https://github.com/yoldaolmak/Pictovapp.git
-cd Pictovapp
+git clone https://github.com/yoldaolmak/Pictovap.git
+cd Pictovap
 
 # Initialize a clean virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies (including dev tools)
-pip install -r requirements.txt
-pip install -e .
+# Install the package, test tools, and linter in editable mode
+python -m pip install -e ".[test,lint]"
 ```
 
 ### 2. Configure Environment Variables
@@ -38,9 +39,10 @@ Open `.env` and configure at minimum:
 
 ---
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
-We maintain a rigorous test suite using `pytest`. Currently, the project has **51 passing tests** across unit and integration boundaries.
+The unit suite is deterministic and does not call external APIs. Integration
+tests must skip cleanly when their required credentials are unavailable.
 
 > [!IMPORTANT]  
 > All PRs must pass the test suite before they can be merged. Do not skip tests.
@@ -66,7 +68,7 @@ python3 -m pytest tests/integration/
 
 ---
 
-## 🏗 Coding Standards & Conventions
+## Coding Standards & Conventions
 
 We enforce strict coding standards to keep the repository maintainable.
 
@@ -92,7 +94,7 @@ As detailed in the [Architecture Guide](ARCHITECTURE.md):
 
 ---
 
-## 🚀 Building & Shipping
+## Building & Shipping
 
 If you are developing the CLI, you can test it directly via the setuptools console script:
 

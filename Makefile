@@ -17,23 +17,22 @@ demo:
 	python3 -m pictovap.demo
 
 install:
-	pip install -r requirements.txt
-	pip install -e .
+	python3 -m pip install -e ".[test,lint]"
 
 test:
-	pytest tests/unit -v
+	python3 -m pytest tests/unit -v
 
 check-docs:
-	pytest tests/unit/test_demo.py::test_docs_readme_links_resolve -v
+	python3 -m pytest tests/unit/test_demo.py::test_docs_readme_links_resolve -v
 
 lint:
-	flake8 src/ --max-line-length=120
+	python3 -m flake8 src/ --max-line-length=120
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "*.egg-info" -exec rm -rf {} +
-	rm -rf .pytest_cache .coverage
+	rm -rf build dist .pytest_cache .coverage
 
 venv:
 	python3 -m venv .venv

@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 import os
 from typing import Dict, List
@@ -81,7 +81,7 @@ class UnsplashSource:
                     "query": query,
                     "alt": alt_text,
                     "download_url": download_url,
-                    "timestamp": datetime.now().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
                 filepath.with_suffix(".json").write_text(
                     json.dumps(metadata, indent=2, ensure_ascii=False)

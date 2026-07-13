@@ -13,13 +13,13 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 ## 2. Installation
 
 ```bash
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
+python -m pip install pictovap
 ```
+
+See the [installation guide](guides/installation.md) for the editable
+source install used by contributors.
 
 ## 3. Run the Local Demo
 

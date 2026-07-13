@@ -3,6 +3,8 @@ Unit tests for the core Pictovap primitives.
 Ensures that the models can be instantiated and serialized correctly.
 """
 
+from datetime import datetime, timezone
+
 from pictovap.core.primitives import (
     VisualBrief,
     FitScore,
@@ -66,7 +68,8 @@ def test_provenance_pack():
     assert data["slot_id"] == "hero"
     # Should automatically set timestamp
     assert "timestamp" in data
-    assert data["timestamp"] is not None
+    timestamp = datetime.fromisoformat(data["timestamp"])
+    assert timestamp.utcoffset() == timezone.utc.utcoffset(timestamp)
 
 
 def test_cms_placement():

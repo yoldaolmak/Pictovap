@@ -5,7 +5,7 @@ Full setup guide covering all Pictovap components.
 ## System Requirements
 
 - macOS or Linux
-- Python 3.9 or higher
+- Python 3.10 or higher
 - A CMS with an available adapter (WordPress, Ghost, or Strapi) — only if you intend
   to publish for real. None of this is required to run the demo.
 
