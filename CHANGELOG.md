@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-13
+
+### Changed
+* installation docs and the README Quickstart now lead with
+  `pip install pictovap` for users, keeping the editable from-source path
+  for contributors
+* expanded PyPI keywords and added Issues/Changelog project URLs so the
+  package page surfaces more of what the project does
+* added PyPI version and Python-version badges to the README
+
+### Removed
+* dead `__main__` block in `services/wordpress.py` — unreachable in the
+  installed library and it printed the configured WordPress URL/username
+  to stdout
+
 ## [0.3.0] - 2026-07-12
 
 ### Changed
