@@ -916,11 +916,3 @@ def upload_images_batch(
         print(f"\n⚠️  Post content update failed: {content_result.get('error', 'unknown error')}")
 
     return results
-
-
-if __name__ == "__main__":
-    # Test authentication
-    uploader = WordPressUploader(site="demo")
-    print(f"✓ Connected to {uploader.base_url}")
-    print(f"  User: {uploader.user}")
-    print("\nReady for image uploads")
