@@ -37,9 +37,31 @@ pictovap plan \
   --report output/report.md
 ```
 
+### Inspect Installed Adapter Plugins
+
+Returns JSON metadata for independently installed adapter packages:
+
+```bash
+pictovap plugins
+pictovap plugins --kind provider
+pictovap plugins --kind cms
+```
+
+### Generate an Adapter Plugin Package
+
+Creates a standalone `src/`-layout Python project with entry-point metadata
+and a passing contract test:
+
+```bash
+pictovap scaffold provider wikimedia
+pictovap scaffold cms hugo --output path/to/projects
+```
+
+The command refuses to overwrite existing scaffold files. Pass `--force` only
+when intentionally refreshing files owned by the scaffold.
+
 ## Planned Commands
 
 *Note: The following commands represent the planned CLI direction and are not currently implemented.*
 
-- `pictovap plan <article.md>` — Generate a visual plan only.
 - `pictovap publish <plan.json>` — Push a confirmed plan to a CMS via the configured adapter. Live publishing is adapter-dependent and not part of the credential-free demo.

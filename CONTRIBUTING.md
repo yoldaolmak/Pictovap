@@ -51,6 +51,16 @@ Before adding a new adapter, read the
 [Adapter Contribution Guide](docs/contributing/adapters.md) — it covers the
 exact interface contract, credential-handling rules, and test expectations.
 
+To start an independent adapter package with the correct entry point and a
+passing contract test:
+
+```bash
+pictovap scaffold provider <name>
+pictovap scaffold cms <name>
+```
+
+See [Building Third-Party Adapter Plugins](docs/contributing/plugins.md).
+
 > [!WARNING]
 > A new adapter that doesn't conform to `ImageSourceAdapter` or `CMSAdapter`
 > (see `src/pictovap/core/adapters.py`) will not be merged. If you're unsure

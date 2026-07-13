@@ -118,11 +118,18 @@ open contribution opportunities — see
 implementations, real but with documented limitations). See
 [CMS Adapters](docs/adapters/cms-adapters.md).
 
-Every adapter degrades gracefully when unconfigured — a missing API key
-produces an empty result, not a crash, so a partially configured profile
-still runs. Writing a new adapter means implementing one method
-(`search_candidates` or `place`) against a documented `Protocol`; see the
+Image-source adapters degrade gracefully when unconfigured — a missing API key
+produces an empty result, not a crash, so a partially configured profile still
+runs. CMS adapters fail clearly when publishing credentials are missing.
+Writing a new adapter means implementing one method (`search_candidates` or
+`place`) against a documented `Protocol`; see the
 [Adapter Overview](docs/adapters/overview.md).
+
+Third-party adapters can ship as independent Python packages. Generate a
+working package with `pictovap scaffold provider <name>` or
+`pictovap scaffold cms <name>`, validate it with `pictovap.testing`, and expose
+it through a standard Python entry point. See
+[Building Adapter Plugins](docs/contributing/plugins.md).
 
 ## Multi-Language by Design
 
