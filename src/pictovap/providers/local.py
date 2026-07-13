@@ -15,16 +15,43 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 _IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+_GPS_INFO_TAG = 34853
 
 
-def _read_dimensions(path: Path) -> tuple[int, int]:
-    """Return (width, height), or (0, 0) if the file can't be read as an image."""
+def _json_safe_exif_value(value: Any) -> Any:
+    """Return an EXIF value that can be serialized into a plan artifact."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return str(value)
+
+
+def _normalize_exif(exif: Any, tag_names: Dict[int, str]) -> Dict[str, Any]:
+    """Normalize EXIF fields for JSON output while excluding precise GPS data."""
+    normalized: Dict[str, Any] = {}
+    for tag_id, value in exif.items():
+        tag_name = tag_names.get(tag_id, str(tag_id))
+        if tag_id == _GPS_INFO_TAG or tag_name == "GPSInfo":
+            continue
+        normalized[str(tag_name)] = _json_safe_exif_value(value)
+    return normalized
+
+
+def _read_image_metadata(path: Path) -> dict[str, Any]:
+    """Return dimensions and JSON-safe, privacy-filtered EXIF fields."""
     try:
-        from PIL import Image
+        from PIL import Image, ExifTags
         with Image.open(path) as img:
-            return img.size
+            meta = {"width": img.width, "height": img.height}
+            exif = img.getexif()
+            if exif:
+                exif_dict = _normalize_exif(exif, ExifTags.TAGS)
+                if exif_dict:
+                    meta["exif"] = exif_dict
+            return meta
     except Exception:
-        return (0, 0)
+        return {"width": 0, "height": 0}
 
 
 class LocalFolderSource:
@@ -55,22 +82,23 @@ class LocalFolderSource:
             name_lower = path.stem.lower()
             if query_terms and not any(term in name_lower for term in query_terms):
                 continue
-            width, height = _read_dimensions(path)
-            candidates.append(
-                {
-                    "id": f"local-{path.stem}",
-                    "filename": path.name,
-                    "provider": "local",
-                    "source_type": "local",
-                    "local_path": str(path),
-                    "source_url": None,
-                    "license": "owned",
-                    "attribution": None,
-                    "keywords": [t for t in path.stem.replace("_", "-").split("-") if t],
-                    "width": width,
-                    "height": height,
-                }
-            )
+            meta = _read_image_metadata(path)
+            candidate = {
+                "id": f"local-{path.stem}",
+                "filename": path.name,
+                "provider": "local",
+                "source_type": "local",
+                "local_path": str(path),
+                "source_url": None,
+                "license": "owned",
+                "attribution": None,
+                "keywords": [t for t in path.stem.replace("_", "-").split("-") if t],
+                "width": meta.get("width", 0),
+                "height": meta.get("height", 0),
+            }
+            if "exif" in meta:
+                candidate["exif"] = meta["exif"]
+            candidates.append(candidate)
             if len(candidates) >= count:
                 break
         return candidates

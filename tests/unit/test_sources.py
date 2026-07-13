@@ -1,5 +1,7 @@
 """Tests for image source adapters and the fetch_candidates orchestrator."""
 
+import json
+from fractions import Fraction
 from unittest.mock import patch
 
 from PIL import Image
@@ -8,7 +10,7 @@ from pictovap.core.adapters import ImageSourceAdapter
 from pictovap.core.profile import PublisherProfile
 from pictovap.core.sources import fetch_candidates
 from pictovap.providers.deposit import DepositPhotosSource
-from pictovap.providers.local import LocalFolderSource
+from pictovap.providers.local import LocalFolderSource, _normalize_exif
 from pictovap.providers.openverse import OpenverseSource
 from pictovap.providers.pexels import PexelsSource
 from pictovap.providers.unsplash import UnsplashSource
@@ -55,6 +57,50 @@ def test_local_folder_source_reads_real_images(tmp_path):
     assert cand["local_path"] == str(image_path)
     assert cand["width"] == 1600
     assert cand["height"] == 1000
+
+
+def test_local_folder_source_reads_exif_metadata(tmp_path):
+    image_path = tmp_path / "exif-travel.jpg"
+    img = Image.new("RGB", (100, 100), color="blue")
+    exif = img.getexif()
+    # 271 is Make, 272 is Model
+    exif[271] = "FakeCamera"
+    exif[272] = "ModelX"
+    img.save(image_path, exif=exif)
+
+    source = LocalFolderSource(directory=str(tmp_path))
+    candidates = source.search_candidates("exif", 5)
+
+    assert len(candidates) == 1
+    cand = candidates[0]
+    assert "exif" in cand
+    assert cand["exif"].get("Make") == "FakeCamera"
+    assert cand["exif"].get("Model") == "ModelX"
+    json.dumps(cand)
+
+
+def test_exif_metadata_is_json_safe_and_excludes_gps():
+    normalized = _normalize_exif(
+        {
+            271: "CameraMaker",
+            33434: Fraction(1, 200),
+            37510: b"note\xff",
+            34853: {1: "N", 2: (41.0, 1.0, 2.0)},
+        },
+        {
+            271: "Make",
+            33434: "ExposureTime",
+            37510: "UserComment",
+            34853: "GPSInfo",
+        },
+    )
+
+    assert normalized == {
+        "Make": "CameraMaker",
+        "ExposureTime": "1/200",
+        "UserComment": "note�",
+    }
+    json.dumps(normalized)
 
 
 def test_fetch_candidates_falls_back_to_empty_when_nothing_configured(monkeypatch):
