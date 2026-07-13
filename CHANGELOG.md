@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-14
+
+### Added
+* third-party adapter discovery through the `pictovap.image_sources` and
+  `pictovap.cms` Python entry-point groups
+* public `pictovap.testing` contract assertions for provider and CMS adapter packages
+* `pictovap plugins` for inspecting installed adapters
+* `pictovap scaffold provider|cms NAME` for generating standalone, tested plugin packages
+
 ## [0.4.0] - 2026-07-14
 
 ### Added

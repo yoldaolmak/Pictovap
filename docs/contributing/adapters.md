@@ -17,6 +17,17 @@ python examples/adapters/custom_image_source.py
 python examples/adapters/custom_cms_adapter.py
 ```
 
+**Prefer an independent plugin package?** Generate a tested `src/` layout with
+the correct entry point and contract test:
+
+```bash
+pictovap scaffold provider wikimedia
+pictovap scaffold cms hugo
+```
+
+See [Building Third-Party Adapter Plugins](plugins.md) for plugin discovery,
+testing, and release requirements.
+
 ## Image Source Adapters
 
 Image source adapters add new ways to supply candidate images to the pipeline.
@@ -116,8 +127,13 @@ without any `.env` file. Tests must not require secrets.
 
 ## Submitting Your Adapter
 
-Open a pull request. Reference the adapter type in the PR title:
+For an in-tree adapter, open a pull request. Reference the adapter type in the PR title:
+
 - `feat(provider): add Openverse image source adapter`
 - `feat(publisher): add Ghost CMS adapter`
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md) for the full contribution process.
+
+For an independently released adapter, publish the package with the documented
+entry point, then open an issue requesting inclusion in the community adapter
+catalog. Independent packages must pass the same contract tests as in-tree adapters.

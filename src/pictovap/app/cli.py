@@ -1,9 +1,11 @@
 """Pictovap CLI entrypoint.
 
-Three commands, matching the public library API 1:1:
+Commands matching the public library API:
     demo    - run the credential-free example pipeline
     plan    - create a visual plan for a real article (pictovap.create_visual_plan)
     report  - render an existing JSON plan as a Markdown editor report
+    plugins - list installed third-party adapter plugins
+    scaffold - generate a standalone adapter plugin package
 """
 
 from __future__ import annotations
@@ -14,6 +16,8 @@ import sys
 from typing import Any, Dict
 
 from pictovap.demo import create_visual_plan, generate_report_from_file, run_demo
+from pictovap.plugins import PluginError, iter_plugins
+from pictovap.scaffold import ScaffoldError, scaffold_adapter
 
 
 def _print_json(payload: Dict[str, Any]) -> None:
@@ -35,6 +39,15 @@ def build_parser() -> argparse.ArgumentParser:
     report = sub.add_parser("report", help="Generate an editor-readable Markdown report from a plan")
     report.add_argument("--plan", required=True, help="Path to visual-plan.json")
     report.add_argument("--output", required=True, help="Path to write the output report.md")
+
+    plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
+    plugins.add_argument("--kind", choices=("provider", "cms"), help="Filter by adapter kind")
+
+    scaffold = sub.add_parser("scaffold", help="Generate a standalone adapter plugin package")
+    scaffold.add_argument("kind", choices=("provider", "cms"), help="Adapter contract to implement")
+    scaffold.add_argument("name", help="Adapter name, for example wikimedia or hugo")
+    scaffold.add_argument("--output", default=".", help="Parent directory for the generated package")
+    scaffold.add_argument("--force", action="store_true", help="Overwrite scaffold-owned files")
 
     return parser
 
@@ -72,6 +85,28 @@ def main() -> int:
         except Exception as e:
             print(f"Error generating report: {e}", file=sys.stderr)
             return 1
+
+    if args.command == "plugins":
+        try:
+            _print_json({"plugins": [plugin.to_dict() for plugin in iter_plugins(args.kind)]})
+            return 0
+        except PluginError as e:
+            print(f"Error discovering plugins: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "scaffold":
+        try:
+            root = scaffold_adapter(
+                args.kind,
+                args.name,
+                output=args.output,
+                force=args.force,
+            )
+        except (OSError, ScaffoldError) as e:
+            print(f"Error creating scaffold: {e}", file=sys.stderr)
+            return 1
+        print(root)
+        return 0
 
     parser.error(f"unknown command: {args.command}")
     return 2

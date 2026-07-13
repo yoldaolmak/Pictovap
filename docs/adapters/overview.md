@@ -47,6 +47,11 @@ src/
     └── publishers/   # CMS placement adapters
 ```
 
+Third-party adapters can live in independent distributions and register their
+adapter class through the `pictovap.image_sources` or `pictovap.cms` Python
+entry-point group. Pictovap discovers installed plugins without importing them
+until they are requested.
+
 ## The Core Engine Is Adapter-Free
 
 The four primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`)
@@ -56,6 +61,8 @@ adapter. They can be tested and run in complete isolation.
 ## Adding a New Adapter
 
 See the contribution guides:
+
 - [Writing Image Source Adapters](image-sources.md)
 - [Writing CMS Adapters](cms-adapters.md)
 - [Contribution Guide for Adapters](../contributing/adapters.md)
+- [Building Third-Party Adapter Plugins](../contributing/plugins.md)

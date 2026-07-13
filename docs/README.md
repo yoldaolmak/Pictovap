@@ -28,4 +28,9 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Adapter Overview](adapters/overview.md) — Where image source and CMS adapters live
 - [Brand & Naming](architecture/naming.md) — Product name vs. package name
 
+### Contributing
+
+- [Writing Adapters](contributing/adapters.md) — In-tree adapter contracts and checklists
+- [Building Adapter Plugins](contributing/plugins.md) — Scaffold, entry points, and contract tests
+
 Pictovap currently has no graphical user interface. It is a CLI-first open-source core. The intended review surface is an editor-readable report, while CMS adapters consume the JSON plan.
