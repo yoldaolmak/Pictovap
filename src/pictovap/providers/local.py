@@ -15,27 +15,40 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 _IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+_GPS_INFO_TAG = 34853
+
+
+def _json_safe_exif_value(value: Any) -> Any:
+    """Return an EXIF value that can be serialized into a plan artifact."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return str(value)
+
+
+def _normalize_exif(exif: Any, tag_names: Dict[int, str]) -> Dict[str, Any]:
+    """Normalize EXIF fields for JSON output while excluding precise GPS data."""
+    normalized: Dict[str, Any] = {}
+    for tag_id, value in exif.items():
+        tag_name = tag_names.get(tag_id, str(tag_id))
+        if tag_id == _GPS_INFO_TAG or tag_name == "GPSInfo":
+            continue
+        normalized[str(tag_name)] = _json_safe_exif_value(value)
+    return normalized
 
 
 def _read_image_metadata(path: Path) -> dict[str, Any]:
-    """Return dict with width, height, and optionally exif fields."""
+    """Return dimensions and JSON-safe, privacy-filtered EXIF fields."""
     try:
         from PIL import Image, ExifTags
         with Image.open(path) as img:
             meta = {"width": img.width, "height": img.height}
             exif = img.getexif()
             if exif:
-                exif_dict = {}
-                for tag_id, value in exif.items():
-                    tag_name = ExifTags.TAGS.get(tag_id, tag_id)
-                    # Convert bytes to string for JSON serialization
-                    if isinstance(value, bytes):
-                        try:
-                            value = value.decode('utf-8', errors='replace')
-                        except Exception:
-                            value = str(value)
-                    exif_dict[tag_name] = value
-                meta["exif"] = exif_dict
+                exif_dict = _normalize_exif(exif, ExifTags.TAGS)
+                if exif_dict:
+                    meta["exif"] = exif_dict
             return meta
     except Exception:
         return {"width": 0, "height": 0}
