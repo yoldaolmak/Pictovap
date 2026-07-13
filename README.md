@@ -1,5 +1,7 @@
 # Pictovap
 
+[![PyPI](https://img.shields.io/pypi/v/pictovap.svg)](https://pypi.org/project/pictovap/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pictovap.svg)](https://pypi.org/project/pictovap/)
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -68,18 +70,10 @@ human review surface and CMS adapters as the machine-facing execution layer.
 
 ## Quickstart
 
-```bash
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-```
-
-Run the credential-free demo:
+Install from PyPI and run the credential-free demo:
 
 ```bash
+pip install pictovap
 pictovap demo
 ```
 

@@ -13,7 +13,9 @@ authors = [
     {name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}
 ]
 keywords = [
-    "wordpress", "image automation", "llm", "vision", "seo", "cms", "unsplash"
+    "wordpress", "cms", "image automation", "seo", "accessibility",
+    "alt text", "llm", "vision", "computer vision", "openverse", "unsplash",
+    "ghost", "strapi", "static site", "content publishing", "provenance",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -46,6 +48,8 @@ test = [
 Homepage = "https://github.com/yoldaolmak/Pictovap"
 Documentation = "https://github.com/yoldaolmak/Pictovap/blob/main/docs/README.md"
 Repository = "https://github.com/yoldaolmak/Pictovap.git"
+Issues = "https://github.com/yoldaolmak/Pictovap/issues"
+Changelog = "https://github.com/yoldaolmak/Pictovap/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pictova = "pictovap.app.cli:main"
