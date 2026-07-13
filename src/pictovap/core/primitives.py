@@ -22,7 +22,9 @@ class LicenseType(str, Enum):
     CC_BY = "cc_by"
     CC_BY_SA = "cc_by_sa"
     CC_BY_NC = "cc_by_nc"
+    OWNED = "owned"
     UNSPLASH = "unsplash"
+    PEXELS = "pexels"
     EDITORIAL = "editorial"
     UNKNOWN = "unknown"
 

@@ -7,6 +7,11 @@ def test_common_license_aliases_are_normalized():
     assert LicenseType.from_string("unexpected") is LicenseType.UNKNOWN
 
 
+def test_provider_license_values_are_preserved():
+    assert LicenseType.from_string("owned") is LicenseType.OWNED
+    assert LicenseType.from_string("pexels") is LicenseType.PEXELS
+
+
 def test_provenance_pack_serializes_license_enum_value():
     pack = ProvenancePack(image_id="image", license_status="unsplash")
     assert pack.license_status is LicenseType.UNSPLASH
