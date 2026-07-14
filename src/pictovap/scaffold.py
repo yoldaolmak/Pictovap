@@ -42,7 +42,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "image adapter", "cms"]
-            dependencies = ["pictovap>=0.5.0"]
+            dependencies = ["pictovap>=0.6.0"]
 
             [project.entry-points."pictovap.image_sources"]
             {slug} = "{package}:{adapter_class}"
@@ -99,6 +99,15 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             pip install -e ".[test]"
             pytest
             pictovap plugins --kind provider
+            pictovap doctor --provider {slug}
+            ```
+
+            Run the adapter in the real planning pipeline:
+
+            ```bash
+            export {module.upper()}_API_KEY="..."
+            pictovap plan --article article.md --provider {slug} \\
+              --provider-option api_key=@{module.upper()}_API_KEY --output plan.json
             ```
 
             Implement the provider request in `{adapter_class}.search_candidates`,
@@ -125,7 +134,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "cms adapter", "publishing"]
-            dependencies = ["pictovap>=0.5.0"]
+            dependencies = ["pictovap>=0.6.0"]
 
             [project.entry-points."pictovap.cms"]
             {slug} = "{package}:{adapter_class}"
@@ -187,6 +196,18 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             pip install -e ".[test]"
             pytest
             pictovap plugins --kind cms
+            ```
+
+            Validate configuration, then preview a real plan without writes:
+
+            ```bash
+            export {module.upper()}_API_TOKEN="..."
+            pictovap doctor --cms {slug} \\
+              --cms-option api_url=https://cms.example.com \\
+              --cms-option api_token=@{module.upper()}_API_TOKEN
+            pictovap publish --plan plan.json --cms {slug} --dry-run \\
+              --cms-option api_url=https://cms.example.com \\
+              --cms-option api_token=@{module.upper()}_API_TOKEN
             ```
 
             Implement the CMS request in `{adapter_class}.place`, mock all HTTP calls

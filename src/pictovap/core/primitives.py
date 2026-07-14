@@ -260,6 +260,24 @@ class PlacementInstruction:
     alt_text: str = ""
     caption: str = ""
 
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "PlacementInstruction":
+        """Rebuild one instruction from a serialized visual plan."""
+        if not isinstance(data, dict):
+            raise ValueError("Each CMS placement instruction must be an object")
+        try:
+            return cls(
+                slot_id=data["slot_id"],
+                output_path=data["output_path"],
+                target_section=data.get("target_section", ""),
+                placement_strategy=data.get("placement_strategy", "after_heading"),
+                image_role=data.get("image_role", "content"),
+                alt_text=data.get("alt_text", ""),
+                caption=data.get("caption", ""),
+            )
+        except KeyError as exc:
+            raise ValueError(f"CMS placement instruction is missing '{exc.args[0]}'") from exc
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "slot_id": self.slot_id,
@@ -285,6 +303,25 @@ class CMSPlacement:
     adapter_target: str = "mock"
     target_platform: str = "generic"
     placements: List[PlacementInstruction] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "CMSPlacement":
+        """Rebuild the typed CMS boundary from a JSON plan."""
+        if not isinstance(data, dict):
+            raise ValueError("CMS placement must be an object")
+        try:
+            article_id = data["article_id"]
+            raw_placements = data["placements"]
+        except KeyError as exc:
+            raise ValueError(f"CMS placement is missing '{exc.args[0]}'") from exc
+        if not isinstance(raw_placements, list):
+            raise ValueError("CMS placement 'placements' must be a list")
+        return cls(
+            article_id=article_id,
+            adapter_target=data.get("adapter_target", "mock"),
+            target_platform=data.get("target_platform", "generic"),
+            placements=[PlacementInstruction.from_dict(item) for item in raw_placements],
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         return {

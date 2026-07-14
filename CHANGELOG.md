@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-14
+
+### Added
+* `pictovap doctor` loads installed plugins and verifies selected adapter
+  constructor configuration without executing CMS writes
+* `pictovap plan --provider NAME` runs an independently installed image-source
+  plugin through candidate validation, Fit Score, provenance, and placement planning
+* `pictovap publish --cms NAME --dry-run` reconstructs and previews typed CMS
+  placement operations; omitting `--dry-run` executes and validates `CMSAdapter.place`
+* repeatable adapter constructor options with JSON scalar decoding and
+  `KEY=@ENV_VAR` secret resolution
+
+### Changed
+* an explicitly selected provider that returns no candidates no longer falls
+  back to demo data, preventing a false-positive integration result
+* generated plugin packages now depend on the complete Pictovap 0.6 runtime
+  and document their install-to-execution workflow
+
 ## [0.5.0] - 2026-07-14
 
 ### Added

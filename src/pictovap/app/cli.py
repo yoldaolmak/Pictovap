@@ -6,6 +6,8 @@ Commands matching the public library API:
     report  - render an existing JSON plan as a Markdown editor report
     plugins - list installed third-party adapter plugins
     scaffold - generate a standalone adapter plugin package
+    doctor  - validate installed plugins and selected adapter configuration
+    publish - execute a visual plan through an installed CMS plugin
 """
 
 from __future__ import annotations
@@ -13,9 +15,15 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, Sequence
 
-from pictovap.demo import create_visual_plan, generate_report_from_file, run_demo
+from pictovap.app.runtime import (
+    AdapterConstructionError,
+    PipelineRunner,
+    RuntimeConfigurationError,
+    parse_adapter_options,
+)
+from pictovap.demo import generate_report_from_file, run_demo
 from pictovap.plugins import PluginError, iter_plugins
 from pictovap.scaffold import ScaffoldError, scaffold_adapter
 
@@ -35,6 +43,36 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--profile", help="Path to a Publisher Profile YAML")
     plan.add_argument("--output", help="Path to write the JSON output plan")
     plan.add_argument("--report", help="Path to write the Markdown report")
+    plan.add_argument("--provider", help="Installed provider plugin entry-point name")
+    plan.add_argument(
+        "--provider-option",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="Provider constructor option; use KEY=@ENV_VAR for secrets",
+    )
+
+    publish = sub.add_parser("publish", help="Execute a visual plan through a CMS plugin")
+    publish.add_argument("--plan", required=True, help="Path to visual-plan.json")
+    publish.add_argument("--cms", required=True, help="Installed CMS plugin entry-point name")
+    publish.add_argument(
+        "--cms-option",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="CMS constructor option; use KEY=@ENV_VAR for secrets",
+    )
+    publish.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Validate and show exact placement operations without calling CMSAdapter.place",
+    )
+
+    doctor = sub.add_parser("doctor", help="Check plugin discovery and adapter configuration")
+    doctor.add_argument("--provider", help="Provider plugin to construct")
+    doctor.add_argument("--cms", help="CMS plugin to construct")
+    doctor.add_argument("--provider-option", action="append", default=[], metavar="KEY=VALUE")
+    doctor.add_argument("--cms-option", action="append", default=[], metavar="KEY=VALUE")
 
     report = sub.add_parser("report", help="Generate an editor-readable Markdown report from a plan")
     report.add_argument("--plan", required=True, help="Path to visual-plan.json")
@@ -52,9 +90,10 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    runner = PipelineRunner()
 
     if args.command == "demo":
         run_demo()
@@ -62,11 +101,13 @@ def main() -> int:
 
     if args.command == "plan":
         try:
-            plan_output = create_visual_plan(
+            plan_output = runner.plan(
                 article=args.article,
                 profile=args.profile,
                 output=args.output,
                 report=args.report,
+                provider=args.provider,
+                provider_options=parse_adapter_options(args.provider_option),
             )
         except FileNotFoundError as e:
             print(f"Error: {e}", file=sys.stderr)
@@ -77,6 +118,34 @@ def main() -> int:
         if not args.output:
             _print_json(plan_output)
         return 0
+
+    if args.command == "publish":
+        try:
+            result = runner.publish(
+                plan=args.plan,
+                cms=args.cms,
+                cms_options=parse_adapter_options(args.cms_option),
+                dry_run=args.dry_run,
+            )
+            _print_json(result)
+            return 0
+        except (FileNotFoundError, ValueError, PluginError, AdapterConstructionError) as e:
+            print(f"Error publishing plan: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "doctor":
+        try:
+            result = runner.doctor(
+                provider=args.provider,
+                cms=args.cms,
+                provider_options=parse_adapter_options(args.provider_option),
+                cms_options=parse_adapter_options(args.cms_option),
+            )
+            _print_json(result)
+            return 0 if result["status"] == "ready" else 1
+        except (RuntimeConfigurationError, PluginError, AdapterConstructionError) as e:
+            print(f"Error checking plugins: {e}", file=sys.stderr)
+            return 1
 
     if args.command == "report":
         try:

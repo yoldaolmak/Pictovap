@@ -52,7 +52,7 @@
     "avoid_list": [],
     "editorial_notes": "",
     "confidence": 0.8,
-    "source_path": "/Users/yoldaolmak/Projects/Pictovap/examples/sample-article.md"
+    "source_path": "sample-article.md"
   },
   "fit_scores": {
     "featured": [
@@ -351,7 +351,7 @@
       "provider": "local",
       "source_url": null,
       "local_source_path": "examples/assets/minimal-backpack.jpg",
-      "license_status": "CC0",
+      "license_status": "cc0",
       "attribution": null,
       "original_filename": "minimal-backpack.jpg",
       "generated_filename": "pictovap_minimal-backpack.webp",
@@ -361,7 +361,7 @@
       "placement_target": "featured_image",
       "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
       "generated_caption": "The Future of Minimalist Travel",
-      "timestamp": "2026-07-09T19:50:03.493412",
+      "timestamp": "2026-07-14T13:38:20.176727+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -374,7 +374,7 @@
       "provider": "local",
       "source_url": null,
       "local_source_path": "examples/assets/forest-path.jpg",
-      "license_status": "CC0",
+      "license_status": "cc0",
       "attribution": null,
       "original_filename": "forest-path.jpg",
       "generated_filename": "pictovap_forest-path.webp",
@@ -384,7 +384,7 @@
       "placement_target": "inline_after_packing_smart",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "Packing Smart: The core of minimalism is the capsule wardrobe.",
-      "timestamp": "2026-07-09T19:50:03.493439",
+      "timestamp": "2026-07-14T13:38:20.176748+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -407,7 +407,7 @@
       "placement_target": "inline_after_finding_serenity_in_nature",
       "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
       "generated_caption": "Finding Serenity in Nature: When you travel with less, you have the physical and mental energy to explore further.",
-      "timestamp": "2026-07-09T19:50:03.493464",
+      "timestamp": "2026-07-14T13:38:20.176764+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -449,11 +449,18 @@
       }
     ]
   },
-  "source_path": "/Users/yoldaolmak/Projects/Pictovap/examples/sample-article.md",
+  "source_path": "sample-article.md",
+  "candidates_evaluated": 5,
   "profile": {
     "id": "demo",
     "brand": "Demo Publisher",
     "cms_type": "wordpress",
     "language": "en"
+  },
+  "runtime": {
+    "provider": {
+      "mode": "demo",
+      "name": null
+    }
   }
 }
