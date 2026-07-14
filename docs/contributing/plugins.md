@@ -63,6 +63,46 @@ pictovap plugins --kind cms
 
 The output is JSON so CI and other tools can consume it.
 
+## From Installation to a Real Workflow
+
+Discovery is only the first gate. Check constructor configuration without CMS
+writes, then run the provider through the real planning pipeline:
+
+```bash
+export WIKIMEDIA_TOKEN="..."
+pictovap doctor \
+  --provider wikimedia \
+  --provider-option token=@WIKIMEDIA_TOKEN
+
+pictovap plan \
+  --article article.md \
+  --provider wikimedia \
+  --provider-option token=@WIKIMEDIA_TOKEN \
+  --output plan.json \
+  --report report.md
+```
+
+Pictovap calls `search_candidates`, validates every candidate, and sends those
+exact records into Fit Score. Empty results stay empty for an explicitly named
+plugin; mock candidates are never substituted.
+
+For a CMS plugin, inspect the operations before allowing writes:
+
+```bash
+export HUGO_OUTPUT_DIR="/srv/site/content"
+pictovap doctor --cms hugo --cms-option output_directory=@HUGO_OUTPUT_DIR
+pictovap publish --plan plan.json --cms hugo --dry-run \
+  --cms-option output_directory=@HUGO_OUTPUT_DIR
+```
+
+Once the preview is correct, remove `--dry-run`. Pictovap reconstructs the
+typed `CMSPlacement`, calls the third-party adapter once, and validates its
+complete result contract.
+
+Option values use JSON scalar decoding (`limit=3`, `enabled=true`). Use
+`key=@ENV_VAR` for credentials and sensitive paths; diagnostics contain option
+names, never their values.
+
 ## Contract Test Kit
 
 Third-party packages should test their public boundary with the helpers shipped
@@ -102,7 +142,8 @@ limit. They do not make external requests themselves.
 - Keep credentials in environment variables or explicit constructor arguments.
 - Mock all provider and CMS calls in tests.
 - Run the contract helper against both success and failure fixtures.
-- Declare `pictovap>=0.5.0` in the plugin package.
+- Declare `pictovap>=0.6.0` in the plugin package.
+- Verify `doctor`, a real provider-backed `plan`, and CMS `publish --dry-run`.
 - Use a unique entry-point name and a `pictovap-<adapter>` distribution name.
 - Document license and attribution behavior for image sources.
 - Document idempotency and rollback limits for CMS targets.

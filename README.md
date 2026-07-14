@@ -131,6 +131,19 @@ working package with `pictovap scaffold provider <name>` or
 it through a standard Python entry point. See
 [Building Adapter Plugins](docs/contributing/plugins.md).
 
+An installed plugin is a first-class runtime component, not only a discovered
+class. The same external package can be checked, planned, previewed, and run:
+
+```bash
+pictovap doctor --provider acme-images
+pictovap plan --article article.md --provider acme-images --output plan.json
+pictovap publish --plan plan.json --cms acme-cms --dry-run
+```
+
+Constructor settings are repeatable `KEY=VALUE` options. For credentials, use
+`KEY=@ENV_VAR`; Pictovap resolves the environment value without echoing it in
+diagnostics or output.
+
 ## Multi-Language by Design
 
 Pictovap's own code, comments, and documentation are English. What it

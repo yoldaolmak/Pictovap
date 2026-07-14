@@ -1,6 +1,7 @@
 # CLI Reference
 
-Pictovap is a CLI-first tool. The primary execution surface currently is the demo module, which runs the pipeline locally without requiring API credentials or external dependencies.
+Pictovap is a CLI-first tool. Commands emit JSON artifacts or diagnostics so
+the same workflow can be reviewed by a person and composed in automation.
 
 ## Current Commands
 
@@ -47,6 +48,56 @@ pictovap plugins --kind provider
 pictovap plugins --kind cms
 ```
 
+### Check Adapter Readiness
+
+Loads every installed entry point and constructs adapters named explicitly.
+It never calls `CMSAdapter.place`, so the command has no publishing effects:
+
+```bash
+pictovap doctor
+pictovap doctor \
+  --provider acme-images \
+  --provider-option api_key=@ACME_IMAGES_API_KEY \
+  --cms acme-cms \
+  --cms-option base_url=https://cms.example.com \
+  --cms-option token=@ACME_CMS_TOKEN
+```
+
+Only option names are included in JSON diagnostics. Values resolved from the
+environment are not printed.
+
+### Plan with an Installed Provider
+
+```bash
+pictovap plan \
+  --article path/to/article.md \
+  --provider acme-images \
+  --provider-option api_key=@ACME_IMAGES_API_KEY \
+  --output output/plan.json
+```
+
+Candidates returned by the plugin are contract-validated before Fit Score.
+An explicitly selected provider that returns no candidates produces an empty
+candidate set; Pictovap does not hide the result by falling back to demo data.
+
+### Preview or Execute CMS Placement
+
+Start with a side-effect-free preview:
+
+```bash
+pictovap publish \
+  --plan output/plan.json \
+  --cms acme-cms \
+  --cms-option base_url=https://cms.example.com \
+  --cms-option token=@ACME_CMS_TOKEN \
+  --dry-run
+```
+
+The dry run loads and constructs the adapter, rebuilds the typed
+`CMSPlacement`, and prints the exact operations without calling `place`.
+Remove `--dry-run` to execute the adapter. The returned `placed`, `failed`,
+and `warnings` fields are validated before Pictovap reports completion.
+
 ### Generate an Adapter Plugin Package
 
 Creates a standalone `src/`-layout Python project with entry-point metadata
@@ -59,9 +110,3 @@ pictovap scaffold cms hugo --output path/to/projects
 
 The command refuses to overwrite existing scaffold files. Pass `--force` only
 when intentionally refreshing files owned by the scaffold.
-
-## Planned Commands
-
-*Note: The following commands represent the planned CLI direction and are not currently implemented.*
-
-- `pictovap publish <plan.json>` — Push a confirmed plan to a CMS via the configured adapter. Live publishing is adapter-dependent and not part of the credential-free demo.

@@ -30,6 +30,7 @@ from pictovap.core.primitives import (  # noqa: E402
 )
 from pictovap.core.profile import PublisherProfile  # noqa: E402
 from pictovap.core.sources import fetch_candidates  # noqa: E402
+from pictovap.testing.contracts import assert_image_source_contract  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -351,6 +352,8 @@ def _build_plan_output(
     *,
     use_real_sources: bool,
     source_label: str | None = None,
+    provider_adapter: object | None = None,
+    provider_name: str | None = None,
 ) -> dict:
     """Run the visual finishing pipeline for an already-resolved article path
     and profile, and return the JSON-shaped plan output.
@@ -391,10 +394,19 @@ def _build_plan_output(
     # falling back to deterministic mock candidates when none are
     # configured/credentialed (or when running the credential-free demo).
     candidates = []
-    if use_real_sources and profile:
+    explicit_provider = provider_adapter is not None
+    provider_mode = "plugin" if explicit_provider else "profile"
+    if explicit_provider:
+        candidates = assert_image_source_contract(
+            provider_adapter,
+            query=brief.topic or brief.article_title,
+            count=8,
+        )
+    elif use_real_sources and profile:
         candidates = fetch_candidates(profile, query=brief.topic or brief.article_title, count=8)
-    if not candidates:
+    if not candidates and not explicit_provider:
         candidates = MOCK_CANDIDATES
+        provider_mode = "demo-fallback" if use_real_sources else "demo"
 
     # 3. Score all candidates for each slot
     print(f"\n[2/4] Fit Scores ({len(candidates)} candidates x {len(brief.image_slots)} slots)")
@@ -501,6 +513,12 @@ def _build_plan_output(
             "cms_type": profile.cms_type,
             "language": profile.language,
         },
+        "runtime": {
+            "provider": {
+                "mode": provider_mode,
+                "name": provider_name if explicit_provider else None,
+            },
+        },
     }
     return output
 
@@ -541,6 +559,8 @@ def create_visual_plan(
     *,
     output: str | None = None,
     report: str | None = None,
+    provider_adapter: object | None = None,
+    provider_name: str | None = None,
 ) -> dict:
     """Build a visual plan for an article — the library equivalent of
     `pictovap plan`. Importable and usable without going through the CLI.
@@ -551,6 +571,11 @@ def create_visual_plan(
             profile when omitted.
         output: If given, also writes the JSON plan to this path.
         report: If given, also writes a Markdown editor report to this path.
+        provider_adapter: An already constructed third-party image-source
+            adapter. When supplied, its candidates are validated and no demo
+            fallback is used.
+        provider_name: Entry-point name recorded in runtime metadata when a
+            third-party provider is supplied.
 
     Returns:
         The JSON-shaped visual plan as a dict (visual_brief, fit_scores,
@@ -582,7 +607,13 @@ def create_visual_plan(
     import contextlib
     import io
     with contextlib.redirect_stdout(io.StringIO()):
-        plan_output = _build_plan_output(article_path, pub_profile, use_real_sources=True)
+        plan_output = _build_plan_output(
+            article_path,
+            pub_profile,
+            use_real_sources=True,
+            provider_adapter=provider_adapter,
+            provider_name=provider_name,
+        )
 
     if output or report:
         _write_plan_files(plan_output, output, report)

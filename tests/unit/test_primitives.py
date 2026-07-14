@@ -95,6 +95,18 @@ def test_cms_placement():
     assert data["placements"][0]["slot_id"] == "hero"
     assert data["placements"][0]["output_path"] == "final.webp"
 
+    restored = CMSPlacement.from_dict(data)
+    assert restored == placement
+
+
+def test_cms_placement_from_dict_rejects_incomplete_payload():
+    try:
+        CMSPlacement.from_dict({"article_id": "post-99"})
+    except ValueError as error:
+        assert "placements" in str(error)
+    else:
+        raise AssertionError("Expected an incomplete placement to fail")
+
 def test_publisher_profile():
     profile = PublisherProfile.get_default_profile()
     assert profile.profile_id == "demo"
