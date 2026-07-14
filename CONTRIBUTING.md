@@ -4,6 +4,11 @@ First off, thank you for considering contributing to Pictovap! It's people like 
 
 Whether you're fixing a typo, resolving a critical bug, or proposing a massive architectural improvement, your contribution is highly valued.
 
+> [!TIP]
+> The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) is the
+> current fastest path to a scoped contribution. Comment on an available issue
+> before starting so the maintainer can confirm the contract and mark it claimed.
+
 ---
 
 ## 🚀 How Can I Contribute?
@@ -16,7 +21,7 @@ If you find a bug, please open an [issue](https://github.com/yoldaolmak/Pictovap
 - Your OS and Python version.
 
 ### 2. Suggesting Enhancements
-Have an idea that would make Pictovap better? Open a [discussion](https://github.com/yoldaolmak/Pictovap/issues) describing:
+Have an idea that would make Pictovap better? Open a [discussion](https://github.com/yoldaolmak/Pictovap/discussions) describing:
 - The specific problem you are trying to solve.
 - Your proposed solution.
 - Any alternative solutions you have considered.
