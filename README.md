@@ -168,6 +168,9 @@ alias — see [Brand & Naming](docs/architecture/naming.md).
 
 ## Contributing
 
+The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) has three
+claimable provider and CMS integrations with exact acceptance tests.
+
 See the [Documentation Portal](docs/README.md) for architecture, concepts,
 and adapter-writing guides, and [DEVELOPER.md](docs/DEVELOPER.md) for the
 contribution workflow. Pull requests that add a new image source or CMS

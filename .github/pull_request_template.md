@@ -16,6 +16,7 @@ Brief description of what this PR does.
 - [ ] I have read the CONTRIBUTING.md
 - [ ] My code follows the project's architectural boundaries
 - [ ] I have added tests that prove my fix/feature works
+- [ ] New adapters pass the relevant helper in `pictovap.testing`
 - [ ] New and existing unit tests pass locally with `pytest`
 - [ ] I have updated documentation if needed
 - [ ] The local demo still works: `make demo`

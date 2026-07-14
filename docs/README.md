@@ -30,6 +30,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 
 ### Contributing
 
+- [July 2026 Adapter Sprint](contributing/adapter-sprint.md) — Claimable integrations and public checkpoints
 - [Writing Adapters](contributing/adapters.md) — In-tree adapter contracts and checklists
 - [Building Adapter Plugins](contributing/plugins.md) — Scaffold, entry points, and contract tests
 
