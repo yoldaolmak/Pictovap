@@ -55,12 +55,19 @@ class WordPressUploader:
                 f"(expected {prefix}URL/{prefix}USER/{prefix}APP_PASSWORD "
                 "or WP_URL/WP_USER/WP_APP_PASSWORD in .env)"
             )
+        assert self.base_url is not None
+        assert self.user is not None
+        assert self.password is not None
         self.session = self._create_session()
 
     def _create_session(self) -> requests.Session:
         """Create authenticated session"""
         session = requests.Session()
-        session.auth = (self.user, self.password)
+        user = self.user
+        password = self.password
+        assert user is not None
+        assert password is not None
+        session.auth = (user, password)
         session.headers.update({
             "User-Agent": _USER_AGENT,
         })
@@ -622,6 +629,8 @@ class WordPressUploader:
             return {"success": False, "error": str(e)}
 
     def _remove_broken_local_image_blocks(self, content: str) -> tuple[str, int]:
+        base_url = self.base_url
+        assert base_url is not None
         removed = 0
 
         def replace_block(match: re.Match[str]) -> str:
@@ -631,7 +640,7 @@ class WordPressUploader:
             if not src_match:
                 return block
             src = src_match.group(1)
-            if not src.startswith(self.base_url + "/wp-content/uploads/"):
+            if not src.startswith(base_url + "/wp-content/uploads/"):
                 return block
             try:
                 resp = self.session.get(src, timeout=15, allow_redirects=True)

@@ -1,4 +1,4 @@
-.PHONY: install test lint clean demo help venv check-docs security-check
+.PHONY: install test lint typecheck markdownlint quality clean demo help venv check-docs security-check
 
 help:
 	@echo "Pictovap - Visual Finishing Engine"
@@ -8,6 +8,9 @@ help:
 	@echo "  test        Run test suite"
 	@echo "  install     Install dependencies"
 	@echo "  lint        Run code linters"
+	@echo "  typecheck   Run static type checks"
+	@echo "  markdownlint Check Markdown structure"
+	@echo "  quality     Run all local quality gates"
 	@echo "  clean       Clean temporary files"
 	@echo "  venv        Create virtual environment"
 	@echo "  check-docs  Check documentation link integrity"
@@ -17,7 +20,7 @@ demo:
 	python3 -m pictovap.demo
 
 install:
-	python3 -m pip install -e ".[test,lint]"
+	python3 -m pip install -e ".[test,lint,typecheck]"
 
 test:
 	python3 -m pytest tests/unit -v
@@ -27,6 +30,14 @@ check-docs:
 
 lint:
 	python3 -m flake8 src/ --max-line-length=120
+
+typecheck:
+	python3 -m pyright
+
+markdownlint:
+	npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
+
+quality: lint typecheck markdownlint test
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

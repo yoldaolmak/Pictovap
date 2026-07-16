@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, cast
 
 from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter
 from pictovap.core.primitives import CMSPlacement, PlacementInstruction
@@ -93,7 +93,8 @@ def assert_image_source_contract(
     _require(type(count) is int and count >= 0, "count must be a non-negative integer")
     _require(isinstance(adapter, ImageSourceAdapter),
              "adapter must implement ImageSourceAdapter.search_candidates")
-    candidates = adapter.search_candidates(query, count)
+    provider = cast(ImageSourceAdapter, adapter)
+    candidates = provider.search_candidates(query, count)
     validate_candidates(candidates, maximum=count)
     return candidates
 
@@ -122,7 +123,8 @@ def assert_cms_adapter_contract(
     Network and filesystem calls should be mocked by the caller.
     """
     _require(isinstance(adapter, CMSAdapter), "adapter must implement CMSAdapter.place")
-    result = adapter.place(placement or sample_placement())
+    cms_adapter = cast(CMSAdapter, adapter)
+    result = cms_adapter.place(placement or sample_placement())
     validate_placement_result(result)
     return dict(result)
 

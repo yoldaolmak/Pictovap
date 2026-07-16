@@ -43,7 +43,7 @@ def _read_image_metadata(path: Path) -> dict[str, Any]:
     try:
         from PIL import Image, ExifTags
         with Image.open(path) as img:
-            meta = {"width": img.width, "height": img.height}
+            meta: dict[str, Any] = {"width": img.width, "height": img.height}
             exif = img.getexif()
             if exif:
                 exif_dict = _normalize_exif(exif, ExifTags.TAGS)

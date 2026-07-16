@@ -625,11 +625,11 @@ def create_visual_plan(
 # CLI runner
 # ---------------------------------------------------------------------------
 def run_demo(
-    article_path_str: str = None,
-    profile_path_str: str = None,
-    output_path_str: str = None,
-    report_path_str: str = None,
-):
+    article_path_str: str | None = None,
+    profile_path_str: str | None = None,
+    output_path_str: str | None = None,
+    report_path_str: str | None = None,
+) -> None:
     """Run the full Pictovap demo pipeline from the CLI.
 
     This is the terminal-facing wrapper: it prints progress, exits with

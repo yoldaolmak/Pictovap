@@ -7,7 +7,7 @@ import json
 import os
 import platform
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, cast
 
 from pictovap.core.primitives import CMSPlacement
 from pictovap.demo import create_visual_plan
@@ -140,7 +140,7 @@ class PipelineRunner:
             ("cms", cms, cms_options),
         ):
             if name:
-                construct_plugin(kind, name, options)
+                construct_plugin(cast(AdapterKind, kind), name, options)
                 selected[kind] = {
                     "name": name,
                     "construction": "ok",

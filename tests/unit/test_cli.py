@@ -1,11 +1,15 @@
 import json
 import subprocess
+import sys
 from pathlib import Path
+
+
+PICTOVAP = str(Path(sys.executable).with_name("pictovap"))
 
 
 def test_pictovap_demo(tmp_path):
     result = subprocess.run(
-        ["pictovap", "demo"], cwd=tmp_path, capture_output=True, text=True
+        [PICTOVAP, "demo"], cwd=tmp_path, capture_output=True, text=True
     )
     assert result.returncode == 0
     assert "Pictovap Local Demo" in result.stdout
@@ -13,7 +17,7 @@ def test_pictovap_demo(tmp_path):
 
 def test_python_m_pictova_demo(tmp_path):
     result = subprocess.run(
-        ["python", "-m", "pictovap.demo"], cwd=tmp_path, capture_output=True, text=True
+        [sys.executable, "-m", "pictovap.demo"], cwd=tmp_path, capture_output=True, text=True
     )
     assert result.returncode == 0
     assert "Pictovap Local Demo" in result.stdout
@@ -23,7 +27,7 @@ def test_python_m_pictova_demo(tmp_path):
 def test_pictovap_plan(tmp_path):
     output_json = tmp_path / "output.json"
     result = subprocess.run([
-        "pictovap", "plan",
+        PICTOVAP, "plan",
         "--article", "examples/articles/travel-guide.md",
         "--profile", "examples/profiles/sample-publisher.yaml",
         "--output", str(output_json)
@@ -44,7 +48,7 @@ def test_pictovap_plan_with_report(tmp_path):
     output_json = tmp_path / "output.json"
     output_md = tmp_path / "output.md"
     result = subprocess.run([
-        "pictovap", "plan",
+        PICTOVAP, "plan",
         "--article", "examples/articles/travel-guide.md",
         "--profile", "examples/profiles/sample-publisher.yaml",
         "--output", str(output_json),
@@ -59,7 +63,7 @@ def test_pictovap_report(tmp_path):
     # First generate a plan
     output_json = tmp_path / "output.json"
     subprocess.run([
-        "pictovap", "plan",
+        PICTOVAP, "plan",
         "--article", "examples/articles/travel-guide.md",
         "--profile", "examples/profiles/sample-publisher.yaml",
         "--output", str(output_json)
@@ -67,7 +71,7 @@ def test_pictovap_report(tmp_path):
     
     output_md = tmp_path / "report.md"
     result = subprocess.run([
-        "pictovap", "report",
+        PICTOVAP, "report",
         "--plan", str(output_json),
         "--output", str(output_md)
     ], capture_output=True, text=True)
@@ -90,7 +94,7 @@ def test_pictovap_report(tmp_path):
 def test_pictovap_plan_missing_article(tmp_path):
     output_json = tmp_path / "output.json"
     result = subprocess.run([
-        "pictovap", "plan",
+        PICTOVAP, "plan",
         "--article", "missing.md",
         "--profile", "examples/profiles/sample-publisher.yaml",
         "--output", str(output_json)
@@ -101,7 +105,7 @@ def test_pictovap_plan_missing_article(tmp_path):
 def test_pictovap_plan_missing_profile(tmp_path):
     output_json = tmp_path / "output.json"
     result = subprocess.run([
-        "pictovap", "plan",
+        PICTOVAP, "plan",
         "--article", "examples/articles/travel-guide.md",
         "--profile", "missing.yaml",
         "--output", str(output_json)
