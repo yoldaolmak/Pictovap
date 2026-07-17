@@ -9,6 +9,12 @@ Whether you're fixing a typo, resolving a critical bug, or proposing a massive a
 > current fastest path to a scoped contribution. Comment on an available issue
 > before starting so the maintainer can confirm the contract and mark it claimed.
 
+> [!TIP]
+> Building an image-source or CMS adapter? Start with
+> [Your First Adapter Pull Request](docs/contributing/first-adapter-pr.md).
+> It tells you whether to use an in-tree adapter or standalone plugin, then
+> gives the shortest verified route for each.
+
 ---
 
 ## 🚀 How Can I Contribute?

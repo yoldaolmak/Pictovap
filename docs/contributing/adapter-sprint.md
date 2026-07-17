@@ -55,6 +55,9 @@ pictovap scaffold provider example-source
 pictovap scaffold cms example-cms
 ```
 
+If you are deciding which route to use or what a reviewable first pull request
+contains, use [Your First Adapter Pull Request](first-adapter-pr.md).
+
 Every adapter PR must use the public helpers in `pictovap.testing`, mock all
 network calls, keep credentials out of tests, and pass the complete unit suite.
 

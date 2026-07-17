@@ -25,6 +25,9 @@ def test_scaffold_generates_installable_src_layout(tmp_path, kind, group, class_
     assert class_name in source
     assert (root / "tests/test_adapter.py").exists()
     assert (root / "README.md").exists()
+    contributing = (root / "CONTRIBUTING.md").read_text(encoding="utf-8")
+    assert "First successful loop" in contributing
+    assert "Definition of done" in contributing
 
 
 def test_scaffold_refuses_to_overwrite_owned_files(tmp_path):
