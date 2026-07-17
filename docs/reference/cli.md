@@ -12,14 +12,31 @@ pictovap demo
 ```
 *(Also available via `python -m pictovap.demo` for backward compatibility).*
 
-### Run with a Custom Article
-Executes the visual finishing pipeline on a specific Markdown article and outputs the canonical JSON plan.
+### Run with a File-Based Article
+Executes the visual finishing pipeline on a specific Markdown article and outputs the canonical JSON plan. Markdown is the portable developer and static-site input; it is not required for WordPress editors.
 ```bash
 pictovap plan \
   --article path/to/article.md \
   --profile examples/profiles/sample-publisher.yaml \
   --output output/plan.json
 ```
+
+### Run with a WordPress Gutenberg Post
+
+Reads one post through the WordPress REST API edit context, extracts Gutenberg
+headings and surrounding text, and writes a visual plan. This command does not
+modify the post, upload media, or publish anything.
+
+```bash
+pictovap plan \
+  --wordpress-post 42 \
+  --wordpress-site publisher \
+  --output output/plan.json \
+  --report output/report.md
+```
+
+`--wordpress-site publisher` reads `PUBLISHER_URL`, `PUBLISHER_USER`, and
+`PUBLISHER_APP_PASSWORD`. Omit it to use the default `WP_` variables.
 
 ### Generate a Human-Readable Report
 Generates an editor-readable Markdown report from an existing JSON plan.

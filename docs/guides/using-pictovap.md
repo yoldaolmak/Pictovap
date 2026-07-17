@@ -25,7 +25,8 @@ To run the local credential-free demo:
 pictovap demo
 ```
 
-To plan your own article:
+To plan a file-based article (Markdown is the portable developer and
+static-site input, not a requirement for editors):
 ```bash
 pictovap plan \
   --article path/to/article.md \
@@ -33,6 +34,21 @@ pictovap plan \
   --output my-plan.json \
   --report my-report.md
 ```
+
+To plan a draft or published WordPress Gutenberg post without changing it:
+
+```bash
+pictovap plan \
+  --wordpress-post 42 \
+  --wordpress-site publisher \
+  --output my-plan.json \
+  --report my-report.md
+```
+
+`--wordpress-site publisher` reads `PUBLISHER_URL`, `PUBLISHER_USER`, and
+`PUBLISHER_APP_PASSWORD`. Omit it to use the `WP_` variables. This read-only
+step preserves Gutenberg heading targets in the resulting CMS placement plan;
+publishing remains a separate explicit command.
 
 ### 3. Review
 Editors review the visual plan through a Markdown report, not raw JSON.

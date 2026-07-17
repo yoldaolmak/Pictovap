@@ -14,6 +14,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
+import html
+import re
 from typing import Any, Dict, List, Optional
 
 
@@ -153,6 +155,78 @@ class VisualBrief:
             sections=sections,
             image_slots=slots,
             source_path=str(path),
+            confidence=0.8,
+        )
+
+    @classmethod
+    def from_html(
+        cls,
+        content: str,
+        *,
+        title: str = "",
+        article_id: str | int | None = None,
+        source_path: str | None = None,
+        fallback_lang: str = "en",
+    ) -> "VisualBrief":
+        """Build a brief from rendered HTML or Gutenberg block content.
+
+        WordPress stores Gutenberg blocks as HTML with block comments. The
+        visual planner needs headings and nearby text, not a Markdown export,
+        so this parser deliberately reads the stable HTML boundary.
+        """
+        from pictovap.core.language import detect_language
+
+        def plain_text(value: str) -> str:
+            without_tags = re.sub(r"<[^>]+>", " ", value)
+            return html.unescape(re.sub(r"\s+", " ", without_tags)).strip()
+
+        heading_pattern = re.compile(r"<h(?P<level>[1-3])\b[^>]*>(?P<body>.*?)</h(?P=level)>", re.I | re.S)
+        matches = list(heading_pattern.finditer(content))
+        resolved_title = plain_text(title)
+        if not resolved_title:
+            first_h1 = next((match for match in matches if match.group("level") == "1"), None)
+            resolved_title = plain_text(first_h1.group("body")) if first_h1 else "Untitled article"
+
+        sections: list[dict[str, str]] = []
+        h2_sections: list[tuple[dict[str, str], str]] = []
+        for index, match in enumerate(matches):
+            level = match.group("level")
+            if level == "1":
+                continue
+            heading = plain_text(match.group("body"))
+            if not heading:
+                continue
+            next_start = matches[index + 1].start() if index + 1 < len(matches) else len(content)
+            excerpt = plain_text(content[match.end():next_start])[:200]
+            section = {"heading": heading, "level": f"h{level}"}
+            sections.append(section)
+            if level == "2":
+                h2_sections.append((section, excerpt))
+
+        slots: list[dict[str, Any]] = [{
+            "slot_id": "featured",
+            "purpose": "featured_image",
+            "preferred_type": "landscape",
+            "section_excerpt": resolved_title,
+        }]
+        for index, (section, excerpt) in enumerate(h2_sections):
+            slots.append({
+                "slot_id": f"section_{index}",
+                "purpose": f"inline_after_{section['heading'].lower().replace(' ', '_')}",
+                "preferred_type": "any",
+                "target_heading": section["heading"],
+                "section_excerpt": excerpt,
+            })
+
+        article_text = " ".join([resolved_title, plain_text(content)])
+        return cls(
+            article_title=resolved_title,
+            article_id=str(article_id) if article_id is not None else None,
+            article_language=detect_language(article_text, fallback_lang=fallback_lang),
+            topic=resolved_title,
+            sections=sections,
+            image_slots=slots,
+            source_path=source_path,
             confidence=0.8,
         )
 

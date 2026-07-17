@@ -347,13 +347,14 @@ def generate_report_from_file(plan_path: str, output_path: str):
 # Core pipeline (shared by the CLI runner and the public library API)
 # ---------------------------------------------------------------------------
 def _build_plan_output(
-    article_path: Path,
+    article_path: Path | None,
     profile: PublisherProfile,
     *,
     use_real_sources: bool,
     source_label: str | None = None,
     provider_adapter: object | None = None,
     provider_name: str | None = None,
+    brief: VisualBrief | None = None,
 ) -> dict:
     """Run the visual finishing pipeline for an already-resolved article path
     and profile, and return the JSON-shaped plan output.
@@ -368,17 +369,20 @@ def _build_plan_output(
     credential-free example, so it must not vary based on whatever
     credentials happen to be present in the environment/.env.
     """
-    brief = VisualBrief.from_markdown(str(article_path), fallback_lang=profile.language if profile else "en")
-    serialized_source = source_label or str(article_path)
+    if brief is None:
+        if article_path is None:
+            raise ValueError("An article path or VisualBrief is required")
+        brief = VisualBrief.from_markdown(str(article_path), fallback_lang=profile.language if profile else "en")
+    serialized_source = source_label or brief.source_path or str(article_path or "article")
     brief.source_path = serialized_source
-    brief.topic = "minimalist travel"
+    brief.topic = brief.topic or brief.article_title
     brief.detected_location = None
 
     # Override only if language_mode is override
     if profile and getattr(profile, "language_mode", "fallback") == "override" and profile.language:
         brief.article_language = profile.language
 
-    brief.article_id = "demo-article-001"
+    brief.article_id = brief.article_id or "demo-article-001"
 
     print("\n[1/4] Visual Brief")
     print(f"  Title:    {brief.article_title}")
@@ -618,6 +622,61 @@ def create_visual_plan(
     if output or report:
         _write_plan_files(plan_output, output, report)
 
+    return plan_output
+
+
+def create_wordpress_visual_plan(
+    post_id: int,
+    *,
+    site: str = "demo",
+    profile: str | None = None,
+    output: str | None = None,
+    report: str | None = None,
+    provider_adapter: object | None = None,
+    provider_name: str | None = None,
+) -> dict:
+    """Create a visual plan from a WordPress Gutenberg post.
+
+    The post is read through WordPress REST API edit context. No content or
+    media is written; publishing remains a separate, explicit operation.
+    """
+    from pictovap.services.wordpress import fetch_post_context
+
+    post = fetch_post_context(post_id, site=site)
+    if not post:
+        raise ValueError(f"WordPress post {post_id} could not be read")
+    raw_content = str(post.get("content_raw") or "")
+    if not raw_content:
+        raise ValueError(f"WordPress post {post_id} has no editable content")
+    if profile:
+        profile_path = Path(profile)
+        if not profile_path.exists():
+            raise FileNotFoundError(f"Profile not found: {profile}")
+        pub_profile = PublisherProfile.from_yaml(str(profile_path))
+    else:
+        pub_profile = PublisherProfile.get_default_profile()
+
+    brief = VisualBrief.from_html(
+        raw_content,
+        title=str(post.get("title") or ""),
+        article_id=post_id,
+        source_path=f"wordpress://{site}/posts/{post_id}",
+        fallback_lang=pub_profile.language,
+    )
+    import contextlib
+    import io
+    with contextlib.redirect_stdout(io.StringIO()):
+        plan_output = _build_plan_output(
+            None,
+            pub_profile,
+            use_real_sources=True,
+            source_label=brief.source_path,
+            provider_adapter=provider_adapter,
+            provider_name=provider_name,
+            brief=brief,
+        )
+    if output or report:
+        _write_plan_files(plan_output, output, report)
     return plan_output
 
 

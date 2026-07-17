@@ -6,6 +6,19 @@ For real WordPress publishing, Pictovap will need a WordPress URL, username, and
 
 The WordPress adapter should consume a CMS Placement plan. WordPress is one adapter, not the conceptual center of Pictovap.
 
+## Gutenberg as an input
+
+Pictovap can read a Gutenberg post directly before it creates any visual plan:
+
+```bash
+pictovap plan --wordpress-post 42 --wordpress-site publisher --output plan.json
+```
+
+The reader uses the WordPress REST API edit context and extracts headings plus
+nearby section text from Gutenberg HTML. It does not modify the post, upload
+media, or publish anything. Markdown remains supported for developer and
+static-site workflows; it is not required for a WordPress editor.
+
 ## Configuration
 
 In your project root, copy `.env.example` to `.env` and fill in the values:

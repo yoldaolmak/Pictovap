@@ -59,6 +59,16 @@ def test_pictovap_plan_with_report(tmp_path):
     assert output_json.exists()
     assert output_md.exists()
 
+
+def test_plan_rejects_article_and_wordpress_post_together():
+    result = subprocess.run([
+        PICTOVAP, "plan", "--article", "examples/articles/travel-guide.md",
+        "--wordpress-post", "42",
+    ], capture_output=True, text=True)
+
+    assert result.returncode != 0
+    assert "not allowed with argument" in result.stderr
+
 def test_pictovap_report(tmp_path):
     # First generate a plan
     output_json = tmp_path / "output.json"

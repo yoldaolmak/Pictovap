@@ -38,8 +38,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("demo", help="Run the built-in credential-free example")
 
-    plan = sub.add_parser("plan", help="Create a visual plan for a Markdown article")
-    plan.add_argument("--article", required=True, help="Path to a Markdown article")
+    plan = sub.add_parser("plan", help="Create a visual plan from an article or WordPress post")
+    plan_input = plan.add_mutually_exclusive_group(required=True)
+    plan_input.add_argument("--article", help="Path to a Markdown article")
+    plan_input.add_argument("--wordpress-post", type=int, help="WordPress Gutenberg post ID")
+    plan.add_argument("--wordpress-site", default="demo", help="WordPress credential prefix/site name")
     plan.add_argument("--profile", help="Path to a Publisher Profile YAML")
     plan.add_argument("--output", help="Path to write the JSON output plan")
     plan.add_argument("--report", help="Path to write the Markdown report")
@@ -101,14 +104,18 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "plan":
         try:
-            plan_output = runner.plan(
-                article=args.article,
-                profile=args.profile,
-                output=args.output,
-                report=args.report,
-                provider=args.provider,
-                provider_options=parse_adapter_options(args.provider_option),
-            )
+            options = parse_adapter_options(args.provider_option)
+            if args.wordpress_post is not None:
+                plan_output = runner.plan_wordpress_post(
+                    post_id=args.wordpress_post, site=args.wordpress_site,
+                    profile=args.profile, output=args.output, report=args.report,
+                    provider=args.provider, provider_options=options,
+                )
+            else:
+                plan_output = runner.plan(
+                    article=args.article, profile=args.profile, output=args.output,
+                    report=args.report, provider=args.provider, provider_options=options,
+                )
         except FileNotFoundError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 1

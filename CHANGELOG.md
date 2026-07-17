@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-17
+
+### Added
+* `pictovap plan --wordpress-post ID` reads a WordPress Gutenberg post through
+  the REST API edit context and creates a visual plan without modifying the post
+* Gutenberg headings and nearby section text now become Visual Brief slots and
+  preserve their placement targets for a later WordPress publish step
+
+### Changed
+* Markdown is documented as a portable developer and static-site input rather
+  than the only article input for Pictovap
+
 ## [0.6.0] - 2026-07-14
 
 ### Added

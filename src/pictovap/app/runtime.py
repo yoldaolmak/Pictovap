@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Iterable, cast
 
 from pictovap.core.primitives import CMSPlacement
-from pictovap.demo import create_visual_plan
+from pictovap.demo import create_visual_plan, create_wordpress_visual_plan
 from pictovap.plugins import AdapterKind, iter_plugins, load_plugin
 from pictovap.testing.contracts import validate_placement_result
 
@@ -209,6 +209,31 @@ class PipelineRunner:
         envelope["result"] = dict(result)
         envelope["status"] = "partial" if result["failed"] else "completed"
         return envelope
+
+    def plan_wordpress_post(
+        self,
+        *,
+        post_id: int,
+        site: str = "demo",
+        profile: str | None = None,
+        output: str | None = None,
+        report: str | None = None,
+        provider: str | None = None,
+        provider_options: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Create a plan from a WordPress Gutenberg post without writing to it."""
+        if provider_options and not provider:
+            raise RuntimeConfigurationError("Provider options require --provider")
+        adapter = construct_plugin("provider", provider, provider_options) if provider else None
+        return create_wordpress_visual_plan(
+            post_id,
+            site=site,
+            profile=profile,
+            output=output,
+            report=report,
+            provider_adapter=adapter,
+            provider_name=provider,
+        )
 
 
 __all__ = [
