@@ -1,0 +1,41 @@
+profile_id: ecommerce-publisher
+brand_name: Ecommerce Publisher
+cms_type: generic
+language: en
+
+image_sources:
+  - local
+  - unsplash
+
+output_rules:
+  format: webp
+  max_width: 2000
+  max_height: 2000
+  quality: 95
+
+filename_rules:
+  prefix: shop_
+  case: lowercase
+  separator: "-"
+
+alt_text_rules:
+  language: en
+  max_length: 150
+  avoid_word: image
+
+caption_rules:
+  language: en
+  include_attribution: false
+
+editorial_preferences:
+  # Persuasive, product-focused tone rather than neutral journalism
+  tone: promotional
+  style: product-focused
+
+forbidden_patterns:
+  - tourists holding maps
+  - stock photo handshake
+  - generic office backgrounds
+  - lifestyle stock photography unrelated to product
+  - low-resolution or blurry product shots
+  - images with visible competitor branding

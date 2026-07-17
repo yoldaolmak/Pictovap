@@ -1,0 +1,45 @@
+profile_id: news-publisher
+brand_name: News Publisher
+cms_type: wordpress
+language: en
+
+image_sources:
+  - local
+  - unsplash
+
+output_rules:
+  format: webp
+  max_width: 1600
+  max_height: 900
+  quality: 90
+
+filename_rules:
+  prefix: news_
+  case: lowercase
+  separator: "-"
+
+alt_text_rules:
+  language: en
+  max_length: 125
+  avoid_word: image
+
+caption_rules:
+  language: en
+  # Newspapers require attribution on every image for editorial/legal reasons
+  include_attribution: true
+  # Shorter captions than the default profile, matching print/wire-style captions
+  max_length: 80
+
+editorial_preferences:
+  # Newsrooms favor a neutral, factual tone over promotional language
+  tone: neutral
+  style: journalistic
+
+forbidden_patterns:
+  - tourists holding maps
+  - stock photo handshake
+  - generic office backgrounds
+  - staged reenactments
+  - stock newsroom photos
+  - clip art or illustrations
+  - watermarked or unlicensed images
