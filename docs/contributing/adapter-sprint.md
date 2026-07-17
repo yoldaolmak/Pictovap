@@ -23,9 +23,10 @@ those dates; the dates are measurement boundaries, not artificial deadlines.
 The `status: available` label means nobody has claimed the issue. The
 `status: claimed` label means a contributor is actively working on it.
 
-## Claim an Issue
+## Claims and First PR Issues
 
-Comment on the issue before writing the implementation. Include:
+Adapter and CMS issues require a claim before writing the implementation.
+Include:
 
 1. A short description of your intended approach.
 2. The tests or fixtures you expect to add.
@@ -35,6 +36,11 @@ The maintainer will acknowledge the claim and switch the status label. A claim
 may return to `status: available` after seven days without an update, but only
 after a check-in on the issue. This avoids abandoned claims blocking another
 contributor.
+
+Issues labelled `contribution: no-claim` are different: they have one bounded
+outcome, no external API or licensing decision, and no shared implementation
+surface. Fork the repository and open a PR directly. Do not reserve these
+issues with a comment; the first complete, tested PR receives review.
 
 ## Start in Five Minutes
 

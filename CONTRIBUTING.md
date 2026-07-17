@@ -6,8 +6,9 @@ Whether you're fixing a typo, resolving a critical bug, or proposing a massive a
 
 > [!TIP]
 > The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) is the
-> current fastest path to a scoped contribution. Comment on an available issue
-> before starting so the maintainer can confirm the contract and mark it claimed.
+> current fastest path to a scoped contribution. Adapter and CMS issues require
+> a claim before implementation; issues marked `contribution: no-claim` are
+> intentionally independent first PRs and can be submitted directly.
 
 > [!TIP]
 > Building an image-source or CMS adapter? Start with
