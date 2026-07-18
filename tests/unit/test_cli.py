@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from pictovap.app import cli
+from pictovap.services.wordpress import WordPressPostReadError
 
 
 PICTOVAP = str(Path(sys.executable).with_name("pictovap"))
@@ -102,6 +103,29 @@ def test_plan_dispatches_wordpress_post_without_network(monkeypatch, capsys):
     assert json.loads(capsys.readouterr().out) == {
         "source_path": "wordpress://publisher/posts/42"
     }
+
+
+def test_plan_reports_safe_wordpress_read_error(monkeypatch, capsys):
+    def fail_plan_wordpress_post(self, **kwargs):
+        raise WordPressPostReadError("WordPress post 42 could not be read: permission denied (HTTP 403)")
+
+    monkeypatch.setattr(cli.PipelineRunner, "plan_wordpress_post", fail_plan_wordpress_post)
+
+    result = cli.main([
+        "plan",
+        "--wordpress-post",
+        "42",
+        "--wordpress-site",
+        "publisher",
+    ])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert captured.out == ""
+    assert captured.err == (
+        "Error running plan: WordPress post 42 could not be read: "
+        "permission denied (HTTP 403)\n"
+    )
 
 
 def test_pictovap_report(tmp_path):

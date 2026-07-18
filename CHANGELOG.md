@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+* WordPress post planning now reports safe, actionable authentication,
+  permission, missing-post, timeout, and connection errors without exposing
+  credentials, response bodies, or private post content
+
 ## [0.7.4] - 2026-07-19
 
 ### Changed

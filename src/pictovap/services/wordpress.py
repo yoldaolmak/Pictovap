@@ -34,6 +34,30 @@ AUTO_MEDIA_START = "<!-- yo:auto-media:start -->"
 AUTO_MEDIA_END = "<!-- yo:auto-media:end -->"
 
 
+class WordPressPostReadError(RuntimeError):
+    """Report a safe, actionable failure to read a WordPress post."""
+
+
+def _post_read_error(post_id: int, exc: requests.exceptions.RequestException) -> WordPressPostReadError:
+    response = getattr(exc, "response", None)
+    status_code = getattr(response, "status_code", None)
+    if status_code == 401:
+        message = f"WordPress post {post_id} could not be read: authentication failed (HTTP 401)"
+    elif status_code == 403:
+        message = f"WordPress post {post_id} could not be read: permission denied (HTTP 403)"
+    elif status_code == 404:
+        message = f"WordPress post {post_id} was not found (HTTP 404)"
+    elif isinstance(status_code, int):
+        message = f"WordPress post {post_id} could not be read (HTTP {status_code})"
+    elif isinstance(exc, requests.exceptions.Timeout):
+        message = f"WordPress post {post_id} could not be read: request timed out"
+    elif isinstance(exc, requests.exceptions.ConnectionError):
+        message = f"WordPress post {post_id} could not be read: connection failed"
+    else:
+        message = f"WordPress post {post_id} could not be read: request failed"
+    return WordPressPostReadError(message)
+
+
 class WordPressUploader:
     """Upload processed images to WordPress via REST API"""
 
@@ -203,8 +227,8 @@ class WordPressUploader:
                 "content_raw": content_raw,
                 "available_headings": _extract_available_headings(content_raw),
             }
-        except requests.exceptions.RequestException:
-            return {}
+        except requests.exceptions.RequestException as exc:
+            raise _post_read_error(post_id, exc) from None
 
     # ------------------------------------------------------------------
     # Public interface (CMSAdapter)
