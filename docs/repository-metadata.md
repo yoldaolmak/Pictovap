@@ -5,7 +5,7 @@ Current public settings for the GitHub repository page. Keep this file aligned w
 ## Description
 
 ```
-Open-source visual finishing engine for content publishers — turn a finished article into a rights-aware, publish-ready CMS page with an auditable image pipeline.
+Open-source image-planning and CMS placement framework for publishers — turn WordPress Gutenberg or Markdown articles into rights-aware visual plans.
 ```
 
 ## Topics
@@ -14,18 +14,17 @@ Open-source visual finishing engine for content publishers — turn a finished a
 accessibility
 alt-text
 cms
-computer-vision
+content-automation
 content-publishing
-ghost
-image-processing
-llm
+digital-publishing
+gutenberg
+headless-cms
+markdown
 openverse
 provenance
 python
 seo
 static-site-generator
-strapi
-unsplash
 wordpress
 ```
 

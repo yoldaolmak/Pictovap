@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pictovap"
-version = "0.7.0"
-description = "Open-source visual finishing engine for content publishers."
+version = "0.7.1"
+description = "Open-source image-planning and CMS placement framework for publishers."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -14,9 +14,9 @@ authors = [
     {name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}
 ]
 keywords = [
-    "wordpress", "cms", "image automation", "seo", "accessibility",
-    "alt text", "llm", "vision", "computer vision", "openverse", "unsplash",
-    "ghost", "strapi", "static site", "content publishing", "provenance",
+    "wordpress", "gutenberg", "cms", "content automation", "content publishing",
+    "digital publishing", "headless cms", "image provenance", "provenance",
+    "accessibility", "alt text", "seo", "openverse", "markdown", "static site",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

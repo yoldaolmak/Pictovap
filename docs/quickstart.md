@@ -4,9 +4,9 @@ Get Pictovap running locally in under five minutes.
 
 ## 1. What is Pictovap?
 
-Pictovap is an open-source visual finishing engine for content publishers.
+Pictovap is an open-source image-planning and CMS placement framework for publishers.
 
-It turns unfinished articles into visually complete, rights-aware, publish-ready CMS pages.
+It turns WordPress Gutenberg or Markdown articles into rights-aware visual plans.
 
 It reads article structure, creates a Visual Brief, evaluates candidate images with Fit Scores, records Provenance Packs, generates metadata, and prepares CMS Placement instructions.
 

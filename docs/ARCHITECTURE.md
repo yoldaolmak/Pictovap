@@ -1,6 +1,6 @@
 # Pictovap Architecture
 
-Pictovap is an open-source visual finishing engine for content publishers.
+Pictovap is an open-source image-planning and CMS placement framework for publishers.
 It is designed as a headless, modular pipeline that transforms raw text content
 into a fully visually-populated publishing package.
 

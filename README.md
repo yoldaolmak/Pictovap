@@ -5,9 +5,9 @@
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap is an open-source visual finishing engine for content publishers.**
-It turns a finished article into a visually complete, rights-aware,
-publish-ready CMS page — and shows its work at every step.
+**Pictovap is an open-source image-planning and CMS placement framework for publishers.**
+It turns WordPress Gutenberg or Markdown articles into rights-aware visual
+plans — and shows its work at every step.
 
 ## The Problem
 

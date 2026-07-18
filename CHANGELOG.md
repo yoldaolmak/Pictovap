@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-07-18
+
+### Added
+* e-commerce and news publisher profile examples
+* a no-network CLI regression test for WordPress post planning dispatch
+
+### Changed
+* GitHub and PyPI metadata now position Pictovap around WordPress Gutenberg
+  and Markdown inputs, rights-aware visual plans, and CMS placement
+* repository topics now prioritize publisher, Gutenberg, CMS, provenance, and
+  accessibility discovery over generic computer-vision and LLM terms
+
 ## [0.7.0] - 2026-07-17
 
 ### Added
