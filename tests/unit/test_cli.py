@@ -3,6 +3,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from pictovap.app import cli
+
 
 PICTOVAP = str(Path(sys.executable).with_name("pictovap"))
 
@@ -68,6 +70,39 @@ def test_plan_rejects_article_and_wordpress_post_together():
 
     assert result.returncode != 0
     assert "not allowed with argument" in result.stderr
+
+
+def test_plan_dispatches_wordpress_post_without_network(monkeypatch, capsys):
+    calls = []
+
+    def fake_plan_wordpress_post(self, **kwargs):
+        calls.append(kwargs)
+        return {"source_path": f"wordpress://{kwargs['site']}/posts/{kwargs['post_id']}"}
+
+    monkeypatch.setattr(cli.PipelineRunner, "plan_wordpress_post", fake_plan_wordpress_post)
+
+    result = cli.main([
+        "plan",
+        "--wordpress-post",
+        "42",
+        "--wordpress-site",
+        "publisher",
+    ])
+
+    assert result == 0
+    assert calls == [{
+        "post_id": 42,
+        "site": "publisher",
+        "profile": None,
+        "output": None,
+        "report": None,
+        "provider": None,
+        "provider_options": {},
+    }]
+    assert json.loads(capsys.readouterr().out) == {
+        "source_path": "wordpress://publisher/posts/42"
+    }
+
 
 def test_pictovap_report(tmp_path):
     # First generate a plan
