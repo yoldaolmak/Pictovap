@@ -5,9 +5,10 @@
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap is an open-source image-planning and CMS placement framework for publishers.**
-It turns WordPress Gutenberg or Markdown articles into rights-aware visual
-plans — and shows its work at every step.
+**Pictovap is an open-source WordPress image workflow for publishers.**
+It finds rights-aware free-stock image candidates for Gutenberg or Markdown
+articles, plans their placement, and keeps the provenance needed to publish
+with confidence.
 
 ## The Problem
 
@@ -109,8 +110,8 @@ Pictovap connects to the outside world only through adapters — the core
 pipeline has no hardcoded dependency on any specific image provider or CMS.
 
 **Image sources:** local folder, Unsplash, DepositPhotos, Openverse (no key
-required), and Pexels are implemented. Pixabay and Wikimedia Commons are
-open contribution opportunities — see
+required, free CC-licensed images), and Pexels are implemented. Pixabay and
+Wikimedia Commons are open contribution opportunities — see
 [Good First Issues](docs/contributing/good-first-issues.md). See
 [Image Source Adapters](docs/adapters/image-sources.md).
 

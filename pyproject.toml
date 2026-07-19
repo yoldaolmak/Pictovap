@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pictovap"
-version = "0.7.1"
-description = "Open-source image-planning and CMS placement framework for publishers."
+version = "0.7.2"
+description = "Open-source WordPress image workflow for rights-aware free-stock discovery and CMS placement."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -14,9 +14,10 @@ authors = [
     {name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}
 ]
 keywords = [
-    "wordpress", "gutenberg", "cms", "content automation", "content publishing",
-    "digital publishing", "headless cms", "image provenance", "provenance",
-    "accessibility", "alt text", "seo", "openverse", "markdown", "static site",
+    "wordpress", "cms", "content publishing", "content automation", "gutenberg",
+    "wordpress images", "gutenberg images", "wordpress image upload",
+    "wordpress media library", "wordpress rest api", "image search", "image sourcing",
+    "image placement", "stock photos", "free stock photos", "openverse",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

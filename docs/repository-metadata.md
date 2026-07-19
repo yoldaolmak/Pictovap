@@ -5,27 +5,26 @@ Current public settings for the GitHub repository page. Keep this file aligned w
 ## Description
 
 ```
-Open-source image-planning and CMS placement framework for publishers — turn WordPress Gutenberg or Markdown articles into rights-aware visual plans.
+Open-source WordPress image workflow — find rights-aware free-stock images for Gutenberg articles, plan placement, and publish to your CMS.
 ```
 
 ## Topics
 
 ```
-accessibility
-alt-text
+free-stock-photos
+gutenberg
 cms
 content-automation
 content-publishing
-digital-publishing
-gutenberg
-headless-cms
-markdown
+image-placement
+image-search
+image-sourcing
+image-upload
 openverse
-provenance
-python
-seo
-static-site-generator
+stock-photos
 wordpress
+wordpress-media-library
+wordpress-rest-api
 ```
 
 ## Website

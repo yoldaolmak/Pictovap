@@ -2,9 +2,10 @@
 
 Welcome to the Pictovap documentation.
 
-Pictovap is an open-source image-planning and CMS placement framework for publishers.
+Pictovap is an open-source WordPress image workflow for publishers.
 
-It turns WordPress Gutenberg or Markdown articles into rights-aware visual plans.
+It finds rights-aware free-stock image candidates for Gutenberg or Markdown
+articles, plans their placement, and preserves image provenance.
 
 It reads article structure, creates a Visual Brief, evaluates candidate images with Fit Scores, records Provenance Packs, generates metadata, and prepares CMS Placement instructions.
 

@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-07-19
+
+### Changed
+* public metadata and documentation now lead with the WordPress publisher pain:
+  finding rights-aware free-stock images, placing them under Gutenberg content,
+  and retaining provenance through publishing
+* PyPI keywords and GitHub topics now prioritize WordPress, Gutenberg, CMS
+  publishing, image search, free-stock images, image placement, and media-library work
+
 ## [0.7.1] - 2026-07-18
 
 ### Added
