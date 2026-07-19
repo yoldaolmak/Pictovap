@@ -14,7 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-import html
+from html.parser import HTMLParser
 import re
 from typing import Any, Dict, List, Optional
 
@@ -176,9 +176,35 @@ class VisualBrief:
         """
         from pictovap.core.language import detect_language
 
+        class PlainTextParser(HTMLParser):
+            block_tags = {
+                "address", "article", "aside", "blockquote", "br", "dd", "div",
+                "dl", "dt", "figcaption", "figure", "footer", "form", "h1", "h2",
+                "h3", "h4", "h5", "h6", "header", "hr", "li", "main", "nav",
+                "ol", "p", "pre", "section", "table", "tbody", "td", "tfoot",
+                "th", "thead", "tr", "ul",
+            }
+
+            def __init__(self) -> None:
+                super().__init__(convert_charrefs=True)
+                self.parts: list[str] = []
+
+            def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+                if tag in self.block_tags:
+                    self.parts.append(" ")
+
+            def handle_endtag(self, tag: str) -> None:
+                if tag in self.block_tags:
+                    self.parts.append(" ")
+
+            def handle_data(self, data: str) -> None:
+                self.parts.append(data)
+
         def plain_text(value: str) -> str:
-            without_tags = re.sub(r"<[^>]+>", " ", value)
-            return html.unescape(re.sub(r"\s+", " ", without_tags)).strip()
+            parser = PlainTextParser()
+            parser.feed(value)
+            parser.close()
+            return re.sub(r"\s+", " ", "".join(parser.parts)).strip()
 
         heading_pattern = re.compile(r"<h(?P<level>[1-3])\b[^>]*>(?P<body>.*?)</h(?P=level)>", re.I | re.S)
         matches = list(heading_pattern.finditer(content))

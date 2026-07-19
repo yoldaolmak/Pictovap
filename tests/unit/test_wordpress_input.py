@@ -46,6 +46,26 @@ def test_visual_brief_from_gutenberg_html_preserves_heading_targets():
     assert "versatile layers" in brief.image_slots[1]["section_excerpt"]
 
 
+def test_visual_brief_from_gutenberg_html_flattens_inline_heading_markup():
+    content = """
+    <!-- wp:heading -->
+    <h2>Walk<strong>ing</strong> the <a href="/coast">coastal route</a></h2>
+    <!-- /wp:heading -->
+    <p>Follow the marked path.</p>
+    <!-- wp:heading {"level":3} -->
+    <h3>Pack <em>light</em>, stay longer</h3>
+    <!-- /wp:heading -->
+    """
+
+    brief = VisualBrief.from_html(content, title="Coastal guide")
+
+    assert [section["heading"] for section in brief.sections] == [
+        "Walking the coastal route",
+        "Pack light, stay longer",
+    ]
+    assert brief.image_slots[1]["target_heading"] == "Walking the coastal route"
+
+
 def test_wordpress_plan_reads_post_without_writing(monkeypatch, tmp_path):
     monkeypatch.setattr(
         "pictovap.services.wordpress.fetch_post_context",
