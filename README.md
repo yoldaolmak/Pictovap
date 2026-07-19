@@ -11,6 +11,22 @@ workflow, from image search to a reviewable publishing plan. WordPress
 Gutenberg is the first-class integration today; the adapter-based core remains
 CMS-neutral.
 
+## Why This Exists
+
+Pictovap began with a production pain at
+[Yoldaolmak.com](https://yoldaolmak.com), an independent Turkish travel
+publisher. Long-form guides repeatedly reached the same last-mile bottleneck:
+an editor still had to find rights-appropriate images, decide which section
+each one belonged to, prepare metadata, upload assets to WordPress, and place
+Gutenberg blocks by hand. That work could take tens of minutes per article,
+and its cost grew directly with publishing volume.
+
+This was not an abstract feature request. The project was extracted from that
+workflow so the hard-won parts could become reusable, reviewable open-source
+infrastructure for other publishers and CMS integrations. The original
+production case and its boundaries are documented in the
+[Yoldaolmak case study](docs/case-studies/yoldaolmak.md).
+
 ## The Problem
 
 Every publisher runs the same manual routine before an article can go live:
