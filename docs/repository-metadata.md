@@ -5,22 +5,26 @@ Current public settings for the GitHub repository page. Keep this file aligned w
 ## Description
 
 ```
-For WordPress publishers who spend hours finding free images and adding them to Gutenberg articles.
+Image workflow for content publishers who spend hours finding free images and placing them in articles.
 ```
 
 ## Topics
 
 ```
-gutenberg
-wordpress-images
-wordpress-image-upload
-wordpress-image-search
+blog-images
+cms
+content-automation
+content-editor
+content-publishing
 free-stock-images
 free-stock-photos
+gutenberg
+image-placement
+image-search
+image-sourcing
+image-upload
 stock-photos
 wordpress
-content-editor
-blog-images
 wordpress-media-library
 ```
 

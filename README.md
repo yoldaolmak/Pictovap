@@ -5,9 +5,11 @@
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap is for WordPress publishers who spend hours finding free images and
-adding them to Gutenberg articles.** It turns that manual loop into an
-inspectable workflow, from image search to a reviewable publishing plan.
+**Pictovap is for content publishers who spend hours finding free images and
+placing them in articles.** It turns that manual loop into an inspectable
+workflow, from image search to a reviewable publishing plan. WordPress
+Gutenberg is the first-class integration today; the adapter-based core remains
+CMS-neutral.
 
 ## The Problem
 

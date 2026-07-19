@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.7.4] - 2026-07-19
+
+### Changed
+* discovery language now frames Pictovap as publisher infrastructure for the
+  universal image-search and in-article placement problem; WordPress Gutenberg
+  remains the first-class integration rather than the product boundary
+
 ## [0.7.3] - 2026-07-19
 
 ### Changed

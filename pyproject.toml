@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pictovap"
-version = "0.7.3"
-description = "For WordPress publishers who spend hours finding free images and adding them to Gutenberg articles."
+version = "0.7.4"
+description = "Image workflow for content publishers who spend hours finding free images and placing them in articles."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -14,11 +14,10 @@ authors = [
     {name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}
 ]
 keywords = [
-    "wordpress images", "gutenberg images", "add images to wordpress",
-    "wordpress image upload", "wordpress media library", "wordpress image search",
-    "free images for wordpress", "free stock images", "free stock photos",
-    "find images for blog posts", "blog post images", "content editor",
-    "image attribution", "stock photos",
+    "content publishing", "content editor", "image search", "image sourcing",
+    "image placement", "image upload", "free stock images", "free stock photos",
+    "find images for blog posts", "blog post images", "stock photos",
+    "wordpress", "gutenberg", "wordpress media library", "wordpress image upload",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

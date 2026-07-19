@@ -2,8 +2,9 @@
 
 Welcome to the Pictovap documentation.
 
-Pictovap is for WordPress publishers who spend hours finding free images and
-adding them to Gutenberg articles.
+Pictovap is for content publishers who spend hours finding free images and
+placing them in articles. WordPress Gutenberg is the first-class integration
+today; the adapter-based core remains CMS-neutral.
 
 It turns that manual loop into an inspectable workflow, from image search to
 a reviewable publishing plan.
