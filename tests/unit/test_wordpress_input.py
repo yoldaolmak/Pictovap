@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+from unittest.mock import MagicMock, patch
+
+import pytest
+import requests
+
 from pictovap.core.primitives import VisualBrief
 from pictovap.demo import create_wordpress_visual_plan
+from pictovap.services.wordpress import WordPressPostReadError
 
 
 GUTENBERG_CONTENT = """
@@ -60,3 +66,61 @@ def test_wordpress_plan_reads_post_without_writing(monkeypatch, tmp_path):
     assert plan["visual_brief"]["article_id"] == "42"
     assert plan["cms_placement"]["article_id"] == "42"
     assert (tmp_path / "plan.json").exists()
+
+
+@pytest.mark.parametrize(
+    ("status_code", "expected_reason"),
+    [
+        (401, "authentication failed"),
+        (403, "permission denied"),
+    ],
+)
+def test_wordpress_plan_reports_safe_access_errors(monkeypatch, tmp_path, status_code, expected_reason):
+    monkeypatch.setenv("PUBLISHER_URL", "https://private.example.test")
+    monkeypatch.setenv("PUBLISHER_USER", "editor@example.test")
+    monkeypatch.setenv("PUBLISHER_APP_PASSWORD", "fake-secret-password")
+
+    response = MagicMock(status_code=status_code)
+    response.text = "private draft content"
+    response.raise_for_status.side_effect = requests.HTTPError(response=response)
+
+    with patch("requests.Session.get", return_value=response):
+        with pytest.raises(WordPressPostReadError) as exc_info:
+            create_wordpress_visual_plan(
+                42,
+                site="publisher",
+                output=str(tmp_path / "plan.json"),
+            )
+
+    message = str(exc_info.value)
+    assert "WordPress post 42" in message
+    assert expected_reason in message
+    assert str(status_code) in message
+    assert "https://private.example.test" not in message
+    assert "editor@example.test" not in message
+    assert "fake-secret-password" not in message
+    assert "private draft content" not in message
+    assert not (tmp_path / "plan.json").exists()
+
+
+def test_wordpress_plan_reports_missing_post_safely(monkeypatch, tmp_path):
+    monkeypatch.setenv("PUBLISHER_URL", "https://private.example.test")
+    monkeypatch.setenv("PUBLISHER_USER", "editor@example.test")
+    monkeypatch.setenv("PUBLISHER_APP_PASSWORD", "fake-secret-password")
+
+    response = MagicMock(status_code=404)
+    response.text = '{"message": "Private post details"}'
+    response.raise_for_status.side_effect = requests.HTTPError(response=response)
+
+    with patch("requests.Session.get", return_value=response):
+        with pytest.raises(WordPressPostReadError) as exc_info:
+            create_wordpress_visual_plan(
+                987,
+                site="publisher",
+                output=str(tmp_path / "plan.json"),
+            )
+
+    message = str(exc_info.value)
+    assert message == "WordPress post 987 was not found (HTTP 404)"
+    assert "Private post details" not in message
+    assert not (tmp_path / "plan.json").exists()
