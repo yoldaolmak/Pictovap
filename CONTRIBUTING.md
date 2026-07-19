@@ -93,6 +93,10 @@ When writing documentation or code comments, please adhere to our naming convent
 
 We strictly follow the [Conventional Commits](https://www.conventionalcommits.org/) specification. This allows us to auto-generate changelogs and version bumps.
 
+Write commit messages, pull request titles and descriptions, issue text, code
+comments, and documentation in English. Generated publisher content remains
+language-aware and may use the article's language.
+
 **Format:**
 ```text
 <type>: <short description>
