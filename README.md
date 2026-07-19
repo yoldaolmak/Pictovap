@@ -5,10 +5,9 @@
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap is an open-source WordPress image workflow for publishers.**
-It finds rights-aware free-stock image candidates for Gutenberg or Markdown
-articles, plans their placement, and keeps the provenance needed to publish
-with confidence.
+**Pictovap is for WordPress publishers who spend hours finding free images and
+adding them to Gutenberg articles.** It turns that manual loop into an
+inspectable workflow, from image search to a reviewable publishing plan.
 
 ## The Problem
 

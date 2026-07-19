@@ -5,26 +5,23 @@ Current public settings for the GitHub repository page. Keep this file aligned w
 ## Description
 
 ```
-Open-source WordPress image workflow — find rights-aware free-stock images for Gutenberg articles, plan placement, and publish to your CMS.
+For WordPress publishers who spend hours finding free images and adding them to Gutenberg articles.
 ```
 
 ## Topics
 
 ```
-free-stock-photos
 gutenberg
-cms
-content-automation
-content-publishing
-image-placement
-image-search
-image-sourcing
-image-upload
-openverse
+wordpress-images
+wordpress-image-upload
+wordpress-image-search
+free-stock-images
+free-stock-photos
 stock-photos
 wordpress
+content-editor
+blog-images
 wordpress-media-library
-wordpress-rest-api
 ```
 
 ## Website

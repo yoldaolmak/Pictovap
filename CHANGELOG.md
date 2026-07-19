@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.7.3] - 2026-07-19
+
+### Changed
+* public discovery metadata now speaks in the language of the WordPress
+  publisher pain: finding free images and adding them to Gutenberg articles
+  rather than describing Pictovap's internal solution components
+
 ## [0.7.2] - 2026-07-19
 
 ### Changed
