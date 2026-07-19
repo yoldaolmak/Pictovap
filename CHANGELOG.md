@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.7.5] - 2026-07-19
+
 ### Fixed
 * WordPress post planning now reports safe, actionable authentication,
   permission, missing-post, timeout, and connection errors without exposing
