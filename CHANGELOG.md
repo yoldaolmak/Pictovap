@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+* Gutenberg H2 and H3 headings now preserve readable text across inline bold,
+  italic, and link markup without leaking HTML into placement targets
+
 ## [0.7.5] - 2026-07-19
 
 ### Fixed
