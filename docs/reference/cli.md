@@ -60,6 +60,27 @@ pictovap report \
 pictovap report --plan output/plan.json --output output/report.html --renderer html-review
 ```
 
+### Check an Installed Adapter
+
+`pictovap adapter check` produces a machine-readable conformance report. The
+default check constructs the adapter without calling a provider search or CMS
+write, captures constructor diagnostics, and verifies that credential option
+values were not emitted.
+
+```bash
+pictovap adapter check --kind renderer --name external-html-review
+```
+
+For a provider with a safe, bounded query, opt into candidate and provenance
+field validation explicitly:
+
+```bash
+pictovap adapter check --kind provider --name local --exercise --count 3
+```
+
+The JSON report names each check and distinguishes `passed`, `not_run`, and
+`not_applicable`; it never prints option values.
+
 You can also generate it inline while planning:
 ```bash
 pictovap plan \

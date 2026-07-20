@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pictovap-external-html-review"
+version = "0.1.0"
+description = "Standalone HTML review renderer plugin for Pictovap."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = ["pictovap>=0.7.5"]
+
+[project.entry-points."pictovap.report_renderers"]
+external-html-review = "pictovap_external_html_review:ExternalHTMLReviewRenderer"
+
+[project.optional-dependencies]
+test = ["pytest>=9.0.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

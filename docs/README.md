@@ -26,6 +26,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Configuration Reference](reference/configuration.md) — Every environment variable
 - [Publisher Profiles](reference/publisher-profiles.md) — The full profile schema
 - [API Stability Policy](../API_STABILITY.md) — Stable, experimental, and internal integration surfaces
+- [Framework Guide](framework.md) — Integrate an image source, CMS, or renderer
 
 ### Architecture
 - [Architecture](ARCHITECTURE.md) — Core primitives, adapter model, data flow

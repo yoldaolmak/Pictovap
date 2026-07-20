@@ -56,9 +56,9 @@ Report-renderer packages use `pictovap.report_renderers`:
 html-review = "pictovap_html_review:HTMLReviewRenderer"
 ```
 
-Entry points must expose a class implementing `ImageSourceAdapter` or
-`CMSAdapter`. Pictovap rejects duplicate names and classes that do not satisfy
-the selected protocol.
+Entry points must expose a class implementing `ImageSourceAdapter`,
+`CMSAdapter`, or `ReportRenderer` for their selected group. Pictovap rejects
+duplicate names and classes that do not satisfy the selected protocol.
 
 Inspect installed plugins with:
 
@@ -66,9 +66,20 @@ Inspect installed plugins with:
 pictovap plugins
 pictovap plugins --kind provider
 pictovap plugins --kind cms
+pictovap plugins --kind renderer
 ```
 
 The output is JSON so CI and other tools can consume it.
+
+Validate one installed adapter without writes:
+
+```bash
+pictovap adapter check --kind provider --name wikimedia
+pictovap adapter check --kind renderer --name html-review
+```
+
+Provider result fields are checked only when `--exercise` is explicitly passed;
+that avoids accidental provider traffic during a normal conformance check.
 
 ## From Installation to a Real Workflow
 

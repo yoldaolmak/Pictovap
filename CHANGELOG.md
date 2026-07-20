@@ -7,6 +7,8 @@
 * stable `pictovap.api` public API module and built-in Markdown/HTML report renderers
 * report-renderer plugin discovery and reusable renderer contract assertions
 * API Stability Policy defining stable, experimental, and internal integration surfaces
+* `pictovap adapter check` for safe, machine-readable installed-plugin conformance reports
+* complete independently installable external HTML renderer package example and Framework Guide
 
 ### Changed
 * public development guidance is now model-neutral and stale project handoff files were removed

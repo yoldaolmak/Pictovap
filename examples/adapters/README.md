@@ -28,3 +28,6 @@ python examples/adapters/custom_cms_adapter.py
 3. Adapters wanted right now: see the
    [open issues](https://github.com/yoldaolmak/Pictovap/issues) —
    Pixabay, Wikimedia Commons, and Hugo are up for grabs.
+4. For a separately installable renderer package, see the complete
+   [`external-renderer-package`](../external-renderer-package/README.md)
+   example, including entry-point discovery, contract testing, and CLI use.

@@ -125,6 +125,10 @@ External adapters should use only the documented public contracts. See the
 [API Stability Policy](API_STABILITY.md) for stable, experimental, and
 internal surfaces.
 
+For the shortest implementation path, see the
+[Framework Guide](docs/framework.md) and the runnable
+[external renderer package](examples/external-renderer-package/README.md).
+
 ## Adapters
 
 Pictovap connects to the outside world only through adapters — the core

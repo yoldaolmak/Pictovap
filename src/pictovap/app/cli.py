@@ -26,6 +26,7 @@ from pictovap.app.runtime import (
     parse_adapter_options,
 )
 from pictovap.demo import generate_report_from_file, run_demo
+from pictovap.conformance import AdapterCheckError, check_adapter
 from pictovap.plugins import PluginError, iter_plugins
 from pictovap.scaffold import ScaffoldError, scaffold_adapter
 
@@ -93,6 +94,21 @@ def build_parser() -> argparse.ArgumentParser:
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
+
+    adapter = sub.add_parser("adapter", help="Inspect an installed adapter")
+    adapter_subcommands = adapter.add_subparsers(dest="adapter_command", required=True)
+    adapter_check = adapter_subcommands.add_parser(
+        "check", help="Produce a safe adapter conformance report"
+    )
+    adapter_check.add_argument("--kind", required=True, choices=("provider", "cms", "renderer"))
+    adapter_check.add_argument("--name", required=True, help="Installed adapter entry-point name")
+    adapter_check.add_argument("--option", action="append", default=[], metavar="KEY=VALUE")
+    adapter_check.add_argument(
+        "--exercise", action="store_true",
+        help="For providers only: run one bounded search to validate candidate provenance fields",
+    )
+    adapter_check.add_argument("--query", default="pictovap adapter check")
+    adapter_check.add_argument("--count", type=int, default=3)
 
     scaffold = sub.add_parser("scaffold", help="Generate a standalone adapter plugin package")
     scaffold.add_argument("kind", choices=("provider", "cms"), help="Adapter contract to implement")
@@ -185,6 +201,22 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         except PluginError as e:
             print(f"Error discovering plugins: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "adapter":
+        try:
+            result = check_adapter(
+                kind=args.kind,
+                name=args.name,
+                options=parse_adapter_options(args.option),
+                exercise=args.exercise,
+                query=args.query,
+                count=args.count,
+            )
+            _print_json(result)
+            return 0 if result["status"] == "passed" else 1
+        except (AdapterCheckError, RuntimeConfigurationError, PluginError, AdapterConstructionError) as e:
+            print(f"Error checking adapter: {e}", file=sys.stderr)
             return 1
 
     if args.command == "scaffold":

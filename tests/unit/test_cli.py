@@ -189,6 +189,26 @@ def test_report_dispatches_installed_renderer(monkeypatch, tmp_path):
     ]) == 0
     assert calls == [(str(plan_path), str(output_path), renderer)]
 
+
+def test_adapter_check_prints_machine_readable_report(monkeypatch, capsys):
+    calls = []
+
+    def fake_check_adapter(**kwargs):
+        calls.append(kwargs)
+        return {"status": "passed", "checks": {"dry_run": {"status": "passed"}}}
+
+    monkeypatch.setattr(cli, "check_adapter", fake_check_adapter)
+
+    assert cli.main([
+        "adapter", "check", "--kind", "provider", "--name", "fixture",
+        "--exercise", "--count", "2",
+    ]) == 0
+    assert calls == [{
+        "kind": "provider", "name": "fixture", "options": {}, "exercise": True,
+        "query": "pictovap adapter check", "count": 2,
+    }]
+    assert json.loads(capsys.readouterr().out)["status"] == "passed"
+
 def test_pictovap_plan_missing_article(tmp_path):
     output_json = tmp_path / "output.json"
     result = subprocess.run([
