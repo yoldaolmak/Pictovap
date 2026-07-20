@@ -25,6 +25,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [CLI Reference](reference/cli.md) — Available commands and flags
 - [Configuration Reference](reference/configuration.md) — Every environment variable
 - [Publisher Profiles](reference/publisher-profiles.md) — The full profile schema
+- [API Stability Policy](../API_STABILITY.md) — Stable, experimental, and internal integration surfaces
 
 ### Architecture
 - [Architecture](ARCHITECTURE.md) — Core primitives, adapter model, data flow

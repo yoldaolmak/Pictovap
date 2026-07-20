@@ -121,19 +121,26 @@ pictovap plan \
 automation. `my-report.md` is the same plan, rendered for a human editor to
 review before anything gets published.
 
+External adapters should use only the documented public contracts. See the
+[API Stability Policy](API_STABILITY.md) for stable, experimental, and
+internal surfaces.
+
 ## Adapters
 
 Pictovap connects to the outside world only through adapters — the core
 pipeline has no hardcoded dependency on any specific image provider or CMS.
 
-**Image sources:** local folder, Unsplash, DepositPhotos, Openverse (no key
-required, free CC-licensed images), and Pexels are implemented. Pixabay and
+**Image sources:** Pictovap ships in-tree adapters for local folders,
+Unsplash, DepositPhotos, Openverse, and Pexels. Their protocol behavior and
+request/response handling are covered by unit tests; live availability depends
+on each provider and the credentials supplied by the publisher. Pixabay and
 Wikimedia Commons are open contribution opportunities — see
 [Good First Issues](docs/contributing/good-first-issues.md). See
 [Image Source Adapters](docs/adapters/image-sources.md).
 
-**CMS placement:** WordPress (production-tested), Ghost and Strapi (reference
-implementations, real but with documented limitations). See
+**CMS placement:** WordPress is the most complete in-tree adapter. Ghost and
+Strapi are reference implementations with mocked API tests and documented
+limitations. See
 [CMS Adapters](docs/adapters/cms-adapters.md).
 
 Image-source adapters degrade gracefully when unconfigured — a missing API key
@@ -181,8 +188,9 @@ or a large external contributor base.
 
 Specifically:
 
-- Only the WordPress CMS adapter is production-hardened; Ghost and Strapi are
-  real, tested reference implementations with documented gaps (see
+- WordPress has the broadest in-tree placement behavior. Ghost and Strapi have
+  mocked API tests and documented functional gaps; validate them against your
+  own deployment before relying on them for publishing (see
   [CMS Adapters](docs/adapters/cms-adapters.md)).
 - The credential-free demo always uses deterministic mock candidates by
   design, regardless of what's configured in `.env` — `pictovap plan` is

@@ -167,7 +167,7 @@ def validate_metadata(metadata: Dict, post_context: Dict, *, duplicate_title: bo
         errors.append("metadata is fallback, not vision verified")
     if metadata.get("embedded") is not True:
         errors.append("metadata not embedded into image")
-    if not source.startswith("gpt") and not source.startswith("claude"):
+    if source not in {"semantic-model", "vision-model", "ai-model"}:
         errors.append("metadata source is not semantic model output")
     if confidence < 0.55:
         errors.append("metadata confidence too low")

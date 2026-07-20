@@ -6,6 +6,12 @@
 * Publisher Profile v1: versioned YAML, strict validation, and a bundled JSON schema
 * stable `pictovap.api` public API module and built-in Markdown/HTML report renderers
 * report-renderer plugin discovery and reusable renderer contract assertions
+* API Stability Policy defining stable, experimental, and internal integration surfaces
+
+### Changed
+* public development guidance is now model-neutral and stale project handoff files were removed
+* adapter status language now distinguishes mocked API coverage from live deployment validation
+* semantic metadata validation uses provider-neutral source categories
 
 ### Fixed
 * Gutenberg H2 and H3 headings now preserve readable text across inline bold,

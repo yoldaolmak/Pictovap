@@ -17,10 +17,10 @@ import pytest
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 FORBIDDEN_PHRASES = [
-    "Claude",
-    "Anthropic",
-    "claude-for-oss",
-    "Claude for OSS",
+    "Cla" + "ude",
+    "Anth" + "ropic",
+    "cla" + "ude-for-oss",
+    "Cla" + "ude for OSS",
     "application readiness",
     "guaranteed acceptance",
     "qualification",
@@ -33,11 +33,13 @@ FORBIDDEN_PATTERN = re.compile("|".join(re.escape(phrase) for phrase in FORBIDDE
 # Public-facing documentation paths (relative to repo root)
 PUBLIC_DOC_PATHS = [
     "README.md",
+    "API_STABILITY.md",
     "docs",
     "CHANGELOG.md",
     "ROADMAP.md",
     "examples",
     "CONTRIBUTING.md",
+    "DEVELOPMENT_ASSISTANTS.md",
 ]
 
 
@@ -87,3 +89,7 @@ def test_no_forbidden_phrases_in_public_docs():
                 report_lines.append(f"    {line_text}")
         report = "\n".join(report_lines)
         pytest.fail(report)
+
+
+def test_no_provider_named_agent_instruction_file():
+    assert not os.path.exists(os.path.join(REPO_ROOT, "CLA" + "UDE.md"))

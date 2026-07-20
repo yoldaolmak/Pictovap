@@ -18,7 +18,7 @@ Those steps happen in the core pipeline before the adapter is called.
 
 ### WordPress / Gutenberg (`src/pictovap/services/wordpress.py`)
 
-**Status: production-tested**
+**Status: most complete in-tree adapter; covered by mocked REST-boundary tests**
 
 `WordPressUploader.place()` uploads each image to the WordPress media
 library via REST API, then inserts a Gutenberg image block at the position
@@ -37,7 +37,7 @@ WordPress is one adapter among many. Nothing in the core engine is specific to W
 
 ### Ghost (`src/pictovap/publishers/ghost.py`)
 
-**Status: reference implementation, not production-tested**
+**Status: reference implementation; covered by mocked API tests**
 
 `GhostPublisher.place()` uploads each image and appends it as an image card
 at the end of the post's Lexical body. It does not yet honor
@@ -46,7 +46,7 @@ in placement order.
 
 ### Strapi (`src/pictovap/publishers/strapi.py`)
 
-**Status: reference implementation, not production-tested**
+**Status: reference implementation; covered by mocked API tests**
 
 `StrapiPublisher.place()` uploads every image, but Strapi content-types are
 user-defined, so this generic adapter only knows how to attach one media

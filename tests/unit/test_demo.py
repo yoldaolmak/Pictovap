@@ -43,7 +43,7 @@ def test_demo_runs_without_env(tmp_path, monkeypatch):
     credential_vars = [
         "WORDPRESS_URL", "WORDPRESS_USERNAME", "WORDPRESS_APP_PASSWORD",
         "UNSPLASH_ACCESS_KEY", "DEPOSITPHOTOS_API_KEY",
-        "GEMINI_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY",
+        "GEMINI_API_KEY", "OPENAI_API_KEY",
         "YO_VISUAL_MEMORY_DB", "LM_STUDIO_URL",
     ]
     for var in credential_vars:

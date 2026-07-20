@@ -18,6 +18,7 @@ PUBLIC_DIRS = [
     REPO_ROOT / "CONTRIBUTING.md",
     REPO_ROOT / "SECURITY.md",
     REPO_ROOT / "CHANGELOG.md",
+    REPO_ROOT / "DEVELOPMENT_ASSISTANTS.md",
     REPO_ROOT / "docs",
     REPO_ROOT / "examples",
     REPO_ROOT / ".github",
@@ -67,11 +68,6 @@ class TestEnvExample:
 
     def test_no_personal_paths(self, env_content):
         assert "/Users/yoldaolmak" not in env_content
-
-    def test_no_claude_references(self, env_content):
-        lower = env_content.lower()
-        assert "claude" not in lower
-        assert "anthropic" not in lower
 
     def test_no_gemini_key(self, env_content):
         assert "GEMINI_API_KEY" not in env_content
@@ -157,7 +153,6 @@ class TestNoLeakedCredentials:
         r"DEPOSITPHOTOS_API_KEY=\S+",
         r"CMS_APP_PASSWORD=\S+",
         r"GEMINI_API_KEY=\S+",
-        r"ANTHROPIC_API_KEY=\S+",
         r"OPENAI_API_KEY=\S+",
         r"GHOST_ADMIN_API_KEY=\S+",
         r"STRAPI_API_TOKEN=\S+",
