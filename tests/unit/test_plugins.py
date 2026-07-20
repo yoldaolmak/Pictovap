@@ -24,6 +24,11 @@ class FakeCMS:
         return {"placed": [], "failed": [], "warnings": []}
 
 
+class FakeRenderer:
+    def render(self, plan):
+        return "fixture report"
+
+
 @dataclass
 class FakeEntryPoint:
     name: str
@@ -49,11 +54,12 @@ def _install_entry_points(monkeypatch, *entry_points):
     monkeypatch.setattr("pictovap.plugins.metadata.entry_points", lambda: FakeEntryPoints(entry_points))
 
 
-def test_iter_plugins_discovers_both_contract_groups(monkeypatch):
+def test_iter_plugins_discovers_all_contract_groups(monkeypatch):
     _install_entry_points(
         monkeypatch,
         FakeEntryPoint("fixture", "fixture:Provider", "pictovap.image_sources", FakeProvider),
         FakeEntryPoint("fixture", "fixture:CMS", "pictovap.cms", FakeCMS),
+        FakeEntryPoint("fixture", "fixture:Renderer", "pictovap.report_renderers", FakeRenderer),
     )
 
     plugins = iter_plugins()
@@ -61,6 +67,7 @@ def test_iter_plugins_discovers_both_contract_groups(monkeypatch):
     assert [(plugin.kind, plugin.name) for plugin in plugins] == [
         ("cms", "fixture"),
         ("provider", "fixture"),
+        ("renderer", "fixture"),
     ]
     assert plugins[0].to_dict()["entry_point"] == "fixture:CMS"
 
@@ -72,6 +79,15 @@ def test_load_plugin_returns_protocol_conforming_class(monkeypatch):
     )
 
     assert load_plugin("provider", "fixture") is FakeProvider
+
+
+def test_load_plugin_returns_report_renderer(monkeypatch):
+    _install_entry_points(
+        monkeypatch,
+        FakeEntryPoint("fixture", "fixture:Renderer", "pictovap.report_renderers", FakeRenderer),
+    )
+
+    assert load_plugin("renderer", "fixture") is FakeRenderer
 
 
 def test_load_plugin_rejects_wrong_contract(monkeypatch):

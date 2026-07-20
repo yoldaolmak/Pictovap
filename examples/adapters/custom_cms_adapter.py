@@ -33,7 +33,7 @@ from typing import Any, Dict
 
 from pictovap.core.adapters import CMSAdapter
 from pictovap.core.primitives import CMSPlacement, PlacementInstruction
-from pictovap.demo import create_visual_plan
+from pictovap import create_visual_plan
 
 
 class MarkdownFolderAdapter:

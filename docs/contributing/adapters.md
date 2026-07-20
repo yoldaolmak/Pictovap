@@ -6,7 +6,7 @@ adapters (new providers) or CMS adapters (new publishing targets).
 ## Before You Start
 
 Read the [Adapter Architecture Overview](../adapters/overview.md) to understand
-the two adapter types and where they live in the codebase.
+the adapter contracts and where they live in the codebase.
 
 **Prefer starting from running code?** [`examples/adapters/`](../../examples/adapters/README.md)
 contains a runnable skeleton for each adapter type — both execute the real
@@ -137,3 +137,19 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for the full contribution process.
 For an independently released adapter, publish the package with the documented
 entry point, then open an issue requesting inclusion in the community adapter
 catalog. Independent packages must pass the same contract tests as in-tree adapters.
+
+## Report Renderers
+
+Report renderers turn a JSON visual plan into an editor-facing string. The
+built-in `MarkdownReportRenderer` and `HTMLReportRenderer` are reference
+implementations. Third-party renderers implement one method:
+
+```python
+class MyRenderer:
+    def render(self, plan: dict) -> str:
+        return "<html>...</html>"
+```
+
+Validate it with `pictovap.testing.assert_report_renderer_contract(renderer)`.
+Independent renderer packages use the `pictovap.report_renderers` entry-point
+group, then appear in `pictovap plugins --kind renderer`.

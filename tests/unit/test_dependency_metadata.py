@@ -13,5 +13,6 @@ def test_runtime_dependencies_are_minimal_and_security_fixed():
 
     assert runtime == {
         "pillow>=12.3.0",
+        "pyyaml>=6.0.2",
         "requests>=2.33.0",
     }

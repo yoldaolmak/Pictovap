@@ -49,10 +49,15 @@ pictovap plan \
 
 ### Generate a Human-Readable Report
 Generates an editor-readable Markdown report from an existing JSON plan.
+An installed `pictovap.report_renderers` plugin can produce HTML or another
+review format:
 ```bash
 pictovap report \
   --plan output/plan.json \
   --output output/report.md
+
+# Example third-party renderer
+pictovap report --plan output/plan.json --output output/report.html --renderer html-review
 ```
 
 You can also generate it inline while planning:

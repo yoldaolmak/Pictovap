@@ -22,6 +22,7 @@ from pictovap.app.runtime import (
     AdapterConstructionError,
     PipelineRunner,
     RuntimeConfigurationError,
+    construct_plugin,
     parse_adapter_options,
 )
 from pictovap.demo import generate_report_from_file, run_demo
@@ -84,12 +85,14 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.add_argument("--provider-option", action="append", default=[], metavar="KEY=VALUE")
     doctor.add_argument("--cms-option", action="append", default=[], metavar="KEY=VALUE")
 
-    report = sub.add_parser("report", help="Generate an editor-readable Markdown report from a plan")
+    report = sub.add_parser("report", help="Generate an editor-readable report from a plan")
     report.add_argument("--plan", required=True, help="Path to visual-plan.json")
-    report.add_argument("--output", required=True, help="Path to write the output report.md")
+    report.add_argument("--output", required=True, help="Path to write the rendered report")
+    report.add_argument("--renderer", help="Installed report-renderer plugin entry-point name")
+    report.add_argument("--renderer-option", action="append", default=[], metavar="KEY=VALUE")
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
-    plugins.add_argument("--kind", choices=("provider", "cms"), help="Filter by adapter kind")
+    plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
 
     scaffold = sub.add_parser("scaffold", help="Generate a standalone adapter plugin package")
     scaffold.add_argument("kind", choices=("provider", "cms"), help="Adapter contract to implement")
@@ -163,9 +166,16 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "report":
         try:
-            generate_report_from_file(args.plan, args.output)
+            renderer = None
+            if args.renderer:
+                renderer = construct_plugin(
+                    "renderer", args.renderer, parse_adapter_options(args.renderer_option)
+                )
+            elif args.renderer_option:
+                raise RuntimeConfigurationError("Renderer options require --renderer")
+            generate_report_from_file(args.plan, args.output, renderer=renderer)
             return 0
-        except Exception as e:
+        except (RuntimeConfigurationError, PluginError, AdapterConstructionError, OSError, ValueError) as e:
             print(f"Error generating report: {e}", file=sys.stderr)
             return 1
 

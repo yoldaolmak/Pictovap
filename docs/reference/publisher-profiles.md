@@ -3,6 +3,14 @@
 A **Publisher Profile** is a configuration object that controls how Pictovap behaves
 for a specific publisher. It decouples the core engine from site-specific hardcoding.
 
+## Contract Version
+
+Publisher Profile v1 is the stable, shareable YAML contract. Every external
+profile must declare `schema_version: 1`; Pictovap rejects unknown fields,
+invalid types, and unsupported versions before it creates a plan. The canonical
+machine-readable schema ships with the package at
+[`pictovap/schemas/publisher-profile-v1.schema.json`](../../src/pictovap/schemas/publisher-profile-v1.schema.json).
+
 ## Configuration Fields
 
 | Field | Type | Description |
@@ -49,6 +57,7 @@ representation; YAML is the external, human-editable format.
 ## Profile Example
 
 ```yaml
+schema_version: 1
 profile_id: my-blog
 brand_name: My Blog
 
@@ -74,6 +83,10 @@ forbidden_patterns:
 Pass a YAML profile path to `pictovap plan --profile <path>`, or construct a
 `PublisherProfile` directly and pass it to `create_visual_plan()` from Python.
 `PublisherProfile.from_yaml(path)` is the loader used by both.
+
+For Python callers, validate an in-memory profile explicitly with
+`profile.validate()`. Profiles created through `from_yaml()` and
+`from_mapping()` are validated automatically.
 
 ## Compatibility Note
 

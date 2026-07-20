@@ -6,7 +6,7 @@ import json
 from collections.abc import Mapping
 from typing import Any, cast
 
-from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter
+from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
 from pictovap.core.primitives import CMSPlacement, PlacementInstruction
 
 REQUIRED_CANDIDATE_FIELDS = frozenset({
@@ -129,12 +129,26 @@ def assert_cms_adapter_contract(
     return dict(result)
 
 
+def assert_report_renderer_contract(
+    renderer: object,
+    *,
+    plan: dict[str, Any] | None = None,
+) -> str:
+    """Run a renderer once and validate its public output contract."""
+    _require(isinstance(renderer, ReportRenderer), "renderer must implement ReportRenderer.render")
+    report = cast(ReportRenderer, renderer).render(plan or {"visual_brief": {}, "profile": {}})
+    _require(isinstance(report, str), "render() must return a string")
+    _require(bool(report.strip()), "render() must return a non-empty string")
+    return report
+
+
 __all__ = [
     "ContractViolation",
     "REQUIRED_CANDIDATE_FIELDS",
     "REQUIRED_PLACEMENT_RESULT_FIELDS",
     "assert_cms_adapter_contract",
     "assert_image_source_contract",
+    "assert_report_renderer_contract",
     "sample_placement",
     "validate_candidates",
     "validate_placement_result",

@@ -168,6 +168,27 @@ def test_pictovap_report(tmp_path):
     # report is not raw json
     assert not content.strip().startswith("{")
 
+
+def test_report_dispatches_installed_renderer(monkeypatch, tmp_path):
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_text("{}", encoding="utf-8")
+    output_path = tmp_path / "report.html"
+    renderer = object()
+    calls = []
+
+    monkeypatch.setattr(cli, "construct_plugin", lambda kind, name, options: renderer)
+    monkeypatch.setattr(
+        cli,
+        "generate_report_from_file",
+        lambda plan, output, renderer=None: calls.append((plan, output, renderer)),
+    )
+
+    assert cli.main([
+        "report", "--plan", str(plan_path), "--output", str(output_path),
+        "--renderer", "html-review", "--renderer-option", "theme=light",
+    ]) == 0
+    assert calls == [(str(plan_path), str(output_path), renderer)]
+
 def test_pictovap_plan_missing_article(tmp_path):
     output_json = tmp_path / "output.json"
     result = subprocess.run([

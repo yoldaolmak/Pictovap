@@ -49,6 +49,13 @@ CMS packages use `pictovap.cms`:
 hugo = "pictovap_hugo:HugoAdapter"
 ```
 
+Report-renderer packages use `pictovap.report_renderers`:
+
+```toml
+[project.entry-points."pictovap.report_renderers"]
+html-review = "pictovap_html_review:HTMLReviewRenderer"
+```
+
 Entry points must expose a class implementing `ImageSourceAdapter` or
 `CMSAdapter`. Pictovap rejects duplicate names and classes that do not satisfy
 the selected protocol.

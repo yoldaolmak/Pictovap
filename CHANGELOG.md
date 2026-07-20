@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+* Publisher Profile v1: versioned YAML, strict validation, and a bundled JSON schema
+* stable `pictovap.api` public API module and built-in Markdown/HTML report renderers
+* report-renderer plugin discovery and reusable renderer contract assertions
+
 ### Fixed
 * Gutenberg H2 and H3 headings now preserve readable text across inline bold,
   italic, and link markup without leaking HTML into placement targets

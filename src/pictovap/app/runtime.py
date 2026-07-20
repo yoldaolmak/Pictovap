@@ -11,7 +11,7 @@ from typing import Any, Iterable, cast
 
 from pictovap import __version__
 from pictovap.core.primitives import CMSPlacement
-from pictovap.demo import create_visual_plan, create_wordpress_visual_plan
+from pictovap.api import create_visual_plan, create_wordpress_visual_plan
 from pictovap.plugins import AdapterKind, iter_plugins, load_plugin
 from pictovap.testing.contracts import validate_placement_result
 

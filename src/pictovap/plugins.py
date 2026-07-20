@@ -6,13 +6,14 @@ from dataclasses import dataclass
 from importlib import metadata
 from typing import Dict, Iterable, Literal, Type
 
-from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter
+from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
 
-AdapterKind = Literal["provider", "cms"]
+AdapterKind = Literal["provider", "cms", "renderer"]
 
 ENTRY_POINT_GROUPS: Dict[AdapterKind, str] = {
     "provider": "pictovap.image_sources",
     "cms": "pictovap.cms",
+    "renderer": "pictovap.report_renderers",
 }
 
 
@@ -61,7 +62,11 @@ class AdapterPlugin:
             raise PluginLoadError(
                 f"Could not load plugin '{self.name}' from {self.value!r}: {exc}"
             ) from exc
-        protocol = ImageSourceAdapter if self.kind == "provider" else CMSAdapter
+        protocol = {
+            "provider": ImageSourceAdapter,
+            "cms": CMSAdapter,
+            "renderer": ReportRenderer,
+        }[self.kind]
         try:
             conforms = isinstance(adapter_class, type) and issubclass(adapter_class, protocol)
         except TypeError:

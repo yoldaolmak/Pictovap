@@ -325,7 +325,7 @@ def _resolve_sample_article() -> Path | None:
     return None
 
 
-def generate_report_from_file(plan_path: str, output_path: str):
+def generate_report_from_file(plan_path: str, output_path: str, renderer: object | None = None):
     import sys
     plan_file = Path(plan_path)
     if not plan_file.exists():
@@ -335,7 +335,12 @@ def generate_report_from_file(plan_path: str, output_path: str):
     with open(plan_file, "r") as f:
         output = json.load(f)
 
-    report = generate_markdown_report(output)
+    if renderer is None:
+        report = generate_markdown_report(output)
+    else:
+        from pictovap.testing.contracts import assert_report_renderer_contract
+
+        report = assert_report_renderer_contract(renderer, plan=output)
 
     out_file = Path(output_path)
     out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -360,7 +365,7 @@ def _build_plan_output(
     and profile, and return the JSON-shaped plan output.
 
     This is the one place the pipeline logic lives — `run_demo()` (CLI) and
-    `create_visual_plan()` (library API) both call this after doing their
+    the public API both call this after doing their
     own input validation.
 
     `use_real_sources` controls whether configured image source adapters
@@ -527,7 +532,12 @@ def _build_plan_output(
     return output
 
 
-def _write_plan_files(output: dict, output_path_str: str | None, report_path_str: str | None) -> Path:
+def _write_plan_files(
+    output: dict,
+    output_path_str: str | None,
+    report_path_str: str | None,
+    report_renderer: object | None = None,
+) -> Path:
     """Write the JSON plan (and optional Markdown report) to disk. Returns the JSON path used."""
     if output_path_str:
         out_path = Path(output_path_str)
@@ -544,9 +554,15 @@ def _write_plan_files(output: dict, output_path_str: str | None, report_path_str
     # path, or the CLI's `--report` bare-flag default resolved upstream in
     # __main__). No implicit/unconditional report on every demo run.
     if report_path_str:
+        if report_renderer is not None:
+            from pictovap.testing.contracts import assert_report_renderer_contract
+
+            report = assert_report_renderer_contract(report_renderer, plan=output)
+        else:
+            report = generate_markdown_report(output)
         report_path = Path(report_path_str)
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        report_path.write_text(generate_markdown_report(output), encoding="utf-8")
+        report_path.write_text(report, encoding="utf-8")
 
     return out_path
 
@@ -765,7 +781,9 @@ if __name__ == "__main__":
     if args.article:
         # A real article was given: use the same real-adapter-aware path as
         # `pictovap plan`, not the always-mock demo path.
-        plan = create_visual_plan(
+        from pictovap import api
+
+        plan = api.create_visual_plan(
             article=args.article,
             profile=args.profile,
             output=args.output,
