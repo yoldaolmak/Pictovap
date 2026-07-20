@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pictovap-wikimedia"
+version = "0.1.0"
+description = "Wikimedia image-source adapter for Pictovap."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["pictovap", "image adapter", "cms"]
+dependencies = ["pictovap>=0.6.0"]
+
+[project.entry-points."pictovap.image_sources"]
+wikimedia = "pictovap_wikimedia:WikimediaSource"
+
+[project.optional-dependencies]
+test = ["pytest>=9.0.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

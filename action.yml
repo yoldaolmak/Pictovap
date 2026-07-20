@@ -1,0 +1,44 @@
+name: 'Pictovap Visual Planning'
+description: 'Automate visual planning and image candidate selection for markdown articles'
+author: 'Yoldaolmak'
+
+branding:
+  icon: 'image'
+  color: 'blue'
+
+inputs:
+  article:
+    description: 'Path to the markdown article'
+    required: true
+  profile:
+    description: 'Path to the publisher profile YAML'
+    required: false
+  output:
+    description: 'Path to write the JSON plan'
+    required: false
+    default: 'pictovap-plan.json'
+  report:
+    description: 'Path to write the markdown report'
+    required: false
+    default: 'pictovap-report.md'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install Pictovap
+      shell: bash
+      run: pip install pictovap
+
+    - name: Run Pictovap Plan
+      shell: bash
+      run: |
+        CMD="pictovap plan --article ${{ inputs.article }} --output ${{ inputs.output }} --report ${{ inputs.report }}"
+        if [ -n "${{ inputs.profile }}" ]; then
+          CMD="$CMD --profile ${{ inputs.profile }}"
+        fi
+        $CMD

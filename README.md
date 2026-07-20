@@ -1,8 +1,13 @@
 # Pictovap
 
+<p align="center">
+  <img src="docs/assets/logo.png" alt="Pictovap Logo" width="200" />
+</p>
+
 [![PyPI](https://img.shields.io/pypi/v/pictovap.svg)](https://pypi.org/project/pictovap/)
 [![Python versions](https://img.shields.io/pypi/pyversions/pictovap.svg)](https://pypi.org/project/pictovap/)
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/yoldaolmak/Pictovap)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **Pictovap is for content publishers who spend hours finding free images and
@@ -210,6 +215,8 @@ console-script entry point are all `pictovap`; `pictova` remains a deprecated
 alias — see [Brand & Naming](docs/architecture/naming.md).
 
 ## Contributing
+
+**Zero-install contribution:** You don't need a local Python environment to contribute. Click **Code -> Create codespace on main** in GitHub to launch a fully configured, browser-based VS Code environment with all dependencies and tests ready to run.
 
 The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) has three
 claimable provider and CMS integrations with exact acceptance tests.

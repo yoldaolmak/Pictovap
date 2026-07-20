@@ -15,6 +15,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 
 ### Guides
 - [Quickstart](quickstart.md) — Get up and running in 5 minutes
+- [Automating WordPress Workflows](tutorials/wordpress-automation.md) — How to automate your entire visual pipeline with Pictovap
 - [Using Pictovap](guides/using-pictovap.md) — The full user journey from configure to publish
 - [Editor Report](guides/editor-report.md) — How humans review visual plans
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
