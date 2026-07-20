@@ -63,7 +63,7 @@ python -m pictovap.demo
 ```
 
 This runs all four stages against `examples/sample-article.md`, using mock candidate
-images, and writes the output to `examples/sample-output.json`.
+images, and writes the output to `sample-output.json` in the current directory.
 
 ## Inspecting Intermediate State
 

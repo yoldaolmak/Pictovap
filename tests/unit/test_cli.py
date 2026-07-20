@@ -3,6 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from pictovap import __version__
 from pictovap.app import cli
 from pictovap.services.wordpress import WordPressPostReadError
 
@@ -16,6 +17,13 @@ def test_pictovap_demo(tmp_path):
     )
     assert result.returncode == 0
     assert "Pictovap Local Demo" in result.stdout
+
+
+def test_pictovap_version_matches_installed_package_version():
+    result = subprocess.run([PICTOVAP, "--version"], capture_output=True, text=True)
+
+    assert result.returncode == 0
+    assert result.stdout.strip() == f"pictovap {__version__}"
 
 
 def test_python_m_pictova_demo(tmp_path):

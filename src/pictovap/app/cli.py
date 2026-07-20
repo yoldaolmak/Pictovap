@@ -17,6 +17,7 @@ import json
 import sys
 from typing import Any, Dict, Sequence
 
+from pictovap import __version__
 from pictovap.app.runtime import (
     AdapterConstructionError,
     PipelineRunner,
@@ -34,6 +35,12 @@ def _print_json(payload: Dict[str, Any]) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pictovap")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+        help="Show the installed Pictovap version and exit",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     sub.add_parser("demo", help="Run the built-in credential-free example")

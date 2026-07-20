@@ -29,7 +29,7 @@ python -m pictovap.demo --article path/to/your/article.md --output my-plan.json
 
 **Then:**
 
-- Inspect the `examples/sample-output.json` output file.
+- Inspect the `sample-output.json` file created in your current directory.
 - Does the structure make sense?
 - Did the Visual Brief identify reasonable image slots for your article?
 - Did anything crash or produce confusing output?

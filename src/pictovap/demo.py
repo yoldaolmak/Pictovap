@@ -532,13 +532,10 @@ def _write_plan_files(output: dict, output_path_str: str | None, report_path_str
     if output_path_str:
         out_path = Path(output_path_str)
     else:
-        # Detect context: dev/source tree vs. real installed package
-        if _is_dev_install():
-            # Dev context: write to repo-relative examples/ directory (preserves existing test expectations)
-            out_path = Path(__file__).resolve().parent.parent.parent / "examples" / "sample-output.json"
-        else:
-            # Real install: write to current working directory where user can reliably find it
-            out_path = Path.cwd() / "sample-output.json"
+        # Demo artifacts belong to the caller's workspace. Writing into the
+        # source checkout would mutate a tracked example; writing into an
+        # installed package could fail because site-packages is read-only.
+        out_path = Path.cwd() / "sample-output.json"
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -754,11 +751,8 @@ def run_demo(
 
 if __name__ == "__main__":
     # `--report` with no value (a bare flag) should still resolve to a real,
-    # writable path -- consistent with where _write_plan_files() puts the
-    # JSON output: examples/ in a dev/source checkout, cwd for a real install.
-    _bare_report_default = (
-        "examples/sample-report.md" if _is_dev_install() else str(Path.cwd() / "sample-report.md")
-    )
+    # writable path in the caller's workspace, alongside the JSON output.
+    _bare_report_default = str(Path.cwd() / "sample-report.md")
 
     parser = argparse.ArgumentParser(description="Pictovap Local Demo")
     parser.add_argument("--article", help="Path to a custom Markdown article", default=None)

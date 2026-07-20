@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import pytest
 
+from pictovap import __version__
 from pictovap.app.runtime import (
     AdapterConstructionError,
     PipelineRunner,
@@ -131,6 +132,7 @@ def test_doctor_loads_all_plugins_and_constructs_selected_adapters(monkeypatch):
     )
 
     assert result["status"] == "ready"
+    assert result["pictovap"] == __version__
     assert {(item["kind"], item["load"]) for item in result["plugins"]} == {
         ("provider", "ok"),
         ("cms", "ok"),

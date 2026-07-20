@@ -62,7 +62,7 @@ Projects with a gallery/repeatable media field should subclass
 
 **Status: used by the credential-free demo**
 
-Writes the `CMSPlacement` output to `examples/sample-output.json`. No CMS connection,
+Writes the `CMSPlacement` output to `sample-output.json` in the current directory. No CMS connection,
 no credentials, no network calls.
 
 ## Writing a New CMS Adapter

@@ -58,7 +58,7 @@ def test_demo_runs_without_env(tmp_path, monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# 3. sample-output.json is produced
+# 3. sample-output.json is produced in the caller's workspace
 # ---------------------------------------------------------------------------
 
 def test_sample_output_produced(tmp_path, monkeypatch):

@@ -53,7 +53,8 @@ Publisher profiles tell Pictovap about your site's tone and requirements. Try cr
 
 ## 6. Review the Output JSON
 
-Open the generated JSON (e.g., `examples/sample-output.json` or your custom output). Look for the four primitives:
+Open the generated JSON (for example, `sample-output.json` in your current
+directory or your custom output). Look for the four primitives:
 - `visual_brief`: What the engine thinks your article needs.
 - `fit_scores`: How candidate images were ranked.
 - `provenance_packs`: The selected images and their audit trail.

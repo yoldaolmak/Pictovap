@@ -101,6 +101,7 @@ If you are developing the CLI, you can test it directly via the setuptools conso
 ```bash
 # Ensure you are in your active virtual environment
 pictovap --help
+pictovap --version
 ```
 
 ### Submitting a Pull Request

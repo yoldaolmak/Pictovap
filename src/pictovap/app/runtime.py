@@ -9,6 +9,7 @@ import platform
 from pathlib import Path
 from typing import Any, Iterable, cast
 
+from pictovap import __version__
 from pictovap.core.primitives import CMSPlacement
 from pictovap.demo import create_visual_plan, create_wordpress_visual_plan
 from pictovap.plugins import AdapterKind, iter_plugins, load_plugin
@@ -150,6 +151,7 @@ class PipelineRunner:
         healthy = all(plugin["load"] == "ok" for plugin in plugins)
         return {
             "status": "ready" if healthy else "unhealthy",
+            "pictovap": __version__,
             "python": platform.python_version(),
             "plugins": plugins,
             "selected": selected,

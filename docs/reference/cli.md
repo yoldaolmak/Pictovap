@@ -5,6 +5,15 @@ the same workflow can be reviewed by a person and composed in automation.
 
 ## Current Commands
 
+### Identify the Installed Version
+
+Print the exact package version when filing an issue, reproducing a plugin
+problem, or recording a release check:
+
+```bash
+pictovap --version
+```
+
 ### Run the Default Demo
 Runs the local credential-free demo using the sample article and mock candidates.
 ```bash
@@ -81,7 +90,8 @@ pictovap doctor \
 ```
 
 Only option names are included in JSON diagnostics. Values resolved from the
-environment are not printed.
+environment are not printed. The result also includes the Pictovap and Python
+versions so a contributor can attach one safe diagnostic artifact to an issue.
 
 ### Plan with an Installed Provider
 
