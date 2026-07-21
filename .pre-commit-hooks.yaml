@@ -1,7 +1,0 @@
-- id: pictovap-plan
-  name: Pictovap Visual Plan Check
-  description: Ensure all markdown articles have valid visual plans
-  entry: pictovap plan
-  language: python
-  types: [markdown]
-  require_serial: false

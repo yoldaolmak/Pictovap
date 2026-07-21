@@ -1,97 +1,122 @@
-# How to Automate WordPress Gutenberg Image Uploads with Python
+# Prepare WordPress Gutenberg Image Plans with Pictovap
 
-If you run a WordPress blog or newsroom, you already know the most tedious part of publishing isn't writing the content—it's formatting the images. 
+WordPress publishers repeatedly solve the same visual-editor problem: decide
+where images belong, find candidates that fit the surrounding content, keep
+license and attribution data, and give an editor a reviewable result. Pictovap
+turns that work into a deterministic visual plan. It is CMS-neutral; the
+WordPress-specific boundary is the input and placement adapter.
 
-Every publisher runs the same manual routine before an article can go live: finding images that fit the text, checking licenses, downloading, resizing, writing alt text, uploading to the WordPress media library, and placing Gutenberg blocks. This process scales linearly with your publishing volume. It takes 15-30 minutes per article, forever.
+This tutorial covers the supported, write-free workflow. It creates a plan and
+an editor report without changing a WordPress post.
 
-In this tutorial, we will show you how to completely automate the WordPress Gutenberg image pipeline using **Pictovap**, an open-source orchestration tool for publishers.
-
-## What is Pictovap?
-
-[Pictovap](https://github.com/yoldaolmak/Pictovap) is a CMS-neutral visual planning framework. Instead of being a closed SaaS product, it runs directly in your CI/CD pipeline or local environment. 
-
-It reads your Markdown article, decides where images are needed based on your headings, searches providers (like Unsplash or Pexels) for appropriate stock photos, and generates a plan that gets pushed directly to your WordPress site.
-
-## Step 1: Install Pictovap
-
-You can install Pictovap directly from PyPI. You need Python 3.10 or higher.
+## Install
 
 ```bash
-pip install pictovap
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install pictovap
 ```
 
-## Step 2: Configure Your Publisher Profile
+## Create a publisher profile
 
-Pictovap uses a `profile.yaml` to understand your blog's rules. This dictates how many images to find and what resolution to use.
+Profiles use the versioned Pictovap schema. Start with the checked-in example
+and adapt the fields that describe your publication:
 
-Create a `publisher.yaml` file:
+```bash
+cp examples/profiles/sample-publisher.yaml publisher.yaml
+```
+
+At minimum, a profile contains `schema_version`, `profile_id`, and
+`brand_name`:
 
 ```yaml
-# publisher.yaml
-language: "en"
-resolution: "1200x800"
-max_images_per_article: 5
+schema_version: 1
+profile_id: my-wordpress-site
+brand_name: My WordPress Site
+cms_type: wordpress
+language: en
+image_sources:
+  - openverse
+caption_rules:
+  include_attribution: true
 ```
 
-## Step 3: Set Your API Keys
+## Create a plan from Markdown
 
-You will need an application password from your WordPress site, and optionally an API key for your image source (e.g., Unsplash).
-
-```bash
-export WP_URL="https://yourblog.com"
-export WP_TOKEN="your-wordpress-application-password"
-export UNSPLASH_API_KEY="your-unsplash-key"
-```
-
-## Step 4: Run the Automation Pipeline
-
-With your credentials set, you can run the entire pipeline with a single command. 
-First, we generate the plan:
+Use this path when the article is maintained in a repository or a CMS export:
 
 ```bash
 pictovap plan \
   --article draft-post.md \
   --profile publisher.yaml \
-  --provider unsplash \
-  --provider-option api_key=@UNSPLASH_API_KEY \
-  --output plan.json
+  --output plan.json \
+  --report report.md
 ```
 
-This reads `draft-post.md`, finds the best images from Unsplash, and writes the decisions to `plan.json`.
+The JSON plan contains the visual brief, scored candidate images, provenance,
+and placement instructions. The Markdown report is the editor-facing review
+surface.
 
-Now, push it to WordPress:
+## Create a plan from an existing WordPress post
+
+Pictovap can read a Gutenberg post through the WordPress REST API. It does not
+write, upload media, or publish during this command.
 
 ```bash
-pictovap publish \
-  --plan plan.json \
-  --cms wordpress \
-  --cms-option api_url=$WP_URL \
-  --cms-option api_token=@WP_TOKEN
+export WP_URL="https://yourblog.example"
+export WP_USER="editor"
+export WP_APP_PASSWORD="xxxx xxxx xxxx xxxx xxxx xxxx"
+
+pictovap plan \
+  --wordpress-post 42 \
+  --output plan.json \
+  --report report.md
 ```
 
-Pictovap will automatically upload the images to your Media Library, generate SEO-friendly Alt Text, and insert the `wp:image` Gutenberg blocks directly into your post!
+For a named site, use `--wordpress-site publisher` and the corresponding
+`PUBLISHER_URL`, `PUBLISHER_USER`, and `PUBLISHER_APP_PASSWORD` variables.
 
-## Using it in GitHub Actions
+## Review the result
 
-You don't even need to run this locally. Pictovap provides an official GitHub Action and a Pre-commit hook. 
-You can add it to your repository so every time you commit a Markdown file, the images are planned and placed automatically.
+```bash
+pictovap report --plan plan.json --output report.md
+```
+
+Check the image role, heading placement, source URL, license, attribution, and
+alt text before a publisher or CMS adapter performs any write.
+
+## Use the GitHub Action
+
+The repository also exposes a small Action for planning one Markdown file per
+run. It does not upload media or modify WordPress:
 
 ```yaml
-name: "Visual Planning"
-on: [push]
+name: Visual plan
+
+on:
+  pull_request:
+    paths: ["posts/**/*.md"]
 
 jobs:
-  plan_images:
+  plan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: yoldaolmak/Pictovap@v0.7.5
         with:
-          article: 'posts/*.md'
+          article: posts/example.md
+          profile: publisher.yaml
+          output: artifacts/pictovap-plan.json
+          report: artifacts/pictovap-report.md
 ```
 
-## Stop Uploading Images Manually
+For multiple articles, invoke the Action once per file from a matrix. A glob
+such as `posts/*.md` is not a valid `article` value.
 
-By integrating Pictovap into your publishing workflow, you ensure consistent SEO metadata, legal image provenance, and you save hundreds of hours of editorial time. 
+## Extending the write step
 
-Check out the [GitHub Repository](https://github.com/yoldaolmak/Pictovap) to get started!
+Uploading media and placing Gutenberg blocks is deliberately an adapter
+boundary. Implement or install a `CMSAdapter`, validate it with
+`pictovap adapter check --kind cms`, and only then call it with a plan. This
+keeps the planning step safe and lets contributors add CMS integrations without
+changing Pictovap core.

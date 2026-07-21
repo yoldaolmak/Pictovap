@@ -13,13 +13,13 @@ pictovap plugins --kind provider
 pictovap doctor --provider wikimedia
 ```
 
-Run the adapter in the real planning pipeline:
+Run the adapter in the real planning pipeline after implementing the provider request:
 
 ```bash
-export WIKIMEDIA_API_KEY="..."
-pictovap plan --article article.md --provider wikimedia \
-  --provider-option api_key=@WIKIMEDIA_API_KEY --output plan.json
+pictovap plan --article article.md --provider wikimedia --output plan.json
 ```
 
 Implement the provider request in `WikimediaSource.search_candidates`,
-mock all HTTP calls in tests, and preserve the credential-free empty-result path.
+mock all HTTP calls in tests, and preserve Wikimedia attribution and license
+fields in every returned candidate. Wikimedia Commons does not require an API
+key for this adapter.

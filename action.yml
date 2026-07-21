@@ -36,9 +36,15 @@ runs:
 
     - name: Run Pictovap Plan
       shell: bash
+      env:
+        PICTOVAP_ARTICLE: ${{ inputs.article }}
+        PICTOVAP_PROFILE: ${{ inputs.profile }}
+        PICTOVAP_OUTPUT: ${{ inputs.output }}
+        PICTOVAP_REPORT: ${{ inputs.report }}
       run: |
-        CMD="pictovap plan --article ${{ inputs.article }} --output ${{ inputs.output }} --report ${{ inputs.report }}"
-        if [ -n "${{ inputs.profile }}" ]; then
-          CMD="$CMD --profile ${{ inputs.profile }}"
+        set -euo pipefail
+        plan_args=(plan --article "$PICTOVAP_ARTICLE" --output "$PICTOVAP_OUTPUT" --report "$PICTOVAP_REPORT")
+        if [[ -n "$PICTOVAP_PROFILE" ]]; then
+          plan_args+=(--profile "$PICTOVAP_PROFILE")
         fi
-        $CMD
+        pictovap "${plan_args[@]}"

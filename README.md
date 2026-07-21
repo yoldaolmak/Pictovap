@@ -216,7 +216,7 @@ alias — see [Brand & Naming](docs/architecture/naming.md).
 
 ## Contributing
 
-**Zero-install contribution:** You don't need a local Python environment to contribute. Click **Code -> Create codespace on main** in GitHub to launch a fully configured, browser-based VS Code environment with all dependencies and tests ready to run.
+**Zero-install contribution:** You don't need a local Python environment to contribute. Click **Code -> Create codespace on main** in GitHub to launch a configured, browser-based VS Code environment with the project dependencies ready to run.
 
 The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) has three
 claimable provider and CMS integrations with exact acceptance tests.
