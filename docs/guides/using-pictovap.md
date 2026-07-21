@@ -15,7 +15,7 @@ A publisher profile defines site name, CMS type, language, output rules, filenam
 
 ### 2. Plan
 Pictovap reads an article and creates a machine-readable visual plan. The planning process includes:
-- **Deterministic Language Detection**: Pictovap automatically detects the article's primary language (e.g., Turkish or English) based on simple local word-markers. It falls back to the publisher profile language if the text is short or ambiguous. Public-facing documentation, READMEs, and logs remain in English, but generated alt texts and captions match the detected article language.
+- **Deterministic Language Detection**: Pictovap detects Turkish or English articles using simple local word-markers and falls back to the publisher profile language when the text is short or ambiguous. The local metadata templates currently generate Turkish and English alt texts and captions; other languages require an external metadata provider or a contributed language pack.
 - **Section Context Extraction**: Pictovap extracts the first few sentences from each section as context (`section_excerpt`). This context is used to select relevant images, score candidates, and generate non-generic localized alt texts and captions.
 
 You do not need WordPress credentials to run the local demo. You do not need image provider credentials to run the local demo.

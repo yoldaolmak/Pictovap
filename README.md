@@ -178,15 +178,14 @@ Constructor settings are repeatable `KEY=VALUE` options. For credentials, use
 `KEY=@ENV_VAR`; Pictovap resolves the environment value without echoing it in
 diagnostics or output.
 
-## Multi-Language by Design
+## Language-Aware by Design
 
-Pictovap's own code, comments, and documentation are English. What it
-*generates* — alt text, captions, titles — is not tied to any one language.
-Article language is detected automatically (or set explicitly via the
-publisher profile), and generated metadata follows it: a Turkish article
-gets Turkish alt text, a French one gets French, and so on. This isn't a
-localization afterthought bolted onto an English-only tool; it's a parameter
-of the pipeline from the start.
+Pictovap's own code, comments, and documentation are English. The
+credential-free deterministic metadata path currently supports Turkish and
+English: article language is detected automatically (or set explicitly via the
+publisher profile), and alt text and captions follow that language. Other
+language codes can travel through the profile and visual-plan contracts, but
+their deterministic metadata templates are not yet implemented.
 
 ## Current Status and Limitations
 
@@ -204,9 +203,9 @@ Specifically:
 - The credential-free demo always uses deterministic mock candidates by
   design, regardless of what's configured in `.env` — `pictovap plan` is
   where real, credentialed sources are used.
-- Deterministic structural extraction (the rule-based, non-AI language and
-  section detection) is reliable for English and Turkish; other languages
-  are untested.
+- Deterministic structural extraction and local metadata templates are tested
+  for English and Turkish; other languages currently require a contributor
+  language pack or an external metadata provider.
 
 ## Compatibility Note
 
