@@ -20,9 +20,10 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - Published `pictovap` package on PyPI
 - Green main-branch CI and release workflows for v0.6.0
 - CodeQL, dependency review, and OpenSSF Scorecard workflows
-- Two external pull requests merged from community forks
+- Six external pull requests merged from five unique community contributors
 - Third-party adapter discovery through standard Python entry points
 - Public adapter contract tests and standalone plugin scaffolding
+- Reproducible OpenSSF Criticality Score workflow with a pinned tool checksum
 
 ## Missing Ecosystem Signals
 
@@ -33,6 +34,7 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - External issues reported by real users
 - Third-party validation or mentions
 - OpenSSF Scorecard improvements
+- A Criticality Score of at least 0.4 (latest measured snapshot: 0.21280 on 2026-07-22)
 
 ## Public Maturity Milestones
 
@@ -47,7 +49,7 @@ The release infrastructure is live. The goals for the next maturity milestone ar
 
 ## Risks
 
-- External contribution is still early and concentrated in two contributors.
+- External contribution is still early and concentrated in five contributors.
 - Package usage and downstream dependents are not yet established.
 - Single-publisher dogfooding only; no independent validation.
 - Limited CI coverage for integration paths.
@@ -57,7 +59,8 @@ The release infrastructure is live. The goals for the next maturity milestone ar
 1. Publish the prepared launch announcements and invite reproducible demo feedback.
 2. Direct provider and CMS contributors to the v0.6.0 scaffold, runtime, and contract test kit.
 3. Document a second publisher profile to demonstrate generality.
-4. Monitor branch protection, CodeQL, dependency review, and OpenSSF Scorecard results.
+4. Monitor branch protection, CodeQL, dependency review, OpenSSF Scorecard, and the
+   [Criticality Score workflow](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml).
 5. Track real package usage, external reports, and downstream integrations without proxy claims.
 
 *Note: Pictovap is still early and does not yet claim broad ecosystem adoption or third-party validation.*
