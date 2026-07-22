@@ -52,8 +52,8 @@ jobs:
             --argjson pypi "$(cat pypi.json)" \
             --argjson stats "$(cat pypistats.json)" \
             --argjson github "$(cat github.json)" \
-            --argjson issues "$(cat issues.json)" \
-            --argjson issue_comments "$(cat issue-comments.json)" \
+            --slurpfile issues issues.json \
+            --slurpfile issue_comments issue-comments.json \
             '{
               observed_at: $observed_at,
               package: $package,
@@ -76,8 +76,8 @@ jobs:
                 open_issues: $github.open_issues_count,
                 subscribers: $github.subscribers_count,
                 updated_at: $github.updated_at,
-                updated_issues_90d: ((($issues | add) // []) | length),
-                issue_comments_90d: ((($issue_comments | add) // []) | length)
+                updated_issues_90d: (((($issues | add | add) // []) | length)),
+                issue_comments_90d: (((($issue_comments | add | add) // []) | length))
               }
             }' > adoption-metrics.json
 
