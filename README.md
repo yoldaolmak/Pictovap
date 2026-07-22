@@ -93,6 +93,8 @@ human review surface and CMS adapters as the machine-facing execution layer.
 
 ## Quickstart
 
+Requires Python 3.10 or newer.
+
 Install from PyPI and run the credential-free demo:
 
 ```bash
@@ -125,6 +127,12 @@ pictovap plan \
 `my-plan.json` is the canonical, machine-readable artifact for adapters and
 automation. `my-report.md` is the same plan, rendered for a human editor to
 review before anything gets published.
+
+If you try Pictovap with a real non-sensitive article, please report whether
+the slots, scores, and report matched your editorial intent in
+[issue #8](https://github.com/yoldaolmak/Pictovap/issues/8). A Python version,
+operating system, command, and traceback are enough; do not include private
+article content.
 
 External adapters should use only the documented public contracts. See the
 [API Stability Policy](API_STABILITY.md) for stable, experimental, and
