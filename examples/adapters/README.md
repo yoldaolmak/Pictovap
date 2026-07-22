@@ -26,6 +26,14 @@ the corresponding core-adapter contribution:
 | [`pictovap-pixabay/`](pictovap-pixabay/) | Pixabay REST API | Optional API key |
 | [`pictovap-wikimedia/`](pictovap-wikimedia/) | Wikimedia Commons API | None |
 
+Run a reference package's tests from its own directory after installing it in
+the active environment:
+
+```bash
+(cd examples/adapters/pictovap-pixabay && pytest -q)
+(cd examples/adapters/pictovap-wikimedia && pytest -q)
+```
+
 ## From skeleton to real adapter
 
 1. Read [docs/contributing/adapters.md](../../docs/contributing/adapters.md)

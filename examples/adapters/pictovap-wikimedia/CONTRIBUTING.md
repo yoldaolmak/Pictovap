@@ -13,6 +13,7 @@ pip install -e ".[test]"
 pytest
 pictovap plugins --kind provider
 pictovap doctor --provider wikimedia
+pictovap adapter check --kind provider --name wikimedia
 ```
 
 ## Definition of done

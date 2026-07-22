@@ -11,6 +11,7 @@ pip install -e ".[test]"
 pytest
 pictovap plugins --kind provider
 pictovap doctor --provider pixabay
+pictovap adapter check --kind provider --name pixabay
 ```
 
 Run the adapter in the real planning pipeline:
