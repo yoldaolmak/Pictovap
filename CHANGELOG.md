@@ -2,7 +2,10 @@
 
 ## [Unreleased]
 
-<!-- Future changes go here. -->
+### Added
+
+* Adoption telemetry now records direct 90-day GitHub issue/PR and issue-comment
+  totals beside the PyPI and repository snapshots.
 
 ## [0.7.7] - 2026-07-22
 

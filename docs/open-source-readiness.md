@@ -16,9 +16,9 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - Contribution templates and starter issues
 - Adoption playbook for early users
 - Single-publisher dogfooding case study (Yoldaolmak)
-- Tagged releases through v0.6.0
+- Tagged releases through v0.7.7
 - Published `pictovap` package on PyPI
-- Green main-branch CI and release workflows for v0.6.0
+- Green main-branch CI and release workflows for v0.7.7
 - CodeQL, dependency review, and OpenSSF Scorecard workflows
 - Six external pull requests merged from five unique community contributors
 - Third-party adapter discovery through standard Python entry points
@@ -30,6 +30,9 @@ Pictovap is a published early-stage open-source package. The public core and rel
   without mirrors across 2026-07-11 through
   2026-07-21 (an installation signal, not a unique-user or dependent-project
   claim)
+- The adoption artifact also records 32 updated issue/PR records and 29 issue
+  comments in the 90-day GitHub API window observed on 2026-07-22. These are
+  maintainer activity signals, not external adoption or unique users.
 
 ## Missing Ecosystem Signals
 
@@ -40,7 +43,7 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - External issues reported by real users
 - Third-party validation or mentions
 - OpenSSF Scorecard improvements
-- A Criticality Score of at least 0.4 (reference snapshot: 0.21624 on 2026-07-22; the
+- A Criticality Score of at least 0.4 (reference snapshot: 0.21630 on 2026-07-22; the
   [workflow artifact](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml)
   is the live measurement surface)
 
@@ -65,7 +68,7 @@ The release infrastructure is live. The goals for the next maturity milestone ar
 ## Next Steps
 
 1. Publish the prepared launch announcements and invite reproducible demo feedback.
-2. Direct provider and CMS contributors to the v0.6.0 scaffold, runtime, and contract test kit.
+2. Direct provider and CMS contributors to the v0.7.7 scaffold, runtime, and contract test kit.
 3. Document a second publisher profile to demonstrate generality.
 4. Monitor branch protection, CodeQL, dependency review, OpenSSF Scorecard, and the
    [Criticality Score workflow](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml).
