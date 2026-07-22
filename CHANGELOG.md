@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+* GitHub Codespaces now installs the complete contributor gate dependencies,
+  including lint and type-check tools, instead of only the test extra.
+
 ## [0.7.8] - 2026-07-22
 
 ### Added

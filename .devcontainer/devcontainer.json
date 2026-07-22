@@ -1,7 +1,7 @@
 {
   "name": "Pictovap Development Environment",
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
-  "postCreateCommand": "pip install -e \".[test]\"",
+  "postCreateCommand": "pip install -e \".[test,lint,typecheck]\"",
   "customizations": {
     "vscode": {
       "settings": {
