@@ -10,6 +10,15 @@
   runtime floor instead of an obsolete pre-contract minimum.
 * Adoption and issue-plan drafts now use the canonical `pictovap plan` command
   and clearly mark historical issue text as non-reopenable.
+
+## [0.7.11] - 2026-07-22
+
+### Fixed
+
+* CMS scaffolds can now be discovered, doctored, and conformance-checked
+  without credentials; missing CMS configuration remains an explicit warning
+  until the contributor implements the transport.
+
 ## [0.7.10] - 2026-07-22
 
 ### Fixed

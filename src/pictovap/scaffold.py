@@ -201,16 +201,21 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
                 # as test classes when imported by a fixture.
                 __test__ = False
 
-                def __init__(self, api_url: str, api_token: str) -> None:
+                def __init__(
+                    self, api_url: str | None = None, api_token: str | None = None
+                ) -> None:
                     self.api_url = api_url
                     self.api_token = api_token
 
                 def place(self, placement: CMSPlacement) -> Dict[str, Any]:
                     # Replace this no-op result with the CMS API integration.
+                    warnings = ["Adapter scaffold has no transport implementation"]
+                    if not self.api_url or not self.api_token:
+                        warnings.append("CMS credentials are not configured")
                     return {{
                         "placed": [],
                         "failed": [],
-                        "warnings": ["Adapter scaffold has no transport implementation"],
+                        "warnings": warnings,
                     }}
 
 
@@ -239,6 +244,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             pip install -e ".[test]"
             pytest
             pictovap plugins --kind cms
+            pictovap adapter check --kind cms --name {slug}
             ```
 
             Validate configuration, then preview a real plan without writes:
@@ -271,6 +277,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             pip install -e ".[test]"
             pytest
             pictovap plugins --kind cms
+            pictovap adapter check --kind cms --name {slug}
             ```
 
             ## Definition of done

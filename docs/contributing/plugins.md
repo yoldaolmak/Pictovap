@@ -89,6 +89,7 @@ Validate one installed adapter without writes:
 
 ```bash
 pictovap adapter check --kind provider --name wikimedia
+pictovap adapter check --kind cms --name hugo
 pictovap adapter check --kind renderer --name html-review
 ```
 

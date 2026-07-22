@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: yoldaolmak/Pictovap@v0.7.10
+      - uses: yoldaolmak/Pictovap@v0.7.11
         with:
           article: posts/example.md
           profile: publisher.yaml

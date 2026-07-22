@@ -65,6 +65,16 @@ def test_scaffold_does_not_duplicate_contract_suffix(tmp_path, kind, name, expec
     assert f"class {unwanted_class}" not in source
 
 
+def test_cms_scaffold_conformance_does_not_require_credentials(tmp_path):
+    root = scaffold_adapter("cms", "hugo", output=tmp_path)
+    source = next((root / "src").glob("*/__init__.py")).read_text(encoding="utf-8")
+    readme = (root / "README.md").read_text(encoding="utf-8")
+
+    assert "api_url: str | None = None" in source
+    assert "api_token: str | None = None" in source
+    assert "adapter check --kind cms --name hugo" in readme
+
+
 @pytest.mark.parametrize("name", ["", "123", "bad name", "../escape"])
 def test_scaffold_rejects_unsafe_names(tmp_path, name):
     with pytest.raises(ScaffoldError):
