@@ -59,7 +59,8 @@ git clone https://github.com/yoldaolmak/Pictovap.git
 cd Pictovap
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[test,lint]"
+pip install -e ".[test,lint,typecheck]"
+python -m pictovap --version
 pytest tests/unit -q
 ```
 
@@ -70,6 +71,21 @@ same contract as a generated standalone package:
 pictovap scaffold provider example-source
 pictovap scaffold cms example-cms
 ```
+
+For a standalone package, change into the printed directory and run its own
+first successful loop before replacing the scaffold implementation:
+
+```bash
+cd pictovap-example-source  # use the path printed by scaffold
+pip install -e ".[test]"
+pytest
+pictovap plugins --kind provider
+pictovap adapter check --kind provider --name example-source
+```
+
+The CMS loop is identical except for `cms` in the final two commands. It does
+not require credentials: the empty scaffold is checked safely and reports a
+warning until its transport is implemented.
 
 If you are deciding which route to use or what a reviewable first pull request
 contains, use [Your First Adapter Pull Request](first-adapter-pr.md).
