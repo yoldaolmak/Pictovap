@@ -1,0 +1,92 @@
+name: Adoption metrics
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    name: Collect public usage signals
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PACKAGE: pictovap
+      REPOSITORY: yoldaolmak/Pictovap
+      GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Collect PyPI and GitHub signals
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl --fail --silent --show-error --retry 5 --retry-all-errors \
+            -A "Pictovap-adoption-metrics/${GITHUB_RUN_ID}" \
+            "https://pypi.org/pypi/${PACKAGE}/json" \
+            --output pypi.json
+          curl --fail --silent --show-error --retry 5 --retry-all-errors \
+            -A "Pictovap-adoption-metrics/${GITHUB_RUN_ID}" \
+            "https://pypistats.org/api/packages/${PACKAGE}/overall?mirrors=false" \
+            --output pypistats.json
+          curl --fail --silent --show-error --retry 5 --retry-all-errors \
+            -H "Authorization: Bearer ${GITHUB_AUTH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${REPOSITORY}" \
+            --output github.json
+
+          jq -n \
+            --arg observed_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg package "$PACKAGE" \
+            --arg repository "$REPOSITORY" \
+            --argjson pypi "$(cat pypi.json)" \
+            --argjson stats "$(cat pypistats.json)" \
+            --argjson github "$(cat github.json)" \
+            '{
+              observed_at: $observed_at,
+              package: $package,
+              repository: $repository,
+              pypi: {
+                version: $pypi.info.version,
+                requires_python: $pypi.info.requires_python
+              },
+              pypistats: {
+                category: "without_mirrors",
+                window_start: ($stats.data[0].date // null),
+                window_end: ($stats.data[-1].date // null),
+                total_downloads: (($stats.data | map(.downloads) | add) // 0),
+                latest_day_downloads: ($stats.data[-1].downloads // 0),
+                series: $stats.data
+              },
+              github: {
+                stars: $github.stargazers_count,
+                forks: $github.forks_count,
+                open_issues: $github.open_issues_count,
+                subscribers: $github.subscribers_count,
+                updated_at: $github.updated_at
+              }
+            }' > adoption-metrics.json
+
+          cat adoption-metrics.json
+
+      - name: Validate metrics artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '
+            (.package == "pictovap")
+            and (.pypi.version | type == "string")
+            and (.pypistats.total_downloads | type == "number")
+            and (.github.stars | type == "number")
+            and (.github.forks | type == "number")
+          ' adoption-metrics.json > /dev/null
+
+      - name: Upload metrics artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: adoption-metrics-${{ github.run_id }}
+          path: adoption-metrics.json
+          retention-days: 90
