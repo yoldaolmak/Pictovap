@@ -28,6 +28,7 @@ If you plan to modify Pictovap, install from a checkout in editable mode:
 ```bash
 git clone https://github.com/yoldaolmak/Pictovap.git
 cd Pictovap
+python3 --version  # must be 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[test]"

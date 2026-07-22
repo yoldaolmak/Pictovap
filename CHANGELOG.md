@@ -7,6 +7,7 @@
 * Vision templates now expose bounded output-token budgets so live metadata
   calls do not reserve a larger completion than the selected template needs.
 * `make contribution-check` provides a fast contributor gate without Node/npm.
+* `make install` now reports the supported Python floor before invoking pip.
 
 ### Fixed
 
