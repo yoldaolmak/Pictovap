@@ -25,9 +25,16 @@ def _normalize_name(name: str) -> tuple[str, str, str]:
     return slug, module, class_stem
 
 
+def _adapter_class_name(class_stem: str, suffix: str) -> str:
+    """Add a contract suffix without producing names such as ``SourceSource``."""
+    if class_stem.lower().endswith(suffix.lower()):
+        return class_stem
+    return f"{class_stem}{suffix}"
+
+
 def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
     package = f"pictovap_{module}"
-    adapter_class = f"{class_stem}Source"
+    adapter_class = _adapter_class_name(class_stem, "Source")
     return {
         "pyproject.toml": dedent(f'''\
             [build-system]
@@ -151,7 +158,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
 def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
     package = f"pictovap_{module}"
-    adapter_class = f"{class_stem}Adapter"
+    adapter_class = _adapter_class_name(class_stem, "Adapter")
     return {
         "pyproject.toml": dedent(f'''\
             [build-system]

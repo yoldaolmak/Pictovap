@@ -18,7 +18,7 @@ I'd appreciate it if you could spend a few minutes trying the demo and letting m
 python3 --version  # Python 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install pictovap==0.7.9
+python -m pip install pictovap==0.7.10
 pictovap demo
 ```
 

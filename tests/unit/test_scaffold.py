@@ -50,6 +50,21 @@ def test_scaffold_force_updates_owned_files(tmp_path):
     assert readme.read_text(encoding="utf-8").startswith("# pictovap-wikimedia")
 
 
+@pytest.mark.parametrize(
+    "kind,name,expected_class,unwanted_class",
+    [
+        ("provider", "contributor-source", "ContributorSource", "ContributorSourceSource"),
+        ("cms", "hugo-adapter", "HugoAdapter", "HugoAdapterAdapter"),
+    ],
+)
+def test_scaffold_does_not_duplicate_contract_suffix(tmp_path, kind, name, expected_class, unwanted_class):
+    root = scaffold_adapter(kind, name, output=tmp_path)
+    source = next((root / "src").glob("*/__init__.py")).read_text(encoding="utf-8")
+
+    assert f"class {expected_class}" in source
+    assert f"class {unwanted_class}" not in source
+
+
 @pytest.mark.parametrize("name", ["", "123", "bad name", "../escape"])
 def test_scaffold_rejects_unsafe_names(tmp_path, name):
     with pytest.raises(ScaffoldError):

@@ -10,6 +10,12 @@
   runtime floor instead of an obsolete pre-contract minimum.
 * Adoption and issue-plan drafts now use the canonical `pictovap plan` command
   and clearly mark historical issue text as non-reopenable.
+## [0.7.10] - 2026-07-22
+
+### Fixed
+
+* Adapter scaffolds no longer duplicate contract suffixes for names such as
+  `contributor-source` or `hugo-adapter`.
 
 ## [0.7.9] - 2026-07-22
 
