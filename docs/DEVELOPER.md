@@ -10,6 +10,10 @@ Pictovap.
 Pictovap supports Python 3.10+ and should be developed in an isolated virtual
 environment.
 
+Check the interpreter before creating the environment. On systems where
+`python3` points to an older system Python, use an installed 3.10+ binary such
+as `python3.11`.
+
 ### 1. Bootstrap the Project
 
 ```bash
@@ -18,6 +22,7 @@ git clone https://github.com/yoldaolmak/Pictovap.git
 cd Pictovap
 
 # Initialize a clean virtual environment
+python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
 
@@ -25,17 +30,19 @@ source .venv/bin/activate
 python -m pip install -e ".[test,lint]"
 ```
 
-### 2. Configure Environment Variables
+### 2. Configure Environment Variables (Optional)
 
-The project relies on `.env` for secrets and configuration.
+The credential-free demo and unit suite do not require a `.env` file. Copy it
+only when exercising a credentialed image source, CMS adapter, or live vision
+provider.
 
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` and configure at minimum:
-- `WP_URL`, `WP_USER`, `WP_APP_PASSWORD` (For integration testing against WordPress).
-- `GEMINI_API_KEY` (Required for Vision Chain tests).
+Open `.env` and configure only the integration you are exercising:
+- `WP_URL`, `WP_USER`, `WP_APP_PASSWORD` (for local WordPress integration work).
+- `GEMINI_API_KEY` (optional; enables live Gemini vision analysis).
 
 ---
 
@@ -90,7 +97,11 @@ We enforce strict coding standards to keep the repository maintainable.
 As detailed in the [Architecture Guide](ARCHITECTURE.md):
 - **App Layer (`src/pictovap/app`)**: Contains HTTP servers, CLI entrypoints, and argument parsers. *No business logic allowed.*
 - **Engine Layer (`src/pictovap/engine`)**: Contains the core logic. *Cannot import from app/.*
-- **Providers Layer (`src/pictovap/providers`)**: External API integrations (WordPress, Unsplash). *Cannot import from engine/.*
+- **Providers Layer (`src/pictovap/providers`)**: External image-source integrations
+  such as Unsplash, DepositPhotos, and Openverse. *Cannot import from engine/.*
+- **Publishers and Services Layers (`src/pictovap/publishers`,
+  `src/pictovap/services`)**: CMS integrations such as Ghost, Strapi, and
+  WordPress.
 
 ---
 
