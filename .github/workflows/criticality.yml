@@ -40,6 +40,17 @@ jobs:
             > criticality-score.json
           cat criticality-score.json
 
+      - name: Validate score artifact
+        run: |
+          set -euo pipefail
+          jq -e '
+            (.default_score | tonumber) as $score
+            | ($score >= 0 and $score <= 1)
+            and (.legacy.contributor_count | type == "number")
+            and (.legacy.commit_frequency | type == "number")
+            and (.repo.url | type == "string")
+          ' criticality-score.json > /dev/null
+
       - name: Upload score artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
