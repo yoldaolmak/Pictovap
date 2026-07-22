@@ -29,11 +29,14 @@ pictovap plan \
   --article path/to/your/article.md \
   --output my-plan.json \
   --report my-plan.md
+pictovap feedback --plan my-plan.json
 ```
 
 **Then:**
 
 - Open `my-plan.json` and `my-plan.md`. Does the structure make sense?
+- Paste the anonymous `feedback` JSON into the issue; it excludes article text,
+  paths, URLs, and credentials.
 - Did the Visual Brief identify reasonable image slots for your article?
 - Did anything crash or produce confusing output?
 
