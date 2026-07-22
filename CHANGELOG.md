@@ -15,6 +15,8 @@
   adapter names beginning with `test`.
 * Single-file documentation and security checks no longer fail on the global
   coverage threshold when run independently.
+* Criticality collection now grants the pinned OpenSSF tool read-only issue and
+  pull-request access so activity signals are not silently omitted.
 
 ## [0.7.6] - 2026-07-22
 
