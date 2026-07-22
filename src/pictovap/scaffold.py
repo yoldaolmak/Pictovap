@@ -42,7 +42,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "image adapter", "cms"]
-            dependencies = ["pictovap>=0.6.0"]
+            dependencies = ["pictovap>=0.7.8"]
 
             [project.entry-points."pictovap.image_sources"]
             {slug} = "{package}:{adapter_class}"
@@ -166,7 +166,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "cms adapter", "publishing"]
-            dependencies = ["pictovap>=0.6.0"]
+            dependencies = ["pictovap>=0.7.8"]
 
             [project.entry-points."pictovap.cms"]
             {slug} = "{package}:{adapter_class}"

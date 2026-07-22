@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 keywords = ["pictovap", "image adapter", "cms"]
-dependencies = ["pictovap>=0.6.0"]
+dependencies = ["pictovap>=0.7.8"]
 
 [project.urls]
 Homepage = "https://github.com/yoldaolmak/Pictovap/tree/main/examples/adapters/pictovap-wikimedia"

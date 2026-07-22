@@ -9,7 +9,7 @@ description = "Standalone HTML review renderer plugin for Pictovap."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-dependencies = ["pictovap>=0.7.5"]
+dependencies = ["pictovap>=0.7.8"]
 
 [project.urls]
 Homepage = "https://github.com/yoldaolmak/Pictovap/tree/main/examples/external-renderer-package"

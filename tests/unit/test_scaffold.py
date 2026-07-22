@@ -21,7 +21,7 @@ def test_scaffold_generates_installable_src_layout(tmp_path, kind, group, class_
     pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
     source = next((root / "src").glob("*/__init__.py")).read_text(encoding="utf-8")
     assert group in pyproject
-    assert "pictovap>=0.6.0" in pyproject
+    assert "pictovap>=0.7.8" in pyproject
     assert class_name in source
     assert "__test__ = False" in source
     if kind == "provider":

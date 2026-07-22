@@ -168,7 +168,8 @@ limit. They do not make external requests themselves.
 - Keep credentials in environment variables or explicit constructor arguments.
 - Mock all provider and CMS calls in tests.
 - Run the contract helper against both success and failure fixtures.
-- Declare `pictovap>=0.6.0` in the plugin package.
+- Declare `pictovap>=0.7.8` in the plugin package so the published contract
+  helpers and runtime are available to downstream users.
 - Verify `doctor`, a real provider-backed `plan`, and CMS `publish --dry-run`.
 - Use a unique entry-point name and a `pictovap-<adapter>` distribution name.
 - Document license and attribution behavior for image sources.
