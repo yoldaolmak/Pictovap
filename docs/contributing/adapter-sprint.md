@@ -23,6 +23,13 @@ those dates; the dates are measurement boundaries, not artificial deadlines.
 The `status: available` label means nobody has claimed the issue. The
 `status: claimed` label means a contributor is actively working on it.
 
+Completed standalone provider references are available under
+[`examples/adapters/`](../../examples/adapters/README.md):
+[`pictovap-pixabay`](../../examples/adapters/pictovap-pixabay/) and
+[`pictovap-wikimedia`](../../examples/adapters/pictovap-wikimedia/). They show
+real response mapping and mocked contract tests; the in-tree issues above
+remain open for contributors who want to integrate the providers into core.
+
 ## Claims and First PR Issues
 
 Adapter and CMS issues require a claim before writing the implementation.
@@ -54,7 +61,7 @@ pytest tests/unit -q
 ```
 
 Read [Writing Adapters](adapters.md) for in-tree contributions. To explore the
-same contract as a standalone package:
+same contract as a generated standalone package:
 
 ```bash
 pictovap scaffold provider example-source

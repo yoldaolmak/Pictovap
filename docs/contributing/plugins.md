@@ -71,6 +71,12 @@ pictovap plugins --kind renderer
 
 The output is JSON so CI and other tools can consume it.
 
+For complete provider references, see
+[`examples/adapters/pictovap-pixabay`](../../examples/adapters/pictovap-pixabay/)
+and [`examples/adapters/pictovap-wikimedia`](../../examples/adapters/pictovap-wikimedia/).
+They include real response mapping and mocked contract tests while the matching
+in-tree adapter issues remain available for contribution.
+
 Validate one installed adapter without writes:
 
 ```bash
@@ -87,15 +93,9 @@ Discovery is only the first gate. Check constructor configuration without CMS
 writes, then run the provider through the real planning pipeline:
 
 ```bash
-export WIKIMEDIA_TOKEN="..."
-pictovap doctor \
-  --provider wikimedia \
-  --provider-option token=@WIKIMEDIA_TOKEN
-
 pictovap plan \
   --article article.md \
   --provider wikimedia \
-  --provider-option token=@WIKIMEDIA_TOKEN \
   --output plan.json \
   --report report.md
 ```
@@ -132,7 +132,7 @@ from pictovap.testing import assert_image_source_contract
 
 
 def test_contract(fake_client):
-    adapter = WikimediaSource(client=fake_client)
+    adapter = WikimediaSource()
     fake_client.respond_with_fixture("tests/fixtures/search.json")
     candidates = assert_image_source_contract(adapter, query="harbor", count=3)
     assert candidates
