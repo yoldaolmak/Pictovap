@@ -5,6 +5,7 @@
 </p>
 
 [![PyPI](https://img.shields.io/pypi/v/pictovap.svg)](https://pypi.org/project/pictovap/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/pictovap.svg)](https://pypistats.org/packages/pictovap)
 [![Python versions](https://img.shields.io/pypi/pyversions/pictovap.svg)](https://pypi.org/project/pictovap/)
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/yoldaolmak/Pictovap)
