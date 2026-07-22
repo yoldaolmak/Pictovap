@@ -42,7 +42,7 @@ This runs the engine against `examples/articles/travel-guide.md` using determini
 You can test Pictovap against your own content:
 
 ```bash
-python -m pictovap.demo --article path/to/your/article.md --profile examples/profiles/sample-publisher.yaml --output my-plan.json
+pictovap plan --article path/to/your/article.md --profile examples/profiles/sample-publisher.yaml --output my-plan.json
 ```
 
 It will parse your article, identify sections, and evaluate mock candidates for placement.

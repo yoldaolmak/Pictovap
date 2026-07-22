@@ -1,6 +1,8 @@
-# GitHub Issue Plan
+# Historical GitHub Issue Plan
 
-These issues are ready to be opened manually on GitHub after the v0.2.0 release. Do not open them before the release tag is published.
+This file records the issue drafts used during the early launch. The current
+claimable work lives in the live [GitHub issue tracker](https://github.com/yoldaolmak/Pictovap/issues);
+do not reopen these drafts as duplicates.
 
 ---
 
@@ -47,7 +49,7 @@ We'd like early feedback from anyone willing to try Pictovap's demo with their o
 
 **Steps:**
 1. Clone the repository and follow the [Quickstart](README.md#quickstart).
-2. Run: `python -m pictovap.demo --article path/to/your/article.md --output my-plan.json`
+2. Run: `pictovap plan --article path/to/your/article.md --output my-plan.json`
 3. Inspect the JSON output.
 
 **What we'd like to know:**
@@ -140,5 +142,5 @@ Pictovap's current examples are focused on travel blogging (the dogfooding case)
 **Acceptance criteria:**
 - A new profile YAML exists in `examples/profiles/`.
 - A matching sample article exists in `examples/articles/`.
-- `python -m pictovap.demo --article examples/articles/<new>.md --profile examples/profiles/<new>.yaml` runs without errors.
+- `pictovap plan --article examples/articles/<new>.md --profile examples/profiles/<new>.yaml` runs without errors.
 - The output demonstrates reasonable image slots for the content type.

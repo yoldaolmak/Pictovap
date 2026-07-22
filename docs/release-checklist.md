@@ -57,5 +57,5 @@ Inspect the output in `dist/` to confirm the package name, version, and included
 
 - [ ] Verify the tag is visible on GitHub
 - [ ] Verify the release notes render correctly
-- [ ] Open planned GitHub issues from `docs/github-issue-plan.md`
+- [ ] Confirm planned issue links point to live GitHub issues; do not reopen the historical drafts in `docs/github-issue-plan.md`
 - [ ] Notify any external testers (see `docs/external-tester-message.md`)

@@ -8,6 +8,8 @@
   including lint and type-check tools, instead of only the test extra.
 * New adapter and renderer packages now declare the current `pictovap>=0.7.8`
   runtime floor instead of an obsolete pre-contract minimum.
+* Adoption and issue-plan drafts now use the canonical `pictovap plan` command
+  and clearly mark historical issue text as non-reopenable.
 
 ## [0.7.8] - 2026-07-22
 
