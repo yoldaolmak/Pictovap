@@ -49,6 +49,50 @@ jobs:
       - name: Demo smoke test
         run: python -m pictovap.demo
 
+  adapter-examples:
+    name: Standalone adapter packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install Pictovap and standalone packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[test]"
+          pip install -e examples/adapters/pictovap-pixabay
+          pip install -e examples/adapters/pictovap-wikimedia
+          pip install -e examples/external-renderer-package
+          pip install build
+
+      - name: Run standalone package tests
+        run: |
+          (cd examples/adapters/pictovap-pixabay && pytest -q)
+          (cd examples/adapters/pictovap-wikimedia && pytest -q)
+          (cd examples/external-renderer-package && pytest -q)
+
+      - name: Verify plugin discovery and conformance
+        run: |
+          pictovap plugins --kind provider
+          pictovap plugins --kind renderer
+          pictovap adapter check --kind provider --name pixabay
+          pictovap adapter check --kind provider --name wikimedia
+          pictovap adapter check --kind renderer --name external-html-review
+
+      - name: Build standalone wheels
+        run: |
+          python -m build --wheel --outdir /tmp/pictovap-pixabay-wheel examples/adapters/pictovap-pixabay
+          python -m build --wheel --outdir /tmp/pictovap-wikimedia-wheel examples/adapters/pictovap-wikimedia
+          python -m build --wheel --outdir /tmp/pictovap-renderer-wheel examples/external-renderer-package
+
   typecheck:
     runs-on: ubuntu-latest
     timeout-minutes: 10
