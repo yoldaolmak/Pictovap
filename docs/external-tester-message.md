@@ -1,6 +1,6 @@
-# External Tester Note
+# External Tester Message
 
-Use this note when reaching out to 2–3 real people who might be willing to try Pictovap's demo. Copy and adapt as needed.
+Copy and adapt this message when inviting a real person to try Pictovap.
 
 ---
 
@@ -15,27 +15,31 @@ I'd appreciate it if you could spend a few minutes trying the demo and letting m
 **What to do:**
 
 ```bash
+python3 --version  # Python 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install pictovap
+python -m pip install pictovap==0.7.6
 pictovap demo
 ```
 
 **Try your own article (if possible):**
 
 ```bash
-python -m pictovap.demo --article path/to/your/article.md --output my-plan.json
+pictovap plan \
+  --article path/to/your/article.md \
+  --output my-plan.json \
+  --report my-plan.md
 ```
 
 **Then:**
 
-- Inspect the `sample-output.json` file created in your current directory.
-- Does the structure make sense?
+- Open `my-plan.json` and `my-plan.md`. Does the structure make sense?
 - Did the Visual Brief identify reasonable image slots for your article?
 - Did anything crash or produce confusing output?
 
-If anything is unclear, broken, or hard to understand, please open an issue on the repository:
-https://github.com/yoldaolmak/Pictovap/issues
+Please report the result in [issue #8](https://github.com/yoldaolmak/Pictovap/issues/8).
+Redact private article content; the Python version, operating system, command,
+and traceback (if any) are enough.
 
 Any feedback at all is helpful — even "it didn't work on my machine" or "the output was confusing."
 
