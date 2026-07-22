@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+<!-- Future changes go here. -->
+
+## [0.7.7] - 2026-07-22
+
 ### Added
 
 * Vision templates now expose bounded output-token budgets so live metadata
