@@ -6,6 +6,8 @@
 
 * Adoption telemetry now records direct 90-day GitHub issue/PR and issue-comment
   totals beside the PyPI and repository snapshots.
+* Vision requests now cap inline image dimensions and unbounded article context
+  before sending data to a model, reducing avoidable token usage.
 
 ## [0.7.7] - 2026-07-22
 

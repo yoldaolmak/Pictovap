@@ -30,6 +30,8 @@ from pictovap.vision_templates import TRAVEL_BLOG
 
 load_project_env()
 
+VISION_MAX_IMAGE_SIDE = 1024
+
 
 def _max_output_tokens(template: Any) -> int:
     """Return a safe provider completion budget for a vision template."""
@@ -180,7 +182,10 @@ def _analyze_gemini_flash(
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not set")
 
-    b64, mime = _image_b64(image_path)
+    # Keep the request within a predictable vision-token budget.  A full-size
+    # camera image can be several times larger than the model needs for
+    # metadata generation, especially on Gemini's inline-data endpoint.
+    b64, mime = _image_b64(image_path, max_side=VISION_MAX_IMAGE_SIDE)
     prompt = _vision_prompt(image_path, location_hint, post_context, template)
     model = env_str("GEMINI_VISION_MODEL", "gemini-2.0-flash")
 

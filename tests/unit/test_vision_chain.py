@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import base64
+import io
 from unittest.mock import patch
 
 import pytest
@@ -94,6 +96,21 @@ def test_lm_studio_uses_template_output_budget(tmp_path):
 
     assert result["alt"] == "short"
     assert captured["max_tokens"] == MINIMAL.max_output_tokens
+
+
+def test_gemini_image_payload_is_downscaled_for_token_budget(tmp_path):
+    from PIL import Image
+
+    from pictovap.engine.vision_chain import _image_b64, VISION_MAX_IMAGE_SIDE
+
+    image = tmp_path / "large.jpg"
+    Image.new("RGB", (2400, 1600), "white").save(image)
+
+    encoded, mime = _image_b64(str(image), max_side=VISION_MAX_IMAGE_SIDE)
+    decoded = Image.open(io.BytesIO(base64.b64decode(encoded)))
+
+    assert mime == "image/jpeg"
+    assert max(decoded.size) == VISION_MAX_IMAGE_SIDE
 
 
 def test_vision_chain_raises_when_all_providers_fail(tmp_path):

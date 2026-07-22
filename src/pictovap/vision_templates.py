@@ -45,6 +45,12 @@ def language_name(code: str | None) -> str:
     return LANGUAGE_NAMES.get(code.lower(), code)
 
 
+def _compact_context(value: object, *, max_chars: int = 120) -> str:
+    """Keep user-supplied context bounded before it enters a model prompt."""
+    text = " ".join(str(value or "").split())
+    return text[:max_chars].rstrip()
+
+
 @dataclass
 class VisionTemplate:
     """A custom vision prompt template.
@@ -100,10 +106,14 @@ def _travel_blog_prompt(location_hint: str, post_context: Dict[str, Any]) -> str
     request from Turkey can ask for Turkish output, a request from France for
     French, and so on, without any per-language hardcoding here.
     """
-    title = str(post_context.get("title") or "").strip()
-    location_ctx = location_hint or title or ""
+    title = _compact_context(post_context.get("title"))
+    location_ctx = _compact_context(location_hint or title)
     apple_labels = post_context.get("apple_labels") or []
-    apple_labels_ctx = ", ".join(apple_labels) if apple_labels else ""
+    if isinstance(apple_labels, str):
+        apple_labels = [apple_labels]
+    apple_labels_ctx = ", ".join(
+        _compact_context(label, max_chars=40) for label in list(apple_labels)[:8]
+    )
     lang = language_name(post_context.get("language"))
     return (
         f"Analyze the image in the context of a travel blog post and return ONLY JSON.\n"
@@ -128,7 +138,7 @@ def _travel_blog_prompt(location_hint: str, post_context: Dict[str, Any]) -> str
 
 def _technical_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
     """Strict technical analysis — no creative language, English output."""
-    loc = location_hint or post_context.get("title") or "unknown location"
+    loc = _compact_context(location_hint or post_context.get("title") or "unknown location")
     return (
         f"Analyze this image objectively and technically. Location context: {loc}.\n"
         "Return ONLY a JSON object. Fields:\n"
@@ -148,7 +158,7 @@ def _technical_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
 
 def _minimal_alt_only_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
     """Ultra-minimal — only generates alt text (fast, low-token)."""
-    loc = location_hint or post_context.get("title") or "scene"
+    loc = _compact_context(location_hint or post_context.get("title") or "scene")
     return (
         f"Describe this image in one short sentence for a screen reader. Context: {loc}.\n"
         "Return ONLY JSON: {\"alt\":\"...\",\"title\":\"\",\"caption\":\"\","
@@ -159,7 +169,7 @@ def _minimal_alt_only_prompt(location_hint: str, post_context: Dict[str, Any]) -
 
 def _ecommerce_prompt(location_hint: str, post_context: Dict[str, Any]) -> str:
     """E-commerce product focus — keyword-rich, conversion-oriented, English."""
-    product = location_hint or post_context.get("title") or "product"
+    product = _compact_context(location_hint or post_context.get("title") or "product")
     return (
         f"You are an e-commerce SEO copywriter. Analyze this product image. Product: {product}.\n"
         "Return ONLY JSON with these fields:\n"

@@ -44,6 +44,11 @@ Open `.env` and configure only the integration you are exercising:
 - `WP_URL`, `WP_USER`, `WP_APP_PASSWORD` (for local WordPress integration work).
 - `GEMINI_API_KEY` (optional; enables live Gemini vision analysis).
 
+Vision-backed metadata uses bounded requests by default: inline images are
+downscaled to a 1024px maximum side and article context is capped before it
+enters the prompt. Select the `MINIMAL` template when only alt text is needed;
+it reserves a 128-token completion budget instead of the 512-token default.
+
 ---
 
 ## Testing Strategy
