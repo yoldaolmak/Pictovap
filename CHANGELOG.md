@@ -11,6 +11,13 @@
 * Adoption and issue-plan drafts now use the canonical `pictovap plan` command
   and clearly mark historical issue text as non-reopenable.
 
+## [0.7.9] - 2026-07-22
+
+### Added
+
+* `pictovap feedback --plan` creates an anonymous validation summary with safe
+  runtime and plan counts for copy-pasteable external issue reports.
+
 ## [0.7.8] - 2026-07-22
 
 ### Added

@@ -7,7 +7,7 @@ publish images across various CMS platforms.
 
 from typing import TYPE_CHECKING, Any
 
-__version__ = "0.7.8"
+__version__ = "0.7.9"
 
 if TYPE_CHECKING:
     from .api import create_visual_plan as create_visual_plan

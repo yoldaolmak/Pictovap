@@ -60,6 +60,21 @@ pictovap report \
 pictovap report --plan output/plan.json --output output/report.html --renderer html-review
 ```
 
+### Create an Anonymous Validation Summary
+
+When asking for help or reporting a result, create a small JSON artifact that
+contains only counts and runtime versions. It excludes article text, titles,
+paths, URLs, profile names, and credentials:
+
+```bash
+pictovap feedback \
+  --plan output/plan.json \
+  --output output/feedback.json
+```
+
+The summary is also printed to stdout so it can be pasted directly into an
+issue. Use it when you want to share diagnostics without sharing your article.
+
 ### Check an Installed Adapter
 
 `pictovap adapter check` produces a machine-readable conformance report. The

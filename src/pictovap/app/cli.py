@@ -8,6 +8,7 @@ Commands matching the public library API:
     scaffold - generate a standalone adapter plugin package
     doctor  - validate installed plugins and selected adapter configuration
     publish - execute a visual plan through an installed CMS plugin
+    feedback - create an anonymous validation summary from a plan
 """
 
 from __future__ import annotations
@@ -26,6 +27,7 @@ from pictovap.app.runtime import (
     parse_adapter_options,
 )
 from pictovap.demo import generate_report_from_file, run_demo
+from pictovap.feedback import summarize_plan
 from pictovap.conformance import AdapterCheckError, check_adapter
 from pictovap.plugins import PluginError, iter_plugins
 from pictovap.scaffold import ScaffoldError, scaffold_adapter
@@ -91,6 +93,12 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--output", required=True, help="Path to write the rendered report")
     report.add_argument("--renderer", help="Installed report-renderer plugin entry-point name")
     report.add_argument("--renderer-option", action="append", default=[], metavar="KEY=VALUE")
+
+    feedback = sub.add_parser(
+        "feedback", help="Create an anonymous external-validation summary from a plan"
+    )
+    feedback.add_argument("--plan", required=True, help="Path to visual-plan.json")
+    feedback.add_argument("--output", help="Optional path to write the summary JSON")
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
@@ -193,6 +201,21 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         except (RuntimeConfigurationError, PluginError, AdapterConstructionError, OSError, ValueError) as e:
             print(f"Error generating report: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "feedback":
+        try:
+            with open(args.plan, encoding="utf-8") as plan_file:
+                plan_payload = json.load(plan_file)
+            summary = summarize_plan(plan_payload)
+            if args.output:
+                with open(args.output, "w", encoding="utf-8") as output_file:
+                    json.dump(summary, output_file, ensure_ascii=False, indent=2)
+                    output_file.write("\n")
+            _print_json(summary)
+            return 0
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
+            print(f"Error creating feedback summary: {e}", file=sys.stderr)
             return 1
 
     if args.command == "plugins":

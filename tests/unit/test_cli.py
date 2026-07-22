@@ -169,6 +169,48 @@ def test_pictovap_report(tmp_path):
     assert not content.strip().startswith("{")
 
 
+def test_pictovap_feedback_is_safe_and_can_write_output(tmp_path):
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_text(json.dumps({
+        "visual_brief": {
+            "article_title": "Private title",
+            "source_path": "/redacted/article.md",
+            "article_language": "tr",
+            "sections": [{"heading": "Heading"}],
+            "image_slots": [{"slot_id": "featured"}],
+        },
+        "candidates_evaluated": 2,
+        "fit_scores": {"featured": [{"source_url": "https://private.example"}]},
+        "provenance_packs": [{"source_url": "https://private.example"}],
+        "cms_placement": {"placements": [{}]},
+        "runtime": {"provider": {"mode": "demo"}},
+    }), encoding="utf-8")
+    summary_path = tmp_path / "feedback.json"
+
+    result = subprocess.run(
+        [PICTOVAP, "feedback", "--plan", str(plan_path), "--output", str(summary_path)],
+        capture_output=True, text=True,
+    )
+
+    assert result.returncode == 0
+    assert summary_path.exists()
+    summary = json.loads(result.stdout)
+    assert summary["plan"]["image_slots"] == 1
+    assert "Private title" not in result.stdout
+    assert "private.example" not in result.stdout
+    assert json.loads(summary_path.read_text(encoding="utf-8")) == summary
+
+
+def test_pictovap_feedback_rejects_missing_plan(tmp_path):
+    result = subprocess.run(
+        [PICTOVAP, "feedback", "--plan", str(tmp_path / "missing.json")],
+        capture_output=True, text=True,
+    )
+
+    assert result.returncode == 1
+    assert "Error creating feedback summary" in result.stderr
+
+
 def test_report_dispatches_installed_renderer(monkeypatch, tmp_path):
     plan_path = tmp_path / "plan.json"
     plan_path.write_text("{}", encoding="utf-8")
