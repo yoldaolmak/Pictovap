@@ -67,7 +67,9 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
                 def __init__(self, api_key: str | None = None) -> None:
                     self.api_key = api_key
 
-                def search_candidates(self, query: str, count: int) -> List[Dict[str, Any]]:
+                def search_candidates(
+                    self, query: str, count: int
+                ) -> List[Dict[str, Any]]:
                     # Replace this empty result with the provider API integration.
                     # Missing credentials must remain a safe empty-result path.
                     if not self.api_key:

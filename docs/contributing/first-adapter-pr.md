@@ -14,6 +14,10 @@ For the current contributor sprint, claim an available issue first. A claim
 keeps two people from solving the same adapter and lets the maintainer confirm
 credentials, attribution, and acceptance criteria before implementation.
 
+The project requires Python 3.10 or newer. If `python3 --version` reports an
+older system interpreter, create the environment with an installed Python 3.10+
+binary (for example, `python3.11`).
+
 ## In-tree adapter
 
 Use this route for an adapter that belongs in the Pictovap repository.

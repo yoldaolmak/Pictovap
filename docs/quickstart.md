@@ -12,7 +12,12 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 
 ## 2. Installation
 
+Pictovap requires Python 3.10 or newer. Check the interpreter before creating
+the environment, especially on systems where `python3` may still point to an
+older system Python.
+
 ```bash
+python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install pictovap

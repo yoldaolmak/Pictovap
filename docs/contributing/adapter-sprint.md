@@ -51,6 +51,9 @@ issues with a comment; the first complete, tested PR receives review.
 
 ## Start in Five Minutes
 
+Use Python 3.10 or newer. On systems where `python3` is older, substitute an
+installed interpreter such as `python3.11`.
+
 ```bash
 git clone https://github.com/yoldaolmak/Pictovap.git
 cd Pictovap
