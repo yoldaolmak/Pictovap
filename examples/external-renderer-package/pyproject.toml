@@ -11,6 +11,11 @@ requires-python = ">=3.10"
 license = "MIT"
 dependencies = ["pictovap>=0.7.5"]
 
+[project.urls]
+Homepage = "https://github.com/yoldaolmak/Pictovap/tree/main/examples/external-renderer-package"
+Repository = "https://github.com/yoldaolmak/Pictovap"
+Issues = "https://github.com/yoldaolmak/Pictovap/issues"
+
 [project.entry-points."pictovap.report_renderers"]
 external-html-review = "pictovap_external_html_review:ExternalHTMLReviewRenderer"
 
