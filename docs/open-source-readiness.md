@@ -24,6 +24,10 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - Third-party adapter discovery through standard Python entry points
 - Public adapter contract tests and standalone plugin scaffolding
 - Reproducible OpenSSF Criticality Score workflow with a pinned tool checksum
+- [PyPIStats](https://pypistats.org/packages/pictovap) records 1,323 downloads
+  without mirrors across 2026-07-11 through
+  2026-07-21 (an installation signal, not a unique-user or dependent-project
+  claim)
 
 ## Missing Ecosystem Signals
 
