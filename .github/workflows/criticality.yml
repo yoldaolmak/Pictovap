@@ -20,6 +20,7 @@ jobs:
       CRITICALITY_ARCHIVE: "criticality_score_2.0.4_linux_amd64.tar.gz"
       CRITICALITY_SHA256: "37adf74be2fdb39cf9da7a419dd53e649dfa7e6b41142bc632a688c18716fdb6"
       GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Download pinned OpenSSF tool
@@ -53,9 +54,57 @@ jobs:
             and (.repo.url | type == "string")
           ' criticality-score.json > /dev/null
 
+      - name: Record direct GitHub activity context
+        shell: bash
+        run: |
+          set -euo pipefail
+          SINCE="$(date -u -d '90 days ago' +%Y-%m-%dT%H:%M:%SZ)"
+          gh api --paginate --slurp \
+            "repos/${GITHUB_REPOSITORY}/issues?state=all&since=${SINCE}&per_page=100" \
+            > criticality-issues.json
+          gh api --paginate --slurp \
+            "repos/${GITHUB_REPOSITORY}/issues/comments?since=${SINCE}&per_page=100" \
+            > criticality-issue-comments.json
+
+          jq -n \
+            --arg observed_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg since "$SINCE" \
+            --arg repository "https://github.com/${GITHUB_REPOSITORY}" \
+            --arg tool_version "$CRITICALITY_VERSION" \
+            --slurpfile score criticality-score.json \
+            --slurpfile issues criticality-issues.json \
+            --slurpfile issue_comments criticality-issue-comments.json \
+            '{
+              observed_at: $observed_at,
+              repository: $repository,
+              criticality_tool_version: $tool_version,
+              official_tool_score: (($score[0].default_score | tonumber)),
+              official_tool_legacy: $score[0].legacy,
+              direct_github_activity_90d: {
+                since: $since,
+                updated_issue_pr_records: ((($issues | add | add) // []) | length),
+                issue_comments: ((($issue_comments | add | add) // []) | length)
+              },
+              interpretation: "Direct GitHub API counts are context evidence; the official score remains the pinned OpenSSF tool output."
+            }' > criticality-context.json
+          cat criticality-context.json
+
+      - name: Validate activity context
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '
+            (.official_tool_score >= 0 and .official_tool_score <= 1)
+            and (.direct_github_activity_90d.updated_issue_pr_records | type == "number")
+            and (.direct_github_activity_90d.issue_comments | type == "number")
+            and (.interpretation | type == "string")
+          ' criticality-context.json > /dev/null
+
       - name: Upload score artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: criticality-score-${{ github.run_id }}
-          path: criticality-score.json
+          path: |
+            criticality-score.json
+            criticality-context.json
           retention-days: 30
