@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: read
+  issues: read
+  pull-requests: read
 
 jobs:
   collect:
@@ -35,6 +37,13 @@ jobs:
           gh api "repos/${REPOSITORY}" \
             --header "Accept: application/vnd.github+json" \
             > github.json
+          SINCE="$(date -u -d '90 days ago' +%Y-%m-%dT%H:%M:%SZ)"
+          gh api --paginate --slurp \
+            "repos/${REPOSITORY}/issues?state=all&since=${SINCE}&per_page=100" \
+            > issues.json
+          gh api --paginate --slurp \
+            "repos/${REPOSITORY}/issues/comments?since=${SINCE}&per_page=100" \
+            > issue-comments.json
 
           jq -n \
             --arg observed_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
@@ -43,6 +52,8 @@ jobs:
             --argjson pypi "$(cat pypi.json)" \
             --argjson stats "$(cat pypistats.json)" \
             --argjson github "$(cat github.json)" \
+            --argjson issues "$(cat issues.json)" \
+            --argjson issue_comments "$(cat issue-comments.json)" \
             '{
               observed_at: $observed_at,
               package: $package,
@@ -64,7 +75,9 @@ jobs:
                 forks: $github.forks_count,
                 open_issues: $github.open_issues_count,
                 subscribers: $github.subscribers_count,
-                updated_at: $github.updated_at
+                updated_at: $github.updated_at,
+                updated_issues_90d: ((($issues | add) // []) | length),
+                issue_comments_90d: ((($issue_comments | add) // []) | length)
               }
             }' > adoption-metrics.json
 
@@ -80,6 +93,8 @@ jobs:
             and (.pypistats.total_downloads | type == "number")
             and (.github.stars | type == "number")
             and (.github.forks | type == "number")
+            and (.github.updated_issues_90d | type == "number")
+            and (.github.issue_comments_90d | type == "number")
           ' adoption-metrics.json > /dev/null
 
       - name: Upload metrics artifact
