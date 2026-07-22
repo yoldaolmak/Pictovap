@@ -40,7 +40,7 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - External issues reported by real users
 - Third-party validation or mentions
 - OpenSSF Scorecard improvements
-- A Criticality Score of at least 0.4 (reference snapshot: 0.21292 on 2026-07-22; the
+- A Criticality Score of at least 0.4 (reference snapshot: 0.21484 on 2026-07-22; the
   [workflow artifact](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml)
   is the live measurement surface)
 
