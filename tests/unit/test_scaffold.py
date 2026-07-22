@@ -23,6 +23,7 @@ def test_scaffold_generates_installable_src_layout(tmp_path, kind, group, class_
     assert group in pyproject
     assert "pictovap>=0.6.0" in pyproject
     assert class_name in source
+    assert "__test__ = False" in source
     if kind == "provider":
         assert "def search_candidates(\n" in source
     assert (root / "tests/test_adapter.py").exists()

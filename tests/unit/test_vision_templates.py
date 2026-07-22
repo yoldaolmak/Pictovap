@@ -32,6 +32,17 @@ def test_minimal_prompt_is_shorter_than_travel_blog():
     assert len(MINIMAL.build_prompt("loc", ctx)) < len(TRAVEL_BLOG.build_prompt("loc", ctx))
 
 
+def test_builtin_templates_use_bounded_output_budgets():
+    assert MINIMAL.max_output_tokens == 128
+    assert TECHNICAL.max_output_tokens == 384
+    assert TRAVEL_BLOG.max_output_tokens == 512
+
+
+def test_custom_template_rejects_unbounded_output_budget():
+    with pytest.raises(ValueError, match="between 64 and 4096"):
+        VisionTemplate("too-large", "test", lambda _loc, _ctx: "{}", max_output_tokens=8192)
+
+
 def test_ecommerce_prompt_mentions_product():
     prompt = ECOMMERCE.build_prompt("Widget X", {"title": "Widget X"})
     assert "product" in prompt.lower() or "ecommerce" in prompt.lower()

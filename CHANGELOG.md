@@ -2,7 +2,18 @@
 
 ## [Unreleased]
 
-<!-- Future changes go here. -->
+### Added
+
+* Vision templates now expose bounded output-token budgets so live metadata
+  calls do not reserve a larger completion than the selected template needs.
+* `make contribution-check` provides a fast contributor gate without Node/npm.
+
+### Fixed
+
+* Standalone adapter scaffolds no longer trigger pytest collection warnings for
+  adapter names beginning with `test`.
+* Single-file documentation and security checks no longer fail on the global
+  coverage threshold when run independently.
 
 ## [0.7.6] - 2026-07-22
 

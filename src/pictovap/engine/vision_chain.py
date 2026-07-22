@@ -31,6 +31,11 @@ from pictovap.vision_templates import TRAVEL_BLOG
 load_project_env()
 
 
+def _max_output_tokens(template: Any) -> int:
+    """Return a safe provider completion budget for a vision template."""
+    return int(getattr(template, "max_output_tokens", 512))
+
+
 # ── Shared helpers ───────────────────────────────────────────────────────────
 
 def _image_b64(image_path: str, max_side: int = 0) -> tuple[str, str]:
@@ -135,7 +140,7 @@ def _analyze_lm_studio(
             },
         ],
         "temperature": 0.3,
-        "max_tokens": 800,
+        "max_tokens": _max_output_tokens(template),
     }
 
     req = urllib.request.Request(
@@ -186,7 +191,10 @@ def _analyze_gemini_flash(
                 {"text": prompt},
             ]
         }],
-        "generationConfig": {"maxOutputTokens": 2048, "temperature": 0.2},
+        "generationConfig": {
+            "maxOutputTokens": _max_output_tokens(template),
+            "temperature": 0.2,
+        },
     }).encode()
 
     url = (

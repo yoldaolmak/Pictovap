@@ -1,6 +1,7 @@
 """Unit tests for the vision_chain multi-provider vision client."""
 from __future__ import annotations
 
+import json
 from unittest.mock import patch
 
 import pytest
@@ -59,6 +60,40 @@ def test_analyze_lm_studio_raises_when_unreachable(tmp_path):
     with patch("pictovap.engine.vision_chain.urllib.request.urlopen", side_effect=OSError("refused")):
         with pytest.raises(RuntimeError, match="not running or unreachable"):
             _analyze_lm_studio("photo.jpg", "Istanbul", {})
+
+
+def test_lm_studio_uses_template_output_budget(tmp_path):
+    from pictovap.engine.vision_chain import _analyze_lm_studio
+    from pictovap.vision_templates import MINIMAL
+
+    image = tmp_path / "photo.jpg"
+    image.write_bytes(b"jpeg-bytes")
+    captured = {}
+
+    class Response:
+        def __init__(self, payload):
+            self.payload = payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self):
+            return json.dumps(self.payload).encode()
+
+    def fake_urlopen(request, timeout):
+        if "models" in request.full_url:
+            return Response({"data": [{"id": "local-vision"}]})
+        captured.update(json.loads(request.data))
+        return Response({"choices": [{"message": {"content": '{"alt":"short"}'}}]})
+
+    with patch("pictovap.engine.vision_chain.urllib.request.urlopen", side_effect=fake_urlopen):
+        result = _analyze_lm_studio(str(image), "Istanbul", {}, template=MINIMAL)
+
+    assert result["alt"] == "short"
+    assert captured["max_tokens"] == MINIMAL.max_output_tokens
 
 
 def test_vision_chain_raises_when_all_providers_fail(tmp_path):

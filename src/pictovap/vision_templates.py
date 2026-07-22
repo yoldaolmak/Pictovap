@@ -55,6 +55,7 @@ class VisionTemplate:
         prompt_fn:   Callable that receives ``(location_hint, post_context)``
                      and returns the prompt string to send to the LLM.
         fields:      Expected output JSON keys (used for response validation).
+        max_output_tokens: Upper bound passed to the configured vision provider.
 
     Example::
 
@@ -78,6 +79,11 @@ class VisionTemplate:
         "alt", "title", "caption", "description", "summary",
         "keywords", "people", "scene", "activity", "story_score",
     ])
+    max_output_tokens: int = 512
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.max_output_tokens, int) or not 64 <= self.max_output_tokens <= 4096:
+            raise ValueError("max_output_tokens must be an integer between 64 and 4096")
 
     def build_prompt(self, location_hint: str, post_context: Dict[str, Any]) -> str:
         """Render the prompt string for this template."""
@@ -176,24 +182,28 @@ TRAVEL_BLOG = VisionTemplate(
     name="travel_blog",
     description="Default Pictovap template — travel blog SEO, language-aware output.",
     prompt_fn=_travel_blog_prompt,
+    max_output_tokens=512,
 )
 
 TECHNICAL = VisionTemplate(
     name="technical",
     description="Strict technical analysis — English output, no creative language.",
     prompt_fn=_technical_prompt,
+    max_output_tokens=384,
 )
 
 MINIMAL = VisionTemplate(
     name="minimal",
     description="Alt-text only — ultra-fast, minimal token usage.",
     prompt_fn=_minimal_alt_only_prompt,
+    max_output_tokens=128,
 )
 
 ECOMMERCE = VisionTemplate(
     name="ecommerce",
     description="E-commerce focused — keyword-rich, conversion-oriented, English.",
     prompt_fn=_ecommerce_prompt,
+    max_output_tokens=512,
 )
 
 _REGISTRY: dict[str, VisionTemplate] = {

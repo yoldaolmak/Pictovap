@@ -27,6 +27,14 @@ Create a CMS plugin:
 pictovap scaffold cms hugo
 ```
 
+`--output` is a parent directory, not the package directory itself. For
+example, this creates `adapters/pictovap-hugo`:
+
+```bash
+pictovap scaffold cms hugo --output adapters
+cd adapters/pictovap-hugo
+```
+
 The generated project includes a `src/` package, entry-point metadata, a
 contract test, a README, and an isolated `.gitignore`. Existing scaffold files
 are never overwritten unless `--force` is passed. Package metadata defaults to

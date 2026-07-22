@@ -27,8 +27,8 @@ git clone https://github.com/yoldaolmak/Pictovap.git
 cd Pictovap
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[test,lint,typecheck]"
-pytest tests/unit -q
+make install
+make contribution-check
 ```
 
 Then copy the closest reference implementation:

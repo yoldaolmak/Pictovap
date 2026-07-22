@@ -1,4 +1,4 @@
-.PHONY: install test lint typecheck markdownlint quality clean demo help venv check-docs security-check
+.PHONY: install test lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check
 
 help:
 	@echo "Pictovap - Visual Finishing Engine"
@@ -11,6 +11,7 @@ help:
 	@echo "  typecheck   Run static type checks"
 	@echo "  markdownlint Check Markdown structure"
 	@echo "  quality     Run all local quality gates"
+	@echo "  contribution-check  Run the fast contributor gates (no Node/npm)"
 	@echo "  clean       Clean temporary files"
 	@echo "  venv        Create virtual environment"
 	@echo "  check-docs  Check documentation link integrity"
@@ -26,7 +27,7 @@ test:
 	python3 -m pytest tests/unit -v
 
 check-docs:
-	python3 -m pytest tests/unit/test_demo.py::test_docs_readme_links_resolve -v
+	python3 -m pytest --no-cov tests/unit/test_demo.py::test_docs_readme_links_resolve -v
 
 lint:
 	python3 -m flake8 src/ --max-line-length=120
@@ -39,6 +40,8 @@ markdownlint:
 
 quality: lint typecheck markdownlint test
 
+contribution-check: lint typecheck test check-docs security-check
+
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
@@ -49,4 +52,4 @@ venv:
 	python3 -m venv .venv
 
 security-check:
-	pytest tests/unit/test_security_hygiene.py -v
+	pytest --no-cov tests/unit/test_security_hygiene.py -v

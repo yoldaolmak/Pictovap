@@ -26,8 +26,8 @@ python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install the package, test tools, and linter in editable mode
-python -m pip install -e ".[test,lint]"
+# Install the package and all local contributor checks in editable mode
+make install
 ```
 
 ### 2. Configure Environment Variables (Optional)
@@ -50,6 +50,10 @@ Open `.env` and configure only the integration you are exercising:
 
 The unit suite is deterministic and does not call external APIs. Integration
 tests must skip cleanly when their required credentials are unavailable.
+
+For the complete local gate, run `make contribution-check`. It includes the
+unit suite, lint/type checks, documentation links, and security hygiene without
+requiring Node/npm.
 
 > [!IMPORTANT]  
 > All PRs must pass the test suite before they can be merged. Do not skip tests.

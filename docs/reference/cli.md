@@ -161,5 +161,9 @@ pictovap scaffold provider wikimedia
 pictovap scaffold cms hugo --output path/to/projects
 ```
 
+`--output` names the parent directory. The second command creates
+`path/to/projects/pictovap-hugo`; change into that generated directory before
+installing its dependencies.
+
 The command refuses to overwrite existing scaffold files. Pass `--force` only
 when intentionally refreshing files owned by the scaffold.

@@ -34,7 +34,17 @@ pip install -e ".[test]"
 ```
 
 The `-e` flag installs Pictovap in editable mode and registers the `pictovap`
-CLI command; the `[test]` extra pulls in the test dependencies.
+CLI command; the `[test]` extra pulls in the test dependencies. For the full
+contributor gate, install all local checks instead:
+
+```bash
+pip install -e ".[test,lint,typecheck]"
+make contribution-check
+```
+
+This fast gate runs tests, Python lint/type checks, documentation link checks,
+and security hygiene checks. `make quality` additionally runs Markdown linting
+through `npx`.
 
 ## Verify Installation
 

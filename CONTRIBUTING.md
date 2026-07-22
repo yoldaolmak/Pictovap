@@ -37,10 +37,11 @@ Have an idea that would make Pictovap better? Open a [discussion](https://github
 We love Pull Requests. To ensure a smooth review process:
 1. **Fork the repository** and create your branch from `main`.
 2. **Set up your environment** by following the [Installation Guide](docs/guides/installation.md).
-3. **Write tests** for any new logic (all existing and new tests must pass via `pytest`).
-4. **Update Documentation** if you change CLI arguments, API endpoints, or core architecture.
-5. **Update the CHANGELOG.md** under the `[Unreleased]` section.
-6. **Submit your PR** with a descriptive summary of your changes.
+3. **Run the contributor gate** with `make contribution-check` (after `make install`).
+4. **Write tests** for any new logic (all existing and new tests must pass).
+5. **Update Documentation** if you change CLI arguments, API endpoints, or core architecture.
+6. **Update the CHANGELOG.md** under the `[Unreleased]` section.
+7. **Submit your PR** with a descriptive summary of your changes.
 
 ---
 

@@ -64,6 +64,10 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             class {adapter_class}:
                 """Return image candidates from {class_stem}."""
 
+                # Avoid pytest collecting adapter names such as ``test-source``
+                # as test classes when imported by a fixture.
+                __test__ = False
+
                 def __init__(self, api_key: str | None = None) -> None:
                     self.api_key = api_key
 
@@ -185,6 +189,10 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
             class {adapter_class}:
                 """Place Pictovap image instructions into {class_stem}."""
+
+                # Avoid pytest collecting adapter names such as ``test-cms``
+                # as test classes when imported by a fixture.
+                __test__ = False
 
                 def __init__(self, api_url: str, api_token: str) -> None:
                     self.api_url = api_url
