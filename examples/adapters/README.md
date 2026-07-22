@@ -16,6 +16,16 @@ python examples/adapters/custom_cms_adapter.py
 | [`custom_image_source.py`](custom_image_source.py) | `ImageSourceAdapter` | Serves candidates from a JSON manifest; shows the required candidate shape, graceful degradation, and the runtime `isinstance` contract check |
 | [`custom_cms_adapter.py`](custom_cms_adapter.py) | `CMSAdapter` | Runs the real planner on the packaged sample article, then executes the resulting `CMSPlacement` by writing a Markdown file — a stand-in for a static-site CMS |
 
+The standalone provider packages below are reference implementations with
+mocked API contract tests. They are intentionally separate from the in-tree
+provider issues so contributors can study a complete package without closing
+the corresponding core-adapter contribution:
+
+| Package | Provider | Credentials |
+|---------|----------|-------------|
+| [`pictovap-pixabay/`](pictovap-pixabay/) | Pixabay REST API | Optional API key |
+| [`pictovap-wikimedia/`](pictovap-wikimedia/) | Wikimedia Commons API | None |
+
 ## From skeleton to real adapter
 
 1. Read [docs/contributing/adapters.md](../../docs/contributing/adapters.md)

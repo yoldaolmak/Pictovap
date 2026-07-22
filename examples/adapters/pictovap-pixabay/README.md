@@ -21,5 +21,7 @@ pictovap plan --article article.md --provider pixabay \
   --provider-option api_key=@PIXABAY_API_KEY --output plan.json
 ```
 
-Implement the provider request in `PixabaySource.search_candidates`,
-mock all HTTP calls in tests, and preserve the credential-free empty-result path.
+The package maps Pixabay hits to the Pictovap candidate contract, preserves the
+provider attribution and license fields, and keeps all HTTP calls mocked in
+the test suite. Missing credentials and API failures remain safe empty-result
+paths.

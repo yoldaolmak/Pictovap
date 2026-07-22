@@ -19,7 +19,7 @@ Run the adapter in the real planning pipeline after implementing the provider re
 pictovap plan --article article.md --provider wikimedia --output plan.json
 ```
 
-Implement the provider request in `WikimediaSource.search_candidates`,
-mock all HTTP calls in tests, and preserve Wikimedia attribution and license
-fields in every returned candidate. Wikimedia Commons does not require an API
-key for this adapter.
+The package maps Commons imageinfo and extmetadata to the Pictovap candidate
+contract, skips incomplete files, and keeps all HTTP calls mocked in the test
+suite. It preserves Wikimedia attribution and license fields in every returned
+candidate. Wikimedia Commons does not require an API key for this adapter.
