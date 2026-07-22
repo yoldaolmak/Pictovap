@@ -1,0 +1,48 @@
+name: OpenSSF Criticality Score
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    name: Measure repository criticality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CRITICALITY_VERSION: "2.0.4"
+      CRITICALITY_ARCHIVE: "criticality_score_2.0.4_linux_amd64.tar.gz"
+      CRITICALITY_SHA256: "37adf74be2fdb39cf9da7a419dd53e649dfa7e6b41142bc632a688c18716fdb6"
+      GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Download pinned OpenSSF tool
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location \
+            "https://github.com/ossf/criticality_score/releases/download/v${CRITICALITY_VERSION}/${CRITICALITY_ARCHIVE}" \
+            --output criticality.tar.gz
+          printf '%s  %s\n' "$CRITICALITY_SHA256" criticality.tar.gz | sha256sum --check
+          tar -xzf criticality.tar.gz criticality_score
+          chmod +x criticality_score
+
+      - name: Collect score
+        run: |
+          set -euo pipefail
+          ./criticality_score \
+            -format=json \
+            -depsdev-disable \
+            "https://github.com/${GITHUB_REPOSITORY}" \
+            > criticality-score.json
+          cat criticality-score.json
+
+      - name: Upload score artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: criticality-score-${{ github.run_id }}
+          path: criticality-score.json
+          retention-days: 30
