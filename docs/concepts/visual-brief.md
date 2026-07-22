@@ -40,7 +40,7 @@ This parser does not call any AI API. It is pure Python, stateless, and testable
 ```python
 from pictovap.core.primitives import VisualBrief
 
-brief = VisualBrief.from_markdown("examples/sample-article.md")
+brief = VisualBrief.from_markdown("examples/articles/travel-guide.md")
 print(brief.article_title)   # "The Future of Minimalist Travel"
 print(brief.article_language) # "en"
 print(len(brief.image_slots)) # 4 (featured + 3 section slots)

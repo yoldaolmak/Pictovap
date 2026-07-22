@@ -295,7 +295,7 @@ def _resolve_sample_article() -> Path | None:
     """Locate the credential-free demo's default sample article.
 
     Preference order:
-    1. The repo-relative ``examples/sample-article.md``. This is the file
+    1. The repo-relative ``examples/articles/travel-guide.md``. This is the file
        contributors actually edit when iterating on the example in a source
        checkout (plain clone or ``pip install -e .``); preferring it means
        their edits are picked up immediately, with no reinstall/resync step.

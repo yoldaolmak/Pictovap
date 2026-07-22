@@ -35,7 +35,7 @@ python -m pip install .
 make demo
 ```
 
-This runs the engine against `examples/sample-article.md` using deterministic scoring.
+This runs the engine against `examples/articles/travel-guide.md` using deterministic scoring.
 
 ## 4. Try Your Own Markdown Article
 
@@ -74,9 +74,24 @@ Help us make Pictovap more publisher-agnostic! If you have a unique article form
 
 Pictovap is built around adapters. If you use a specific image source (like Openverse) or CMS (like Ghost or Strapi), open an "Adapter Request" issue. Check our existing requests before submitting.
 
-## 10. Current Limitations
+## 10. Try a Standalone Plugin
+
+The repository includes complete, independently installable provider references
+with mocked contract tests:
+
+- [`pictovap-pixabay`](../examples/adapters/pictovap-pixabay/)
+- [`pictovap-wikimedia`](../examples/adapters/pictovap-wikimedia/)
+- [`pictovap-external-html-review`](../examples/external-renderer-package/)
+
+These packages demonstrate entry-point discovery and the adapter conformance
+check without changing Pictovap core. Use them as a starting point for a
+downstream package with its own release cadence.
+
+## 11. Current Limitations
 
 - The credential-free demo relies on mock assets and deterministic scoring, not live APIs.
 - Real API runs (with external model providers) require configuration not covered in this quick playbook.
 - We currently only offer a WordPress CMS adapter (reference implementation).
-- Pictovap has no external adoption yet; you are on the bleeding edge.
+- Pictovap does not claim broad downstream adoption yet. Six external PRs from
+  five contributors have been merged; current adapter and Gutenberg issues are
+  the most direct way to add another real contribution.

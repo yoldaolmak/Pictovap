@@ -62,7 +62,7 @@ make demo
 python -m pictovap.demo
 ```
 
-This runs all four stages against `examples/sample-article.md`, using mock candidate
+This runs all four stages against `examples/articles/travel-guide.md`, using mock candidate
 images, and writes the output to `sample-output.json` in the current directory.
 
 ## Inspecting Intermediate State
@@ -73,7 +73,7 @@ any point:
 ```python
 from pictovap.core.primitives import VisualBrief
 
-brief = VisualBrief.from_markdown("examples/sample-article.md")
+brief = VisualBrief.from_markdown("examples/articles/travel-guide.md")
 print(brief.to_dict())
 ```
 
