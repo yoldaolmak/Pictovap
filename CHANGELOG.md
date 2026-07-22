@@ -2,7 +2,17 @@
 
 ## [Unreleased]
 
+<!-- Future changes go here. -->
+
+## [0.7.6] - 2026-07-22
+
 ### Added
+* A pinned OpenSSF Criticality Score workflow with checksum and JSON artifact
+  validation.
+* Runnable Pixabay and Wikimedia standalone provider references with mocked
+  response mapping and public contract tests.
+* CI coverage for standalone adapter installation, discovery, conformance, and
+  wheel builds.
 * Publisher Profile v1: versioned YAML, strict validation, and a bundled JSON schema
 * stable `pictovap.api` public API module and built-in Markdown/HTML report renderers
 * report-renderer plugin discovery and reusable renderer contract assertions
@@ -11,11 +21,17 @@
 * complete independently installable external HTML renderer package example and Framework Guide
 
 ### Changed
+* Adapter scaffolds now pass a default flake8 run without contributors needing
+  to edit generated boilerplate first.
+* Contributor documentation now states the Python 3.10+ requirement and keeps
+  credential-free setup separate from optional live integrations.
 * public development guidance is now model-neutral and stale project handoff files were removed
 * adapter status language now distinguishes mocked API coverage from live deployment validation
 * semantic metadata validation uses provider-neutral source categories
 
 ### Fixed
+* Adoption and framework walkthroughs no longer point at source-checkout-only
+  article paths.
 * Gutenberg H2 and H3 headings now preserve readable text across inline bold,
   italic, and link markup without leaking HTML into placement targets
 
