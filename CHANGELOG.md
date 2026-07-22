@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.7.8] - 2026-07-22
+
 ### Added
 
 * Adoption telemetry now records direct 90-day GitHub issue/PR and issue-comment
