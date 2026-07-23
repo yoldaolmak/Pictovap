@@ -26,13 +26,15 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - Reproducible OpenSSF Criticality Score workflow with a pinned tool checksum
 - Scheduled [adoption metrics workflow](https://github.com/yoldaolmak/Pictovap/actions/workflows/adoption-metrics.yml)
   preserving PyPI and GitHub snapshots as artifacts
-- [PyPIStats](https://pypistats.org/packages/pictovap) records 1,323 downloads
+- [PyPIStats](https://pypistats.org/packages/pictovap) records 1,909 downloads
   without mirrors across 2026-07-11 through
-  2026-07-21 (an installation signal, not a unique-user or dependent-project
+  2026-07-22 (an installation signal, not a unique-user or dependent-project
   claim)
-- The adoption artifact also records 32 updated issue/PR records and 32 issue
-  comments in the 90-day GitHub API window observed on 2026-07-22. These are
+- The adoption artifact also records 37 updated issue/PR records and 44 issue
+  comments in the 90-day GitHub API window observed on 2026-07-23. These are
   maintainer activity signals, not external adoption or unique users.
+- The repository currently has five forks and no open pull requests as of the
+  2026-07-23 adoption snapshot.
 
 ## Missing Ecosystem Signals
 
@@ -43,7 +45,7 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - External issues reported by real users
 - Third-party validation or mentions
 - OpenSSF Scorecard improvements
-- A Criticality Score of at least 0.4 (reference snapshot: 0.22153 on 2026-07-22; the
+- A Criticality Score of at least 0.4 (reference snapshot: 0.22172 on 2026-07-23; the
   [workflow artifact](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml)
   is the live measurement surface)
 
