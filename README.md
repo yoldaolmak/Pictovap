@@ -232,6 +232,9 @@ alias — see [Brand & Naming](docs/architecture/naming.md).
 
 The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) has three
 claimable provider and CMS integrations with exact acceptance tests.
+The [WordPress Gutenberg Mini Sprint](docs/contributing/wordpress-gutenberg-minisprint.md)
+has small fixture, test, and editor-report issues for first-time contributors
+who want to work on image placement without a live CMS.
 
 See the [Documentation Portal](docs/README.md) for architecture, concepts,
 and adapter-writing guides, and [DEVELOPER.md](docs/DEVELOPER.md) for the

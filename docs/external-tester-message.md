@@ -47,3 +47,21 @@ and traceback (if any) are enough.
 Any feedback at all is helpful — even "it didn't work on my machine" or "the output was confusing."
 
 Thanks for your time.
+
+## Short Public Post
+
+```text
+Pictovap needs external validation from content publishers and WordPress/Gutenberg users.
+
+If you have a non-sensitive Markdown article, please try:
+
+python -m pip install pictovap==0.7.12
+pictovap plan --article path/to/article.md --output my-plan.json --report my-plan.md
+pictovap feedback --plan my-plan.json --format markdown
+
+Paste the generated safe summary here:
+https://github.com/yoldaolmak/Pictovap/issues/8
+
+If you prefer a first PR, there are small WordPress/Gutenberg fixture and documentation issues:
+https://github.com/yoldaolmak/Pictovap/blob/main/docs/contributing/wordpress-gutenberg-minisprint.md
+```
