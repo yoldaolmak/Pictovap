@@ -70,6 +70,7 @@ jobs:
           pip install ".[test]"
           pip install -e examples/adapters/pictovap-pixabay
           pip install -e examples/adapters/pictovap-wikimedia
+          pip install -e examples/adapters/pictovap-hugo
           pip install -e examples/external-renderer-package
           pip install build
 
@@ -77,20 +78,24 @@ jobs:
         run: |
           (cd examples/adapters/pictovap-pixabay && pytest -q)
           (cd examples/adapters/pictovap-wikimedia && pytest -q)
+          (cd examples/adapters/pictovap-hugo && pytest -q)
           (cd examples/external-renderer-package && pytest -q)
 
       - name: Verify plugin discovery and conformance
         run: |
           pictovap plugins --kind provider
+          pictovap plugins --kind cms
           pictovap plugins --kind renderer
           pictovap adapter check --kind provider --name pixabay
           pictovap adapter check --kind provider --name wikimedia
+          pictovap adapter check --kind cms --name hugo
           pictovap adapter check --kind renderer --name external-html-review
 
       - name: Build standalone wheels
         run: |
           python -m build --wheel --outdir /tmp/pictovap-pixabay-wheel examples/adapters/pictovap-pixabay
           python -m build --wheel --outdir /tmp/pictovap-wikimedia-wheel examples/adapters/pictovap-wikimedia
+          python -m build --wheel --outdir /tmp/pictovap-hugo-wheel examples/adapters/pictovap-hugo
           python -m build --wheel --outdir /tmp/pictovap-renderer-wheel examples/external-renderer-package
 
   typecheck:

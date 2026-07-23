@@ -27,8 +27,13 @@ Completed standalone provider references are available under
 [`examples/adapters/`](../../examples/adapters/README.md):
 [`pictovap-pixabay`](../../examples/adapters/pictovap-pixabay/) and
 [`pictovap-wikimedia`](../../examples/adapters/pictovap-wikimedia/). They show
-real response mapping and mocked contract tests; the in-tree issues above
-remain open for contributors who want to integrate the providers into core.
+real response mapping and mocked contract tests.
+
+A completed standalone CMS reference is also available:
+[`pictovap-hugo`](../../examples/adapters/pictovap-hugo/). It writes
+idempotent Hugo `figure` shortcodes into Markdown content with path-containment
+tests. The in-tree issues above remain open for contributors who want to
+integrate the providers or CMS behavior into core.
 
 ## Claims and First PR Issues
 
@@ -86,6 +91,15 @@ pictovap adapter check --kind provider --name example-source
 The CMS loop is identical except for `cms` in the final two commands. It does
 not require credentials: the empty scaffold is checked safely and reports a
 warning until its transport is implemented.
+
+For a concrete static-site CMS example, install and test the Hugo reference:
+
+```bash
+cd examples/adapters/pictovap-hugo
+pip install -e ".[test]"
+pytest
+pictovap adapter check --kind cms --name hugo
+```
 
 If you are deciding which route to use or what a reviewable first pull request
 contains, use [Your First Adapter Pull Request](first-adapter-pr.md).
