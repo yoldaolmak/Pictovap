@@ -62,7 +62,7 @@ pictovap report --plan output/plan.json --output output/report.html --renderer h
 
 ### Create an Anonymous Validation Summary
 
-When asking for help or reporting a result, create a small JSON artifact that
+When asking for help or reporting a result, create a small artifact that
 contains only counts and runtime versions. It excludes article text, titles,
 paths, URLs, profile names, and credentials:
 
@@ -74,6 +74,15 @@ pictovap feedback \
 
 The summary is also printed to stdout so it can be pasted directly into an
 issue. Use it when you want to share diagnostics without sharing your article.
+
+For GitHub issue comments, render the same anonymous summary as Markdown:
+
+```bash
+pictovap feedback \
+  --plan output/plan.json \
+  --format markdown \
+  --output output/feedback.md
+```
 
 ### Check an Installed Adapter
 

@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [0.7.12] - 2026-07-23
+
+### Added
+
+* A runnable standalone Hugo CMS adapter reference demonstrates path-contained,
+  idempotent static-site shortcode placement without requiring credentials.
+* `pictovap feedback --format markdown` renders the anonymous validation
+  summary as a GitHub issue-ready report.
+* A dedicated external validation issue template asks for safe runtime and plan
+  counts without article text, paths, image URLs, or credentials.
+
 ### Fixed
 
 * GitHub Codespaces now installs the complete contributor gate dependencies,

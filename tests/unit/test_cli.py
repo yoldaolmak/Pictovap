@@ -201,6 +201,43 @@ def test_pictovap_feedback_is_safe_and_can_write_output(tmp_path):
     assert json.loads(summary_path.read_text(encoding="utf-8")) == summary
 
 
+def test_pictovap_feedback_can_render_markdown_issue_body(tmp_path):
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_text(json.dumps({
+        "visual_brief": {
+            "article_title": "Private title",
+            "source_path": "/redacted/article.md",
+            "article_language": "en",
+            "sections": [{"heading": "Heading"}],
+            "image_slots": [{"slot_id": "featured"}],
+        },
+        "candidates_evaluated": 2,
+        "fit_scores": {},
+        "provenance_packs": [],
+        "cms_placement": {"placements": []},
+    }), encoding="utf-8")
+    summary_path = tmp_path / "feedback.md"
+
+    result = subprocess.run(
+        [
+            PICTOVAP, "feedback",
+            "--plan", str(plan_path),
+            "--output", str(summary_path),
+            "--format", "markdown",
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0
+    assert summary_path.exists()
+    rendered = summary_path.read_text(encoding="utf-8")
+    assert "## Pictovap External Validation" in rendered
+    assert "Candidates evaluated: `2`" in rendered
+    assert "Private title" not in result.stdout
+    assert result.stdout == rendered
+
+
 def test_pictovap_feedback_rejects_missing_plan(tmp_path):
     result = subprocess.run(
         [PICTOVAP, "feedback", "--plan", str(tmp_path / "missing.json")],

@@ -18,7 +18,7 @@ I'd appreciate it if you could spend a few minutes trying the demo and letting m
 python3 --version  # Python 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install pictovap==0.7.11
+python -m pip install pictovap==0.7.12
 pictovap demo
 ```
 
@@ -29,14 +29,14 @@ pictovap plan \
   --article path/to/your/article.md \
   --output my-plan.json \
   --report my-plan.md
-pictovap feedback --plan my-plan.json
+pictovap feedback --plan my-plan.json --format markdown
 ```
 
 **Then:**
 
 - Open `my-plan.json` and `my-plan.md`. Does the structure make sense?
-- Paste the anonymous `feedback` JSON into the issue; it excludes article text,
-  paths, URLs, and credentials.
+- Paste the anonymous `feedback` Markdown into the issue; it excludes article
+  text, paths, URLs, and credentials.
 - Did the Visual Brief identify reasonable image slots for your article?
 - Did anything crash or produce confusing output?
 

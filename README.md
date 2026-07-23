@@ -132,8 +132,12 @@ review before anything gets published.
 If you try Pictovap with a real non-sensitive article, please report whether
 the slots, scores, and report matched your editorial intent in
 [issue #8](https://github.com/yoldaolmak/Pictovap/issues/8). A Python version,
-operating system, command, and traceback are enough; do not include private
-article content.
+operating system, command, and traceback are enough. To share a safe
+copy-paste report without article text, paths, URLs, or credentials:
+
+```bash
+pictovap feedback --plan my-plan.json --format markdown
+```
 
 External adapters should use only the documented public contracts. See the
 [API Stability Policy](API_STABILITY.md) for stable, experimental, and

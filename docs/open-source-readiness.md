@@ -16,9 +16,9 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - Contribution templates and starter issues
 - Adoption playbook for early users
 - Single-publisher dogfooding case study (Yoldaolmak)
-- Tagged releases through v0.7.11
+- Tagged releases through v0.7.12
 - Published `pictovap` package on PyPI
-- Green main-branch CI and release workflows for v0.7.11
+- Green main-branch CI and release workflows for v0.7.12
 - CodeQL, dependency review, and OpenSSF Scorecard workflows
 - Six external pull requests merged from five unique community contributors
 - Third-party adapter discovery through standard Python entry points
@@ -68,7 +68,7 @@ The release infrastructure is live. The goals for the next maturity milestone ar
 ## Next Steps
 
 1. Publish the prepared launch announcements and invite reproducible demo feedback.
-2. Direct provider and CMS contributors to the v0.7.11 scaffold, runtime, and contract test kit.
+2. Direct provider and CMS contributors to the v0.7.12 scaffold, runtime, and contract test kit.
 3. Document a second publisher profile to demonstrate generality.
 4. Monitor branch protection, CodeQL, dependency review, OpenSSF Scorecard, and the
    [Criticality Score workflow](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml).

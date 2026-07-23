@@ -27,7 +27,7 @@ from pictovap.app.runtime import (
     parse_adapter_options,
 )
 from pictovap.demo import generate_report_from_file, run_demo
-from pictovap.feedback import summarize_plan
+from pictovap.feedback import render_feedback_markdown, summarize_plan
 from pictovap.conformance import AdapterCheckError, check_adapter
 from pictovap.plugins import PluginError, iter_plugins
 from pictovap.scaffold import ScaffoldError, scaffold_adapter
@@ -99,6 +99,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     feedback.add_argument("--plan", required=True, help="Path to visual-plan.json")
     feedback.add_argument("--output", help="Optional path to write the summary JSON")
+    feedback.add_argument(
+        "--format",
+        choices=("json", "markdown"),
+        default="json",
+        help="Output format for the anonymous summary",
+    )
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
@@ -208,6 +214,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             with open(args.plan, encoding="utf-8") as plan_file:
                 plan_payload = json.load(plan_file)
             summary = summarize_plan(plan_payload)
+            if args.format == "markdown":
+                rendered = render_feedback_markdown(summary)
+                if args.output:
+                    with open(args.output, "w", encoding="utf-8") as output_file:
+                        output_file.write(rendered)
+                print(rendered, end="")
+                return 0
             if args.output:
                 with open(args.output, "w", encoding="utf-8") as output_file:
                     json.dump(summary, output_file, ensure_ascii=False, indent=2)
