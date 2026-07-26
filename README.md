@@ -162,8 +162,15 @@ Wikimedia Commons are open contribution opportunities — see
 
 **CMS placement:** WordPress is the most complete in-tree adapter. Ghost and
 Strapi are reference implementations with mocked API tests and documented
-limitations. See
-[CMS Adapters](docs/adapters/cms-adapters.md).
+limitations. See [CMS Adapters](docs/adapters/cms-adapters.md) and
+[WordPress Setup](docs/guides/wordpress-setup.md).
+
+You do not need WordPress credentials to run the demo, create a local visual
+plan, or generate an editor report. WordPress credentials are only needed when
+Pictovap contacts a live WordPress site for actions such as reading Gutenberg
+posts, uploading media, or updating post content. Those credentials must live
+in `.env` or another local secret store, never in the repository. WordPress is
+one CMS adapter; Pictovap's core output is the CMS Placement plan.
 
 Image-source adapters degrade gracefully when unconfigured — a missing API key
 produces an empty result, not a crash, so a partially configured profile still
