@@ -81,4 +81,5 @@ def test_external_validation_docs_use_pypi_and_safe_feedback():
         text = (REPO_ROOT / rel_path).read_text(encoding="utf-8")
         assert "python -m pip install --upgrade pictovap" in text, rel_path
         assert "pictovap feedback --plan my-plan.json --format markdown" in text, rel_path
+        assert "issues/new?template=external_validation.md" in text, rel_path
         assert "pictovap==0.7.12" not in text, rel_path

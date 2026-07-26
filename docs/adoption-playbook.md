@@ -77,9 +77,9 @@ and credentials.
 
 ## 7. Report a Useful Validation Result
 
-Paste the generated feedback Markdown into
-[issue #8](https://github.com/yoldaolmak/Pictovap/issues/8). Good reports
-include success, confusing output, or failures:
+Paste the generated feedback Markdown into a
+[new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md).
+Good reports include success, confusing output, or failures:
 
 - The `visual_brief` matched or missed the article structure.
 - The report was or was not useful for editorial review.

@@ -8,6 +8,11 @@ from typing import Any
 
 from pictovap import __version__
 
+EXTERNAL_VALIDATION_ISSUE_URL = (
+    "https://github.com/yoldaolmak/Pictovap/issues/new"
+    "?template=external_validation.md"
+)
+
 
 def _length(value: Any) -> int:
     """Return a collection length without exposing its contents."""
@@ -111,9 +116,12 @@ def render_feedback_markdown(summary: Mapping[str, Any]) -> str:
         "",
         "### Notes",
         "",
+        "Share this report in a new external validation issue:",
+        f"{EXTERNAL_VALIDATION_ISSUE_URL}",
+        "",
         "<!-- Do not paste private article text, private paths, image URLs, or credentials. -->",
         "",
     ])
 
 
-__all__ = ["render_feedback_markdown", "summarize_plan"]
+__all__ = ["EXTERNAL_VALIDATION_ISSUE_URL", "render_feedback_markdown", "summarize_plan"]

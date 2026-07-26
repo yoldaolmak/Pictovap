@@ -130,10 +130,10 @@ automation. `my-report.md` is the same plan, rendered for a human editor to
 review before anything gets published.
 
 If you try Pictovap with a real non-sensitive article, please report whether
-the slots, scores, and report matched your editorial intent in
-[issue #8](https://github.com/yoldaolmak/Pictovap/issues/8). To share a safe
-copy-paste report with Python and coarse OS metadata but without article text,
-paths, URLs, or credentials:
+the slots, scores, and report matched your editorial intent in a
+[new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md).
+To share a safe copy-paste report with Python and coarse OS metadata but
+without article text, paths, URLs, or credentials:
 
 ```bash
 pictovap feedback --plan my-plan.json --format markdown

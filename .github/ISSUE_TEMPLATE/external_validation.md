@@ -8,6 +8,9 @@ assignees: ''
 
 Thank you for trying Pictovap with a real article or CMS workflow.
 
+Use this template from:
+https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md
+
 Generate a safe summary:
 
 ```bash

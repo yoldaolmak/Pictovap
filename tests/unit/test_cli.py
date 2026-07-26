@@ -5,6 +5,7 @@ from pathlib import Path
 
 from pictovap import __version__
 from pictovap.app import cli
+from pictovap.feedback import EXTERNAL_VALIDATION_ISSUE_URL
 from pictovap.services.wordpress import WordPressPostReadError
 
 
@@ -245,6 +246,7 @@ def test_pictovap_feedback_can_render_markdown_issue_body(tmp_path):
     assert summary_path.exists()
     rendered = summary_path.read_text(encoding="utf-8")
     assert "## Pictovap External Validation" in rendered
+    assert EXTERNAL_VALIDATION_ISSUE_URL in rendered
     assert "- OS: `" in rendered
     assert "<!-- macOS" not in rendered
     assert "Candidates evaluated: `2`" in rendered

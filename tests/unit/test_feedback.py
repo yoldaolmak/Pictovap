@@ -2,7 +2,11 @@ import json
 
 import pytest
 
-from pictovap.feedback import render_feedback_markdown, summarize_plan
+from pictovap.feedback import (
+    EXTERNAL_VALIDATION_ISSUE_URL,
+    render_feedback_markdown,
+    summarize_plan,
+)
 
 
 def test_summary_contains_only_anonymous_plan_statistics():
@@ -61,6 +65,7 @@ def test_markdown_feedback_contains_only_anonymous_plan_statistics():
     rendered = render_feedback_markdown(summarize_plan(plan))
 
     assert "Pictovap External Validation" in rendered
+    assert EXTERNAL_VALIDATION_ISSUE_URL in rendered
     assert "Article language: `tr`" in rendered
     assert "Candidates evaluated: `3`" in rendered
     assert "- OS: `" in rendered
@@ -68,7 +73,7 @@ def test_markdown_feedback_contains_only_anonymous_plan_statistics():
     assert "Private title" not in rendered
     assert "/redacted" not in rendered
     assert "private-provider" not in rendered
-    assert "https://" not in rendered
+    assert "private.example" not in rendered
 
 
 def test_summary_handles_partial_plan():
