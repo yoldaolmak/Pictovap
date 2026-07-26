@@ -43,6 +43,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install ".[test]"
 
+      - name: Contributor smoke check
+        run: python scripts/contributor_smoke.py
+
       - name: Run unit tests
         run: pytest tests/unit -v
 

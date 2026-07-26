@@ -1,4 +1,4 @@
-.PHONY: install check-python test lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check
+.PHONY: install check-python contributor-smoke test lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check
 
 help:
 	@echo "Pictovap - Visual Finishing Engine"
@@ -7,6 +7,7 @@ help:
 	@echo "  demo        Run the local credential-free demo"
 	@echo "  test        Run test suite"
 	@echo "  check-python  Verify Python 3.10+ before installing"
+	@echo "  contributor-smoke  Verify installed CLI, demo, and feedback flow"
 	@echo "  install     Install dependencies"
 	@echo "  lint        Run code linters"
 	@echo "  typecheck   Run static type checks"
@@ -23,6 +24,9 @@ demo:
 
 check-python:
 	@python3 -c 'import sys; sys.exit("Pictovap requires Python 3.10+. Use python3.11+ and recreate the virtualenv.") if sys.version_info < (3, 10) else None'
+
+contributor-smoke: check-python
+	python3 scripts/contributor_smoke.py
 
 install: check-python
 	python3 -m pip install -e ".[test,lint,typecheck]"
@@ -44,7 +48,7 @@ markdownlint:
 
 quality: lint typecheck markdownlint test
 
-contribution-check: lint typecheck test check-docs security-check
+contribution-check: contributor-smoke lint typecheck test check-docs security-check
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
