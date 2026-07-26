@@ -1,6 +1,6 @@
 # 🤝 Contributing to Pictovap
 
-First off, thank you for considering contributing to Pictovap! It's people like you that make open-source software such a powerful tool for the community. 
+First off, thank you for considering contributing to Pictovap! It's people like you that make open-source software such a powerful tool for the community.
 
 Whether you're fixing a typo, resolving a critical bug, or proposing a massive architectural improvement, your contribution is highly valued.
 
@@ -15,6 +15,27 @@ Whether you're fixing a typo, resolving a critical bug, or proposing a massive a
 > [Your First Adapter Pull Request](docs/contributing/first-adapter-pr.md).
 > It tells you whether to use an in-tree adapter or standalone plugin, then
 > gives the shortest verified route for each.
+
+## Fast First PR Menu
+
+If you want to contribute without waiting for a claim confirmation, choose one
+of the `contribution: no-claim` issues and open a focused PR directly:
+
+- [#40 WordPress media-library upload response fixture](https://github.com/yoldaolmak/Pictovap/issues/40)
+- [#41 Gutenberg image-block insertion regression fixture](https://github.com/yoldaolmak/Pictovap/issues/41)
+- [#42 Editor-report example for WordPress image placement review](https://github.com/yoldaolmak/Pictovap/issues/42)
+- [#24 Realistic Gutenberg blocks fixture](https://github.com/yoldaolmak/Pictovap/issues/24)
+- [#26 WordPress planning behavior for posts without H2 headings](https://github.com/yoldaolmak/Pictovap/issues/26)
+- [#28 WordPress Gutenberg planning example profile and walkthrough](https://github.com/yoldaolmak/Pictovap/issues/28)
+
+Start every PR with:
+
+```bash
+make install
+make contributor-smoke
+```
+
+Run `make contribution-check` before opening the pull request.
 
 ---
 
