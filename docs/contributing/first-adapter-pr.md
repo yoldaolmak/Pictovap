@@ -28,6 +28,7 @@ cd Pictovap
 python3 -m venv .venv
 source .venv/bin/activate
 make install
+make contributor-smoke
 make contribution-check
 ```
 
