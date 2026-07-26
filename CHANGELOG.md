@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [0.7.14] - 2026-07-26
+
+### Changed
+
+* Generated external validation Markdown now links directly to the dedicated
+  GitHub issue form, making real downstream reports easier to submit, count,
+  and review.
+* Public validation docs now route testers to a new external validation issue
+  instead of a shared tracking issue comment thread.
+
 ## [0.7.13] - 2026-07-26
 
 ### Added

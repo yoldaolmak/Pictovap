@@ -53,7 +53,7 @@ and paste a safe validation report into a
 [new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md):
 
 ```bash
-python -m pip install pictovap==0.7.13
+python -m pip install pictovap==0.7.14
 pictovap plan --article path/to/article.md --output my-plan.json --report my-plan.md
 pictovap feedback --plan my-plan.json --format markdown
 ```
