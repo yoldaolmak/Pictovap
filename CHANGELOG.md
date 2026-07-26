@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Added
+
+* `make contributor-smoke` verifies the installed CLI, credential-free demo,
+  and anonymous feedback report before contributors run the full local gate.
+
+### Changed
+
+* WordPress setup documentation now separates credential-free local planning
+  from live WordPress reads, media uploads, and post updates.
+
+### Fixed
+
+* `python -m pictovap` now runs the public CLI entry point directly.
+
 ## [0.7.12] - 2026-07-23
 
 ### Added
