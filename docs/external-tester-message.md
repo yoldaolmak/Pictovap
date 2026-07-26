@@ -36,13 +36,14 @@ pictovap feedback --plan my-plan.json --format markdown
 
 - Open `my-plan.json` and `my-plan.md`. Does the structure make sense?
 - Paste the anonymous `feedback` Markdown into the issue; it excludes article
-  text, paths, URLs, and credentials.
+  text, paths, URLs, and credentials while including safe Python and OS
+  metadata.
 - Did the Visual Brief identify reasonable image slots for your article?
 - Did anything crash or produce confusing output?
 
 Please report the result in [issue #8](https://github.com/yoldaolmak/Pictovap/issues/8).
-Redact private article content; the Python version, operating system, command,
-and traceback (if any) are enough.
+Redact private article content; the generated feedback Markdown, command, and
+traceback (if any) are enough.
 
 Any feedback at all is helpful — even "it didn't work on my machine" or "the output was confusing."
 
