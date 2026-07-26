@@ -71,8 +71,9 @@ Open the generated JSON plan and Markdown report. Look for the four primitives:
 - `provenance_packs`: The selected images and their audit trail.
 - `cms_placement`: The final placement instructions.
 
-The feedback command prints only safe counts and runtime metadata. It excludes
-article text, private paths, image URLs, profile names, and credentials.
+The feedback command prints only safe counts plus Python and coarse OS
+metadata. It excludes article text, private paths, image URLs, profile names,
+and credentials.
 
 ## 7. Report a Useful Validation Result
 
@@ -83,7 +84,7 @@ include success, confusing output, or failures:
 - The `visual_brief` matched or missed the article structure.
 - The report was or was not useful for editorial review.
 - The command crashed when parsing a specific Markdown element.
-- Your OS, Python version, and traceback if it failed.
+- The generated OS/Python metadata and traceback if it failed.
 
 ## 8. Contribute a Sample Article/Profile
 

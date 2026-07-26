@@ -22,13 +22,16 @@ def test_summary_contains_only_anonymous_plan_statistics():
         "runtime": {"provider": {"mode": "plugin", "name": "private-provider"}},
     }
 
-    serialized = json.dumps(summarize_plan(plan))
+    summary = summarize_plan(plan)
+    serialized = json.dumps(summary)
 
     assert "Private title" not in serialized
     assert "/redacted/private" not in serialized
     assert "private.example" not in serialized
     assert "private-provider" not in serialized
-    assert summarize_plan(plan)["plan"] == {
+    assert isinstance(summary["os"], str)
+    assert summary["os"]
+    assert summary["plan"] == {
         "article_language": "en",
         "sections": 1,
         "image_slots": 2,
@@ -60,6 +63,8 @@ def test_markdown_feedback_contains_only_anonymous_plan_statistics():
     assert "Pictovap External Validation" in rendered
     assert "Article language: `tr`" in rendered
     assert "Candidates evaluated: `3`" in rendered
+    assert "- OS: `" in rendered
+    assert "<!-- macOS" not in rendered
     assert "Private title" not in rendered
     assert "/redacted" not in rendered
     assert "private-provider" not in rendered

@@ -131,9 +131,9 @@ review before anything gets published.
 
 If you try Pictovap with a real non-sensitive article, please report whether
 the slots, scores, and report matched your editorial intent in
-[issue #8](https://github.com/yoldaolmak/Pictovap/issues/8). A Python version,
-operating system, command, and traceback are enough. To share a safe
-copy-paste report without article text, paths, URLs, or credentials:
+[issue #8](https://github.com/yoldaolmak/Pictovap/issues/8). To share a safe
+copy-paste report with Python and coarse OS metadata but without article text,
+paths, URLs, or credentials:
 
 ```bash
 pictovap feedback --plan my-plan.json --format markdown

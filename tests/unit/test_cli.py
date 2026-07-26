@@ -54,10 +54,10 @@ def test_pictovap_plan(tmp_path):
         "--profile", "examples/profiles/sample-publisher.yaml",
         "--output", str(output_json)
     ], capture_output=True, text=True)
-    
+
     assert result.returncode == 0
     assert output_json.exists()
-    
+
     with open(output_json) as f:
         data = json.load(f)
         assert "visual_brief" in data
@@ -65,6 +65,7 @@ def test_pictovap_plan(tmp_path):
         assert "provenance_packs" in data
         assert "cms_placement" in data
         assert "source_path" in data
+
 
 def test_pictovap_plan_with_report(tmp_path):
     output_json = tmp_path / "output.json"
@@ -76,7 +77,7 @@ def test_pictovap_plan_with_report(tmp_path):
         "--output", str(output_json),
         "--report", str(output_md)
     ], capture_output=True, text=True)
-    
+
     assert result.returncode == 0
     assert output_json.exists()
     assert output_md.exists()
@@ -156,17 +157,17 @@ def test_pictovap_report(tmp_path):
         "--profile", "examples/profiles/sample-publisher.yaml",
         "--output", str(output_json)
     ], check=True)
-    
+
     output_md = tmp_path / "report.md"
     result = subprocess.run([
         PICTOVAP, "report",
         "--plan", str(output_json),
         "--output", str(output_md)
     ], capture_output=True, text=True)
-    
+
     assert result.returncode == 0
     assert output_md.exists()
-    
+
     content = output_md.read_text(encoding="utf-8")
     assert "# Pictovap Visual Plan" in content
     assert "## Article" in content
@@ -244,6 +245,8 @@ def test_pictovap_feedback_can_render_markdown_issue_body(tmp_path):
     assert summary_path.exists()
     rendered = summary_path.read_text(encoding="utf-8")
     assert "## Pictovap External Validation" in rendered
+    assert "- OS: `" in rendered
+    assert "<!-- macOS" not in rendered
     assert "Candidates evaluated: `2`" in rendered
     assert "Private title" not in result.stdout
     assert result.stdout == rendered
@@ -299,6 +302,7 @@ def test_adapter_check_prints_machine_readable_report(monkeypatch, capsys):
     }]
     assert json.loads(capsys.readouterr().out)["status"] == "passed"
 
+
 def test_pictovap_plan_missing_article(tmp_path):
     output_json = tmp_path / "output.json"
     result = subprocess.run([
@@ -309,6 +313,7 @@ def test_pictovap_plan_missing_article(tmp_path):
     ], capture_output=True, text=True)
     assert result.returncode != 0
     assert "Error: Article not found" in result.stderr
+
 
 def test_pictovap_plan_missing_profile(tmp_path):
     output_json = tmp_path / "output.json"

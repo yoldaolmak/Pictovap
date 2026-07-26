@@ -9,6 +9,8 @@
 
 ### Changed
 
+* Anonymous feedback Markdown now includes coarse OS metadata automatically,
+  reducing manual edits for external validation reports.
 * External validation docs now use a PyPI-first install path and the safe
   Markdown feedback report, reducing friction for downstream usage reports.
 * Contributor-facing setup docs, issue-copy templates, and the pull-request

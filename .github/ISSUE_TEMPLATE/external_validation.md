@@ -16,8 +16,9 @@ pictovap plan --article path/to/article.md --output my-plan.json --report my-rep
 pictovap feedback --plan my-plan.json --format markdown
 ```
 
-Paste the generated Markdown below. It excludes article text, private paths,
-image URLs, profile names, and credentials.
+Paste the generated Markdown below. It includes coarse OS and Python metadata,
+but excludes article text, private paths, image URLs, profile names, and
+credentials.
 
 ## Pictovap External Validation
 

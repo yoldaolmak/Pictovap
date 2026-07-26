@@ -16,6 +16,16 @@ def _length(value: Any) -> int:
     return 0
 
 
+def _safe_os_name() -> str:
+    """Return a coarse OS name that is useful in bug reports without paths."""
+    system = platform.system()
+    if system == "Darwin":
+        return "macOS"
+    if system:
+        return system
+    return "unknown"
+
+
 def summarize_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
     """Create an anonymous, copy-pasteable summary of a visual plan.
 
@@ -42,6 +52,7 @@ def summarize_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
         "schema_version": 1,
         "pictovap_version": __version__,
         "python_version": platform.python_version(),
+        "os": _safe_os_name(),
         "plan": {
             "article_language": brief.get("article_language"),
             "sections": _length(brief.get("sections")),
@@ -78,7 +89,7 @@ def render_feedback_markdown(summary: Mapping[str, Any]) -> str:
         "",
         f"- Pictovap version: `{summary.get('pictovap_version', 'unknown')}`",
         f"- Python version: `{summary.get('python_version', 'unknown')}`",
-        "- OS: <!-- macOS / Ubuntu / Windows / other -->",
+        f"- OS: `{summary.get('os', 'unknown')}`",
         "",
         "### Anonymous Plan Summary",
         "",
