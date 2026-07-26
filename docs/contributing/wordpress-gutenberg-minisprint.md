@@ -53,10 +53,10 @@ and paste a safe validation report into
 [issue #8](https://github.com/yoldaolmak/Pictovap/issues/8):
 
 ```bash
-python -m pip install pictovap==0.7.12
+python -m pip install pictovap==0.7.13
 pictovap plan --article path/to/article.md --output my-plan.json --report my-plan.md
 pictovap feedback --plan my-plan.json --format markdown
 ```
 
-The feedback command excludes article text, private paths, image URLs, and
-credentials.
+The feedback command includes coarse OS/Python metadata but excludes article
+text, private paths, image URLs, and credentials.
