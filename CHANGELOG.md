@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.7.13] - 2026-07-26
+
 ### Added
 
 * `make contributor-smoke` verifies the installed CLI, credential-free demo,

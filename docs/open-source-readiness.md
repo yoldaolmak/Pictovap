@@ -16,9 +16,9 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - Contribution templates and starter issues
 - Adoption playbook for early users
 - Single-publisher dogfooding case study (Yoldaolmak)
-- Tagged releases through v0.7.12
+- Tagged releases through v0.7.13
 - Published `pictovap` package on PyPI
-- Green main-branch CI and release workflows for v0.7.12
+- Green main-branch CI and release workflows for v0.7.13
 - CodeQL, dependency review, and OpenSSF Scorecard workflows
 - Six external pull requests merged from five unique community contributors
 - Third-party adapter discovery through standard Python entry points
@@ -26,15 +26,15 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - Reproducible OpenSSF Criticality Score workflow with a pinned tool checksum
 - Scheduled [adoption metrics workflow](https://github.com/yoldaolmak/Pictovap/actions/workflows/adoption-metrics.yml)
   preserving PyPI and GitHub snapshots as artifacts
-- [PyPIStats](https://pypistats.org/packages/pictovap) records 1,909 downloads
+- [PyPIStats](https://pypistats.org/packages/pictovap) records 2,107 downloads
   without mirrors across 2026-07-11 through
-  2026-07-22 (an installation signal, not a unique-user or dependent-project
+  2026-07-25 (an installation signal, not a unique-user or dependent-project
   claim)
-- The adoption artifact also records 37 updated issue/PR records and 44 issue
-  comments in the 90-day GitHub API window observed on 2026-07-23. These are
+- The adoption artifact also records 48 updated issue/PR records and 50 issue
+  comments in the 90-day GitHub API window observed on 2026-07-26. These are
   maintainer activity signals, not external adoption or unique users.
 - The repository currently has five forks and no open pull requests as of the
-  2026-07-23 adoption snapshot.
+  2026-07-26 adoption snapshot.
 
 ## Missing Ecosystem Signals
 
@@ -45,7 +45,7 @@ Pictovap is a published early-stage open-source package. The public core and rel
 - External issues reported by real users
 - Third-party validation or mentions
 - OpenSSF Scorecard improvements
-- A Criticality Score of at least 0.4 (reference snapshot: 0.22178 on 2026-07-23; the
+- A Criticality Score of at least 0.4 (reference snapshot: 0.22232 on 2026-07-26; the
   [workflow artifact](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml)
   is the live measurement surface)
 
@@ -70,7 +70,7 @@ The release infrastructure is live. The goals for the next maturity milestone ar
 ## Next Steps
 
 1. Publish the prepared launch announcements and invite reproducible demo feedback.
-2. Direct provider and CMS contributors to the v0.7.12 scaffold, runtime, and contract test kit.
+2. Direct provider and CMS contributors to the v0.7.13 scaffold, runtime, and contract test kit.
 3. Document a second publisher profile to demonstrate generality.
 4. Monitor branch protection, CodeQL, dependency review, OpenSSF Scorecard, and the
    [Criticality Score workflow](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml).
