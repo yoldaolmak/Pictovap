@@ -26,6 +26,17 @@ def test_pictovap_version_matches_installed_package_version():
     assert result.stdout.strip() == f"pictovap {__version__}"
 
 
+def test_python_m_pictovap_version_matches_installed_package_version():
+    result = subprocess.run(
+        [sys.executable, "-m", "pictovap", "--version"],
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0
+    assert result.stdout.strip() == f"pictovap {__version__}"
+
+
 def test_python_m_pictova_demo(tmp_path):
     result = subprocess.run(
         [sys.executable, "-m", "pictovap.demo"], cwd=tmp_path, capture_output=True, text=True
