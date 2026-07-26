@@ -31,15 +31,16 @@ cd Pictovap
 python3 --version  # must be 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[test]"
+make install
+make contributor-smoke
 ```
 
-The `-e` flag installs Pictovap in editable mode and registers the `pictovap`
-CLI command; the `[test]` extra pulls in the test dependencies. For the full
-contributor gate, install all local checks instead:
+The `make install` target installs Pictovap in editable mode with the test,
+lint, and type-check dependencies, then `make contributor-smoke` verifies the
+installed CLI, credential-free demo, and anonymous feedback flow. Before
+opening a pull request, run the full contributor gate:
 
 ```bash
-pip install -e ".[test,lint,typecheck]"
 make contribution-check
 ```
 
@@ -59,10 +60,10 @@ mock candidates. No `.env` file, no credentials, no network calls.
 If you installed from source, you can also run the test suite:
 
 ```bash
-python3 -m pytest tests/unit -v
+make contribution-check
 ```
 
-Expected: all tests passed.
+Expected: all checks passed.
 
 ## Optional: Configure Real Sources and Adapters
 

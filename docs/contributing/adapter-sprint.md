@@ -64,9 +64,9 @@ git clone https://github.com/yoldaolmak/Pictovap.git
 cd Pictovap
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[test,lint,typecheck]"
-python -m pictovap --version
-pytest tests/unit -q
+make install
+make contributor-smoke
+make contribution-check
 ```
 
 Read [Writing Adapters](adapters.md) for in-tree contributions. To explore the
@@ -82,8 +82,8 @@ first successful loop before replacing the scaffold implementation:
 
 ```bash
 cd pictovap-example-source  # use the path printed by scaffold
-pip install -e ".[test]"
-pytest
+python -m pip install -e ".[test]"
+python -m pytest
 pictovap plugins --kind provider
 pictovap adapter check --kind provider --name example-source
 ```
@@ -96,8 +96,8 @@ For a concrete static-site CMS example, install and test the Hugo reference:
 
 ```bash
 cd examples/adapters/pictovap-hugo
-pip install -e ".[test]"
-pytest
+python -m pip install -e ".[test]"
+python -m pytest
 pictovap adapter check --kind cms --name hugo
 ```
 

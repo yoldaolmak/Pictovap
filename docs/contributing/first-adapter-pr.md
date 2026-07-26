@@ -40,7 +40,8 @@ Then copy the closest reference implementation:
 - A filesystem CMS adapter: `examples/adapters/custom_cms_adapter.py`
 
 Your pull request is ready when it includes an adapter, mocked tests, any
-needed documentation, and a passing `pytest tests/unit -q` run.
+needed documentation, and passing `make contributor-smoke` plus
+`make contribution-check` runs.
 
 ## Standalone plugin
 

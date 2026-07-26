@@ -9,6 +9,9 @@
 
 ### Changed
 
+* Contributor-facing setup docs, issue-copy templates, and the pull-request
+  checklist now point to the same `make install`, `make contributor-smoke`,
+  and `make contribution-check` path used by CI.
 * Demo sample JSON outputs now match the current credential-free CLI demo
   contract, including runtime provider metadata and normalized license values.
 * WordPress setup documentation now separates credential-free local planning
