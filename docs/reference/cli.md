@@ -72,8 +72,9 @@ pictovap feedback \
   --output output/feedback.json
 ```
 
-The summary is also printed to stdout so it can be pasted directly into an
-issue. Use it when you want to share diagnostics without sharing your article.
+The summary is also printed to stdout so it can be pasted directly into a
+[new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md).
+Use it when you want to share diagnostics without sharing your article.
 
 For GitHub issue comments, render the same anonymous summary as Markdown:
 

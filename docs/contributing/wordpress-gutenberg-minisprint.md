@@ -49,8 +49,8 @@ If local setup is friction, use the
 ## External Validation
 
 If you are not ready to open a PR, run Pictovap on a real non-sensitive article
-and paste a safe validation report into
-[issue #8](https://github.com/yoldaolmak/Pictovap/issues/8):
+and paste a safe validation report into a
+[new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md):
 
 ```bash
 python -m pip install pictovap==0.7.13

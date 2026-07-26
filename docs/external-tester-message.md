@@ -35,13 +35,16 @@ pictovap feedback --plan my-plan.json --format markdown
 **Then:**
 
 - Open `my-plan.json` and `my-plan.md`. Does the structure make sense?
-- Paste the anonymous `feedback` Markdown into the issue; it excludes article
+- Paste the anonymous `feedback` Markdown into a
+  [new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md);
+  it excludes article
   text, paths, URLs, and credentials while including safe Python and OS
   metadata.
 - Did the Visual Brief identify reasonable image slots for your article?
 - Did anything crash or produce confusing output?
 
-Please report the result in [issue #8](https://github.com/yoldaolmak/Pictovap/issues/8).
+Please report the result in a
+[new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md).
 Redact private article content; the generated feedback Markdown, command, and
 traceback (if any) are enough.
 
