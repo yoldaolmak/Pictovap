@@ -10,16 +10,15 @@ Real-world article formats vary widely. Testing with diverse input helps identif
 
 **Proposed approach:**
 Anyone who is willing can:
-1. Clone the repository and follow the Quickstart.
-2. Install the current release: `python -m pip install pictovap==0.7.12`
-3. Run: `pictovap plan --article path/to/your/article.md --output my-plan.json`
-4. If you want to share diagnostics without sharing your article, run:
+1. Install the current release: `python -m pip install --upgrade pictovap`
+2. Run: `pictovap plan --article path/to/your/article.md --output my-plan.json --report my-plan.md`
+3. Generate the safe report:
    `pictovap feedback --plan my-plan.json --format markdown`
-5. Inspect the JSON output and answer:
+4. Inspect the JSON and Markdown outputs and answer:
    - Did the demo run without errors?
    - Did the Visual Brief correctly identify sections and image slots?
    - Were the Fit Scores reasonable for your content type?
-   - Is the JSON output structure clear and useful?
+   - Is the report clear and useful for editorial review?
 
 **Acceptance criteria:**
 - At least one external person has tried the demo and reported results (success or failure).
