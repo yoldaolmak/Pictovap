@@ -25,7 +25,9 @@ If you find a bug, please open an [issue](https://github.com/yoldaolmak/Pictovap
 - A clear, descriptive title.
 - Steps to reproduce the behavior.
 - Expected behavior versus actual behavior.
-- Your OS and Python version.
+- The generated `pictovap feedback --format markdown` summary when a plan file
+  exists; it includes safe OS/Python metadata without article text, private
+  paths, image URLs, profile names, or credentials.
 
 ### 2. Suggesting Enhancements
 Have an idea that would make Pictovap better? Open a [discussion](https://github.com/yoldaolmak/Pictovap/discussions) describing:
