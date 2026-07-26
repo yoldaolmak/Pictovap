@@ -16,6 +16,9 @@
 
 ### Fixed
 
+* Root `.gitignore` no longer contains Markdown fence artifacts or the legacy
+  `src/pictova/data` exception, so packaged `src/pictovap/data` sample files
+  remain addable while Python caches stay ignored.
 * `python -m pictovap` now runs the public CLI entry point directly.
 
 ## [0.7.12] - 2026-07-23

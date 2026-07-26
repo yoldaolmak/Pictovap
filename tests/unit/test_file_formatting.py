@@ -12,6 +12,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 MINIMUM_LINES = {
+    ".gitignore": 40,
     "README.md": 40,
     "Makefile": 20,
     ".github/workflows/ci.yml": 40,
@@ -46,3 +47,14 @@ def test_public_file_not_collapsed(rel_path, minimum):
         f"{rel_path} appears collapsed or malformed: "
         f"{actual} lines, expected at least {minimum}"
     )
+
+
+def test_gitignore_packaged_data_exception_matches_current_package():
+    """The root ignore rules must not hide package data contributors need to add."""
+    text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
+
+    assert "```" not in text
+    assert "src/pictova/data" not in text
+    assert "!src/pictovap/data/" in text
+    assert "!src/pictovap/data/**" in text
+    assert ".pytest_cache/" in text
