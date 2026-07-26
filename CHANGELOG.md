@@ -9,6 +9,8 @@
 
 ### Changed
 
+* Demo sample JSON outputs now match the current credential-free CLI demo
+  contract, including runtime provider metadata and normalized license values.
 * WordPress setup documentation now separates credential-free local planning
   from live WordPress reads, media uploads, and post updates.
 
