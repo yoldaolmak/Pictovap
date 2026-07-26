@@ -67,3 +67,18 @@ def test_issue_copy_templates_use_current_contributor_gate():
     assert "make contributor-smoke" in text
     assert "make contribution-check" in text
     assert "pytest tests/unit -q" not in text
+
+
+def test_external_validation_docs_use_pypi_and_safe_feedback():
+    docs = [
+        ".github/ISSUE_TEMPLATE/external_validation.md",
+        "docs/adoption-playbook.md",
+        "docs/external-tester-message.md",
+        "docs/issues/02-try-your-own-article-feedback.md",
+    ]
+
+    for rel_path in docs:
+        text = (REPO_ROOT / rel_path).read_text(encoding="utf-8")
+        assert "python -m pip install --upgrade pictovap" in text, rel_path
+        assert "pictovap feedback --plan my-plan.json --format markdown" in text, rel_path
+        assert "pictovap==0.7.12" not in text, rel_path

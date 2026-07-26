@@ -11,6 +11,7 @@ Thank you for trying Pictovap with a real article or CMS workflow.
 Generate a safe summary:
 
 ```bash
+python -m pip install --upgrade pictovap
 pictovap plan --article path/to/article.md --output my-plan.json --report my-report.md
 pictovap feedback --plan my-plan.json --format markdown
 ```

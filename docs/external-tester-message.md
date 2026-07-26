@@ -18,7 +18,7 @@ I'd appreciate it if you could spend a few minutes trying the demo and letting m
 python3 --version  # Python 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install pictovap==0.7.12
+python -m pip install --upgrade pictovap
 pictovap demo
 ```
 
@@ -55,7 +55,7 @@ Pictovap needs external validation from content publishers and WordPress/Gutenbe
 
 If you have a non-sensitive Markdown article, please try:
 
-python -m pip install pictovap==0.7.12
+python -m pip install --upgrade pictovap
 pictovap plan --article path/to/article.md --output my-plan.json --report my-plan.md
 pictovap feedback --plan my-plan.json --format markdown
 

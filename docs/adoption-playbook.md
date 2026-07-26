@@ -16,55 +16,74 @@ Pictovap is an early-stage open-source infrastructure project. You are an ideal 
 ## 2. What You Can Test in 10 Minutes
 
 In just 10 minutes, without any credentials, you can:
-- Clone the repository and install it locally.
+- Install the current PyPI package.
 - Run the core pipeline (Visual Brief → Fit Score → Provenance Pack → CMS Placement).
 - Test how Pictovap evaluates images against a mock dataset.
 - Run a custom Markdown article through the engine.
+- Generate a safe Markdown validation report without sharing article text,
+  private paths, image URLs, or credentials.
 
 ## 3. Run the Default Demo
 
-Clone the repo, set up a virtual environment, and run the standard demo:
+Set up a virtual environment, install the current release from PyPI, and run
+the standard credential-free demo:
 
 ```bash
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
+python3 --version  # Python 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install .
+python -m pip install --upgrade pictovap
 
-make demo
+pictovap demo
 ```
 
-This runs the engine against `examples/articles/travel-guide.md` using deterministic scoring.
+This runs the engine against bundled sample content using deterministic mock
+image candidates. It does not read `.env`, call image APIs, or contact a CMS.
 
 ## 4. Try Your Own Markdown Article
 
 You can test Pictovap against your own content:
 
 ```bash
-pictovap plan --article path/to/your/article.md --profile examples/profiles/sample-publisher.yaml --output my-plan.json
+pictovap plan \
+  --article path/to/your/article.md \
+  --output my-plan.json \
+  --report my-plan.md
+pictovap feedback --plan my-plan.json --format markdown
 ```
 
-It will parse your article, identify sections, and evaluate mock candidates for placement.
+It will parse your article, identify sections, evaluate deterministic mock
+candidates for placement, write a JSON plan, write a Markdown editor report,
+and print a GitHub-ready validation summary.
 
 ## 5. Create a Publisher Profile
 
-Publisher profiles tell Pictovap about your site's tone and requirements. Try creating your own profile based on `examples/profiles/sample-publisher.yaml`. Copy the file, edit the tone rules, and pass it to the demo using the `--profile` flag.
+Publisher profiles tell Pictovap about your site's tone and requirements.
+For source checkouts, try creating your own profile based on
+`examples/profiles/sample-publisher.yaml`. Copy the file, edit the tone rules,
+and pass it to `pictovap plan` using the `--profile` flag.
 
-## 6. Review the Output JSON
+## 6. Review the Outputs
 
-Open the generated JSON (for example, `sample-output.json` in your current
-directory or your custom output). Look for the four primitives:
+Open the generated JSON plan and Markdown report. Look for the four primitives:
 - `visual_brief`: What the engine thinks your article needs.
 - `fit_scores`: How candidate images were ranked.
 - `provenance_packs`: The selected images and their audit trail.
 - `cms_placement`: The final placement instructions.
 
-## 7. Report a Useful Issue
+The feedback command prints only safe counts and runtime metadata. It excludes
+article text, private paths, image URLs, profile names, and credentials.
 
-If you encounter bugs or confusing outputs, please open an issue. Good issues include:
-- The `visual_brief` completely misunderstood my article structure.
-- The demo crashed when parsing a specific Markdown element.
+## 7. Report a Useful Validation Result
+
+Paste the generated feedback Markdown into
+[issue #8](https://github.com/yoldaolmak/Pictovap/issues/8). Good reports
+include success, confusing output, or failures:
+
+- The `visual_brief` matched or missed the article structure.
+- The report was or was not useful for editorial review.
+- The command crashed when parsing a specific Markdown element.
+- Your OS, Python version, and traceback if it failed.
 
 ## 8. Contribute a Sample Article/Profile
 
@@ -91,7 +110,8 @@ downstream package with its own release cadence.
 
 - The credential-free demo relies on mock assets and deterministic scoring, not live APIs.
 - Real API runs (with external model providers) require configuration not covered in this quick playbook.
-- We currently only offer a WordPress CMS adapter (reference implementation).
+- WordPress is the most production-hardened CMS path. Ghost, Strapi, and Hugo
+  reference paths exist, but broader downstream validation is still needed.
 - Pictovap does not claim broad downstream adoption yet. Six external PRs from
   five contributors have been merged; current adapter and Gutenberg issues are
   the most direct way to add another real contribution.

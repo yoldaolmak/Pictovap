@@ -9,6 +9,8 @@
 
 ### Changed
 
+* External validation docs now use a PyPI-first install path and the safe
+  Markdown feedback report, reducing friction for downstream usage reports.
 * Contributor-facing setup docs, issue-copy templates, and the pull-request
   checklist now point to the same `make install`, `make contributor-smoke`,
   and `make contribution-check` path used by CI.
