@@ -18,7 +18,7 @@ If anyone uses Pixabay and wants to wire this up, it's a very straightforward fi
 1. You can jump right into a pre-configured environment by clicking **Code -> Create codespace on main** (no local setup needed).
 2. Read the completed standalone reference in `examples/adapters/pictovap-pixabay/`.
 3. Add the in-tree provider at `src/pictovap/providers/pixabay.py`, including mocked success, empty-result, missing-key, and API-failure fixtures.
-4. Run `pytest tests/unit -q` and validate the success fixture with `pictovap.testing.assert_image_source_contract`.
+4. Run `make contributor-smoke` and `make contribution-check`; validate the success fixture with `pictovap.testing.assert_image_source_contract`.
 
 Drop a comment if you're picking this up or if you run into any API quirks!
 ```
@@ -39,7 +39,7 @@ If you're interested in connecting the Wikimedia API to the framework, this is r
 1. You can launch a ready-to-use dev environment by clicking **Code -> Create codespace on main** (it includes all dependencies and tests).
 2. Read the completed standalone reference in `examples/adapters/pictovap-wikimedia/`.
 3. Add the in-tree provider at `src/pictovap/providers/wikimedia.py`, preserving per-file license and attribution metadata and covering malformed items with mocked fixtures.
-4. Run `pytest tests/unit -q` and validate the success fixture with `pictovap.testing.assert_image_source_contract`. (Wikimedia does not require an API key.)
+4. Run `make contributor-smoke` and `make contribution-check`; validate the success fixture with `pictovap.testing.assert_image_source_contract`. (Wikimedia does not require an API key.)
 
 Feel free to claim this below. Happy to help if you need pointers on the adapter protocol!
 ```

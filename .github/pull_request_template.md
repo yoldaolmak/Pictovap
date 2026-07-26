@@ -17,6 +17,6 @@ Brief description of what this PR does.
 - [ ] My code follows the project's architectural boundaries
 - [ ] I have added tests that prove my fix/feature works
 - [ ] New adapters pass the relevant helper in `pictovap.testing`
-- [ ] New and existing unit tests pass locally with `pytest`
+- [ ] `make contributor-smoke` passes locally
+- [ ] `make contribution-check` passes locally, or I explain the exact local environment blocker below
 - [ ] I have updated documentation if needed
-- [ ] The local demo still works: `make demo`
