@@ -1,8 +1,12 @@
 # 🤝 Contributing to Pictovap
 
-First off, thank you for considering contributing to Pictovap! It's people like you that make open-source software such a powerful tool for the community.
+Pictovap is a visual-finishing framework for article publishers: it turns an
+article into image slots, scores candidate images, preserves provenance, and
+prepares CMS placement data.
 
-Whether you're fixing a typo, resolving a critical bug, or proposing a massive architectural improvement, your contribution is highly valued.
+The best first contributions are small fixtures, adapter contract checks, and
+editor-facing examples that make this workflow safer for WordPress/Gutenberg
+and other CMS integrations.
 
 > [!TIP]
 > The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) is the
@@ -21,12 +25,17 @@ Whether you're fixing a typo, resolving a critical bug, or proposing a massive a
 If you want to contribute without waiting for a claim confirmation, choose one
 of the `contribution: no-claim` issues and open a focused PR directly:
 
-- [#40 WordPress media-library upload response fixture](https://github.com/yoldaolmak/Pictovap/issues/40)
-- [#41 Gutenberg image-block insertion regression fixture](https://github.com/yoldaolmak/Pictovap/issues/41)
-- [#42 Editor-report example for WordPress image placement review](https://github.com/yoldaolmak/Pictovap/issues/42)
-- [#24 Realistic Gutenberg blocks fixture](https://github.com/yoldaolmak/Pictovap/issues/24)
-- [#26 WordPress planning behavior for posts without H2 headings](https://github.com/yoldaolmak/Pictovap/issues/26)
-- [#28 WordPress Gutenberg planning example profile and walkthrough](https://github.com/yoldaolmak/Pictovap/issues/28)
+| Issue | Best first contribution | Good fit |
+| --- | --- | --- |
+| [#41 Gutenberg image-block insertion regression fixture](https://github.com/yoldaolmak/Pictovap/issues/41) | One synthetic fixture proving heading-based image placement, alt text, captions, and idempotency | WordPress/Gutenberg tests |
+| [#40 WordPress media-library upload response fixture](https://github.com/yoldaolmak/Pictovap/issues/40) | Mocked media-library response preserving ID, URL, alt text, caption, and safe metadata | WordPress REST tests |
+| [#42 Editor-report example for WordPress image placement review](https://github.com/yoldaolmak/Pictovap/issues/42) | Copyable Markdown example showing what an editor reviews before CMS publishing | Docs/examples |
+| [#24 Realistic Gutenberg blocks fixture](https://github.com/yoldaolmak/Pictovap/issues/24) | A readable Gutenberg input fixture for VisualBrief regression coverage | Article parsing fixtures |
+| [#26 WordPress planning behavior for posts without H2 headings](https://github.com/yoldaolmak/Pictovap/issues/26) | Expected fallback behavior when an article has no clear section headings | Planning rules |
+| [#28 WordPress Gutenberg planning example profile and walkthrough](https://github.com/yoldaolmak/Pictovap/issues/28) | A realistic profile plus walkthrough for the WordPress planning path | Docs/profiles |
+
+See the live queue:
+[`contribution: no-claim`](https://github.com/yoldaolmak/Pictovap/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22contribution%3A%20no-claim%22).
 
 Start every PR with:
 
@@ -36,6 +45,11 @@ make contributor-smoke
 ```
 
 Run `make contribution-check` before opening the pull request.
+
+If local setup is slow, start from
+[GitHub Codespaces](https://codespaces.new/yoldaolmak/Pictovap). The
+development container installs the same test, lint, and type-check extras used
+by `make contribution-check`.
 
 ---
 

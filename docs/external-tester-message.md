@@ -64,7 +64,7 @@ pictovap plan --article path/to/article.md --output my-plan.json --report my-pla
 pictovap feedback --plan my-plan.json --format markdown
 
 Paste the generated safe summary here:
-https://github.com/yoldaolmak/Pictovap/issues/8
+https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md
 
 If you prefer a first PR, there are small WordPress/Gutenberg fixture and documentation issues:
 https://github.com/yoldaolmak/Pictovap/blob/main/docs/contributing/wordpress-gutenberg-minisprint.md

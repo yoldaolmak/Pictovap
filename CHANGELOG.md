@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed
+
+* Contributor entry docs now prioritize the current no-claim
+  WordPress/Gutenberg issues, link the live no-claim queue, and point
+  first-time contributors to Codespaces.
+* The reusable external tester message now sends validation reports to the
+  dedicated issue form instead of the legacy shared feedback thread.
+
 ## [0.7.14] - 2026-07-26
 
 ### Changed

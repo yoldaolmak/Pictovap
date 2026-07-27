@@ -83,3 +83,11 @@ def test_external_validation_docs_use_pypi_and_safe_feedback():
         assert "pictovap feedback --plan my-plan.json --format markdown" in text, rel_path
         assert "issues/new?template=external_validation.md" in text, rel_path
         assert "pictovap==0.7.12" not in text, rel_path
+
+
+def test_external_tester_message_uses_issue_form_not_legacy_thread():
+    text = (REPO_ROOT / "docs" / "external-tester-message.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "github.com/yoldaolmak/Pictovap/issues/8" not in text
