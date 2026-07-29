@@ -7,6 +7,8 @@
 * Contributor entry docs now prioritize the current no-claim
   WordPress/Gutenberg issues, link the live no-claim queue, and point
   first-time contributors to Codespaces.
+* New first-PR kits give contributors exact files, focused checks, PR-size
+  limits, and boundaries for the current WordPress/Gutenberg no-claim issues.
 * The reusable external tester message now sends validation reports to the
   dedicated issue form instead of the legacy shared feedback thread.
 

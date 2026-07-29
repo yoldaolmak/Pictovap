@@ -47,6 +47,7 @@ def test_contributor_docs_use_current_fast_gate():
     docs = [
         "CONTRIBUTING.md",
         "docs/contributing/adapter-sprint.md",
+        "docs/contributing/first-pr-kits.md",
         "docs/contributing/first-adapter-pr.md",
         "docs/contributing/wordpress-gutenberg-minisprint.md",
         "docs/guides/installation.md",
@@ -91,3 +92,16 @@ def test_external_tester_message_uses_issue_form_not_legacy_thread():
     )
 
     assert "github.com/yoldaolmak/Pictovap/issues/8" not in text
+
+
+def test_first_pr_kits_remain_small_and_actionable():
+    text = (REPO_ROOT / "docs" / "contributing" / "first-pr-kits.md").read_text(
+        encoding="utf-8"
+    )
+
+    for issue_number in ("#40", "#41", "#42"):
+        assert issue_number in text
+    assert "PR size:" in text
+    assert "Do not touch:" in text
+    assert ".venv/bin/python -m pytest --no-cov tests/unit/test_wordpress_input.py -q" in text
+    assert "make contribution-check" in text
