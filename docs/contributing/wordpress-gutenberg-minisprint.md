@@ -20,6 +20,9 @@ All three issues use the `contribution: no-claim` label. Fork the repository,
 make the smallest complete change, and open a PR directly. Do not reserve the
 issue with a comment.
 
+For exact file paths, focused test commands, expected PR size, and boundaries,
+use the [First PR Kits](first-pr-kits.md).
+
 ## First Local Loop
 
 Use Python 3.10 or newer:

@@ -37,6 +37,10 @@ of the `contribution: no-claim` issues and open a focused PR directly:
 See the live queue:
 [`contribution: no-claim`](https://github.com/yoldaolmak/Pictovap/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22contribution%3A%20no-claim%22).
 
+For the shortest copy-paste path, use
+[First PR Kits](docs/contributing/first-pr-kits.md). The kits name the exact
+files, focused test command, PR size, and boundaries for #40, #41, and #42.
+
 Start every PR with:
 
 ```bash
