@@ -162,6 +162,12 @@ For the shortest implementation path, see the
 [Framework Guide](docs/framework.md) and the runnable
 [external renderer package](examples/external-renderer-package/README.md).
 
+If you already use a Markdown-to-WordPress importer, AI draft plugin, media
+upload script, or CMS automation tool, Pictovap should sit before that publish
+step as the visual-finishing layer. See
+[Ecosystem Integrations](docs/ecosystem-integrations.md) and the
+[Markdown-to-WordPress pre-publish workflow](examples/workflows/markdown-to-wordpress-prepublish.md).
+
 ## Adapters
 
 Pictovap connects to the outside world only through adapters — the core

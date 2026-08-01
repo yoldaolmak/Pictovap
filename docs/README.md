@@ -14,6 +14,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 ## Navigation
 
 ### Guides
+
 - [Quickstart](quickstart.md) — Get up and running in 5 minutes
 - [WordPress Gutenberg Image Plans](tutorials/wordpress-automation.md) — Prepare and review visual plans without CMS writes
 - [Using Pictovap](guides/using-pictovap.md) — The full user journey from configure to publish
@@ -21,8 +22,10 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
 - [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos, Openverse, Pexels)
 - [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS
+- [Ecosystem Integrations](ecosystem-integrations.md) — Where Pictovap fits with Markdown-to-WordPress, AI draft, CMS, and media tools
 
 ### Reference
+
 - [CLI Reference](reference/cli.md) — Available commands and flags
 - [Configuration Reference](reference/configuration.md) — Every environment variable
 - [Publisher Profiles](reference/publisher-profiles.md) — The full profile schema
@@ -30,6 +33,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Framework Guide](framework.md) — Integrate an image source, CMS, or renderer
 
 ### Architecture
+
 - [Architecture](ARCHITECTURE.md) — Core primitives, adapter model, data flow
 - [Adapter Overview](adapters/overview.md) — Where image source and CMS adapters live
 - [Brand & Naming](architecture/naming.md) — Product name vs. package name
@@ -40,5 +44,6 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [WordPress Gutenberg Mini Sprint](contributing/wordpress-gutenberg-minisprint.md) — Small fixture, test, and report contributions around image placement
 - [Writing Adapters](contributing/adapters.md) — In-tree adapter contracts and checklists
 - [Building Adapter Plugins](contributing/plugins.md) — Scaffold, entry points, and contract tests
+- [Ecosystem Pull Requests](contributing/ecosystem-prs.md) — How to contribute to adjacent projects without link spam
 
 Pictovap currently has no graphical user interface. It is a CLI-first open-source core. The intended review surface is an editor-readable report, while CMS adapters consume the JSON plan.

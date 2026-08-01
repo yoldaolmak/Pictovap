@@ -107,7 +107,18 @@ These packages demonstrate entry-point discovery and the adapter conformance
 check without changing Pictovap core. Use them as a starting point for a
 downstream package with its own release cadence.
 
-## 11. Current Limitations
+## 11. Connect Pictovap to an Existing Publishing Tool
+
+If you already use a Markdown-to-WordPress importer, AI draft plugin, static
+site migration script, or media uploader, do not replace it. Run Pictovap before
+that tool to prepare a visual plan and editor report.
+
+See [Ecosystem Integrations](ecosystem-integrations.md) for the supported
+boundary and
+[Markdown to WordPress Pre-Publish Image Workflow](../examples/workflows/markdown-to-wordpress-prepublish.md)
+for a copyable sequence.
+
+## 12. Current Limitations
 
 - The credential-free demo relies on mock assets and deterministic scoring, not live APIs.
 - Real API runs (with external model providers) require configuration not covered in this quick playbook.
