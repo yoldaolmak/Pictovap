@@ -115,6 +115,21 @@ No `.env` file, no API keys, no network calls — every candidate and score
 above comes from deterministic mock data, on purpose. This is the demo's
 guarantee, not just its default state.
 
+## Want a 15-Minute First PR?
+
+If you want to contribute without learning the whole framework first, start
+with one of these no-claim issues. Each one is intentionally small, safe, and
+credential-free:
+
+| Issue | What you add | Validation |
+| --- | --- | --- |
+| [#65 Realistic article fixture](https://github.com/yoldaolmak/Pictovap/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | `make contributor-smoke` |
+| [#66 Editor-report terminology](https://github.com/yoldaolmak/Pictovap/issues/66) | Plain-English CMS/image-placement terms for non-technical editors | `make markdownlint` |
+| [#67 Negative provider fixture](https://github.com/yoldaolmak/Pictovap/issues/67) | One safe unusable-candidate fixture for adapter authors | focused provider/unit test |
+
+No claim comment is required for these. Open a focused PR directly and paste
+the validation command output in the PR body.
+
 ## Try Your Own Article
 
 ```bash
@@ -239,6 +254,10 @@ alias — see [Brand & Naming](docs/architecture/naming.md).
 
 After setup, run `make contributor-smoke` for the fastest check that the
 installed CLI, local demo, and anonymous feedback report all work.
+
+For the lowest-friction path, pick one of the
+[15-minute first PR issues](#want-a-15-minute-first-pr): #65, #66, or #67.
+They are designed for contributors who want a real but narrow first change.
 
 The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) has three
 claimable provider and CMS integrations with exact acceptance tests.

@@ -27,6 +27,9 @@ of the `contribution: no-claim` issues and open a focused PR directly:
 
 | Issue | Best first contribution | Good fit |
 | --- | --- | --- |
+| [#65 Realistic article fixture for image placement](https://github.com/yoldaolmak/Pictovap/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | Docs/fixtures |
+| [#66 Editor-report terminology for CMS image placement](https://github.com/yoldaolmak/Pictovap/issues/66) | Plain-English explanation of CMS/image-placement terms for editors | Docs |
+| [#67 Negative image-source adapter fixture](https://github.com/yoldaolmak/Pictovap/issues/67) | One safe unusable-candidate fixture for adapter authors | Adapter tests/fixtures |
 | [#41 Gutenberg image-block insertion regression fixture](https://github.com/yoldaolmak/Pictovap/issues/41) | One synthetic fixture proving heading-based image placement, alt text, captions, and idempotency | WordPress/Gutenberg tests |
 | [#40 WordPress media-library upload response fixture](https://github.com/yoldaolmak/Pictovap/issues/40) | Mocked media-library response preserving ID, URL, alt text, caption, and safe metadata | WordPress REST tests |
 | [#42 Editor-report example for WordPress image placement review](https://github.com/yoldaolmak/Pictovap/issues/42) | Copyable Markdown example showing what an editor reviews before CMS publishing | Docs/examples |
@@ -39,7 +42,8 @@ See the live queue:
 
 For the shortest copy-paste path, use
 [First PR Kits](docs/contributing/first-pr-kits.md). The kits name the exact
-files, focused test command, PR size, and boundaries for #40, #41, and #42.
+files, focused test command, PR size, and boundaries for the smallest no-claim
+issues.
 
 Start every PR with:
 

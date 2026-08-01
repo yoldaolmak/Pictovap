@@ -24,7 +24,132 @@ Before opening the PR, run:
 make contribution-check
 ```
 
-## Kit 1: WordPress media-library upload response fixture
+For the smallest possible first contribution, use Kits 1-3. They are designed
+to avoid framework internals, live services, and credentials.
+
+## Kit 1: Realistic article fixture for image placement
+
+Issue: [#65](https://github.com/yoldaolmak/Pictovap/issues/65)
+
+Goal: add one safe Markdown article fixture that creates realistic image
+placement decisions.
+
+Good PR shape:
+
+- PR size: about 30-80 lines.
+- Touch:
+  - `examples/articles/community-image-placement.md`
+  - optionally `examples/articles/README.md`
+- Do not touch:
+  - live CMS code
+  - provider adapters
+  - release files
+  - `.env`
+- Include:
+  - one title
+  - 3-5 `##` sections
+  - at least one section where the image choice needs article context, not only
+    the heading text
+
+Focused validation:
+
+```bash
+make contributor-smoke
+```
+
+Optional local plan check:
+
+```bash
+pictovap plan \
+  --article examples/articles/community-image-placement.md \
+  --profile examples/profiles/sample-publisher.yaml \
+  --output /tmp/community-plan.json \
+  --report /tmp/community-report.md
+```
+
+Acceptance:
+
+- The fixture is synthetic or original.
+- The fixture contains no private article text, private URLs, credentials, or
+  personal paths.
+- The fixture creates useful visual slots.
+
+## Kit 2: Editor-report terminology for CMS image placement
+
+Issue: [#66](https://github.com/yoldaolmak/Pictovap/issues/66)
+
+Goal: help non-technical editors understand the terms they see in a Pictovap
+editor report.
+
+Good PR shape:
+
+- PR size: about 20-60 lines.
+- Touch:
+  - `docs/guides/editor-report.md`
+  - or the closest existing editor-report guide if that file is not the right
+    location
+- Do not touch:
+  - Python code
+  - live publishing code
+  - release files
+- Explain terms such as:
+  - visual slot
+  - inline placement
+  - featured image
+  - alt text
+  - caption
+  - provenance
+  - attribution
+  - dry run
+
+Focused validation:
+
+```bash
+make markdownlint
+```
+
+Acceptance:
+
+- The text is English, practical, and editor-facing.
+- It does not use marketing language.
+- It does not imply that a real CMS was updated unless the example is clearly a
+  dry run.
+
+## Kit 3: Negative image-source adapter fixture
+
+Issue: [#67](https://github.com/yoldaolmak/Pictovap/issues/67)
+
+Goal: show how an adapter should handle an unusable candidate safely.
+
+Good PR shape:
+
+- PR size: about 20-70 lines.
+- Touch one small fixture or focused test, for example:
+  - `tests/fixtures/providers/unusable-candidate.json`
+  - an existing provider/adapter unit test
+- Do not touch:
+  - live provider clients
+  - credentials
+  - release files
+- Cover one unsafe or unusable candidate shape:
+  - missing license
+  - missing source URL
+  - missing attribution
+  - unsupported media type
+
+Focused validation:
+
+```bash
+python3 -m pytest --no-cov tests/unit -q
+```
+
+Acceptance:
+
+- No network calls.
+- No real API keys, tokens, private URLs, or personal paths.
+- The failure is explicit and safe.
+
+## Kit 4: WordPress media-library upload response fixture
 
 Issue: [#40](https://github.com/yoldaolmak/Pictovap/issues/40)
 
@@ -62,7 +187,7 @@ Acceptance:
 - No real WordPress host, username, token, media URL, or private path.
 - The test fails if media ID or source URL mapping regresses.
 
-## Kit 2: Gutenberg image-block insertion regression fixture
+## Kit 5: Gutenberg image-block insertion regression fixture
 
 Issue: [#41](https://github.com/yoldaolmak/Pictovap/issues/41)
 
@@ -104,7 +229,7 @@ Acceptance:
 - Placement is idempotent for one target heading.
 - No credentials or real WordPress requests are required.
 
-## Kit 3: Editor-report example for WordPress image placement review
+## Kit 6: Editor-report example for WordPress image placement review
 
 Issue: [#42](https://github.com/yoldaolmak/Pictovap/issues/42)
 
