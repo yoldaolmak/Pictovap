@@ -305,6 +305,47 @@ def test_adapter_check_prints_machine_readable_report(monkeypatch, capsys):
     assert json.loads(capsys.readouterr().out)["status"] == "passed"
 
 
+def test_ecosystem_explain_prints_supported_tool_kinds(capsys):
+    assert cli.main(["ecosystem", "explain"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert {"tool_kind": "markdown-to-wordpress", "label": "Markdown-to-WordPress importer"} in (
+        payload["tool_kinds"]
+    )
+
+
+def test_ecosystem_match_prints_machine_readable_packet(capsys):
+    assert cli.main([
+        "ecosystem", "match",
+        "--tool", "ai-draft",
+        "--project-name", "DraftPress",
+        "--repository-url", "https://github.com/example/draftpress",
+    ]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["tool_kind"] == "ai-draft"
+    assert payload["project_name"] == "DraftPress"
+    assert "DraftPress creates review-ready drafts" in payload["readme_section"]
+    assert payload["readme_section"].count("https://github.com/yoldaolmak/Pictovap") == 1
+
+
+def test_ecosystem_match_can_write_markdown_output(tmp_path, capsys):
+    output = tmp_path / "ecosystem.md"
+
+    assert cli.main([
+        "ecosystem", "match",
+        "--tool", "media-uploader",
+        "--project-name", "Media Push",
+        "--format", "markdown",
+        "--output", str(output),
+    ]) == 0
+
+    rendered = output.read_text(encoding="utf-8")
+    assert "# Pictovap Ecosystem Integration" in rendered
+    assert "Media Push uploads media" in rendered
+    assert capsys.readouterr().out == rendered
+
+
 def test_pictovap_plan_missing_article(tmp_path):
     output_json = tmp_path / "output.json"
     result = subprocess.run([

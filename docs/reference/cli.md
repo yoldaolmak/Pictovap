@@ -192,3 +192,37 @@ installing its dependencies.
 
 The command refuses to overwrite existing scaffold files. Pass `--force` only
 when intentionally refreshing files owned by the scaffold.
+
+### Generate an Ecosystem Integration Packet
+
+When contributing to an adjacent Markdown-to-WordPress, AI draft, media upload,
+Gutenberg, CMS automation, or static-site migration project, generate a
+target-specific packet instead of pasting a generic Pictovap link:
+
+```bash
+pictovap ecosystem match \
+  --tool markdown-to-wordpress \
+  --project-name md2wp \
+  --repository-url https://github.com/example/md2wp \
+  --format markdown \
+  --output pictovap-integration.md
+```
+
+The packet includes:
+
+- a README section for the target repository;
+- a pull-request body;
+- a safe workflow command list;
+- an anti-spam checklist.
+
+List supported tool kinds:
+
+```bash
+pictovap ecosystem explain --format markdown
+```
+
+The JSON form is machine-readable and suitable for automation:
+
+```bash
+pictovap ecosystem match --tool ai-draft --project-name DraftPress
+```

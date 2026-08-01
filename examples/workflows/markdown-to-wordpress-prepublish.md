@@ -70,3 +70,19 @@ Markdown authoring
 
 This keeps Pictovap focused on image intent, provenance, and placement
 reasoning while the importer remains responsible for WordPress transport.
+
+## Generate a PR Packet for an Importer
+
+If you maintain or contribute to a Markdown-to-WordPress importer, generate a
+copyable integration packet:
+
+```bash
+pictovap ecosystem match \
+  --tool markdown-to-wordpress \
+  --project-name "Your Importer" \
+  --format markdown \
+  --output pictovap-integration.md
+```
+
+Review the anti-spam checklist in the generated file before opening an
+ecosystem PR.

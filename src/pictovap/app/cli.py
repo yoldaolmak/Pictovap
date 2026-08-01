@@ -9,6 +9,7 @@ Commands matching the public library API:
     doctor  - validate installed plugins and selected adapter configuration
     publish - execute a visual plan through an installed CMS plugin
     feedback - create an anonymous validation summary from a plan
+    ecosystem - generate adjacent-project integration packets
 """
 
 from __future__ import annotations
@@ -29,12 +30,26 @@ from pictovap.app.runtime import (
 from pictovap.demo import generate_report_from_file, run_demo
 from pictovap.feedback import render_feedback_markdown, summarize_plan
 from pictovap.conformance import AdapterCheckError, check_adapter
+from pictovap.ecosystem import (
+    SUPPORTED_TOOL_KINDS,
+    build_ecosystem_match,
+    ecosystem_tool_kinds,
+    render_ecosystem_markdown,
+    render_supported_tool_kinds,
+)
 from pictovap.plugins import PluginError, iter_plugins
 from pictovap.scaffold import ScaffoldError, scaffold_adapter
 
 
 def _print_json(payload: Dict[str, Any]) -> None:
     print(json.dumps(payload, ensure_ascii=False, indent=2))
+
+
+def _write_text_or_print(rendered: str, output: str | None) -> None:
+    if output:
+        with open(output, "w", encoding="utf-8") as output_file:
+            output_file.write(rendered)
+    print(rendered, end="")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -129,6 +144,42 @@ def build_parser() -> argparse.ArgumentParser:
     scaffold.add_argument("name", help="Adapter name, for example wikimedia or hugo")
     scaffold.add_argument("--output", default=".", help="Parent directory for the generated package")
     scaffold.add_argument("--force", action="store_true", help="Overwrite scaffold-owned files")
+
+    ecosystem = sub.add_parser(
+        "ecosystem",
+        help="Generate integration guidance for adjacent publishing tools",
+    )
+    ecosystem_subcommands = ecosystem.add_subparsers(dest="ecosystem_command", required=True)
+    ecosystem_explain = ecosystem_subcommands.add_parser(
+        "explain",
+        help="List supported adjacent tool categories",
+    )
+    ecosystem_explain.add_argument(
+        "--format",
+        choices=("json", "markdown"),
+        default="json",
+        help="Output format",
+    )
+    ecosystem_explain.add_argument("--output", help="Optional path to write the rendered output")
+
+    ecosystem_match = ecosystem_subcommands.add_parser(
+        "match",
+        help="Create a reusable integration packet for an adjacent project",
+    )
+    ecosystem_match.add_argument(
+        "--tool",
+        required=True,
+        help=f"Adjacent tool kind or alias. Supported values: {', '.join(SUPPORTED_TOOL_KINDS)}",
+    )
+    ecosystem_match.add_argument("--project-name", default="This project")
+    ecosystem_match.add_argument("--repository-url")
+    ecosystem_match.add_argument(
+        "--format",
+        choices=("json", "markdown"),
+        default="json",
+        help="Output format",
+    )
+    ecosystem_match.add_argument("--output", help="Optional path to write the rendered output")
 
     return parser
 
@@ -268,6 +319,41 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 1
         print(root)
         return 0
+
+    if args.command == "ecosystem":
+        try:
+            if args.ecosystem_command == "explain":
+                payload = {"tool_kinds": ecosystem_tool_kinds()}
+                if args.format == "markdown":
+                    rendered = render_supported_tool_kinds(payload["tool_kinds"])
+                    _write_text_or_print(rendered, args.output)
+                    return 0
+                if args.output:
+                    with open(args.output, "w", encoding="utf-8") as output_file:
+                        json.dump(payload, output_file, ensure_ascii=False, indent=2)
+                        output_file.write("\n")
+                _print_json(payload)
+                return 0
+
+            if args.ecosystem_command == "match":
+                packet = build_ecosystem_match(
+                    tool_kind=args.tool,
+                    project_name=args.project_name,
+                    repository_url=args.repository_url,
+                )
+                if args.format == "markdown":
+                    rendered = render_ecosystem_markdown(packet)
+                    _write_text_or_print(rendered, args.output)
+                    return 0
+                if args.output:
+                    with open(args.output, "w", encoding="utf-8") as output_file:
+                        json.dump(packet, output_file, ensure_ascii=False, indent=2)
+                        output_file.write("\n")
+                _print_json(packet)
+                return 0
+        except (OSError, ValueError) as e:
+            print(f"Error creating ecosystem integration packet: {e}", file=sys.stderr)
+            return 1
 
     parser.error(f"unknown command: {args.command}")
     return 2

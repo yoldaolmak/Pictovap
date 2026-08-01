@@ -167,6 +167,15 @@ upload script, or CMS automation tool, Pictovap should sit before that publish
 step as the visual-finishing layer. See
 [Ecosystem Integrations](docs/ecosystem-integrations.md) and the
 [Markdown-to-WordPress pre-publish workflow](examples/workflows/markdown-to-wordpress-prepublish.md).
+To generate a copyable integration packet for an adjacent project:
+
+```bash
+pictovap ecosystem match \
+  --tool markdown-to-wordpress \
+  --project-name md2wp \
+  --format markdown \
+  --output pictovap-integration.md
+```
 
 ## Adapters
 

@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+* `pictovap ecosystem explain` and `pictovap ecosystem match` generate
+  copyable integration packets for adjacent Markdown-to-WordPress, AI draft,
+  media upload, Gutenberg, CMS automation, and static-site migration projects.
+* Ecosystem integration docs now include the supported boundary, external PR
+  checklist, and a Markdown-to-WordPress pre-publish workflow example.
+
 ### Changed
 
 * Contributor entry docs now prioritize the current no-claim

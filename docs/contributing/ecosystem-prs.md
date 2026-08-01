@@ -32,6 +32,22 @@ Good ecosystem PRs are small and concrete:
 Avoid large rewrites, unsolicited architecture changes, or PRs whose only
 change is a bare Pictovap link.
 
+## Generate the Draft Text
+
+Before opening an external PR, generate a target-specific packet:
+
+```bash
+pictovap ecosystem match \
+  --tool markdown-to-wordpress \
+  --project-name md2wp \
+  --repository-url https://github.com/example/md2wp \
+  --format markdown \
+  --output pictovap-integration.md
+```
+
+Use the generated README section and PR body as a starting point, then edit
+them for the target repository's exact language and scope.
+
 ## Natural Pictovap Positioning
 
 Use this shape when it fits the target project:

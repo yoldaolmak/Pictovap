@@ -28,6 +28,30 @@ Draft or Markdown article
 Pictovap produces reviewable artifacts before a live publishing tool writes to
 a site.
 
+## Generate an Integration Packet
+
+Use the CLI to create a target-specific integration packet before opening an
+external PR:
+
+```bash
+pictovap ecosystem match \
+  --tool markdown-to-wordpress \
+  --project-name md2wp \
+  --repository-url https://github.com/example/md2wp \
+  --format markdown \
+  --output pictovap-integration.md
+```
+
+The generated file contains a README section, PR body, workflow commands, and
+anti-spam checklist. This keeps ecosystem contributions useful to the target
+repository instead of turning them into link drops.
+
+Supported tool kinds:
+
+```bash
+pictovap ecosystem explain --format markdown
+```
+
 ## Compatible Project Types
 
 | Project type | What it usually owns | What Pictovap can add |
