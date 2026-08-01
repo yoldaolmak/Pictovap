@@ -29,6 +29,7 @@ from pictovap.core.primitives import (  # noqa: E402
     PlacementInstruction,
 )
 from pictovap.core.profile import PublisherProfile  # noqa: E402
+from pictovap.core.selection import select_assignments  # noqa: E402
 from pictovap.core.sources import fetch_candidates  # noqa: E402
 from pictovap.testing.contracts import assert_image_source_contract  # noqa: E402
 
@@ -98,6 +99,18 @@ MOCK_CANDIDATES = [
         "keywords": ["sunset", "mountains", "nature", "travel", "landscape"],
         "width": 2400,
         "height": 1600,
+    },
+    {
+        "id": "img-lake-06",
+        "filename": "quiet-lake.jpg",
+        "provider": "local",
+        "source_type": "local",
+        "local_path": "examples/assets/quiet-lake.jpg",
+        "license": "CC0",
+        "attribution": None,
+        "keywords": ["lake", "nature", "serenity", "travel", "landscape"],
+        "width": 1800,
+        "height": 1200,
     },
 ]
 
@@ -433,49 +446,50 @@ def _build_plan_output(
             icon = "v" if s.decision == "selected" else ("x" if s.decision == "rejected" else "?")
             print(f"    {icon} {s.candidate_id}: {s.final_score:.1f} ({s.decision}) -- {s.human_reason}")
 
-    # 4. Select best candidate per slot & build Provenance Packs
+    # 4. Select candidates globally & build Provenance Packs.  The selection
+    # engine prevents a strong candidate from being silently reused when a
+    # different eligible image can cover another editorial slot.
     print("\n[3/4] Provenance Packs")
     packs = []
-    selected_map = {}  # slot_id -> candidate
-    used_ids = set()
+    score_map = {slot["slot_id"]: scores for slot, scores in all_scores}
+    selection = select_assignments(score_map)
+    for warning in selection.warnings:
+        print(f"  Warning: {warning}")
 
-    for slot, slot_scores in all_scores:
-        for score in slot_scores:
-            if score.decision == "selected" and score.candidate_id not in used_ids:
-                cand = next(c for c in candidates if c["id"] == score.candidate_id)
-                used_ids.add(score.candidate_id)
-                selected_map[slot["slot_id"]] = cand
+    for slot, _slot_scores in all_scores:
+        score = selection.assignments.get(slot["slot_id"])
+        if score is not None:
+            cand = next(c for c in candidates if c["id"] == score.candidate_id)
 
-                content = f"{cand['id']}:{cand['filename']}"
-                chash = hashlib.sha256(content.encode()).hexdigest()[:16]
-                gen_name = f"pictovap_{cand['filename'].rsplit('.', 1)[0]}.webp"
+            content = f"{cand['id']}:{cand['filename']}"
+            chash = hashlib.sha256(content.encode()).hexdigest()[:16]
+            gen_name = f"pictovap_{cand['filename'].rsplit('.', 1)[0]}.webp"
 
-                from pictovap.core.demo_metadata import generate_local_alt_text, generate_local_caption
-                alt_text = generate_local_alt_text(cand, slot, language=brief.article_language)
-                caption = generate_local_caption(cand, slot, language=brief.article_language)
+            from pictovap.core.demo_metadata import generate_local_alt_text, generate_local_caption
+            alt_text = generate_local_alt_text(cand, slot, language=brief.article_language)
+            caption = generate_local_caption(cand, slot, language=brief.article_language)
 
-                pack = ProvenancePack(
-                    image_id=cand["id"],
-                    source_type=cand.get("source_type", "local"),
-                    provider=cand.get("provider", "local"),
-                    source_url=cand.get("source_url"),
-                    local_source_path=cand.get("local_path"),
-                    license_status=cand.get("license", "unknown"),
-                    attribution=cand.get("attribution"),
-                    original_filename=cand["filename"],
-                    generated_filename=gen_name,
-                    content_hash=chash,
-                    article_id=brief.article_id,
-                    slot_id=slot["slot_id"],
-                    placement_target=slot.get("purpose", ""),
-                    generated_alt_text=alt_text,
-                    generated_caption=caption,
-                    processing_actions=["resize_1200", "webp_convert", "exif_strip"],
-                )
-                packs.append(pack)
-                print(f"  {pack.slot_id}: {pack.original_filename} -> {pack.generated_filename}")
-                print(f"    Provider: {pack.provider}, License: {pack.license_status}, Hash: {pack.content_hash}")
-                break
+            pack = ProvenancePack(
+                image_id=cand["id"],
+                source_type=cand.get("source_type", "local"),
+                provider=cand.get("provider", "local"),
+                source_url=cand.get("source_url"),
+                local_source_path=cand.get("local_path"),
+                license_status=cand.get("license", "unknown"),
+                attribution=cand.get("attribution"),
+                original_filename=cand["filename"],
+                generated_filename=gen_name,
+                content_hash=chash,
+                article_id=brief.article_id,
+                slot_id=slot["slot_id"],
+                placement_target=slot.get("purpose", ""),
+                generated_alt_text=alt_text,
+                generated_caption=caption,
+                processing_actions=["resize_1200", "webp_convert", "exif_strip"],
+            )
+            packs.append(pack)
+            print(f"  {pack.slot_id}: {pack.original_filename} -> {pack.generated_filename}")
+            print(f"    Provider: {pack.provider}, License: {pack.license_status}, Hash: {pack.content_hash}")
 
     # 5. Build CMS Placement plan
     print("\n[4/4] CMS Placement Plan")
@@ -516,6 +530,7 @@ def _build_plan_output(
         "cms_placement": placement.to_dict(),
         "source_path": serialized_source,
         "candidates_evaluated": len(candidates),
+        "planning_diagnostics": selection.to_dict(),
         "profile": {
             "id": profile.profile_id,
             "brand": profile.brand_name,

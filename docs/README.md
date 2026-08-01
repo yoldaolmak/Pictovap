@@ -19,6 +19,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [WordPress Gutenberg Image Plans](tutorials/wordpress-automation.md) — Prepare and review visual plans without CMS writes
 - [Using Pictovap](guides/using-pictovap.md) — The full user journey from configure to publish
 - [Editor Report](guides/editor-report.md) — How humans review visual plans
+- [Selection Engine](concepts/selection-engine.md) — Global, explainable image assignment and coverage diagnostics
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
 - [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos, Openverse, Pexels)
 - [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS

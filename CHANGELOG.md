@@ -9,6 +9,9 @@
   media upload, Gutenberg, CMS automation, and static-site migration projects.
 * Ecosystem integration docs now include the supported boundary, external PR
   checklist, and a Markdown-to-WordPress pre-publish workflow example.
+* The core planner now exposes a deterministic maximum-weight assignment
+  engine through `SelectionPolicy`, `SelectionResult`, and
+  `select_assignments`.
 
 ### Changed
 
@@ -19,6 +22,17 @@
   limits, and boundaries for the current WordPress/Gutenberg no-claim issues.
 * The reusable external tester message now sends validation reports to the
   dedicated issue form instead of the legacy shared feedback thread.
+* Visual plans now select candidates globally, avoid accidental image reuse by
+  default, and include coverage, unfilled-slot, and policy diagnostics.
+
+## [0.8.0] - 2026-08-01
+
+### Added
+
+* A constraint-aware core selection engine maximizes total fit across all
+  editorial slots instead of making independent greedy choices.
+* Planning diagnostics make assignment quality machine-readable for editors,
+  adapters, and downstream validation tools.
 
 ## [0.7.14] - 2026-07-26
 

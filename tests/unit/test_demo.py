@@ -79,6 +79,8 @@ def test_sample_output_produced(tmp_path, monkeypatch):
     assert "fit_scores" in data, "Output must contain fit_scores"
     assert "provenance_packs" in data, "Output must contain provenance_packs"
     assert "cms_placement" in data, "Output must contain cms_placement"
+    assert data["planning_diagnostics"]["algorithm"] == "deterministic_maximum_weight_assignment"
+    assert data["planning_diagnostics"]["coverage_ratio"] == 1.0
     assert data["source_path"] == "sample-article.md"
     assert data["visual_brief"]["source_path"] == "sample-article.md"
 

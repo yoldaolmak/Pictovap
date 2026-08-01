@@ -70,6 +70,9 @@ Article Input → Visual Brief → Candidate Images → Fit Score
 - **Fit Score** — every candidate is scored against the brief with a
   transparent, deterministic reason attached (`selected`, `rejected`, or
   `needs_review`, plus why). No black-box relevance number.
+- **Global selection** — eligible images are assigned across the whole article
+  with a deterministic maximum-weight policy, preventing accidental reuse and
+  exposing incomplete coverage.
 - **Provenance Pack** — a persistent audit trail for every selected image:
   source, license status, attribution, a content hash, and the exact
   processing actions applied. This is what makes "where did this image come
