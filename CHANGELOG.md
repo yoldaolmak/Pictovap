@@ -4,6 +4,9 @@
 
 ### Added
 
+* Markdown Visual Brief parsing now preserves a safe, JSON-compatible YAML
+  frontmatter mapping for tags, categories, audience, location, and editorial
+  constraints.
 * `pictovap ecosystem explain` and `pictovap ecosystem match` generate
   copyable integration packets for adjacent Markdown-to-WordPress, AI draft,
   media upload, Gutenberg, CMS automation, and static-site migration projects.
@@ -24,6 +27,17 @@
   dedicated issue form instead of the legacy shared feedback thread.
 * Visual plans now select candidates globally, avoid accidental image reuse by
   default, and include coverage, unfilled-slot, and policy diagnostics.
+* Frontmatter context now participates in deterministic candidate relevance
+  scoring and appears in Markdown editor reports.
+
+## [0.9.0] - 2026-08-02
+
+### Added
+
+* Added a safe Markdown frontmatter contract for Visual Brief inputs.
+* Exposed JSON-safe `visual_brief.frontmatter` metadata in public plan output.
+* Added focused tests for valid, missing, malformed, and scoring-relevant
+  frontmatter.
 
 ## [0.8.0] - 2026-08-01
 

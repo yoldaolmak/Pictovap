@@ -27,6 +27,7 @@ from pictovap.core.primitives import (  # noqa: E402
     ProvenancePack,
     CMSPlacement,
     PlacementInstruction,
+    _metadata_text,
 )
 from pictovap.core.profile import PublisherProfile  # noqa: E402
 from pictovap.core.selection import select_assignments  # noqa: E402
@@ -124,8 +125,12 @@ def score_candidate(candidate: dict, slot: dict, brief: VisualBrief) -> FitScore
     slot_purpose = slot.get("purpose", "")
     target_heading = slot.get("target_heading", "")
 
-    # Contextual relevance: keyword overlap with article topic + title
-    topic_words = set((brief.topic + " " + brief.article_title).lower().split())
+    # Contextual relevance: keyword overlap with article context and metadata
+    metadata_context = _metadata_text(
+        brief.frontmatter,
+        "keywords", "tags", "categories", "category", "audience", "location",
+    )
+    topic_words = set((brief.topic + " " + brief.article_title + " " + metadata_context).lower().split())
     kw = set(k.lower() for k in candidate.get("keywords", []))
     overlap = len(topic_words & kw)
     contextual = min(overlap / max(len(topic_words), 1) * 5.0, 5.0)
@@ -222,6 +227,12 @@ def generate_markdown_report(output: dict) -> str:
     lines.append("## Visual Brief")
     lines.append(f"- **Detected sections:** {len(brief.get('sections', []))}")
     lines.append(f"- **Required image slots:** {len(brief.get('image_slots', []))}")
+    frontmatter = brief.get("frontmatter", {})
+    if frontmatter:
+        lines.append("- **Frontmatter context:**")
+        for key in sorted(frontmatter):
+            value = json.dumps(frontmatter[key], ensure_ascii=False, sort_keys=True)
+            lines.append(f"  - **{key}:** {value}")
     for slot in brief.get('image_slots', []):
         lines.append(f"- **Preferred image type per slot ({slot['slot_id']}):** {slot['preferred_type']}")
         if slot.get('section_excerpt'):
@@ -394,7 +405,6 @@ def _build_plan_output(
     serialized_source = source_label or brief.source_path or str(article_path or "article")
     brief.source_path = serialized_source
     brief.topic = brief.topic or brief.article_title
-    brief.detected_location = None
 
     # Override only if language_mode is override
     if profile and getattr(profile, "language_mode", "fallback") == "override" and profile.language:

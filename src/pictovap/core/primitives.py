@@ -18,6 +18,61 @@ from html.parser import HTMLParser
 import re
 from typing import Any, Dict, List, Optional
 
+import yaml
+
+
+def _json_safe(value: Any) -> Any:
+    """Convert YAML values to deterministic JSON-compatible values."""
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    return str(value)
+
+
+def _extract_frontmatter(text: str) -> tuple[dict[str, Any], str]:
+    """Read one leading YAML frontmatter block without changing plain Markdown.
+
+    Only a delimiter on the first line starts frontmatter. Invalid YAML and
+    non-mapping documents are ignored, leaving the original article intact.
+    """
+    lines = text.splitlines(keepends=True)
+    if not lines or lines[0].lstrip("\ufeff").strip() != "---":
+        return {}, text
+
+    closing_index = next(
+        (index for index, line in enumerate(lines[1:], start=1) if line.strip() in {"---", "..."}),
+        None,
+    )
+    if closing_index is None:
+        return {}, text
+
+    block = "".join(lines[1:closing_index])
+    try:
+        parsed = yaml.safe_load(block)
+    except yaml.YAMLError:
+        return {}, text
+    if not isinstance(parsed, dict):
+        return {}, text
+    body = "".join(lines[closing_index + 1:])
+    return _json_safe(parsed), body
+
+
+def _metadata_text(metadata: dict[str, Any], *keys: str) -> str:
+    """Flatten selected frontmatter fields for deterministic keyword scoring."""
+    values: list[str] = []
+    for key in keys:
+        value = metadata.get(key)
+        if isinstance(value, (list, tuple)):
+            values.extend(str(item) for item in value)
+        elif value is not None:
+            values.append(str(value))
+    return " ".join(values)
+
 
 class LicenseType(str, Enum):
     CC0 = "cc0"
@@ -78,6 +133,7 @@ class VisualBrief:
     editorial_notes: str = ""
     confidence: float = 0.0
     source_path: Optional[str] = None
+    frontmatter: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -92,6 +148,7 @@ class VisualBrief:
             "editorial_notes": self.editorial_notes,
             "confidence": self.confidence,
             "source_path": self.source_path,
+            "frontmatter": self.frontmatter,
         }
 
     @classmethod
@@ -103,14 +160,16 @@ class VisualBrief:
         """
         from pathlib import Path
         from pictovap.core.language import detect_language
-        text = Path(path).read_text(encoding="utf-8")
+        raw_text = Path(path).read_text(encoding="utf-8")
+        frontmatter, text = _extract_frontmatter(raw_text)
 
         # Call our deterministic language detector
-        lang = detect_language(text, fallback_lang=fallback_lang)
+        lang = detect_language(" ".join([_metadata_text(frontmatter, "title", "topic", "tags"), text]),
+                               fallback_lang=fallback_lang)
 
         lines = text.strip().split("\n")
 
-        title = ""
+        title = str(frontmatter.get("title", "")).strip()
         sections = []
         current_section = None
         for line in lines:
@@ -149,13 +208,28 @@ class VisualBrief:
         for sec in sections:
             sec.pop("lines", None)
 
+        topic = str(frontmatter.get("topic", frontmatter.get("subject", ""))).strip()
+        if not topic:
+            topic = title
+        location = frontmatter.get("location", frontmatter.get("detected_location"))
+        avoid = frontmatter.get("avoid_list", frontmatter.get("avoid", []))
+        if isinstance(avoid, str):
+            avoid = [avoid]
+        if not isinstance(avoid, list):
+            avoid = []
+        notes = frontmatter.get("editorial_notes", "")
         return cls(
             article_title=title,
             article_language=lang,
+            topic=topic,
+            detected_location=str(location).strip() if location is not None else None,
             sections=sections,
             image_slots=slots,
+            avoid_list=[str(item) for item in avoid],
+            editorial_notes=str(notes) if notes is not None else "",
             source_path=str(path),
             confidence=0.8,
+            frontmatter=frontmatter,
         )
 
     @classmethod

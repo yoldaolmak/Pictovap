@@ -23,6 +23,10 @@ A `VisualBrief` object contains:
   - `target_heading` — the section heading this slot serves
 - **Avoid List** — concepts or visual elements to reject based on editorial rules.
 - **Editorial Notes** — free-form guidance from the publisher profile.
+- **Frontmatter** — JSON-safe YAML metadata from the article's leading
+  `---` block. Common fields such as `tags`, `categories`, `audience`,
+  `location`, `avoid_list`, and `editorial_notes` are retained and can affect
+  deterministic image relevance scoring.
 - **Confidence** — how certain the parser is about the extracted brief (0.0–1.0).
 
 ## How It Is Built
@@ -33,7 +37,7 @@ Pictovap builds a `VisualBrief` using a deterministic rule-based parser:
 2. Detect language based on simple word-markers (e.g. Turkish vs. English). If markers are ambiguous, fall back to the publisher profile language.
 3. Generate one featured image slot from the title.
 4. Generate one inline slot per H2 section, extracting the section's first few sentences as `section_excerpt` context.
-5. Apply publisher profile editorial preferences and avoid lists.
+5. Apply frontmatter context and publisher profile editorial preferences and avoid lists.
 
 This parser does not call any AI API. It is pure Python, stateless, and testable. Language detection is deterministic and simple; future iterations might introduce more advanced NLP detection models if required.
 
@@ -45,7 +49,34 @@ print(brief.article_title)   # "The Future of Minimalist Travel"
 print(brief.article_language) # "en"
 print(len(brief.image_slots)) # 4 (featured + 3 section slots)
 print(brief.image_slots[1]["section_excerpt"]) # First few sentences context
+print(brief.frontmatter.get("tags", [])) # Metadata available to adapters and reports
 ```
+
+### Optional article frontmatter
+
+Pictovap reads a YAML mapping only when it is the first block in the Markdown
+file. Invalid YAML, a missing closing delimiter, or a non-mapping document is
+ignored safely and the article is parsed as ordinary Markdown.
+
+```markdown
+---
+title: A Weekend in Sinop
+tags: [coast, walking]
+categories: [travel]
+audience: first-time visitors
+location: Sinop
+avoid_list: [generic city skyline]
+---
+
+# A Weekend in Sinop
+
+## Coastline Walk
+```
+
+The parsed mapping is exposed as `brief.frontmatter` and in the
+`visual_brief.frontmatter` JSON output. Selected fields are also included in
+fit-score context so an image tagged `coast` can outrank a generic candidate
+for this brief.
 
 ## Where It Goes
 
