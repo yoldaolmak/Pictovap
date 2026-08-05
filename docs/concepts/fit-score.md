@@ -17,7 +17,7 @@ A `FitScore` evaluates:
 | `contextual_relevance` | Keyword overlap with article topic and title |
 | `section_relevance` | Keyword overlap with the target section heading |
 | `technical_quality` | Resolution and aspect ratio suitability |
-| `duplication_risk` | Whether the image has been used recently in other articles |
+| `duplication_risk` | A duplication signal carried by a scorer; global near-duplicate avoidance is reported by the selection diagnostics |
 | `source_trust` | Preference for owned photography over stock |
 | `license_confidence` | Whether the image is confirmed safe to use commercially |
 | `cms_suitability` | Whether it fits required dimensions for the CMS theme |

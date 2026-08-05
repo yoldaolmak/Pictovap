@@ -56,3 +56,25 @@ def test_below_threshold_candidates_require_review():
 
     assert result.slots_filled == 0
     assert result.unfilled_slots == ("featured",)
+
+
+def test_visual_similarity_penalty_prefers_distinct_candidate():
+    scores = {
+        "featured": [
+            _score("featured", "hero", 10), _score("featured", "duplicate", 9), _score("featured", "distinct", 8)
+        ],
+        "section_0": [
+            _score("section_0", "hero", 10), _score("section_0", "duplicate", 9), _score("section_0", "distinct", 8)
+        ],
+    }
+    fingerprints = {
+        "hero": "ah4:ffff:cff0000",
+        "duplicate": "ah4:ffff:cff0000",
+        "distinct": "ah4:0000:c0000ff",
+    }
+
+    result = select_assignments(scores, candidate_fingerprints=fingerprints)
+
+    assert set(score.candidate_id for score in result.assignments.values()) == {"hero", "distinct"}
+    assert result.diversity_penalty == 0
+    assert result.to_dict()["adjusted_total_score"] == result.total_score

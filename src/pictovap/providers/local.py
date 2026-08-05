@@ -54,6 +54,13 @@ def _read_image_metadata(path: Path) -> dict[str, Any]:
         return {"width": 0, "height": 0}
 
 
+def _visual_fingerprint(path: Path) -> str | None:
+    """Compute an optional local-only diversity signal without failing search."""
+    from pictovap.core.visual_similarity import compute_visual_fingerprint
+
+    return compute_visual_fingerprint(path)
+
+
 class LocalFolderSource:
     """Image source adapter that lists files from a local directory."""
 
@@ -98,6 +105,9 @@ class LocalFolderSource:
             }
             if "exif" in meta:
                 candidate["exif"] = meta["exif"]
+            fingerprint = _visual_fingerprint(path)
+            if fingerprint is not None:
+                candidate["visual_fingerprint"] = fingerprint
             candidates.append(candidate)
             if len(candidates) >= count:
                 break

@@ -12,7 +12,7 @@ def test_runtime_dependencies_are_minimal_and_security_fixed():
     runtime = {requirement.lower() for requirement in declared if "extra ==" not in requirement}
 
     assert runtime == {
-        "pillow>=12.3.0",
+        "pillow>=10.4.0",
         "pyyaml>=6.0.2",
-        "requests>=2.33.0",
+        "requests>=2.32.3",
     }

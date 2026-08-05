@@ -19,6 +19,9 @@ The default policy:
 - uses each candidate at most once;
 - keeps unfilled slots visible instead of silently reusing an image;
 - reports coverage and warnings in `planning_diagnostics`.
+- applies an optional perceptual-similarity penalty when candidates provide a
+  `visual_fingerprint`, so an article does not quietly receive several near-
+  duplicate images.
 
 ## Diagnostics
 
@@ -31,6 +34,8 @@ Every generated plan contains a `planning_diagnostics` object:
   "slots_filled": 3,
   "coverage_ratio": 1.0,
   "total_score": 28.4,
+  "adjusted_total_score": 27.1,
+  "diversity_penalty": 1.3,
   "unfilled_slots": [],
   "warnings": []
 }
@@ -51,6 +56,23 @@ result = select_assignments(scores_by_slot)
 if result.coverage_ratio < 1.0:
     raise RuntimeError("The article needs editorial image review")
 ```
+
+Adapters that already have local image files can expose fingerprints and let
+the engine account for visual variety:
+
+```python
+from pictovap import compute_visual_fingerprint, select_assignments
+
+fingerprints = {
+    candidate["id"]: compute_visual_fingerprint(candidate["local_path"])
+    for candidate in candidates
+    if candidate.get("local_path")
+}
+result = select_assignments(scores_by_slot, candidate_fingerprints=fingerprints)
+```
+
+Missing or invalid fingerprints are ignored. Pictovap never fetches a remote
+image merely to calculate similarity.
 
 For a deliberately small candidate pool, an integration can opt into reuse:
 

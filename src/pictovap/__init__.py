@@ -7,7 +7,7 @@ publish images across various CMS platforms.
 
 from typing import TYPE_CHECKING, Any
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 if TYPE_CHECKING:
     from .api import create_visual_plan as create_visual_plan
@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 # Adapter contracts
 from .core.adapters import ImageSourceAdapter, CMSAdapter, ReportRenderer
 from .core.selection import SelectionPolicy, SelectionResult, select_assignments
+from .core.visual_similarity import compute_visual_fingerprint, visual_similarity
 from .renderers import HTMLReportRenderer, MarkdownReportRenderer
 
 # Vision template system
@@ -48,6 +49,8 @@ __all__ = [
     "SelectionPolicy",
     "SelectionResult",
     "select_assignments",
+    "compute_visual_fingerprint",
+    "visual_similarity",
     "HTMLReportRenderer",
     "MarkdownReportRenderer",
     "VisionTemplate",

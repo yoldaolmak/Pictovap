@@ -19,6 +19,8 @@ not change without a deprecation notice and migration guidance.
 | `pictovap.api` | `create_visual_plan()` and `create_wordpress_visual_plan()` keyword arguments and their JSON-shaped visual-plan output. |
 | `pictovap` | The same two planning functions and the adapter protocols re-exported from the package root. |
 | `pictovap.core.adapters` | `ImageSourceAdapter`, `CMSAdapter`, and `ReportRenderer`, including their documented method signatures. |
+| `pictovap.core.selection` | `SelectionPolicy`, `SelectionResult`, and `select_assignments()`, including optional candidate fingerprints and additive diversity diagnostics. |
+| `pictovap.core.visual_similarity` | `compute_visual_fingerprint()` and `visual_similarity()` for deterministic, local-only editorial diversity signals. |
 | Adapter data | The required candidate fields, CMS placement-result fields, and validation helpers published by `pictovap.testing`. |
 | CMS plan types | `CMSPlacement` and `PlacementInstruction` serialization used by `CMSAdapter.place()`. |
 | Publisher Profile v1 | `PublisherProfile`, `from_mapping()`, `from_yaml()`, and `publisher-profile-v1.schema.json`. |

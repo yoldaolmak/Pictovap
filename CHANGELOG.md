@@ -2,6 +2,30 @@
 
 ## [Unreleased]
 
+No changes yet.
+
+## [0.10.0] - 2026-08-05
+
+### Added
+
+* Added deterministic perceptual fingerprints for local images and an
+  optional `visual_fingerprint` adapter field.
+* Added diversity-aware global assignment: near-duplicate candidates can be
+  penalized during selection without downloading remote assets.
+
+### Changed
+
+* Planning diagnostics now expose `adjusted_total_score` and
+  `diversity_penalty`, making the editorial variety trade-off auditable.
+* The local image source computes fingerprints opportunistically and remains
+  fully compatible with adapters that do not provide one.
+* Corrected the requests lower bound so a clean PyPI/wheel installation can
+  resolve the published dependency set.
+* Corrected the Pillow lower bound to the installable runtime baseline used by
+  the image fingerprint implementation.
+
+## [0.9.0] - 2026-08-02
+
 ### Added
 
 * Markdown Visual Brief parsing now preserves a safe, JSON-compatible YAML
@@ -29,15 +53,6 @@
   default, and include coverage, unfilled-slot, and policy diagnostics.
 * Frontmatter context now participates in deterministic candidate relevance
   scoring and appears in Markdown editor reports.
-
-## [0.9.0] - 2026-08-02
-
-### Added
-
-* Added a safe Markdown frontmatter contract for Visual Brief inputs.
-* Exposed JSON-safe `visual_brief.frontmatter` metadata in public plan output.
-* Added focused tests for valid, missing, malformed, and scoring-relevant
-  frontmatter.
 
 ## [0.8.0] - 2026-08-01
 

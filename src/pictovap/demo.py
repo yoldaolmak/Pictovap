@@ -31,6 +31,7 @@ from pictovap.core.primitives import (  # noqa: E402
 )
 from pictovap.core.profile import PublisherProfile  # noqa: E402
 from pictovap.core.selection import select_assignments  # noqa: E402
+from pictovap.core.visual_similarity import collect_candidate_fingerprints  # noqa: E402
 from pictovap.core.sources import fetch_candidates  # noqa: E402
 from pictovap.testing.contracts import assert_image_source_contract  # noqa: E402
 
@@ -462,7 +463,8 @@ def _build_plan_output(
     print("\n[3/4] Provenance Packs")
     packs = []
     score_map = {slot["slot_id"]: scores for slot, scores in all_scores}
-    selection = select_assignments(score_map)
+    candidate_fingerprints = collect_candidate_fingerprints(candidates)
+    selection = select_assignments(score_map, candidate_fingerprints=candidate_fingerprints)
     for warning in selection.warnings:
         print(f"  Warning: {warning}")
 

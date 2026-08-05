@@ -42,6 +42,12 @@ class ImageSourceAdapter(Protocol):
             id, filename, provider, source_type ("local" | "api" | "url"),
             local_path (str | None), source_url (str | None), license,
             attribution (str | None), keywords (list[str]), width, height
+
+        ``visual_fingerprint`` is optional. When supplied, it must be a
+        fingerprint produced by ``pictovap.compute_visual_fingerprint`` (or a
+        compatible deterministic implementation). It enables the global
+        selection engine to avoid near-duplicate images without downloading
+        remote assets.
         """
         ...
 
