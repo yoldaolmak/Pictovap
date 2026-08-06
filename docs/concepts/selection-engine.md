@@ -36,6 +36,9 @@ Every generated plan contains a `planning_diagnostics` object:
   "total_score": 28.4,
   "adjusted_total_score": 27.1,
   "diversity_penalty": 1.3,
+  "similarity_pairs": [
+    {"left_candidate_id": "img-1", "right_candidate_id": "img-2", "similarity": 0.98, "penalty": 1.3}
+  ],
   "unfilled_slots": [],
   "warnings": []
 }

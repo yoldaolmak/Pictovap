@@ -39,6 +39,7 @@ class SelectionResult:
     policy: SelectionPolicy
     warnings: tuple[str, ...] = ()
     diversity_penalty: float = 0.0
+    similarity_pairs: tuple[Mapping[str, Any], ...] = ()
 
     @property
     def coverage_ratio(self) -> float:
@@ -62,6 +63,7 @@ class SelectionResult:
             "total_score": round(self.total_score, 2),
             "adjusted_total_score": round(self.total_score - self.diversity_penalty, 2),
             "diversity_penalty": round(self.diversity_penalty, 2),
+            "similarity_pairs": [dict(pair) for pair in self.similarity_pairs],
             "unfilled_slots": list(self.unfilled_slots),
             "warnings": list(self.warnings),
         }
@@ -97,12 +99,12 @@ def _pair_penalty(
     return round(penalty, 4)
 
 
-def _selected_diversity_penalty(
+def _selected_similarity_pairs(
     selected_ids: list[str],
     fingerprints: Mapping[str, str],
     policy: SelectionPolicy,
-) -> float:
-    penalty = 0.0
+) -> tuple[Mapping[str, Any], ...]:
+    pairs: list[Mapping[str, Any]] = []
     for index, left_id in enumerate(selected_ids):
         for right_id in selected_ids[index + 1:]:
             similarity = visual_similarity(fingerprints.get(left_id), fingerprints.get(right_id))
@@ -110,8 +112,13 @@ def _selected_diversity_penalty(
                 scale = (similarity - policy.similarity_threshold) / max(
                     1.0 - policy.similarity_threshold, 0.0001
                 )
-                penalty += policy.similarity_penalty * scale
-    return round(penalty, 4)
+                pairs.append({
+                    "left_candidate_id": left_id,
+                    "right_candidate_id": right_id,
+                    "similarity": similarity,
+                    "penalty": round(policy.similarity_penalty * scale, 4),
+                })
+    return tuple(pairs)
 
 
 def select_assignments(
@@ -219,9 +226,10 @@ def select_assignments(
         warnings.append(f"{len(unfilled)} editorial slot(s) have no eligible unique candidate")
     if not policy.allow_candidate_reuse and len(candidate_ids) < len(slot_ids):
         warnings.append("Candidate pool is smaller than the requested slot count")
-    diversity_penalty = _selected_diversity_penalty(
+    similarity_pairs = _selected_similarity_pairs(
         [score.candidate_id for score in assignments.values()], fingerprints, policy
     )
+    diversity_penalty = round(sum(float(pair["penalty"]) for pair in similarity_pairs), 4)
     if diversity_penalty:
         warnings.append("Selected images include visually similar candidates; review variety before publishing")
     return SelectionResult(
@@ -233,6 +241,7 @@ def select_assignments(
         policy=policy,
         warnings=tuple(warnings),
         diversity_penalty=diversity_penalty,
+        similarity_pairs=similarity_pairs,
     )
 
 

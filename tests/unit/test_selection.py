@@ -78,3 +78,20 @@ def test_visual_similarity_penalty_prefers_distinct_candidate():
     assert set(score.candidate_id for score in result.assignments.values()) == {"hero", "distinct"}
     assert result.diversity_penalty == 0
     assert result.to_dict()["adjusted_total_score"] == result.total_score
+
+
+def test_similarity_pairs_are_explained_in_diagnostics():
+    scores = {
+        "featured": [_score("featured", "hero", 10)],
+        "section_0": [_score("section_0", "detail", 9)],
+    }
+    fingerprints = {"hero": "ah4:ffff:cff0000", "detail": "ah4:ffff:cff0000"}
+
+    result = select_assignments(scores, candidate_fingerprints=fingerprints)
+
+    assert {
+        result.similarity_pairs[0]["left_candidate_id"],
+        result.similarity_pairs[0]["right_candidate_id"],
+    } == {"hero", "detail"}
+    assert result.similarity_pairs[0]["similarity"] == 1.0
+    assert result.to_dict()["similarity_pairs"] == list(result.similarity_pairs)

@@ -4,6 +4,13 @@
 
 No changes yet.
 
+## [0.10.1] - 2026-08-06
+
+### Added
+
+* Selection diagnostics now list the candidate pairs that crossed the visual
+  similarity threshold, including their similarity ratio and applied penalty.
+
 ## [0.10.0] - 2026-08-05
 
 ### Added
