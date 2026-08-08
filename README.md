@@ -147,6 +147,16 @@ pictovap plan \
 automation. `my-report.md` is the same plan, rendered for a human editor to
 review before anything gets published.
 
+Validate the hand-off locally or in adapter CI before a CMS is involved:
+
+```bash
+pictovap validate --plan my-plan.json
+```
+
+The validator is side-effect-free: it does not contact providers, read
+credentials, write files, or call a CMS. Add `--strict` when audit gaps such as
+missing planning diagnostics should fail the check.
+
 If you try Pictovap with a real non-sensitive article, please report whether
 the slots, scores, and report matched your editorial intent in a
 [new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md).

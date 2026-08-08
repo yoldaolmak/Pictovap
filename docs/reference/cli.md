@@ -103,6 +103,18 @@ field validation explicitly:
 pictovap adapter check --kind provider --name local --exercise --count 3
 ```
 
+## Validate a visual plan
+
+Validate a serialized plan without network access, credentials, or a live CMS:
+
+```console
+pictovap validate --plan output/visual-plan.json
+```
+
+Use `--strict` when CI should reject recommended audit gaps as well as broken
+core fields. The JSON result includes check-level status, structured error
+codes, warnings, and a summary count.
+
 The JSON report names each check and distinguishes `passed`, `not_run`, and
 `not_applicable`; it never prints option values.
 

@@ -121,6 +121,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output format for the anonymous summary",
     )
 
+    validate = sub.add_parser(
+        "validate", help="Validate a serialized visual plan without network or CMS access"
+    )
+    validate.add_argument("--plan", required=True, help="Path to visual-plan.json")
+    validate.add_argument(
+        "--strict",
+        action="store_true",
+        help="Treat recommended consistency warnings as validation failures",
+    )
+
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
 
@@ -280,6 +290,19 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
             print(f"Error creating feedback summary: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "validate":
+        try:
+            with open(args.plan, encoding="utf-8") as plan_file:
+                plan_payload = json.load(plan_file)
+            from pictovap.validation import validate_visual_plan
+
+            result = validate_visual_plan(plan_payload, strict=args.strict)
+            _print_json(result)
+            return 0 if result["status"] == "passed" else 1
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
+            print(f"Error validating plan: {e}", file=sys.stderr)
             return 1
 
     if args.command == "plugins":

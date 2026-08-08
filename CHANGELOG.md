@@ -4,6 +4,16 @@
 
 No changes yet.
 
+## [0.11.0] - 2026-08-08
+
+### Added
+
+* Added the public `validate_visual_plan()` API for checking serialized plans
+  without network access, credentials, or a live CMS.
+* Added `pictovap validate --plan` with machine-readable contract results for
+  adapter CI and external integrations. `--strict` promotes recommended
+  consistency warnings to failures.
+
 ## [0.10.1] - 2026-08-06
 
 ### Added
