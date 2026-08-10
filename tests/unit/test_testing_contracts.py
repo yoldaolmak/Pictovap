@@ -8,6 +8,7 @@ from pictovap.testing import (
     ContractViolation,
     assert_cms_adapter_contract,
     assert_image_source_contract,
+    sample_candidate,
     sample_placement,
     validate_candidates,
     validate_placement_result,
@@ -92,6 +93,13 @@ def test_sample_placement_is_minimal_but_complete():
     placement = sample_placement()
     assert placement.article_id == "contract-test"
     assert placement.placements[0].slot_id == "featured"
+
+
+def test_sample_candidate_is_a_complete_json_safe_fixture():
+    candidate = sample_candidate("fixture-image")
+    validate_candidates([candidate])
+    assert candidate["id"] == "fixture-image"
+    assert candidate["source_url"].endswith("contract-test.webp")
 
 
 @pytest.mark.parametrize("field", ["placed", "failed", "warnings"])

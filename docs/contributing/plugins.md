@@ -36,10 +36,10 @@ cd adapters/pictovap-hugo
 ```
 
 The generated project includes a `src/` package, entry-point metadata, a
-contract test, a README, and an isolated `.gitignore`. Existing scaffold files
-are never overwritten unless `--force` is passed. Package metadata defaults to
-MIT, matching Pictovap; change it before publishing if the plugin uses another
-OSI-approved license.
+contract test, a README, a Makefile, a GitHub Actions test workflow, and an
+isolated `.gitignore`. Existing scaffold files are never overwritten unless
+`--force` is passed. Package metadata defaults to MIT, matching Pictovap;
+change it before publishing if the plugin uses another OSI-approved license.
 
 ## Entry-Point Groups
 
@@ -137,7 +137,11 @@ in `pictovap.testing`:
 
 ```python
 from pictovap_wikimedia import WikimediaSource
-from pictovap.testing import assert_image_source_contract
+from pictovap.testing import assert_image_source_contract, sample_candidate, validate_candidates
+
+
+def test_candidate_fixture_documents_the_required_shape():
+    validate_candidates([sample_candidate()])
 
 
 def test_contract(fake_client):
@@ -162,14 +166,15 @@ def test_contract(tmp_path):
 
 The caller must mock network and filesystem effects. The helpers validate the
 runtime protocol, candidate field types, result shape, and requested candidate
-limit. They do not make external requests themselves.
+limit. `sample_candidate()` provides a complete synthetic response while the
+provider mapper is being built. They do not make external requests themselves.
 
 ## Release Checklist
 
 - Keep credentials in environment variables or explicit constructor arguments.
 - Mock all provider and CMS calls in tests.
 - Run the contract helper against both success and failure fixtures.
-- Declare `pictovap>=0.7.8` in the plugin package so the published contract
+- Declare `pictovap>=0.11.0` in the plugin package so the published contract
   helpers and runtime are available to downstream users.
 - Verify `doctor`, a real provider-backed `plan`, and CMS `publish --dry-run`.
 - Use a unique entry-point name and a `pictovap-<adapter>` distribution name.

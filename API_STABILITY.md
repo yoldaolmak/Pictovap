@@ -23,6 +23,7 @@ not change without a deprecation notice and migration guidance.
 | `pictovap.core.visual_similarity` | `compute_visual_fingerprint()` and `visual_similarity()` for deterministic, local-only editorial diversity signals. |
 | `pictovap.validation` | `validate_visual_plan()` for side-effect-free validation of serialized plans in CI and external integrations. |
 | Adapter data | The required candidate fields, CMS placement-result fields, and validation helpers published by `pictovap.testing`. |
+| `pictovap.testing.sample_candidate()` | A deterministic, JSON-safe candidate fixture for provider adapter tests. |
 | CMS plan types | `CMSPlacement` and `PlacementInstruction` serialization used by `CMSAdapter.place()`. |
 | Publisher Profile v1 | `PublisherProfile`, `from_mapping()`, `from_yaml()`, and `publisher-profile-v1.schema.json`. |
 | Plugin entry points | `pictovap.image_sources`, `pictovap.cms`, and `pictovap.report_renderers`. |

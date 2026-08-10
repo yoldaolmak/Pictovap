@@ -21,16 +21,20 @@ def test_scaffold_generates_installable_src_layout(tmp_path, kind, group, class_
     pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
     source = next((root / "src").glob("*/__init__.py")).read_text(encoding="utf-8")
     assert group in pyproject
-    assert "pictovap>=0.7.8" in pyproject
+    assert "pictovap>=0.11.0" in pyproject
     assert class_name in source
     assert "__test__ = False" in source
     if kind == "provider":
         assert "def search_candidates(\n" in source
     assert (root / "tests/test_adapter.py").exists()
+    assert (root / "Makefile").exists()
+    assert (root / ".github/workflows/ci.yml").exists()
     assert (root / "README.md").exists()
     contributing = (root / "CONTRIBUTING.md").read_text(encoding="utf-8")
     assert "First successful loop" in contributing
     assert "Definition of done" in contributing
+    if kind == "provider":
+        assert "sample_candidate" in (root / "tests/test_adapter.py").read_text(encoding="utf-8")
 
 
 def test_scaffold_refuses_to_overwrite_owned_files(tmp_path):

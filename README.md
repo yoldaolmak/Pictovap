@@ -224,8 +224,9 @@ Writing a new adapter means implementing one method (`search_candidates` or
 
 Third-party adapters can ship as independent Python packages. Generate a
 working package with `pictovap scaffold provider <name>` or
-`pictovap scaffold cms <name>`, validate it with `pictovap.testing`, and expose
-it through a standard Python entry point. See
+`pictovap scaffold cms <name>`. The generated package includes a contract
+fixture, Makefile, and minimal GitHub Actions workflow; validate it with
+`pictovap.testing` and expose it through a standard Python entry point. See
 [Building Adapter Plugins](docs/contributing/plugins.md).
 
 An installed plugin is a first-class runtime component, not only a discovered

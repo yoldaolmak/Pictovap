@@ -113,6 +113,27 @@ def sample_placement() -> CMSPlacement:
     )
 
 
+def sample_candidate(candidate_id: str = "contract-test") -> dict[str, Any]:
+    """Return one complete, JSON-safe image candidate fixture.
+
+    Adapter authors can use this fixture while wiring a provider response
+    mapper. It is deliberately synthetic and never performs network access.
+    """
+    return {
+        "id": candidate_id,
+        "filename": "contract-test.webp",
+        "provider": "sample-provider",
+        "source_type": "api",
+        "local_path": None,
+        "source_url": "https://images.example.test/contract-test.webp",
+        "license": "CC0",
+        "attribution": "Pictovap contract fixture",
+        "keywords": ["pictovap", "contract", "fixture"],
+        "width": 1200,
+        "height": 800,
+    }
+
+
 def assert_cms_adapter_contract(
     adapter: object,
     *,
@@ -150,6 +171,7 @@ __all__ = [
     "assert_image_source_contract",
     "assert_report_renderer_contract",
     "sample_placement",
+    "sample_candidate",
     "validate_candidates",
     "validate_placement_result",
 ]

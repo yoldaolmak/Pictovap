@@ -4,6 +4,22 @@
 
 No changes yet.
 
+## [0.12.0] - 2026-08-10
+
+### Added
+
+* Standalone adapter scaffolds now include a minimal Makefile and GitHub Actions
+  workflow, so a new external package has a working CI gate immediately.
+* Added `pictovap.testing.sample_candidate()` as a deterministic provider
+  response fixture for third-party adapter tests.
+
+### Changed
+
+* Generated provider and CMS packages now target the current public contract
+  (`pictovap>=0.11.0`) and explicitly implement their adapter protocols.
+* Scaffold README and tests now show the complete contract-check loop, including
+  the bounded provider exercise path.
+
 ## [0.11.0] - 2026-08-08
 
 ### Added

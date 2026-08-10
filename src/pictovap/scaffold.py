@@ -49,7 +49,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "image adapter", "cms"]
-            dependencies = ["pictovap>=0.7.8"]
+            dependencies = ["pictovap>=0.11.0"]
 
             [project.entry-points."pictovap.image_sources"]
             {slug} = "{package}:{adapter_class}"
@@ -67,8 +67,10 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
             from typing import Any, Dict, List
 
+            from pictovap import ImageSourceAdapter
 
-            class {adapter_class}:
+
+            class {adapter_class}(ImageSourceAdapter):
                 """Return image candidates from {class_stem}."""
 
                 # Avoid pytest collecting adapter names such as ``test-source``
@@ -92,12 +94,46 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
         '''),
         "tests/test_adapter.py": dedent(f'''\
             from {package} import {adapter_class}
-            from pictovap.testing import assert_image_source_contract
+            from pictovap.testing import (
+                assert_image_source_contract,
+                sample_candidate,
+                validate_candidates,
+            )
+
+
+            def test_sample_candidate_documents_provider_shape():
+                validate_candidates([sample_candidate()])
 
 
             def test_adapter_contract_without_credentials():
                 adapter = {adapter_class}()
                 assert assert_image_source_contract(adapter) == []
+        '''),
+        "Makefile": dedent('''\
+            .PHONY: test check
+
+            test:
+            \tpython -m pytest -q
+
+            check: test
+        '''),
+        ".github/workflows/ci.yml": dedent('''\
+            name: Adapter CI
+
+            on:
+              push:
+              pull_request:
+
+            jobs:
+              test:
+                runs-on: ubuntu-latest
+                steps:
+                  - uses: actions/checkout@v4
+                  - uses: actions/setup-python@v5
+                    with:
+                      python-version: "3.12"
+                  - run: python -m pip install -e ".[test]"
+                  - run: make check
         '''),
         "README.md": dedent(f'''\
             # pictovap-{slug}
@@ -113,6 +149,8 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             pytest
             pictovap plugins --kind provider
             pictovap doctor --provider {slug}
+            pictovap adapter check --kind provider --name {slug} --exercise
+            make check
             ```
 
             Run the adapter in the real planning pipeline:
@@ -173,7 +211,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "cms adapter", "publishing"]
-            dependencies = ["pictovap>=0.7.8"]
+            dependencies = ["pictovap>=0.11.0"]
 
             [project.entry-points."pictovap.cms"]
             {slug} = "{package}:{adapter_class}"
@@ -191,10 +229,11 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
             from typing import Any, Dict
 
+            from pictovap import CMSAdapter
             from pictovap.core.primitives import CMSPlacement
 
 
-            class {adapter_class}:
+            class {adapter_class}(CMSAdapter):
                 """Place Pictovap image instructions into {class_stem}."""
 
                 # Avoid pytest collecting adapter names such as ``test-cms``
@@ -231,6 +270,32 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
                 result = assert_cms_adapter_contract(adapter)
                 assert result["warnings"]
         '''),
+        "Makefile": dedent('''\
+            .PHONY: test check
+
+            test:
+            \tpython -m pytest -q
+
+            check: test
+        '''),
+        ".github/workflows/ci.yml": dedent('''\
+            name: Adapter CI
+
+            on:
+              push:
+              pull_request:
+
+            jobs:
+              test:
+                runs-on: ubuntu-latest
+                steps:
+                  - uses: actions/checkout@v4
+                  - uses: actions/setup-python@v5
+                    with:
+                      python-version: "3.12"
+                  - run: python -m pip install -e ".[test]"
+                  - run: make check
+        '''),
         "README.md": dedent(f'''\
             # pictovap-{slug}
 
@@ -245,6 +310,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             pytest
             pictovap plugins --kind cms
             pictovap adapter check --kind cms --name {slug}
+            make check
             ```
 
             Validate configuration, then preview a real plan without writes:

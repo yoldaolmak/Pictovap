@@ -205,6 +205,14 @@ installing its dependencies.
 The command refuses to overwrite existing scaffold files. Pass `--force` only
 when intentionally refreshing files owned by the scaffold.
 
+Every generated package includes a contract test, a `Makefile`, and a minimal
+GitHub Actions workflow. Provider packages can run a bounded, credential-safe
+exercise immediately:
+
+```console
+pictovap adapter check --kind provider --name example-source --exercise
+```
+
 ### Generate an Ecosystem Integration Packet
 
 When contributing to an adjacent Markdown-to-WordPress, AI draft, media upload,

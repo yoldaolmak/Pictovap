@@ -78,7 +78,8 @@ pictovap scaffold cms example-cms
 ```
 
 For a standalone package, change into the printed directory and run its own
-first successful loop before replacing the scaffold implementation:
+first successful loop before replacing the scaffold implementation. The
+generated package already includes a Makefile and CI workflow:
 
 ```bash
 cd pictovap-example-source  # use the path printed by scaffold
@@ -86,6 +87,7 @@ python -m pip install -e ".[test]"
 python -m pytest
 pictovap plugins --kind provider
 pictovap adapter check --kind provider --name example-source
+make check
 ```
 
 The CMS loop is identical except for `cms` in the final two commands. It does
