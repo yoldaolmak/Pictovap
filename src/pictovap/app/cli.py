@@ -9,6 +9,7 @@ Commands matching the public library API:
     doctor  - validate installed plugins and selected adapter configuration
     publish - execute a visual plan through an installed CMS plugin
     feedback - create an anonymous validation summary from a plan
+    audit    - review a plan for editorial and integration readiness
     ecosystem - generate adjacent-project integration packets
 """
 
@@ -30,6 +31,7 @@ from pictovap.app.runtime import (
 from pictovap.demo import generate_report_from_file, run_demo
 from pictovap.feedback import render_feedback_markdown, summarize_plan
 from pictovap.conformance import AdapterCheckError, check_adapter
+from pictovap.audit import audit_visual_plan, render_audit_markdown
 from pictovap.ecosystem import (
     SUPPORTED_TOOL_KINDS,
     build_ecosystem_match,
@@ -130,6 +132,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Treat recommended consistency warnings as validation failures",
     )
+
+    audit = sub.add_parser(
+        "audit", help="Audit a visual plan for editorial and integration readiness"
+    )
+    audit.add_argument("--plan", required=True, help="Path to visual-plan.json")
+    audit.add_argument(
+        "--format", choices=("json", "markdown"), default="json", help="Output format"
+    )
+    audit.add_argument(
+        "--strict", action="store_true", help="Turn editorial warnings into failures"
+    )
+    audit.add_argument("--output", help="Optional path to write the audit report")
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
@@ -303,6 +317,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0 if result["status"] == "passed" else 1
         except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
             print(f"Error validating plan: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "audit":
+        try:
+            with open(args.plan, encoding="utf-8") as plan_file:
+                plan_payload = json.load(plan_file)
+            result = audit_visual_plan(plan_payload, strict=args.strict)
+            if args.format == "markdown":
+                rendered = render_audit_markdown(result)
+                _write_text_or_print(rendered, args.output)
+            else:
+                if args.output:
+                    with open(args.output, "w", encoding="utf-8") as output_file:
+                        json.dump(result, output_file, ensure_ascii=False, indent=2)
+                        output_file.write("\n")
+                _print_json(result)
+            return 0 if result["status"] in {"passed", "warning"} else 1
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
+            print(f"Error auditing plan: {e}", file=sys.stderr)
             return 1
 
     if args.command == "plugins":

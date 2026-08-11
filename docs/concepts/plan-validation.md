@@ -33,3 +33,7 @@ diagnostics or a provenance record without a CMS placement.
 The stable core checks cover the visual brief, fit-score records, provenance
 packs, and CMS placement instructions. New additive fields are ignored so an
 adapter can remain compatible across minor releases.
+
+For a human-readable readiness review that also checks coverage,
+accessibility, license status, and duplicate selections, use the
+[plan audit](plan-audit.md) boundary.

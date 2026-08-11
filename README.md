@@ -153,6 +153,16 @@ Validate the hand-off locally or in adapter CI before a CMS is involved:
 pictovap validate --plan my-plan.json
 ```
 
+For the final editor/CI hand-off, generate a read-only audit covering slot
+coverage, provenance and license status, alt text, unresolved review decisions,
+and duplicate selections:
+
+```bash
+pictovap audit --plan my-plan.json --format markdown --output plan-audit.md
+```
+
+Use `--strict` when any unresolved editorial warning should block publishing.
+
 The validator is side-effect-free: it does not contact providers, read
 credentials, write files, or call a CMS. Add `--strict` when audit gaps such as
 missing planning diagnostics should fail the check.

@@ -4,6 +4,16 @@
 
 No changes yet.
 
+## [0.13.0] - 2026-08-11
+
+### Added
+
+* Added `audit_visual_plan()` and `pictovap audit` for a read-only editorial
+  and integration readiness report.
+* Audit reports expose coverage, review-queue, provenance/license,
+  accessibility, and duplicate-selection checks in JSON or Markdown.
+* Strict audit mode turns unresolved editorial warnings into a CI failure.
+
 ## [0.12.0] - 2026-08-10
 
 ### Added

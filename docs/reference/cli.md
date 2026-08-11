@@ -118,6 +118,19 @@ codes, warnings, and a summary count.
 The JSON report names each check and distinguishes `passed`, `not_run`, and
 `not_applicable`; it never prints option values.
 
+### Audit a visual plan
+
+Use the audit command for a final read-only editorial and integration review:
+
+```console
+pictovap audit --plan output/visual-plan.json --format markdown
+pictovap audit --plan output/visual-plan.json --strict
+```
+
+The report includes coverage, provenance/license, alt-text, human-review, and
+duplicate-selection checks. JSON is suitable for CI; Markdown is suitable for
+an editor or pull request review.
+
 You can also generate it inline while planning:
 ```bash
 pictovap plan \
