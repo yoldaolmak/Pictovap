@@ -1,5 +1,9 @@
 # API Stability Policy
 
+The concise external-facing ABI summary is maintained in
+[FRAMEWORK_COMPATIBILITY.md](FRAMEWORK_COMPATIBILITY.md). This document keeps
+the detailed surface-by-surface policy and migration rules.
+
 Pictovap is beta software, but adapter authors need a dependable boundary.
 This policy distinguishes the contracts that integrations may rely on from the
 implementation modules that may change as the framework evolves.

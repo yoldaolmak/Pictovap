@@ -1,0 +1,44 @@
+schema_version: 1
+cases:
+  - id: travel
+    article: travel.md
+    expected:
+      language: en
+      slots: 4
+      placements: 4
+      captions: 4
+  - id: recipe
+    article: recipe.md
+    expected:
+      language: en
+      slots: 4
+      placements: 4
+      captions: 4
+  - id: news
+    article: news.md
+    expected:
+      language: en
+      slots: 3
+      placements: 3
+      captions: 3
+  - id: review
+    article: review.md
+    expected:
+      language: en
+      slots: 4
+      placements: 4
+      captions: 4
+  - id: tutorial
+    article: tutorial.md
+    expected:
+      language: en
+      slots: 5
+      placements: 5
+      captions: 5
+  - id: product
+    article: product.md
+    expected:
+      language: en
+      slots: 4
+      placements: 4
+      captions: 4

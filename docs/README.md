@@ -22,6 +22,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Selection Engine](concepts/selection-engine.md) — Global, explainable image assignment and coverage diagnostics
 - [Visual Plan Validation](concepts/plan-validation.md) — Validate adapter output locally and in CI
 - [Plan Audit](concepts/plan-audit.md) — Review coverage, provenance, accessibility, and hand-off readiness
+- [Golden Corpus Benchmark](concepts/golden-corpus.md) — Run the deterministic offline regression suite
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
 - [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos, Openverse, Pexels)
 - [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS
@@ -34,6 +35,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Publisher Profiles](reference/publisher-profiles.md) — The full profile schema
 - [API Stability Policy](../API_STABILITY.md) — Stable, experimental, and internal integration surfaces
 - [Framework Guide](framework.md) — Integrate an image source, CMS, or renderer
+- [Framework Compatibility](../FRAMEWORK_COMPATIBILITY.md) — ABI v1 expectations for external adapters
 
 ### Architecture
 

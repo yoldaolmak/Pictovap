@@ -1,4 +1,4 @@
-.PHONY: install check-python contributor-smoke test lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check
+.PHONY: install check-python contributor-smoke test benchmark lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check
 
 help:
 	@echo "Pictovap - Visual Finishing Engine"
@@ -6,6 +6,7 @@ help:
 	@echo "Available targets:"
 	@echo "  demo        Run the local credential-free demo"
 	@echo "  test        Run test suite"
+	@echo "  benchmark   Run the deterministic golden corpus benchmark"
 	@echo "  check-python  Verify Python 3.10+ before installing"
 	@echo "  contributor-smoke  Verify installed CLI, demo, and feedback flow"
 	@echo "  install     Install dependencies"
@@ -33,6 +34,9 @@ install: check-python
 
 test:
 	python3 -m pytest tests/unit -v
+
+benchmark:
+	python3 -m pictovap benchmark --corpus tests/corpus --format markdown
 
 check-docs:
 	python3 -m pytest --no-cov tests/unit/test_demo.py::test_docs_readme_links_resolve -v

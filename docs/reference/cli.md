@@ -131,6 +131,20 @@ The report includes coverage, provenance/license, alt-text, human-review, and
 duplicate-selection checks. JSON is suitable for CI; Markdown is suitable for
 an editor or pull request review.
 
+### Run the Golden Corpus Benchmark
+
+Run the offline regression corpus that exercises parsing, scoring, provenance,
+localized metadata, placement, and strict plan validation:
+
+```bash
+pictovap benchmark --corpus tests/corpus
+pictovap benchmark --corpus tests/corpus --format markdown --output output/benchmark.md
+```
+
+The command uses synthetic candidates and never calls a provider, reads
+credentials, or writes to a CMS. A failed case returns exit code 1 and a
+machine-readable receipt.
+
 You can also generate it inline while planning:
 ```bash
 pictovap plan \

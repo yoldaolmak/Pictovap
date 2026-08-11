@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-No changes yet.
+- Added a deterministic golden-corpus benchmark covering six editorial shapes.
+- Added `pictovap benchmark` for offline JSON or Markdown compatibility receipts.
+- Added the Framework ABI v1 compatibility summary for external adapter authors.
 
 ## [0.13.0] - 2026-08-11
 

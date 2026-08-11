@@ -185,6 +185,17 @@ For the shortest implementation path, see the
 [Framework Guide](docs/framework.md) and the runnable
 [external renderer package](examples/external-renderer-package/README.md).
 
+Contributors can verify the full offline planning contract across six common
+article shapes:
+
+```bash
+pictovap benchmark --corpus tests/corpus --format markdown
+```
+
+See the [golden corpus guide](docs/concepts/golden-corpus.md) and the
+[framework compatibility contract](FRAMEWORK_COMPATIBILITY.md) before building
+an external adapter.
+
 If you already use a Markdown-to-WordPress importer, AI draft plugin, media
 upload script, or CMS automation tool, Pictovap should sit before that publish
 step as the visual-finishing layer. See

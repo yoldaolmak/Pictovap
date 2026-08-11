@@ -49,6 +49,9 @@ jobs:
       - name: Run unit tests
         run: pytest tests/unit -v
 
+      - name: Golden corpus benchmark
+        run: python -m pictovap benchmark --corpus tests/corpus
+
       - name: Demo smoke test
         run: python -m pictovap.demo
 
