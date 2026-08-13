@@ -44,6 +44,7 @@ def test_valid_plan_passes_without_network_or_side_effects():
     assert result["status"] == "passed"
     assert result["errors"] == []
     assert result["summary"] == {"errors": 0, "warnings": 0}
+    assert result["checks"]["intent_proof"] == {"status": "not_applicable"}
 
 
 def test_missing_contract_fields_are_machine_readable():

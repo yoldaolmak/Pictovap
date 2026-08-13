@@ -22,7 +22,7 @@ def test_golden_corpus_markdown_is_reviewer_friendly():
     rendered = render_benchmark_markdown(run_corpus_benchmark(CORPUS))
 
     assert "# Golden Corpus Benchmark" in rendered
-    assert "| `travel` | `passed` | 7/7 |" in rendered
+    assert "| `travel` | `passed` | 8/8 |" in rendered
     assert "never calls a provider or CMS" in rendered
 
 

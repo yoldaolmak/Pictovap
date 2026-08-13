@@ -115,6 +115,11 @@ Use `--strict` when CI should reject recommended audit gaps as well as broken
 core fields. The JSON result includes check-level status, structured error
 codes, warnings, and a summary count.
 
+When a plan contains the additive `intent_proof` block, validation also checks
+its graph, ledger, assignment cardinality, and summary consistency. Corrupt
+proof records fail with machine-readable `intent_*` error codes; older plans
+without the block remain compatible and report `not_applicable` for that check.
+
 The JSON report names each check and distinguishes `passed`, `not_run`, and
 `not_applicable`; it never prints option values.
 

@@ -10,6 +10,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
+from pictovap.intent_validation import validate_intent_proof
+
 
 def _issue(code: str, path: str, message: str) -> dict[str, str]:
     return {"code": code, "path": path, "message": message}
@@ -165,6 +167,33 @@ def validate_visual_plan(plan: Mapping[str, Any], *, strict: bool = False) -> di
     else:
         placement_slots = set()
         checks["cms_placement"] = {"status": "failed", "placements": 0}
+
+    # ``intent_proof`` was added additively. Older plans remain valid, while a
+    # present proof is checked strictly so integrations cannot publish a
+    # structurally corrupt explanation as if it were trustworthy.
+    if "intent_proof" not in root:
+        checks["intent_proof"] = {"status": "not_applicable"}
+    else:
+        intent_result = validate_intent_proof(root.get("intent_proof"), expected_slot_ids=slot_ids)
+        checks["intent_proof"] = {
+            "status": intent_result["status"],
+            "errors": len(intent_result["errors"]),
+            "warnings": len(intent_result["warnings"]),
+        }
+        errors.extend(
+            {
+                **issue,
+                "path": "$.intent_proof" + issue["path"][1:],
+            }
+            for issue in intent_result["errors"]
+        )
+        warnings.extend(
+            {
+                **issue,
+                "path": "$.intent_proof" + issue["path"][1:],
+            }
+            for issue in intent_result["warnings"]
+        )
 
     diagnostics = root.get("planning_diagnostics")
     if diagnostics is not None and isinstance(diagnostics, Mapping):

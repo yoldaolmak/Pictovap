@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from pictovap.api import create_visual_plan
+from pictovap import validate_intent_proof, validate_visual_plan
 from pictovap.testing.contracts import sample_candidate
 
 
@@ -37,6 +38,33 @@ def test_plan_contains_proof_carrying_intent_graph_and_ledger():
     assert proof["summary"]["evaluations"] == len(proof["ledger"])
     assert any(entry["decision"] == "selected" for entry in proof["ledger"])
     assert all("hard_constraints" in entry and "evidence" in entry for entry in proof["ledger"])
+
+
+def test_generated_intent_proof_passes_structural_validation():
+    plan = create_visual_plan(str(ARTICLE), provider_adapter=IntentFixtureProvider())
+
+    result = validate_intent_proof(
+        plan["intent_proof"],
+        expected_slot_ids=[slot["slot_id"] for slot in plan["visual_brief"]["image_slots"]],
+    )
+
+    assert result["status"] == "passed"
+    assert result["errors"] == []
+    assert validate_visual_plan(plan)["checks"]["intent_proof"]["status"] == "passed"
+
+
+def test_intent_validator_reports_stable_codes_for_corruption():
+    plan = create_visual_plan(str(ARTICLE), provider_adapter=IntentFixtureProvider())
+    proof = json.loads(json.dumps(plan["intent_proof"]))
+    proof["schema_version"] = "999"
+    proof["graph"]["slots"][0]["slot_id"] = proof["graph"]["slots"][1]["slot_id"]
+    proof["summary"]["selected"] += 1
+
+    result = validate_intent_proof(proof)
+    codes = {item["code"] for item in result["errors"]}
+
+    assert result["status"] == "failed"
+    assert {"intent_schema_version", "intent_duplicate_slot", "intent_summary_mismatch"} <= codes
 
 
 def test_explain_cli_renders_intent_proof(tmp_path):

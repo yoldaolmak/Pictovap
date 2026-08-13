@@ -91,6 +91,7 @@ def _case_result(case: Mapping[str, Any], corpus_root: Path) -> dict[str, Any]:
         "captions": captions == expected_captions,
         "provenance": len(provenance) == expected_placements,
         "validation": validation["status"] == "passed",
+        "intent_validation": validation.get("checks", {}).get("intent_proof", {}).get("status") == "passed",
         "intent_proof": (
             intent_proof.get("schema_version") == "1"
             and len(intent_proof.get("graph", {}).get("slots", [])) == expected_slots

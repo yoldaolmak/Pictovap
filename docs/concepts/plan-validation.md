@@ -31,8 +31,10 @@ recommended audit information is incomplete, such as missing planning
 diagnostics or a provenance record without a CMS placement.
 
 The stable core checks cover the visual brief, fit-score records, provenance
-packs, and CMS placement instructions. New additive fields are ignored so an
-adapter can remain compatible across minor releases.
+packs, and CMS placement instructions. The additive `intent_proof` block is
+validated when present; older plans without it remain compatible and return
+`not_applicable` for that check. Proof failures use machine-readable
+`intent_*` error codes.
 
 For a human-readable readiness review that also checks coverage,
 accessibility, license status, and duplicate selections, use the

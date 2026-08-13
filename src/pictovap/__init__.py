@@ -18,6 +18,7 @@ from .core.adapters import ImageSourceAdapter, CMSAdapter, ReportRenderer
 from .core.selection import SelectionPolicy, SelectionResult, select_assignments
 from .core.visual_similarity import compute_visual_fingerprint, visual_similarity
 from .validation import validate_visual_plan
+from .intent_validation import validate_intent_proof
 from .audit import audit_visual_plan, render_audit_markdown
 from .benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
 from .registry import registry_entries, registry_payload, registry_to_json, render_registry_markdown
@@ -63,6 +64,7 @@ __all__ = [
     "compute_visual_fingerprint",
     "visual_similarity",
     "validate_visual_plan",
+    "validate_intent_proof",
     "audit_visual_plan",
     "render_audit_markdown",
     "run_corpus_benchmark",

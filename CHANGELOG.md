@@ -9,6 +9,8 @@
   renderers, and installed third-party plugins.
 - Added the experimental Visual Intent Compiler: proof-carrying intent graphs,
   hard/soft constraints, candidate evidence, and the `pictovap explain` report.
+- Added side-effect-free intent-proof validation with machine-readable
+  `intent_*` error codes and an 8-check golden-corpus proof gate.
 
 ## [0.13.0] - 2026-08-11
 

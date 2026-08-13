@@ -28,7 +28,9 @@ not on registry presentation details.
 The additive `intent_proof` plan block is experimental schema 1. It exposes the
 Visual Intent Graph and Decision Ledger for review and tooling. Integrations
 must tolerate its absence and must not treat the proof as a legal license
-guarantee; it is a structured record of the evidence Pictovap observed.
+guarantee; it is a structured record of the evidence Pictovap observed. The
+public `validate_intent_proof()` helper checks this block without side effects
+and returns `intent_*` error codes for the current experimental schema.
 
 ## Compatibility rules
 

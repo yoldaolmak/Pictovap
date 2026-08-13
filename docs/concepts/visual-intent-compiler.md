@@ -41,6 +41,20 @@ pictovap explain --plan output/plan.json --format json --output output/intent-pr
 The command is read-only. It never calls a provider, reads credentials, or
 publishes to a CMS.
 
+Validate the proof independently when an external tool stores or transports
+the block:
+
+```python
+from pictovap import validate_intent_proof
+
+result = validate_intent_proof(proof, expected_slot_ids=["featured", "inline-1"])
+if result["status"] != "passed":
+    raise ValueError(result["errors"])
+```
+
+The validator is side-effect-free and reports `intent_*` error codes for
+schema, graph, ledger, assignment, and summary inconsistencies.
+
 ## Compatibility boundary
 
 The `intent_proof` block is additive to the visual-plan JSON and has schema
