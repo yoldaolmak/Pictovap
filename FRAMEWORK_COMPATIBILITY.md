@@ -20,6 +20,11 @@ The golden corpus benchmark and its CLI are integration tooling. They are
 stable for this repository's contributor and CI workflow, but the benchmark
 module is not yet a versioned third-party ABI.
 
+The read-only `pictovap registry list` command is also discovery tooling. Its
+JSON shape is versioned as schema 1 for this release line, but adapter authors
+should continue to depend on the adapter protocols and entry-point groups,
+not on registry presentation details.
+
 ## Compatibility rules
 
 - Pictovap supports Python 3.10 and newer.

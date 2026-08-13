@@ -145,6 +145,19 @@ The command uses synthetic candidates and never calls a provider, reads
 credentials, or writes to a CMS. A failed case returns exit code 1 and a
 machine-readable receipt.
 
+### Discover Adapters
+
+List built-in adapters and installed third-party plugins without constructing
+them or contacting external services:
+
+```bash
+pictovap registry list
+pictovap registry list --kind provider --format markdown
+```
+
+The registry is intentionally read-only. It does not install packages, resolve
+credentials, or claim that a configured provider is reachable.
+
 You can also generate it inline while planning:
 ```bash
 pictovap plan \

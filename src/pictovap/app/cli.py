@@ -11,6 +11,7 @@ Commands matching the public library API:
     feedback - create an anonymous validation summary from a plan
     audit    - review a plan for editorial and integration readiness
     benchmark - run the deterministic golden corpus benchmark
+    registry - list built-in and installed adapters
     ecosystem - generate adjacent-project integration packets
 """
 
@@ -34,6 +35,7 @@ from pictovap.feedback import render_feedback_markdown, summarize_plan
 from pictovap.conformance import AdapterCheckError, check_adapter
 from pictovap.audit import audit_visual_plan, render_audit_markdown
 from pictovap.benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
+from pictovap.registry import registry_payload, registry_to_json, render_registry_markdown
 from pictovap.ecosystem import (
     SUPPORTED_TOOL_KINDS,
     build_ecosystem_match,
@@ -155,6 +157,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=("json", "markdown"), default="json", help="Output format"
     )
     benchmark.add_argument("--output", help="Optional path to write the benchmark receipt")
+
+    registry = sub.add_parser("registry", help="List built-in and installed adapters")
+    registry_subcommands = registry.add_subparsers(dest="registry_command", required=True)
+    registry_list = registry_subcommands.add_parser(
+        "list", help="List adapter metadata without installing or constructing anything"
+    )
+    registry_list.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
+    registry_list.add_argument(
+        "--format", choices=("json", "markdown"), default="json", help="Output format"
+    )
+    registry_list.add_argument("--output", help="Optional path to write the registry")
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
@@ -357,6 +370,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0 if result["status"] == "passed" else 1
         except (OSError, TypeError, ValueError) as e:
             print(f"Error running golden corpus benchmark: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "registry":
+        try:
+            payload = registry_payload(args.kind)
+            rendered = registry_to_json(payload) if args.format == "json" else render_registry_markdown(payload)
+            _write_text_or_print(rendered, args.output)
+            return 0
+        except (OSError, TypeError, ValueError, PluginError) as e:
+            print(f"Error listing registry: {e}", file=sys.stderr)
             return 1
 
     if args.command == "plugins":

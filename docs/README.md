@@ -36,6 +36,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [API Stability Policy](../API_STABILITY.md) — Stable, experimental, and internal integration surfaces
 - [Framework Guide](framework.md) — Integrate an image source, CMS, or renderer
 - [Framework Compatibility](../FRAMEWORK_COMPATIBILITY.md) — ABI v1 expectations for external adapters
+- [Adapter Registry](reference/cli.md#discover-adapters) — Discover built-in and installed adapters safely
 
 ### Architecture
 

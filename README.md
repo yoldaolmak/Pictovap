@@ -196,6 +196,13 @@ See the [golden corpus guide](docs/concepts/golden-corpus.md) and the
 [framework compatibility contract](FRAMEWORK_COMPATIBILITY.md) before building
 an external adapter.
 
+Discover the available extension points without installing or constructing
+anything:
+
+```bash
+pictovap registry list --format markdown
+```
+
 If you already use a Markdown-to-WordPress importer, AI draft plugin, media
 upload script, or CMS automation tool, Pictovap should sit before that publish
 step as the visual-finishing layer. See
