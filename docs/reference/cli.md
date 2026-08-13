@@ -158,6 +158,18 @@ pictovap registry list --kind provider --format markdown
 The registry is intentionally read-only. It does not install packages, resolve
 credentials, or claim that a configured provider is reachable.
 
+### Explain Visual Intent Decisions
+
+Render the intent graph and candidate decision ledger embedded in a plan:
+
+```bash
+pictovap explain --plan output/plan.json --format markdown
+pictovap explain --plan output/plan.json --format json --output output/intent-proof.json
+```
+
+This is a read-only explanation surface. It does not rerun providers or
+re-score candidates.
+
 You can also generate it inline while planning:
 ```bash
 pictovap plan \

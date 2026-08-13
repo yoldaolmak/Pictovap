@@ -81,6 +81,7 @@ def _case_result(case: Mapping[str, Any], corpus_root: Path) -> dict[str, Any]:
 
     placements = plan.get("cms_placement", {}).get("placements", [])
     provenance = plan.get("provenance_packs", [])
+    intent_proof = plan.get("intent_proof", {})
     captions = sum(bool(item.get("caption")) for item in placements if isinstance(item, Mapping))
     validation = validate_visual_plan(plan, strict=True)
     checks = {
@@ -90,6 +91,11 @@ def _case_result(case: Mapping[str, Any], corpus_root: Path) -> dict[str, Any]:
         "captions": captions == expected_captions,
         "provenance": len(provenance) == expected_placements,
         "validation": validation["status"] == "passed",
+        "intent_proof": (
+            intent_proof.get("schema_version") == "1"
+            and len(intent_proof.get("graph", {}).get("slots", [])) == expected_slots
+            and len(intent_proof.get("ledger", [])) > 0
+        ),
     }
     errors = [name for name, passed in checks.items() if not passed]
     return {
@@ -102,6 +108,7 @@ def _case_result(case: Mapping[str, Any], corpus_root: Path) -> dict[str, Any]:
             "placements": len(placements),
             "captions": captions,
             "provenance": len(provenance),
+            "intent_evaluations": len(intent_proof.get("ledger", [])),
         },
         "errors": errors,
     }

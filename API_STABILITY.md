@@ -45,6 +45,8 @@ minor release while the framework is still pre-1.0:
 - built-in renderer presentation details in `pictovap.renderers`
 - `pictovap.vision_templates`, including prompt wording and the optional
   `VisionTemplate.max_output_tokens` tuning field
+- `intent_proof` in serialized plans and the `pictovap.intent` compiler helpers
+- `pictovap.registry` metadata and registry presentation details
 - CLI convenience commands and their human-readable output
 - built-in provider and CMS adapter implementation details
 

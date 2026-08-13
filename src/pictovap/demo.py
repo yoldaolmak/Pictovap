@@ -33,6 +33,7 @@ from pictovap.core.profile import PublisherProfile  # noqa: E402
 from pictovap.core.selection import select_assignments  # noqa: E402
 from pictovap.core.visual_similarity import collect_candidate_fingerprints  # noqa: E402
 from pictovap.core.sources import fetch_candidates  # noqa: E402
+from pictovap.intent import compile_intent_proof  # noqa: E402
 from pictovap.testing.contracts import assert_image_source_contract  # noqa: E402
 
 
@@ -530,6 +531,14 @@ def _build_plan_output(
         placements=instructions,
     )
 
+    intent_proof = compile_intent_proof(
+        brief,
+        profile,
+        candidates,
+        all_scores,
+        selection.assignments,
+    )
+
     # 6. Assemble full output
     output = {
         "pipeline": "Pictovap Visual Finishing Demo",
@@ -543,6 +552,7 @@ def _build_plan_output(
         "source_path": serialized_source,
         "candidates_evaluated": len(candidates),
         "planning_diagnostics": selection.to_dict(),
+        "intent_proof": intent_proof,
         "profile": {
             "id": profile.profile_id,
             "brand": profile.brand_name,

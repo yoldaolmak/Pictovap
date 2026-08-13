@@ -25,6 +25,11 @@ JSON shape is versioned as schema 1 for this release line, but adapter authors
 should continue to depend on the adapter protocols and entry-point groups,
 not on registry presentation details.
 
+The additive `intent_proof` plan block is experimental schema 1. It exposes the
+Visual Intent Graph and Decision Ledger for review and tooling. Integrations
+must tolerate its absence and must not treat the proof as a legal license
+guarantee; it is a structured record of the evidence Pictovap observed.
+
 ## Compatibility rules
 
 - Pictovap supports Python 3.10 and newer.

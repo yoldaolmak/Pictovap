@@ -203,6 +203,17 @@ anything:
 pictovap registry list --format markdown
 ```
 
+For the deeper editorial reasoning behind a plan, inspect its proof-carrying
+intent decisions:
+
+```bash
+pictovap explain --plan my-plan.json --format markdown
+```
+
+The [Visual Intent Compiler](docs/concepts/visual-intent-compiler.md) records
+hard constraints, soft constraints, candidate evidence, and global assignment
+reasons without calling a provider again.
+
 If you already use a Markdown-to-WordPress importer, AI draft plugin, media
 upload script, or CMS automation tool, Pictovap should sit before that publish
 step as the visual-finishing layer. See

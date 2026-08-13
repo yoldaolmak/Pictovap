@@ -23,6 +23,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Visual Plan Validation](concepts/plan-validation.md) — Validate adapter output locally and in CI
 - [Plan Audit](concepts/plan-audit.md) — Review coverage, provenance, accessibility, and hand-off readiness
 - [Golden Corpus Benchmark](concepts/golden-corpus.md) — Run the deterministic offline regression suite
+- [Visual Intent Compiler](concepts/visual-intent-compiler.md) — Inspect intent, constraints, and decisions
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
 - [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos, Openverse, Pexels)
 - [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS
@@ -37,6 +38,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Framework Guide](framework.md) — Integrate an image source, CMS, or renderer
 - [Framework Compatibility](../FRAMEWORK_COMPATIBILITY.md) — ABI v1 expectations for external adapters
 - [Adapter Registry](reference/cli.md#discover-adapters) — Discover built-in and installed adapters safely
+- [Roadmap](ROADMAP.md) — Visual Intent Compiler and evidence-backed ecosystem plan
 
 ### Architecture
 

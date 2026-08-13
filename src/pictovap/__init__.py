@@ -21,6 +21,13 @@ from .validation import validate_visual_plan
 from .audit import audit_visual_plan, render_audit_markdown
 from .benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
 from .registry import registry_entries, registry_payload, registry_to_json, render_registry_markdown
+from .intent import (
+    build_decision_ledger,
+    build_visual_intent_graph,
+    compile_intent_proof,
+    intent_proof_to_json,
+    render_intent_markdown,
+)
 from .renderers import HTMLReportRenderer, MarkdownReportRenderer
 
 # Vision template system
@@ -65,6 +72,11 @@ __all__ = [
     "registry_payload",
     "registry_to_json",
     "render_registry_markdown",
+    "build_decision_ledger",
+    "build_visual_intent_graph",
+    "compile_intent_proof",
+    "intent_proof_to_json",
+    "render_intent_markdown",
     "HTMLReportRenderer",
     "MarkdownReportRenderer",
     "VisionTemplate",

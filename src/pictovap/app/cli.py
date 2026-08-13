@@ -12,6 +12,7 @@ Commands matching the public library API:
     audit    - review a plan for editorial and integration readiness
     benchmark - run the deterministic golden corpus benchmark
     registry - list built-in and installed adapters
+    explain - render the proof-carrying intent decisions from a plan
     ecosystem - generate adjacent-project integration packets
 """
 
@@ -36,6 +37,7 @@ from pictovap.conformance import AdapterCheckError, check_adapter
 from pictovap.audit import audit_visual_plan, render_audit_markdown
 from pictovap.benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
 from pictovap.registry import registry_payload, registry_to_json, render_registry_markdown
+from pictovap.intent import intent_proof_to_json, render_intent_markdown
 from pictovap.ecosystem import (
     SUPPORTED_TOOL_KINDS,
     build_ecosystem_match,
@@ -168,6 +170,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=("json", "markdown"), default="json", help="Output format"
     )
     registry_list.add_argument("--output", help="Optional path to write the registry")
+
+    explain = sub.add_parser(
+        "explain", help="Explain visual intent, constraints, and candidate decisions from a plan"
+    )
+    explain.add_argument("--plan", required=True, help="Path to visual-plan.json")
+    explain.add_argument(
+        "--format", choices=("json", "markdown"), default="markdown", help="Output format"
+    )
+    explain.add_argument("--output", help="Optional path to write the explanation")
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
@@ -380,6 +391,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         except (OSError, TypeError, ValueError, PluginError) as e:
             print(f"Error listing registry: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "explain":
+        try:
+            with open(args.plan, encoding="utf-8") as plan_file:
+                plan_payload = json.load(plan_file)
+            proof = plan_payload.get("intent_proof")
+            if not isinstance(proof, dict):
+                raise ValueError("Plan does not contain an intent_proof block")
+            rendered = intent_proof_to_json(proof) if args.format == "json" else render_intent_markdown(proof)
+            _write_text_or_print(rendered, args.output)
+            return 0
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
+            print(f"Error explaining visual plan: {e}", file=sys.stderr)
             return 1
 
     if args.command == "plugins":

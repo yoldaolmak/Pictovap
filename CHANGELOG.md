@@ -7,6 +7,8 @@
 - Added the Framework ABI v1 compatibility summary for external adapter authors.
 - Added a read-only adapter registry for built-in sources, CMS adapters,
   renderers, and installed third-party plugins.
+- Added the experimental Visual Intent Compiler: proof-carrying intent graphs,
+  hard/soft constraints, candidate evidence, and the `pictovap explain` report.
 
 ## [0.13.0] - 2026-08-11
 
