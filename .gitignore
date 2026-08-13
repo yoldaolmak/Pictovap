@@ -51,6 +51,7 @@ build/
 *.db
 data/
 .codebase-memory/
+outreach/
 /var/
 /tmp/
 
