@@ -32,6 +32,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 ### Reference
 
 - [CLI Reference](reference/cli.md) — Available commands and flags
+- [Release Status](release-status.md) — Stable PyPI release versus unreleased `main`
 - [Configuration Reference](reference/configuration.md) — Every environment variable
 - [Publisher Profiles](reference/publisher-profiles.md) — The full profile schema
 - [API Stability Policy](../API_STABILITY.md) — Stable, experimental, and internal integration surfaces

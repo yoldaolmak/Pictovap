@@ -99,6 +99,15 @@ human review surface and CMS adapters as the machine-facing execution layer.
 
 Requires Python 3.10 or newer.
 
+### Release status
+
+The current stable release is **0.12.0** on
+[PyPI](https://pypi.org/project/pictovap/0.12.0/) and
+[GitHub](https://github.com/yoldaolmak/Pictovap/releases/tag/v0.12.0).
+The `main` branch contains the next unreleased **0.13.0** development line;
+see the [release status page](docs/release-status.md) before comparing a
+checkout with the package installed from PyPI.
+
 Install from PyPI and run the credential-free demo:
 
 ```bash
@@ -123,6 +132,11 @@ guarantee, not just its default state.
 If you want to contribute without learning the whole framework first, start
 with one of these no-claim issues. Each one is intentionally small, safe, and
 credential-free:
+
+**Recommended path: [#65 realistic article fixture](https://github.com/yoldaolmak/Pictovap/issues/65).**
+It changes one synthetic Markdown fixture, needs no credentials, and can be
+validated with `make contributor-smoke`. Use the alternatives below only when
+that task does not match your interests.
 
 | Issue | What you add | Validation |
 | --- | --- | --- |

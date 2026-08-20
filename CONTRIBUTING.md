@@ -25,6 +25,22 @@ and other CMS integrations.
 If you want to contribute without waiting for a claim confirmation, choose one
 of the `contribution: no-claim` issues and open a focused PR directly:
 
+### Recommended starting point
+
+Start with [#65, the realistic article fixture for image
+placement](https://github.com/yoldaolmak/Pictovap/issues/65), unless you already
+know that a different kit matches your work better. It is the shortest path to
+a useful contribution:
+
+- one synthetic Markdown file;
+- no API keys, CMS credentials, or framework internals;
+- one local validation command: `make contributor-smoke`.
+
+In the PR body, link `#65`, describe the editorial decision the fixture makes,
+and paste the command output. No claim comment or private article is needed.
+The remaining menu is an explicit alternative list, not a requirement to read
+the whole repository before starting.
+
 | Issue | Best first contribution | Good fit |
 | --- | --- | --- |
 | [#65 Realistic article fixture for image placement](https://github.com/yoldaolmak/Pictovap/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | Docs/fixtures |
