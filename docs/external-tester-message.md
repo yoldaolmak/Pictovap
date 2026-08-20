@@ -68,4 +68,7 @@ https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.m
 
 If you prefer a first PR, there are small WordPress/Gutenberg fixture and documentation issues:
 https://github.com/yoldaolmak/Pictovap/blob/main/docs/contributing/wordpress-gutenberg-minisprint.md
+
+The shortest first PR is [#65, a realistic article fixture](https://github.com/yoldaolmak/Pictovap/issues/65).
+It is a no-claim, credential-free change validated with `make contributor-smoke`.
 ```

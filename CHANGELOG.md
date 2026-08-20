@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.13.0] - Unreleased
+
+### Added
 
 - Added a deterministic golden-corpus benchmark covering six editorial shapes.
 - Added `pictovap benchmark` for offline JSON or Markdown compatibility receipts.
@@ -12,15 +14,11 @@
 - Added side-effect-free intent-proof validation with machine-readable
   `intent_*` error codes and an 8-check golden-corpus proof gate.
 
-## [0.13.0] - 2026-08-11
-
-### Added
-
-* Added `audit_visual_plan()` and `pictovap audit` for a read-only editorial
+- Added `audit_visual_plan()` and `pictovap audit` for a read-only editorial
   and integration readiness report.
-* Audit reports expose coverage, review-queue, provenance/license,
+- Audit reports expose coverage, review-queue, provenance/license,
   accessibility, and duplicate-selection checks in JSON or Markdown.
-* Strict audit mode turns unresolved editorial warnings into a CI failure.
+- Strict audit mode turns unresolved editorial warnings into a CI failure.
 
 ## [0.12.0] - 2026-08-10
 
