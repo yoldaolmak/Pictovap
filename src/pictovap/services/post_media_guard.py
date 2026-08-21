@@ -25,7 +25,7 @@ _HEADING_OR_IMAGE_RE = re.compile(
 
 
 def get_manifest_dir() -> Path:
-    configured = env_str("PICTOVA_POST_MANIFEST_DIR")
+    configured = env_str("PICTOVAP_POST_MANIFEST_DIR")
     if configured:
         return Path(configured).expanduser()
     return get_workspace_root() / "data" / "post_media_manifests"

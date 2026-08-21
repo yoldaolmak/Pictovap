@@ -639,7 +639,7 @@ def create_visual_plan(
         FileNotFoundError: if `article` or `profile` doesn't exist.
 
     Example:
-        from pictova import create_visual_plan
+        from pictovap import create_visual_plan
 
         plan = create_visual_plan(
             article="article.md",

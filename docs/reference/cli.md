@@ -175,7 +175,29 @@ pictovap explain --plan output/plan.json --format json --output output/intent-pr
 This is a read-only explanation surface. It does not rerun providers or
 re-score candidates.
 
-You can also generate it inline while planning:
+### Compare Visual Plans
+
+Attribute changes to article structure, publisher profile, candidate evidence,
+compiled policy, or CMS placement without rerunning either plan:
+
+```bash
+pictovap diff \
+  --before output/plan-before.json \
+  --after output/plan-after.json \
+  --format markdown \
+  --output output/plan-diff.md
+```
+
+Use `--format json` for the versioned machine-readable receipt. Differences
+are reviewable output and return exit status `0` by default. Add
+`--fail-on-change` when any detected drift should return exit status `1` in
+CI. Both input plans are validated and their validation statuses are embedded
+in the result, but the diff remains available for incomplete drafts.
+
+See [Visual Plan Diff](../concepts/plan-diff.md) for the schema and safety
+boundary.
+
+You can also generate an editor report inline while planning:
 ```bash
 pictovap plan \
   --article path/to/article.md \

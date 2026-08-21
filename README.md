@@ -228,6 +228,19 @@ The [Visual Intent Compiler](docs/concepts/visual-intent-compiler.md) records
 hard constraints, soft constraints, candidate evidence, and global assignment
 reasons without calling a provider again.
 
+Compare two stored plans without rerunning providers or touching a CMS:
+
+```bash
+pictovap diff \
+  --before plan-before.json \
+  --after plan-after.json \
+  --format markdown
+```
+
+The [Visual Plan Diff](docs/concepts/plan-diff.md) separates article, profile,
+candidate, policy, and CMS-placement changes. Add `--fail-on-change` only when
+using the command as a CI drift gate.
+
 If you already use a Markdown-to-WordPress importer, AI draft plugin, media
 upload script, or CMS automation tool, Pictovap should sit before that publish
 step as the visual-finishing layer. See
@@ -326,9 +339,9 @@ Specifically:
 
 ## Compatibility Note
 
-Product name: Pictovap. Since 0.3.0 the Python package, import name, and
-console-script entry point are all `pictovap`; `pictova` remains a deprecated
-alias — see [Brand & Naming](docs/architecture/naming.md).
+Product name: Pictovap. The Python package, import name, and console-script
+entry point are all `pictovap`; see
+[Brand & Naming](docs/architecture/naming.md).
 
 ## Contributing
 

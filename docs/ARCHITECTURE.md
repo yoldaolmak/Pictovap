@@ -95,8 +95,8 @@ No specific AI model or "Vision Chain" is a required architectural component.
 ## 9. Package/CLI Naming
 
 - **Product name:** Pictovap.
-- Python package (`src/pictovap/`), import name, and console-script entry
-  points are `pictovap` since 0.3.0; `pictova` remains a deprecated alias.
+- Python package (`src/pictovap/`), import name, and console-script entry point
+  are all `pictovap`.
 - See [Brand & Naming](architecture/naming.md) for the full reasoning.
 
 ## 10. Current Limitations

@@ -90,8 +90,8 @@ For Python callers, validate an in-memory profile explicitly with
 
 ## Compatibility Note
 
-Product name: Pictovap. The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias
-for backward compatibility. `examples/profiles/sample-publisher.yaml` is a
+Product name, Python package, and CLI: Pictovap / `pictovap`.
+`examples/profiles/sample-publisher.yaml` is a
 reference example, not the only supported configuration --
 `examples/profiles/yoldaolmak.py` shows the older, pre-`PublisherProfile`
 per-site convention this format replaced.

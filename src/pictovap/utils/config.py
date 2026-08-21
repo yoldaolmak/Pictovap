@@ -15,11 +15,11 @@ def get_workspace_root() -> Path:
     this module would point inside site-packages for a real
     `pip install pictovap`, which is unwritable and wrong.
 
-    Override with the ``PICTOVA_WORKSPACE_DIR`` environment variable. This
+    Override with the ``PICTOVAP_WORKSPACE_DIR`` environment variable. This
     is read from the process environment directly (not `.env`), because the
     `.env` location itself depends on this value.
     """
-    configured = os.environ.get("PICTOVA_WORKSPACE_DIR", "").strip()
+    configured = os.environ.get("PICTOVAP_WORKSPACE_DIR", "").strip()
     if configured:
         return Path(configured).expanduser()
     return Path.cwd()
@@ -61,7 +61,7 @@ def get_vil_dir() -> Path | None:
     graceful-degradation pattern of `env_str()` above rather than hardcoding
     a path specific to any one contributor's machine.
     """
-    configured = env_str("YO_VIL_DIR")
+    configured = env_str("PICTOVAP_VIL_DIR")
     if configured:
         return Path(configured).expanduser()
     return None
