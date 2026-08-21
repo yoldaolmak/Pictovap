@@ -59,7 +59,6 @@ Issues = "https://github.com/yoldaolmak/Pictovap/issues"
 Changelog = "https://github.com/yoldaolmak/Pictovap/blob/main/CHANGELOG.md"
 
 [project.scripts]
-pictova = "pictovap.app.cli:main"
 pictovap = "pictovap.app.cli:main"
 
 [tool.setuptools.packages.find]

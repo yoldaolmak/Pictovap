@@ -26,6 +26,17 @@ See [Image Source Adapters](../adapters/image-sources.md) for the full contract.
 
 See [CMS Adapters](../adapters/cms-adapters.md) for the full contract.
 
+## Runtime Paths
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `PICTOVAP_WORKSPACE_DIR` | No | Root for `.env` lookup and local runtime data; defaults to the current working directory |
+| `PICTOVAP_POST_MANIFEST_DIR` | No | Directory for WordPress media-integrity manifests |
+| `PICTOVAP_VIL_DIR` | No | Local staging directory used only by the optional Unsplash `download()` helper |
+
+These variables control local paths, not credentials. The standard provider
+search path does not require `PICTOVAP_VIL_DIR`.
+
 ## Vision-Backed Metadata (optional)
 
 | Variable | Required | Description |
@@ -42,6 +53,11 @@ metadata generator — no vision key is required to run the pipeline.
 # Image sources (all optional)
 PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images
 UNSPLASH_ACCESS_KEY=abc123
+
+# Runtime paths (optional)
+PICTOVAP_WORKSPACE_DIR=/path/to/project
+PICTOVAP_POST_MANIFEST_DIR=/path/to/project/data/post-media-manifests
+PICTOVAP_VIL_DIR=/path/to/project/data/downloads
 
 # CMS adapter (optional; pick whichever you're publishing to)
 WP_URL=https://example.com

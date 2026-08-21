@@ -34,7 +34,7 @@ def test_media_items_from_content_keeps_nearest_heading():
 
 
 def test_manifest_round_trip_merges_and_detects_drift(tmp_path, monkeypatch):
-    monkeypatch.setenv("PICTOVA_POST_MANIFEST_DIR", str(tmp_path))
+    monkeypatch.setenv("PICTOVAP_POST_MANIFEST_DIR", str(tmp_path))
     first_content = '<img src="https://example.com/11.webp" class="wp-image-11"/>'
     second_content = first_content + '<img src="https://example.com/12.webp" class="wp-image-12"/>'
 
@@ -65,7 +65,7 @@ def test_manifest_round_trip_merges_and_detects_drift(tmp_path, monkeypatch):
 
 
 def test_manifest_replaces_unanchored_auto_region_items(tmp_path, monkeypatch):
-    monkeypatch.setenv("PICTOVA_POST_MANIFEST_DIR", str(tmp_path))
+    monkeypatch.setenv("PICTOVAP_POST_MANIFEST_DIR", str(tmp_path))
     both = '<i class="wp-image-1"></i><i class="wp-image-2"></i>'
     save_post_media_manifest(
         site="demoblog",
@@ -84,7 +84,7 @@ def test_manifest_replaces_unanchored_auto_region_items(tmp_path, monkeypatch):
 
 
 def test_guard_repairs_manifest_drift(tmp_path, monkeypatch):
-    monkeypatch.setenv("PICTOVA_POST_MANIFEST_DIR", str(tmp_path))
+    monkeypatch.setenv("PICTOVAP_POST_MANIFEST_DIR", str(tmp_path))
     healthy_content = '<i class="wp-image-1"></i><i class="wp-image-2"></i>'
     drifted_content = '<i class="wp-image-1"></i>'
     save_post_media_manifest(

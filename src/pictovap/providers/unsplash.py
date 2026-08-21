@@ -54,7 +54,7 @@ class UnsplashSource:
     ) -> List[str]:
         if not self.vil_dir:
             raise RuntimeError(
-                "download() requires a local staging directory. Set YO_VIL_DIR "
+                "download() requires a local staging directory. Set PICTOVAP_VIL_DIR "
                 "in .env to enable it — search_candidates() does not need this."
             )
         results = self.search(query, count=count)

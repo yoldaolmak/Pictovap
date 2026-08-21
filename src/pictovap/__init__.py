@@ -20,6 +20,7 @@ from .core.visual_similarity import compute_visual_fingerprint, visual_similarit
 from .validation import validate_visual_plan
 from .intent_validation import validate_intent_proof
 from .audit import audit_visual_plan, render_audit_markdown
+from .plan_diff import diff_visual_plans, plan_diff_to_json, render_plan_diff_markdown
 from .benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
 from .registry import registry_entries, registry_payload, registry_to_json, render_registry_markdown
 from .intent import (
@@ -67,6 +68,9 @@ __all__ = [
     "validate_intent_proof",
     "audit_visual_plan",
     "render_audit_markdown",
+    "diff_visual_plans",
+    "plan_diff_to_json",
+    "render_plan_diff_markdown",
     "run_corpus_benchmark",
     "render_benchmark_markdown",
     "benchmark_to_json",

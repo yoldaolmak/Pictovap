@@ -13,6 +13,7 @@ Commands matching the public library API:
     benchmark - run the deterministic golden corpus benchmark
     registry - list built-in and installed adapters
     explain - render the proof-carrying intent decisions from a plan
+    diff     - compare two serialized visual plans without rerunning providers
     ecosystem - generate adjacent-project integration packets
 """
 
@@ -38,6 +39,7 @@ from pictovap.audit import audit_visual_plan, render_audit_markdown
 from pictovap.benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
 from pictovap.registry import registry_payload, registry_to_json, render_registry_markdown
 from pictovap.intent import intent_proof_to_json, render_intent_markdown
+from pictovap.plan_diff import diff_visual_plans, plan_diff_to_json, render_plan_diff_markdown
 from pictovap.ecosystem import (
     SUPPORTED_TOOL_KINDS,
     build_ecosystem_match,
@@ -179,6 +181,21 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=("json", "markdown"), default="markdown", help="Output format"
     )
     explain.add_argument("--output", help="Optional path to write the explanation")
+
+    plan_diff = sub.add_parser(
+        "diff", help="Explain changes between two serialized visual plans"
+    )
+    plan_diff.add_argument("--before", required=True, help="Path to the earlier visual plan")
+    plan_diff.add_argument("--after", required=True, help="Path to the later visual plan")
+    plan_diff.add_argument(
+        "--format", choices=("json", "markdown"), default="markdown", help="Output format"
+    )
+    plan_diff.add_argument("--output", help="Optional path to write the plan diff")
+    plan_diff.add_argument(
+        "--fail-on-change",
+        action="store_true",
+        help="Return exit status 1 when the plans differ, for CI drift gates",
+    )
 
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
@@ -405,6 +422,24 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
             print(f"Error explaining visual plan: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "diff":
+        try:
+            with open(args.before, encoding="utf-8") as before_file:
+                before = json.load(before_file)
+            with open(args.after, encoding="utf-8") as after_file:
+                after = json.load(after_file)
+            result = diff_visual_plans(before, after)
+            rendered = (
+                plan_diff_to_json(result)
+                if args.format == "json"
+                else render_plan_diff_markdown(result)
+            )
+            _write_text_or_print(rendered, args.output)
+            return 1 if args.fail_on_change and result["status"] == "changed" else 0
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as e:
+            print(f"Error comparing visual plans: {e}", file=sys.stderr)
             return 1
 
     if args.command == "plugins":
