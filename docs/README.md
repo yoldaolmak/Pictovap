@@ -24,6 +24,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Plan Audit](concepts/plan-audit.md) — Review coverage, provenance, accessibility, and hand-off readiness
 - [Golden Corpus Benchmark](concepts/golden-corpus.md) — Run the deterministic offline regression suite
 - [Visual Intent Compiler](concepts/visual-intent-compiler.md) — Inspect intent, constraints, and decisions
+- [Visual Plan Diff](concepts/plan-diff.md) — Attribute plan changes to article, profile, candidates, policy, or CMS placement
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
 - [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos, Openverse, Pexels)
 - [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS

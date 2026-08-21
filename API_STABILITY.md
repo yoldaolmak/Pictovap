@@ -49,6 +49,7 @@ minor release while the framework is still pre-1.0:
 - `pictovap.intent_validation.validate_intent_proof()` and its `intent_*` error
   codes (experimental until the intent schema reaches v1)
 - `pictovap.registry` metadata and registry presentation details
+- `pictovap.plan_diff`, the plan-diff schema, and Markdown presentation details
 - CLI convenience commands and their human-readable output
 - built-in provider and CMS adapter implementation details
 
