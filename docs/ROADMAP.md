@@ -43,9 +43,9 @@ contract before adding another provider or CMS adapter.
 - [x] Additive `intent_proof` schema in every generated plan
 - [x] `pictovap explain` read-only editor/CI report
 - [x] Golden-corpus assertions for intent proof coverage
-- [ ] Intent proof validator with stable error codes
+- [x] Intent proof validator with stable error codes
 - [ ] Constraint policy overrides in Publisher Profile v2
-- [ ] Plan diff: explain what changed when article, profile, or candidates change
+- [x] Plan diff: explain what changed when article, profile, or candidates change
 
 ## Phase 2 — Editorial policy and resilience
 

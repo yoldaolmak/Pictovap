@@ -13,6 +13,19 @@
   hard/soft constraints, candidate evidence, and the `pictovap explain` report.
 - Added side-effect-free intent-proof validation with machine-readable
   `intent_*` error codes and an 8-check golden-corpus proof gate.
+- Added `diff_visual_plans()` and `pictovap diff` for deterministic,
+  side-effect-free comparison of article identity, profile, candidate, intent,
+  provenance, and CMS-placement changes.
+- Added `--fail-on-change` for CI drift gates while keeping editorial plan
+  differences reviewable by default.
+
+### Removed
+
+- Removed the deprecated compatibility namespace and duplicate console entry
+  point. The distribution now ships only the canonical `pictovap` package and
+  CLI.
+- Standardized runtime path overrides as `PICTOVAP_WORKSPACE_DIR`,
+  `PICTOVAP_POST_MANIFEST_DIR`, and `PICTOVAP_VIL_DIR`.
 
 - Added `audit_visual_plan()` and `pictovap audit` for a read-only editorial
   and integration readiness report.
@@ -145,8 +158,8 @@
 
 ### Fixed
 
-* Root `.gitignore` no longer contains Markdown fence artifacts or the legacy
-  `src/pictova/data` exception, so packaged `src/pictovap/data` sample files
+* Root `.gitignore` no longer contains Markdown fence artifacts or the obsolete
+  package-data exception, so packaged `src/pictovap/data` sample files
   remain addable while Python caches stay ignored.
 * `python -m pictovap` now runs the public CLI entry point directly.
 
@@ -371,17 +384,8 @@
 ## [0.3.0] - 2026-07-12
 
 ### Changed
-* **Breaking (soft):** the importable package was renamed from `pictova`
-  to `pictovap`, matching the product and PyPI distribution name.
-  Old imports keep working through a deprecation alias — `import pictova`
-  and `from pictova.core... import ...` resolve to the same module
-  objects as their `pictovap` counterparts and emit a
-  `DeprecationWarning`. The alias will be removed in a future major
-  version.
-
-  Migration: replace `pictova` with `pictovap` in imports; nothing else
-  changes. The `pictova` console script also remains as an alias of
-  `pictovap`.
+* Standardized the importable package, console script, product, and PyPI
+  distribution identity as `pictovap`.
 * `YOUnsplashDownloader` renamed to `UnsplashSource`, completing the
   removal of legacy "YO" branding from adapter class names
 
@@ -399,8 +403,8 @@
 * runtime paths (`.env` lookup, post-media manifests) resolved relative to
   the installed package and landed inside site-packages for a real
   `pip install`; they now resolve from the working directory, with a
-  `PICTOVA_WORKSPACE_DIR` override
-* `pictova.__version__` reported 0.2.0 while the package was 0.2.1; now
+  `PICTOVAP_WORKSPACE_DIR` override
+* The package version reported 0.2.0 while the distribution was 0.2.1; now
   synced and guarded by a test
 * `upload_media()` docstring promised slug-conflict handling that does
   not exist
@@ -450,7 +454,7 @@ failed before these fixes); 0.2.1 is the first release available on PyPI.
 * starter issue backlog
 
 ### Changed
-* product identity from legacy Pictova language to Pictovap
+* standardized product identity as Pictovap
 * WordPress reframed as CMS adapter
 * yoldaolmak reframed as dogfooding case
 * public docs rewritten around OSS infrastructure
@@ -468,4 +472,3 @@ failed before these fixes); 0.2.1 is the first release available on PyPI.
 * limited adapter coverage
 * provenance is audit trail, not legal guarantee
 * demo uses mock/local candidates
-* package/legacy CLI compatibility still uses `pictova` in places

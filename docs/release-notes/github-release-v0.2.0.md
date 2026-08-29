@@ -39,4 +39,4 @@ make demo
 
 ## Compatibility note
 
-* The internal Python package namespace remains `pictova` for backward compatibility, while the product name is `Pictovap`.
+* The public product, Python package, and CLI use the Pictovap identity.

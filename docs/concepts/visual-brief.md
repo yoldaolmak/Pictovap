@@ -88,4 +88,4 @@ against each slot's requirements.
 ## Compatibility Note
 
 Product name: Pictovap.
-The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias.
+The Python package and CLI are `pictovap`.

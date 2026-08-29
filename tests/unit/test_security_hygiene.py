@@ -233,7 +233,7 @@ def test_yoldaolmak_references_only_in_allowed_locations():
 
 def test_src_and_tests_free_of_personal_legacy_references():
     """
-    The legacy personal project ("Pictova") must not leak into the pipeline:
+    The legacy personal project must not leak into the pipeline:
     no personal machine paths, personal site names, or personal-blog
     geography in src/ or tests/ Python files. The public GitHub repo URL is
     the only allowed appearance of the maintainer's handle. This has slipped

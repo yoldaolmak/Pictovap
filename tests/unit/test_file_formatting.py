@@ -54,7 +54,21 @@ def test_gitignore_packaged_data_exception_matches_current_package():
     text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
 
     assert "```" not in text
-    assert "src/pictova/data" not in text
     assert "!src/pictovap/data/" in text
     assert "!src/pictovap/data/**" in text
     assert ".pytest_cache/" in text
+
+
+def test_distribution_has_one_canonical_package_and_console_script():
+    """Build discovery and command metadata must expose one Pictovap identity."""
+    package_roots = sorted(
+        path.name
+        for path in (REPO_ROOT / "src").iterdir()
+        if path.is_dir() and (path / "__init__.py").is_file()
+    )
+    pyproject = (REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    scripts_section = pyproject.split("[project.scripts]", 1)[1].split("[", 1)[0]
+    scripts = [line.strip() for line in scripts_section.splitlines() if line.strip()]
+
+    assert package_roots == ["pictovap"]
+    assert scripts == ['pictovap = "pictovap.app.cli:main"']

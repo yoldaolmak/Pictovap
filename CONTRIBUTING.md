@@ -150,7 +150,7 @@ See [Building Third-Party Adapter Plugins](docs/contributing/plugins.md).
 
 When writing documentation or code comments, please adhere to our naming conventions:
 - **Product Name:** Pictovap (Always capitalized).
-- **CLI Command:** `pictovap` (always lowercase; `pictova` remains a deprecated alias).
+- **CLI Command:** `pictovap` (always lowercase).
 - **Package Root:** `src/pictovap`.
 
 ---

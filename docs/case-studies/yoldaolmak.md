@@ -57,6 +57,6 @@ The project welcomes case studies from:
 ## Compatibility Note
 
 Product name: Pictovap.
-The Python package is `pictovap` (since 0.3.0); `pictova` remains a deprecated alias.
+The Python package and CLI are `pictovap`.
 The `yoldaolmak` site profile in `src/pictovap/profiles/` is one example publisher
 profile, not the conceptual center of the project.
