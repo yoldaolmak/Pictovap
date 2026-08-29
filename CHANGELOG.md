@@ -14,7 +14,7 @@
 - Added side-effect-free intent-proof validation with machine-readable
   `intent_*` error codes and an 8-check golden-corpus proof gate.
 - Added `diff_visual_plans()` and `pictovap diff` for deterministic,
-  side-effect-free comparison of article, profile, candidate, intent,
+  side-effect-free comparison of article identity, profile, candidate, intent,
   provenance, and CMS-placement changes.
 - Added `--fail-on-change` for CI drift gates while keeping editorial plan
   differences reviewable by default.

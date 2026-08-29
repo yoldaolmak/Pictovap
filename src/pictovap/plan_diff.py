@@ -277,9 +277,12 @@ def diff_visual_plans(
         _mapping(after.get("planning_diagnostics")),
         _DIAGNOSTIC_FIELDS,
     )
+    before_id = _article_id(before)
+    after_id = _article_id(after)
+    article_identity_changed = before_id != after_id
 
     change_sources: list[str] = []
-    if article_changes or slot_changes:
+    if article_identity_changed or article_changes or slot_changes:
         change_sources.append("article")
     if profile_changes:
         change_sources.append("profile")
@@ -297,6 +300,7 @@ def diff_visual_plans(
         change_sources.append("cms_placement")
 
     summary = {
+        "article_identity_changed": int(article_identity_changed),
         "article_fields_changed": len(article_changes),
         "profile_fields_changed": len(profile_changes),
         "slots_changed": len(slot_changes),
@@ -310,8 +314,6 @@ def diff_visual_plans(
         "diagnostics_fields_changed": len(diagnostics_changes),
     }
     total_changes = sum(summary.values())
-    before_id = _article_id(before)
-    after_id = _article_id(after)
 
     return {
         "schema_version": PLAN_DIFF_SCHEMA_VERSION,
@@ -407,6 +409,7 @@ def render_plan_diff_markdown(result: Mapping[str, Any]) -> str:
         "| --- | ---: |",
     ]
     for key in (
+        "article_identity_changed",
         "article_fields_changed",
         "profile_fields_changed",
         "slots_changed",

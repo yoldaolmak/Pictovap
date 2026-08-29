@@ -177,7 +177,7 @@ re-score candidates.
 
 ### Compare Visual Plans
 
-Attribute changes to article structure, publisher profile, candidate evidence,
+Attribute changes to article identity or structure, publisher profile, candidate evidence,
 compiled policy, or CMS placement without rerunning either plan:
 
 ```bash

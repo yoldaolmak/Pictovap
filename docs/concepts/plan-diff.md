@@ -7,7 +7,7 @@ edited. A raw JSON diff mixes those causes together and makes review harder.
 
 Pictovap's plan diff groups them into explicit, deterministic categories:
 
-- article fields and image-slot topology;
+- article identity, fields, and image-slot topology;
 - publisher-profile fields;
 - candidate additions, removals, and per-slot evaluation changes;
 - selected-image and provenance changes;

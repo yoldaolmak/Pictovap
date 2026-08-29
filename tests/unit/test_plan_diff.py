@@ -184,6 +184,21 @@ def test_identical_plans_produce_a_stable_empty_diff():
     assert result["identity"]["same_article"] is True
 
 
+def test_article_identity_change_is_counted_as_article_drift():
+    before = sample_plan()
+    after = copy.deepcopy(before)
+    after["visual_brief"]["article_id"] = "article-2"
+    after["cms_placement"]["article_id"] = "article-2"
+
+    result = diff_visual_plans(before, after)
+
+    assert result["status"] == "changed"
+    assert result["change_sources"] == ["article"]
+    assert result["identity"]["same_article"] is False
+    assert result["summary"]["article_identity_changed"] == 1
+    assert result["summary"]["total_changes"] == 1
+
+
 def test_diff_attributes_article_profile_candidate_policy_and_cms_changes():
     result = diff_visual_plans(sample_plan(), changed_plan())
 
