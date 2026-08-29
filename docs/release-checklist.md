@@ -15,6 +15,8 @@ Follow this final pre-release sequence before publishing a new Pictovap release.
 - [ ] No secrets or credentials in committed files
 - [ ] No fake adoption claims (stars, forks, downloads, contributors)
 - [ ] CI pipeline is green on main branch
+- [ ] Stable version, Git tag, GitHub release, and PyPI version are identical
+- [ ] The next development version is clearly labeled unreleased in README and release docs
 
 ## Final Manual Release
 
@@ -34,13 +36,16 @@ Before tagging:
 Manual release steps:
 
 ```bash
-git tag -a v0.2.0 -m "Pictovap v0.2.0"
-git push origin v0.2.0
+git tag -a vX.Y.Z -m "Pictovap vX.Y.Z"
+git push origin vX.Y.Z
+gh release create vX.Y.Z --verify-tag \
+  --title "Pictovap X.Y.Z" \
+  --notes-file docs/release-notes/vX.Y.Z.md
 ```
 
-Then create GitHub Release manually using:
-
-`docs/release-notes/github-release-v0.2.0.md`
+Use the same version in `pyproject.toml`, `src/pictovap/__init__.py`, the tag,
+the GitHub release, and the PyPI artifact. Do not create a release object for
+a tag whose package version or release notes disagree with it.
 
 ## Package Build Verification
 

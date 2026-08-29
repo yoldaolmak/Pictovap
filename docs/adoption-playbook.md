@@ -40,6 +40,24 @@ pictovap demo
 This runs the engine against bundled sample content using deterministic mock
 image candidates. It does not read `.env`, call image APIs, or contact a CMS.
 
+## 3a. Choose one measurable path
+
+After the demo, choose one path instead of trying to evaluate the whole
+framework at once:
+
+- **External validation:** run one non-sensitive Markdown article and open one
+  external-validation issue with the generated safe feedback summary.
+- **First contribution:** start with [#65 realistic article
+  fixture](https://github.com/yoldaolmak/Pictovap/issues/65), then run
+  `make contributor-smoke` and open one focused PR.
+- **Adapter work:** read the adapter contract first and claim one adapter issue
+  before changing integration code.
+
+For a useful report, record the path chosen, the command that ran, whether the
+output matched the editorial intent, and one confusing or successful detail.
+Stars, downloads, forks, or maintainer-authored activity are not substitutes
+for an external validation report or an independently authored PR.
+
 ## 4. Try Your Own Markdown Article
 
 You can test Pictovap against your own content:
