@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
 from PIL import Image
 
@@ -76,6 +79,14 @@ def test_candidate_validation_requires_json_safe_metadata():
     candidate["metadata"] = object()
 
     with pytest.raises(ContractViolation, match="JSON-serializable"):
+        validate_candidates([candidate])
+
+
+def test_candidate_validation_rejects_fixture_without_image_source():
+    fixture_path = Path(__file__).parents[1] / "fixtures/providers/unusable-candidate.json"
+    candidate = json.loads(fixture_path.read_text(encoding="utf-8"))
+
+    with pytest.raises(ContractViolation, match="must provide local_path or source_url"):
         validate_candidates([candidate])
 
 

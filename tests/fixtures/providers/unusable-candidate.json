@@ -1,0 +1,13 @@
+{
+  "id": "unusable-provider-image",
+  "filename": "unusable-provider-image.jpg",
+  "provider": "fixture-provider",
+  "source_type": "api",
+  "local_path": null,
+  "source_url": null,
+  "license": "CC0",
+  "attribution": "Fixture contributor",
+  "keywords": ["fixture", "unusable"],
+  "width": 1600,
+  "height": 1000
+}
