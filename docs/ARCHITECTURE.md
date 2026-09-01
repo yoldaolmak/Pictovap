@@ -34,6 +34,11 @@ through the pipeline:
 4. **[CMS Placement](concepts/cms-placement.md)**: CMS-agnostic plan for where
    images should be injected into the target platform.
 
+The **[Decision Pack](concepts/decision-pack.md)** is a portable aggregate of
+these primitives for editorial review. It keeps proposed evidence, human review
+state, and later CMS application receipts distinct; it is not a replacement for
+the underlying planning record.
+
 ## 3. Data Flow
 
 The engine operates sequentially:
@@ -43,12 +48,21 @@ Analysis (Visual Brief)
   -> Selection (Fit Score)
   -> Processing (Provenance Pack)
   -> Placement (CMS Placement)
+  -> Review (Decision Pack)
 ```
 
 Each stage produces a serializable object that feeds the next. The core engine
 orchestrates this flow without any hardcoded dependencies on external systems.
 
-## 4. Adapter Model
+## 4. Decision Pack and Review Boundary
+
+Pictovap Core remains CMS-neutral. A Decision Pack can be consumed by a
+Gutenberg sidebar, a Ghost integration, a CLI review workflow, or an agent
+tool without rerunning providers. Schema 1 is read-only: it models a proposed
+plan and an editor review, but it neither applies a CMS change nor claims a
+rollback guarantee. WordPress is the first reference review surface.
+
+## 5. Adapter Model
 
 Pictovap connects to the outside world via two types of adapters:
 
@@ -60,7 +74,7 @@ Pictovap connects to the outside world via two types of adapters:
 
 The core pipeline is adapter-agnostic.
 
-## 5. Credential-Free Demo Path
+## 6. Credential-Free Demo Path
 
 The local demo (`make demo`) runs the entire pipeline end-to-end without
 requiring any external credentials, API keys, or CMS connections. It uses:
@@ -69,14 +83,14 @@ requiring any external credentials, API keys, or CMS connections. It uses:
 - Deterministic rules for scoring and metadata generation.
 - A mock CMS adapter that outputs the placement plan to a local JSON file.
 
-## 6. WordPress as One CMS Adapter
+## 7. WordPress as One CMS Adapter
 
 While WordPress is currently the most production-hardened target, it is merely
 one CMS adapter implementation. Pictovap does not assume WordPress as the
 conceptual center. Any CMS with an API can be supported by writing a new adapter
 that consumes the `CMSPlacement` primitive.
 
-## 7. Yoldaolmak.com as Dogfooding Case Study
+## 8. Yoldaolmak.com as Dogfooding Case Study
 
 Pictovap was extracted from the production infrastructure of a travel publisher,
 yoldaolmak.com. That site's original profile (`examples/profiles/yoldaolmak.py`)
@@ -85,21 +99,21 @@ configuration, not the default path or product center. See
 [Publisher Profiles](reference/publisher-profiles.md) for the current,
 supported YAML-based configuration format.
 
-## 8. Metadata Generation as Optional Adapter Behavior
+## 9. Metadata Generation as Optional Adapter Behavior
 
 While Pictovap produces standard metadata (Alt Text, SEO Title, Caption), the
 exact mechanism is source-agnostic. It may be generated via an AI metadata
 adapter (e.g., via external model providers) or fall back to rule-based templates.
 No specific AI model or "Vision Chain" is a required architectural component.
 
-## 9. Package/CLI Naming
+## 10. Package/CLI Naming
 
 - **Product name:** Pictovap.
 - Python package (`src/pictovap/`), import name, and console-script entry point
   are all `pictovap`.
 - See [Brand & Naming](architecture/naming.md) for the full reasoning.
 
-## 10. Current Limitations
+## 11. Current Limitations
 
 - Only the WordPress CMS adapter is production-hardened; Ghost and Strapi are
   reference implementations (see [CMS Adapters](adapters/cms-adapters.md)

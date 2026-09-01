@@ -7,7 +7,8 @@ reviewable visual plan whose decisions can be explained later.
 
 ```text
 Article → Visual Intent Graph → Candidate Evidence → Constraints
-        → Decision Ledger → Provenance Pack → CMS Placement → Editor Review
+        → Decision Ledger → Provenance Pack → CMS Placement
+        → Decision Pack → Editor Review → CMS Application Receipt
 ```
 
 ## North-star contract
@@ -18,7 +19,7 @@ Every plan should answer five questions without rerunning a provider:
 2. Which hard and soft constraints were applied?
 3. Why was each candidate selected, rejected, or left for review?
 4. What license, source, accessibility, and processing evidence was observed?
-5. What should the CMS place, and what is the safest fallback if an image is unavailable?
+5. What did an editor decide, and has any CMS application actually occurred?
 
 ## Phase 0 — Public foundation (complete)
 
@@ -44,18 +45,32 @@ contract before adding another provider or CMS adapter.
 - [x] `pictovap explain` read-only editor/CI report
 - [x] Golden-corpus assertions for intent proof coverage
 - [x] Intent proof validator with stable error codes
-- [ ] Constraint policy overrides in Publisher Profile v2
 - [x] Plan diff: explain what changed when article, profile, or candidates change
 
-## Phase 2 — Editorial policy and resilience
+## Phase 2 — Decision Pack and reference review surface (current)
+
+The Decision Pack is the portable product contract. It does not duplicate the
+planning engine: it groups its existing evidence by slot and records review and
+application state separately. WordPress is the first reference surface, not
+the conceptual center of the framework.
+
+- [x] Decision Pack schema 1 builder and side-effect-free validator
+- [x] Explicit `pending` review and `not_applied` application states
+- [ ] Editor decision receipt: accept, replace, or reject with actor and time
+- [ ] Preview diff between a proposed and reviewed Decision Pack
+- [ ] WordPress review surface: Plan → Review → Preview Diff → Apply
+- [ ] CMS application receipt with idempotency and rollback boundaries
+
+## Phase 3 — Editorial policy and resilience
 
 - [ ] Publisher Visual Constitution: explicit, versioned visual policy YAML
+- [ ] Constraint policy overrides in Publisher Profile v2
 - [ ] Fallback simulation when a selected image is removed or becomes unusable
 - [ ] Coverage delta and risk report for alternative assignments
 - [ ] Cross-article duplicate and source-concentration policy
 - [ ] CMS capability matrix for crop, caption, alt text, and media-library behavior
 
-## Phase 3 — Evidence-backed VisualDNA
+## Phase 4 — Evidence-backed VisualDNA
 
 VisualDNA is deliberately downstream of explicit policy and real editorial
 feedback. It must not pretend to learn a publisher's taste from a tiny or
@@ -67,15 +82,14 @@ unverified corpus.
 - [ ] Optional VisualDNA profile generated only from approved feedback
 - [ ] Reproducible evaluation set for any learned or heuristic preference
 
-## Phase 4 — Integration surfaces
+## Phase 5 — Integration surfaces
 
-- [ ] WordPress review surface that consumes `intent_proof` without re-scoring
 - [ ] CMS capability adapters for placement validation and safe dry-runs
 - [ ] MCP server only after the public intent and proof contracts stabilize
 - [ ] External adapter conformance badge backed by contract receipts
 - [ ] Stable Framework ABI v1 after one complete compatibility cycle
 
-## Phase 5 — Ecosystem and adoption
+## Phase 6 — Ecosystem and adoption
 
 - [ ] Third-party adapter packages with independent CI and compatibility pins
 - [ ] External publisher case studies with reproducible, non-sensitive evidence

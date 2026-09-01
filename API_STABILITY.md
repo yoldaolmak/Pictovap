@@ -50,6 +50,8 @@ minor release while the framework is still pre-1.0:
   codes (experimental until the intent schema reaches v1)
 - `pictovap.registry` metadata and registry presentation details
 - `pictovap.plan_diff`, the plan-diff schema, and Markdown presentation details
+- `pictovap.decision_pack` and the Decision Pack schema; they are the
+  versioned, read-only foundation for future editor review surfaces
 - CLI convenience commands and their human-readable output
 - built-in provider and CMS adapter implementation details
 
