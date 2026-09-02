@@ -32,6 +32,12 @@ guarantee; it is a structured record of the evidence Pictovap observed. The
 public `validate_intent_proof()` helper checks this block without side effects
 and returns `intent_*` error codes for the current experimental schema.
 
+Decision Pack schema 1 is also experimental. `build_decision_pack()` projects
+an already-valid visual plan into a portable review package; its default
+`pending` review and `not_applied` application state are read-only. It does not
+authorize provider calls or CMS writes. Future review receipts and application
+receipts will require an additive schema revision and migration guidance.
+
 ## Compatibility rules
 
 - Pictovap supports Python 3.10 and newer.

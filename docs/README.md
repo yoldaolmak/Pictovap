@@ -25,6 +25,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 - [Golden Corpus Benchmark](concepts/golden-corpus.md) — Run the deterministic offline regression suite
 - [Visual Intent Compiler](concepts/visual-intent-compiler.md) — Inspect intent, constraints, and decisions
 - [Visual Plan Diff](concepts/plan-diff.md) — Attribute plan changes to article, profile, candidates, policy, or CMS placement
+- [Decision Pack](concepts/decision-pack.md) — Carry a proposal into a review surface without applying CMS changes
 - [Publisher Profiles](reference/publisher-profiles.md) — How to configure output rules
 - [Image Sources](guides/image-sources.md) — Where images come from (local, Unsplash, DepositPhotos, Openverse, Pexels)
 - [WordPress Setup](guides/wordpress-setup.md) — How to connect a real CMS
@@ -45,6 +46,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 ### Architecture
 
 - [Architecture](ARCHITECTURE.md) — Core primitives, adapter model, data flow
+- [Core/Product Boundary](architecture/core-product-boundary.md) — What remains public framework scope
 - [Adapter Overview](adapters/overview.md) — Where image source and CMS adapters live
 - [Brand & Naming](architecture/naming.md) — Product name vs. package name
 
