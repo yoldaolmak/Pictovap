@@ -9,7 +9,7 @@ a CMS.
 Visual plan evidence
   → Decision Pack (proposal by slot)
   → Editor review surface
-  → Future preview and CMS application receipt
+  → Product integration boundary
 ```
 
 ## What it carries
@@ -37,10 +37,22 @@ Decision Pack schema 1 is experimental and read-only. A newly built pack has:
 ```
 
 The validator recognizes a complete editor review with one `accept`, `replace`,
-or `reject` decision per slot, including an actor and timestamp. It does not
-yet write those decisions, apply a CMS change, create a rollback point, or
-claim that a CMS action occurred. Those operations require later additive
-contracts and explicit user authorization.
+or `reject` decision per slot, including an actor and timestamp. `accept`
+retains the proposal's fully bound candidate, provenance, and placement.
+`replace` must carry a different scored candidate with its own provenance and
+placement, all bound to the same candidate and slot IDs. The placement output
+filename must also match the filename recorded by provenance. It does not write
+those decisions, apply a CMS change, create a rollback point, or claim that a
+CMS action occurred.
+
+An unfilled slot may keep all three proposal fields null while review is
+pending. That slot can later be rejected or replaced, but it cannot be accepted
+as if evidence existed. Partially populated proposal evidence is always invalid.
+
+The `application` object is deliberately fixed to `not_applied` with an empty
+receipt list. It prevents a Core review artifact from being mistaken for proof
+of execution. Authorization, idempotency, rollback, execution receipts, and
+live verification are owned by the separate Product lifecycle.
 
 ## Python API
 
@@ -60,11 +72,11 @@ Both functions are side-effect-free. The source visual plan must already pass
 
 Pictovap Core is the planning and evidence layer. A WordPress Gutenberg
 integration is the first intended reference review surface, not a replacement
-for the CMS-neutral core. The intended user flow is:
+for the CMS-neutral core. The Core user flow ends at a reviewed preview:
 
 ```text
-Plan → Review → Preview Diff → Apply → Receipt
+Plan → Review → Preview Diff → Product integration boundary
 ```
 
-Only the first two stages are represented by schema 1. The remaining stages
-are roadmap work and must not be implied by a pending Decision Pack.
+Schema 1 represents Plan and Review only. Product-owned execution must not be
+implied by a pending or reviewed Decision Pack.

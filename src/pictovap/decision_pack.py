@@ -44,6 +44,202 @@ def _string(value: Any, code: str, path: str, errors: list[dict[str, str]]) -> b
     return True
 
 
+def _candidate_ids(
+    candidates: list[Any],
+    slot_id: str,
+    path: str,
+    errors: list[dict[str, str]],
+) -> tuple[set[str], set[str]]:
+    """Return all and selected candidate IDs after validating slot bindings."""
+    all_ids: set[str] = set()
+    selected_ids: set[str] = set()
+    for index, raw_candidate in enumerate(candidates):
+        candidate_path = f"{path}[{index}]"
+        candidate = _object(raw_candidate, candidate_path, errors)
+        if candidate is None:
+            continue
+        candidate_id = candidate.get("candidate_id")
+        if not _string(
+            candidate_id,
+            "decision_pack_candidate_id",
+            f"{candidate_path}.candidate_id",
+            errors,
+        ):
+            continue
+        candidate_id = str(candidate_id)
+        if candidate_id in all_ids:
+            errors.append(_issue(
+                "decision_pack_duplicate_candidate",
+                f"{candidate_path}.candidate_id",
+                "Candidate IDs must be unique within a slot.",
+            ))
+        all_ids.add(candidate_id)
+        candidate_slot_id = candidate.get("slot_id")
+        if candidate_slot_id != slot_id:
+            errors.append(_issue(
+                "decision_pack_candidate_slot_binding",
+                f"{candidate_path}.slot_id",
+                "Candidate slot_id must match its Decision Pack slot.",
+            ))
+        if candidate.get("decision") == "selected":
+            selected_ids.add(candidate_id)
+    return all_ids, selected_ids
+
+
+def _assigned_candidate_id(
+    evidence: list[Any],
+    slot_id: str,
+    path: str,
+    errors: list[dict[str, str]],
+) -> str | None:
+    """Resolve the final assignment recorded by the intent ledger, if present."""
+    assigned_ids: set[str] = set()
+    for index, raw_entry in enumerate(evidence):
+        if not isinstance(raw_entry, Mapping) or raw_entry.get("assignment") != "assigned":
+            continue
+        entry_path = f"{path}[{index}]"
+        if raw_entry.get("slot_id") != slot_id:
+            errors.append(_issue(
+                "decision_pack_evidence_slot_binding",
+                f"{entry_path}.slot_id",
+                "Assigned evidence slot_id must match its Decision Pack slot.",
+            ))
+        candidate_id = raw_entry.get("candidate_id")
+        if _string(
+            candidate_id,
+            "decision_pack_evidence_candidate_id",
+            f"{entry_path}.candidate_id",
+            errors,
+        ):
+            assigned_ids.add(str(candidate_id))
+    if len(assigned_ids) > 1:
+        errors.append(_issue(
+            "decision_pack_ambiguous_assignment",
+            path,
+            "A slot may contain at most one assigned candidate.",
+        ))
+        return None
+    return next(iter(assigned_ids), None)
+
+
+def _validate_asset_binding(
+    asset: Mapping[str, Any],
+    *,
+    slot_id: str,
+    path: str,
+    candidate_ids: set[str],
+    expected_candidate_id: str | None,
+    errors: list[dict[str, str]],
+) -> str | None:
+    """Validate one candidate, provenance, and placement as an atomic binding."""
+    candidate_id = asset.get("candidate_id")
+    if not _string(
+        candidate_id,
+        "decision_pack_candidate_id",
+        f"{path}.candidate_id",
+        errors,
+    ):
+        candidate_id = None
+    else:
+        candidate_id = str(candidate_id)
+        if candidate_id not in candidate_ids:
+            errors.append(_issue(
+                "decision_pack_unknown_candidate",
+                f"{path}.candidate_id",
+                "Asset candidate_id must refer to a scored candidate in the same slot.",
+            ))
+        if expected_candidate_id is not None and candidate_id != expected_candidate_id:
+            errors.append(_issue(
+                "decision_pack_selected_candidate_binding",
+                f"{path}.candidate_id",
+                "Proposal candidate_id must match the candidate assigned by the visual plan.",
+            ))
+
+    generated_filename = None
+    provenance = _object(asset.get("provenance"), f"{path}.provenance", errors)
+    if provenance is not None:
+        image_id = provenance.get("image_id")
+        _string(
+            image_id,
+            "decision_pack_provenance_image_id",
+            f"{path}.provenance.image_id",
+            errors,
+        )
+        _string(
+            provenance.get("provider"),
+            "decision_pack_provenance_provider",
+            f"{path}.provenance.provider",
+            errors,
+        )
+        generated_filename = provenance.get("generated_filename")
+        _string(
+            generated_filename,
+            "decision_pack_provenance_filename",
+            f"{path}.provenance.generated_filename",
+            errors,
+        )
+        if candidate_id is not None and image_id != candidate_id:
+            errors.append(_issue(
+                "decision_pack_provenance_candidate_binding",
+                f"{path}.provenance.image_id",
+                "Provenance image_id must match the bound candidate_id.",
+            ))
+        if provenance.get("slot_id") != slot_id:
+            errors.append(_issue(
+                "decision_pack_provenance_slot_binding",
+                f"{path}.provenance.slot_id",
+                "Provenance slot_id must match the Decision Pack slot.",
+            ))
+
+    placement = _object(asset.get("placement"), f"{path}.placement", errors)
+    if placement is not None:
+        output_path = placement.get("output_path")
+        _string(
+            output_path,
+            "decision_pack_placement_output_path",
+            f"{path}.placement.output_path",
+            errors,
+        )
+        if (
+            isinstance(output_path, str)
+            and isinstance(generated_filename, str)
+            and output_path.replace("\\", "/").rsplit("/", 1)[-1]
+            != generated_filename.replace("\\", "/").rsplit("/", 1)[-1]
+        ):
+            errors.append(_issue(
+                "decision_pack_placement_asset_binding",
+                f"{path}.placement.output_path",
+                "Placement output_path must resolve to the provenance generated_filename.",
+            ))
+        if placement.get("slot_id") != slot_id:
+            errors.append(_issue(
+                "decision_pack_placement_slot_binding",
+                f"{path}.placement.slot_id",
+                "Placement slot_id must match the Decision Pack slot.",
+            ))
+        if candidate_id is not None and placement.get("candidate_id") != candidate_id:
+            errors.append(_issue(
+                "decision_pack_placement_candidate_binding",
+                f"{path}.placement.candidate_id",
+                "Placement candidate_id must match the bound candidate_id.",
+            ))
+    return candidate_id
+
+
+def _asset_is_empty(asset: Mapping[str, Any]) -> bool:
+    return all(asset.get(field) is None for field in ("candidate_id", "provenance", "placement"))
+
+
+def _asset_is_complete(asset: Any) -> bool:
+    return (
+        isinstance(asset, Mapping)
+        and isinstance(asset.get("candidate_id"), str)
+        and bool(asset.get("candidate_id", "").strip())
+        and isinstance(asset.get("provenance"), Mapping)
+        and isinstance(asset.get("placement"), Mapping)
+    )
+
+
 def build_decision_pack(plan: Mapping[str, Any]) -> dict[str, Any]:
     """Build a portable review package from one validated visual plan.
 
@@ -81,6 +277,9 @@ def build_decision_pack(plan: Mapping[str, Any]) -> dict[str, Any]:
         slot = dict(raw_slot)
         slot_id = str(slot["slot_id"])
         provenance = packs.get(slot_id)
+        slot_placement = placements.get(slot_id)
+        if slot_placement is not None and provenance is not None:
+            slot_placement["candidate_id"] = provenance.get("image_id")
         slots.append({
             "slot_id": slot_id,
             "purpose": str(slot.get("purpose", "")),
@@ -92,13 +291,13 @@ def build_decision_pack(plan: Mapping[str, Any]) -> dict[str, Any]:
             "proposal": {
                 "candidate_id": provenance.get("image_id") if provenance else None,
                 "provenance": provenance,
-                "placement": placements.get(slot_id),
+                "placement": slot_placement,
             },
             "evidence": evidence_by_slot.get(slot_id, []),
         })
 
     article_id = brief.get("article_id") or placement.get("article_id")
-    return {
+    decision_pack = {
         "schema_version": DECISION_PACK_SCHEMA_VERSION,
         "kind": _KIND,
         "article": {
@@ -110,6 +309,13 @@ def build_decision_pack(plan: Mapping[str, Any]) -> dict[str, Any]:
         "review": {"status": "pending", "decisions": []},
         "application": {"status": "not_applied", "receipts": []},
     }
+    decision_pack_validation = validate_decision_pack(decision_pack)
+    if decision_pack_validation["status"] != "passed":
+        codes = ", ".join(error["code"] for error in decision_pack_validation["errors"])
+        raise ValueError(
+            "Visual plan cannot produce a semantically bound Decision Pack: " + codes
+        )
+    return decision_pack
 
 
 def validate_decision_pack(pack: Any) -> dict[str, Any]:
@@ -149,6 +355,7 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
 
     raw_slots = _list(root.get("slots"), "$.slots", errors)
     slot_ids: set[str] = set()
+    slots_by_id: dict[str, Mapping[str, Any]] = {}
     if raw_slots is not None:
         for index, raw_slot in enumerate(raw_slots):
             path = f"$.slots[{index}]"
@@ -165,23 +372,60 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
                         "Decision Pack slot IDs must be unique.",
                     ))
                 slot_ids.add(slot_id)
-            _list(slot.get("candidates"), f"{path}.candidates", errors)
+                slots_by_id[slot_id] = slot
+            candidates = _list(slot.get("candidates"), f"{path}.candidates", errors)
+            evidence = _list(slot.get("evidence"), f"{path}.evidence", errors)
+            candidate_ids: set[str] = set()
+            selected_ids: set[str] = set()
+            assigned_candidate_id = None
+            if candidates is not None and isinstance(slot_id, str):
+                candidate_ids, selected_ids = _candidate_ids(
+                    candidates, slot_id, f"{path}.candidates", errors
+                )
+            if evidence is not None and isinstance(slot_id, str):
+                assigned_candidate_id = _assigned_candidate_id(
+                    evidence, slot_id, f"{path}.evidence", errors
+                )
             proposal = _object(slot.get("proposal"), f"{path}.proposal", errors)
-            if proposal is not None:
-                candidate_id = proposal.get("candidate_id")
-                if candidate_id is not None and not isinstance(candidate_id, str):
-                    errors.append(_issue(
-                        "decision_pack_candidate_id",
-                        f"{path}.proposal.candidate_id",
-                        "Candidate ID must be a string or null.",
-                    ))
-                provenance = proposal.get("provenance")
-                if provenance is not None:
-                    _object(provenance, f"{path}.proposal.provenance", errors)
-                placement = proposal.get("placement")
-                if placement is not None:
-                    _object(placement, f"{path}.proposal.placement", errors)
-            _list(slot.get("evidence"), f"{path}.evidence", errors)
+            if proposal is not None and isinstance(slot_id, str):
+                if _asset_is_empty(proposal):
+                    if assigned_candidate_id is not None:
+                        errors.append(_issue(
+                            "decision_pack_assigned_proposal_missing",
+                            f"{path}.proposal",
+                            "An assigned candidate requires complete proposal evidence.",
+                        ))
+                else:
+                    expected_candidate_id = assigned_candidate_id
+                    if expected_candidate_id is None:
+                        if len(selected_ids) == 1:
+                            expected_candidate_id = next(iter(selected_ids))
+                        elif len(selected_ids) > 1:
+                            errors.append(_issue(
+                                "decision_pack_ambiguous_selected_candidate",
+                                f"{path}.candidates",
+                                "Multiple selected candidates require one assigned intent-ledger entry.",
+                            ))
+                        else:
+                            errors.append(_issue(
+                                "decision_pack_selected_candidate_missing",
+                                f"{path}.candidates",
+                                "A proposal requires one selected candidate or assigned intent-ledger entry.",
+                            ))
+                    elif expected_candidate_id not in candidate_ids:
+                        errors.append(_issue(
+                            "decision_pack_assignment_candidate_binding",
+                            f"{path}.evidence",
+                            "Assigned evidence must refer to a scored candidate in the same slot.",
+                        ))
+                    _validate_asset_binding(
+                        proposal,
+                        slot_id=slot_id,
+                        path=f"{path}.proposal",
+                        candidate_ids=candidate_ids,
+                        expected_candidate_id=expected_candidate_id,
+                        errors=errors,
+                    )
     checks["slots"] = {"status": "passed" if raw_slots is not None and not any(
         item["path"].startswith("$.slots") for item in errors
     ) else "failed", "slots": len(slot_ids)}
@@ -224,6 +468,63 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
                         "decision_pack_review_action",
                         f"{path}.action",
                         "Review action must be accept, replace, or reject.",
+                    ))
+                action = decision.get("action")
+                replacement = decision.get("replacement")
+                decision_slot = slots_by_id.get(str(slot_id)) if isinstance(slot_id, str) else None
+                if action == "accept" and (
+                    decision_slot is None or not _asset_is_complete(decision_slot.get("proposal"))
+                ):
+                    errors.append(_issue(
+                        "decision_pack_accept_requires_proposal",
+                        f"{path}.action",
+                        "An accept decision requires complete bound proposal evidence.",
+                    ))
+                if action == "replace":
+                    replacement_obj = None
+                    if not isinstance(replacement, Mapping):
+                        errors.append(_issue(
+                            "decision_pack_replacement_required",
+                            f"{path}.replacement",
+                            "A replace decision requires candidate, provenance, and placement evidence.",
+                        ))
+                    else:
+                        replacement_obj = replacement
+                    if replacement_obj is not None and decision_slot is not None:
+                        raw_candidates = decision_slot.get("candidates")
+                        candidate_ids = set()
+                        if isinstance(raw_candidates, list):
+                            candidate_ids = {
+                                str(item.get("candidate_id"))
+                                for item in raw_candidates
+                                if isinstance(item, Mapping)
+                                and isinstance(item.get("candidate_id"), str)
+                                and item.get("candidate_id", "").strip()
+                            }
+                        replacement_id = _validate_asset_binding(
+                            replacement_obj,
+                            slot_id=str(slot_id),
+                            path=f"{path}.replacement",
+                            candidate_ids=candidate_ids,
+                            expected_candidate_id=None,
+                            errors=errors,
+                        )
+                        proposal = decision_slot.get("proposal")
+                        if (
+                            replacement_id is not None
+                            and isinstance(proposal, Mapping)
+                            and replacement_id == proposal.get("candidate_id")
+                        ):
+                            errors.append(_issue(
+                                "decision_pack_replacement_must_differ",
+                                f"{path}.replacement.candidate_id",
+                                "Replacement candidate_id must differ from the proposal.",
+                            ))
+                elif replacement is not None:
+                    errors.append(_issue(
+                        "decision_pack_unexpected_replacement",
+                        f"{path}.replacement",
+                        "Only a replace decision may contain replacement evidence.",
                     ))
                 _string(decision.get("actor"), "decision_pack_review_actor", f"{path}.actor", errors)
                 _string(decision.get("decided_at"), "decision_pack_review_time", f"{path}.decided_at", errors)

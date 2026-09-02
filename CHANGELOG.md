@@ -19,6 +19,18 @@
 - Added `--fail-on-change` for CI drift gates while keeping editorial plan
   differences reviewable by default.
 
+### Fixed
+
+- Decision Pack proposals now fail closed when the selected candidate,
+  provenance, and placement evidence do not bind to the same candidate, slot,
+  and generated filename.
+- `accept` can no longer approve an empty proposal, and `replace` now requires
+  a different scored candidate with complete replacement provenance and
+  placement evidence.
+- Clarified that execution receipts, idempotency, rollback, and live
+  verification are Product-owned lifecycle concerns rather than Core roadmap
+  deliverables.
+
 ### Removed
 
 - Removed the deprecated compatibility namespace and duplicate console entry

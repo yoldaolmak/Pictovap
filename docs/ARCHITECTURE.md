@@ -44,9 +44,9 @@ through the pipeline:
    images should be injected into the target platform.
 
 The **[Decision Pack](concepts/decision-pack.md)** is a portable aggregate of
-these primitives for editorial review. It keeps proposed evidence, human review
-state, and later CMS application receipts distinct; it is not a replacement for
-the underlying planning record.
+these primitives for editorial review. It keeps proposed evidence and human
+review state distinct from Product-owned execution; it is not a replacement
+for the underlying planning record.
 
 ## 4. Data Flow
 

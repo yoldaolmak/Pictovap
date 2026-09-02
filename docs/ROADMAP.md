@@ -16,7 +16,7 @@ to a separate commercial application that consumes Core's public contracts.
 ```text
 Article → Visual Intent Graph → Candidate Evidence → Constraints
         → Decision Ledger → Provenance Pack → CMS Placement
-        → Decision Pack → Editor Review → CMS Application Receipt
+        → Decision Pack → Editor Review → Product integration boundary
 ```
 
 ## North-star contract
@@ -27,7 +27,7 @@ Every plan should answer five questions without rerunning a provider:
 2. Which hard and soft constraints were applied?
 3. Why was each candidate selected, rejected, or left for review?
 4. What license, source, accessibility, and processing evidence was observed?
-5. What did an editor decide, and has any CMS application actually occurred?
+5. What did an editor decide, without implying that a CMS application occurred?
 
 ## Phase 0 — Public foundation (complete)
 
@@ -57,17 +57,22 @@ contract before adding another provider or CMS adapter.
 
 ## Phase 2 — Decision Pack and reference review surface (current)
 
-The Decision Pack is the portable product contract. It does not duplicate the
-planning engine: it groups its existing evidence by slot and records review and
-application state separately. WordPress is the first reference surface, not
-the conceptual center of the framework.
+The Decision Pack is the portable review contract. It does not duplicate the
+planning engine: it groups its existing evidence by slot and records review
+state. Its `not_applied` application value is a negative sentinel, not an
+execution lifecycle or receipt contract. WordPress is the first reference
+review surface, not the conceptual center of the framework.
 
 - [x] Decision Pack schema 1 builder and side-effect-free validator
 - [x] Explicit `pending` review and `not_applied` application states
 - [ ] Editor decision receipt: accept, replace, or reject with actor and time
 - [ ] Preview diff between a proposed and reviewed Decision Pack
-- [ ] WordPress review surface: Plan → Review → Preview Diff → Apply
-- [ ] CMS application receipt with idempotency and rollback boundaries
+- [ ] WordPress review surface: Plan → Review → Preview Diff
+- [ ] Document the hand-off from a reviewed pack to Product-owned execution
+
+Authorization, Apply, idempotency, rollback, execution receipts, and live
+verification remain private Product responsibilities and are not future Core
+Phase 2 deliverables.
 
 ## Phase 3 — Editorial policy, corpus, and resilience
 
