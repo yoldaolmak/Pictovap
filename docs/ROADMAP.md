@@ -5,6 +5,14 @@ product is not another stock-image search or alt-text utility. It compiles
 article intent, candidate evidence, publisher policy, and CMS placement into a
 reviewable visual plan whose decisions can be explained later.
 
+## Public Core scope
+
+This roadmap is for Pictovap Core, the public framework. Core remains usable
+for a single article and knows visual decisions; it does not manage an
+organization's estate or operational lifecycle. Enterprise inventory, findings,
+authorization, orchestration, execution receipts, and live verification belong
+to a separate commercial application that consumes Core's public contracts.
+
 ```text
 Article → Visual Intent Graph → Candidate Evidence → Constraints
         → Decision Ledger → Provenance Pack → CMS Placement
@@ -61,7 +69,7 @@ the conceptual center of the framework.
 - [ ] WordPress review surface: Plan → Review → Preview Diff → Apply
 - [ ] CMS application receipt with idempotency and rollback boundaries
 
-## Phase 3 — Editorial policy and resilience
+## Phase 3 — Editorial policy, corpus, and resilience
 
 - [ ] Publisher Visual Constitution: explicit, versioned visual policy YAML
 - [ ] Constraint policy overrides in Publisher Profile v2
@@ -70,26 +78,14 @@ the conceptual center of the framework.
 - [ ] Cross-article duplicate and source-concentration policy
 - [ ] CMS capability matrix for crop, caption, alt text, and media-library behavior
 
-## Phase 4 — Evidence-backed VisualDNA
-
-VisualDNA is deliberately downstream of explicit policy and real editorial
-feedback. It must not pretend to learn a publisher's taste from a tiny or
-unverified corpus.
-
-- [ ] Opt-in editor feedback receipt: accepted, replaced, rejected, and reason
-- [ ] Aggregate visual preference report with provenance-safe statistics
-- [ ] Suggested policy changes requiring maintainer/editor approval
-- [ ] Optional VisualDNA profile generated only from approved feedback
-- [ ] Reproducible evaluation set for any learned or heuristic preference
-
-## Phase 5 — Integration surfaces
+## Phase 4 — Integration surfaces
 
 - [ ] CMS capability adapters for placement validation and safe dry-runs
 - [ ] MCP server only after the public intent and proof contracts stabilize
 - [ ] External adapter conformance badge backed by contract receipts
 - [ ] Stable Framework ABI v1 after one complete compatibility cycle
 
-## Phase 6 — Ecosystem and adoption
+## Phase 5 — Ecosystem and adoption
 
 - [ ] Third-party adapter packages with independent CI and compatibility pins
 - [ ] External publisher case studies with reproducible, non-sensitive evidence

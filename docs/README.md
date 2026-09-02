@@ -46,6 +46,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 ### Architecture
 
 - [Architecture](ARCHITECTURE.md) — Core primitives, adapter model, data flow
+- [Core/Product Boundary](architecture/core-product-boundary.md) — What remains public framework scope
 - [Adapter Overview](adapters/overview.md) — Where image source and CMS adapters live
 - [Brand & Naming](architecture/naming.md) — Product name vs. package name
 
