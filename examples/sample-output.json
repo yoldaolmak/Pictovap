@@ -418,7 +418,7 @@
       "placement_target": "featured_image",
       "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
       "generated_caption": "The Future of Minimalist Travel",
-      "timestamp": "2026-09-03T16:12:28.237620+00:00",
+      "timestamp": "2026-09-03T19:18:53.285602+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -441,7 +441,7 @@
       "placement_target": "inline_after_packing_smart",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "Packing Smart: The core of minimalism is the capsule wardrobe.",
-      "timestamp": "2026-09-03T16:12:28.237640+00:00",
+      "timestamp": "2026-09-03T19:18:53.285631+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -464,7 +464,7 @@
       "placement_target": "inline_after_finding_serenity_in_nature",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "Finding Serenity in Nature: When you travel with less, you have the physical and mental energy to explore further.",
-      "timestamp": "2026-09-03T16:12:28.237652+00:00",
+      "timestamp": "2026-09-03T19:18:53.285648+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -487,7 +487,7 @@
       "placement_target": "inline_after_conclusion",
       "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
       "generated_caption": "Conclusion: Embracing this mindset transforms the journey.",
-      "timestamp": "2026-09-03T16:12:28.237662+00:00",
+      "timestamp": "2026-09-03T19:18:53.285663+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -2351,6 +2351,20 @@
     "provider": {
       "mode": "demo",
       "name": null
-    }
+    },
+    "sources": [
+      {
+        "source": "local",
+        "state": "unknown",
+        "candidates": 0,
+        "reason": "not_queried_fixture_run"
+      },
+      {
+        "source": "unsplash",
+        "state": "unknown",
+        "candidates": 0,
+        "reason": "not_queried_fixture_run"
+      }
+    ]
   }
 }

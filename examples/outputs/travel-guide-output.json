@@ -426,7 +426,7 @@
       "placement_target": "featured_image",
       "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
       "generated_caption": "The Ultimate 3-Day Kyoto Itinerary",
-      "timestamp": "2026-09-03T16:12:28.225538+00:00",
+      "timestamp": "2026-09-03T19:18:53.270088+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -449,7 +449,7 @@
       "placement_target": "inline_after_day_1:_the_eastern_mountains",
       "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
       "generated_caption": "Day 1: The Eastern Mountains: Start your journey in Higashiyama, Kyoto's best-preserved historic district.",
-      "timestamp": "2026-09-03T16:12:28.225777+00:00",
+      "timestamp": "2026-09-03T19:18:53.270611+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -472,7 +472,7 @@
       "placement_target": "inline_after_day_2:_bamboo_and_zen",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "Day 2: Bamboo and Zen: Head west to Arashiyama.",
-      "timestamp": "2026-09-03T16:12:28.225802+00:00",
+      "timestamp": "2026-09-03T19:18:53.270640+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -495,7 +495,7 @@
       "placement_target": "inline_after_conclusion",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "Conclusion: Three days is barely enough to scratch the surface of Kyoto, but by focusing on one region per day, you can experience the magic without feeling rushed.",
-      "timestamp": "2026-09-03T16:12:28.225826+00:00",
+      "timestamp": "2026-09-03T19:18:53.270671+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -2360,6 +2360,14 @@
     "provider": {
       "mode": "demo",
       "name": null
-    }
+    },
+    "sources": [
+      {
+        "source": "local",
+        "state": "unknown",
+        "candidates": 0,
+        "reason": "not_queried_fixture_run"
+      }
+    ]
   }
 }

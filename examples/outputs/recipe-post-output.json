@@ -523,7 +523,7 @@
       "placement_target": "featured_image",
       "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
       "generated_caption": "Authentic Neapolitan Pizza Dough",
-      "timestamp": "2026-09-03T16:12:28.234362+00:00",
+      "timestamp": "2026-09-03T19:18:53.280728+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -546,7 +546,7 @@
       "placement_target": "inline_after_ingredients",
       "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
       "generated_caption": "Ingredients: You only need four simple ingredients: - 500g Tipo 00 Flour - 325ml Water (room temperature) - 10g Fine Sea Salt - 3g Fresh Yeast (or 1g active dry yeast)",
-      "timestamp": "2026-09-03T16:12:28.234377+00:00",
+      "timestamp": "2026-09-03T19:18:53.280760+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -569,7 +569,7 @@
       "placement_target": "inline_after_the_mixing_process",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "The Mixing Process: Start by dissolving the salt in the water.",
-      "timestamp": "2026-09-03T16:12:28.234389+00:00",
+      "timestamp": "2026-09-03T19:18:53.280777+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -592,7 +592,7 @@
       "placement_target": "inline_after_fermentation",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "Fermentation: Place the dough in a lightly oiled bowl, cover it with a damp cloth, and let it rest at room temperature for 2 hours.",
-      "timestamp": "2026-09-03T16:12:28.234399+00:00",
+      "timestamp": "2026-09-03T19:18:53.280792+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -2904,6 +2904,14 @@
     "provider": {
       "mode": "demo",
       "name": null
-    }
+    },
+    "sources": [
+      {
+        "source": "local",
+        "state": "unknown",
+        "candidates": 0,
+        "reason": "not_queried_fixture_run"
+      }
+    ]
   }
 }

@@ -430,7 +430,7 @@
       "placement_target": "featured_image",
       "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
       "generated_caption": "The Best Coffee Shops in Capitol Hill, Seattle",
-      "timestamp": "2026-09-03T16:12:28.231596+00:00",
+      "timestamp": "2026-09-03T19:18:53.276012+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -453,7 +453,7 @@
       "placement_target": "inline_after_espresso_vivace",
       "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
       "generated_caption": "Espresso Vivace: A true Seattle institution, Espresso Vivace is famous for bringing Northern Italian roasting styles to the Pacific Northwest.",
-      "timestamp": "2026-09-03T16:12:28.231615+00:00",
+      "timestamp": "2026-09-03T19:18:53.276049+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -476,7 +476,7 @@
       "placement_target": "inline_after_analog_coffee",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "The right image should support the section’s context, not simply decorate the page.",
-      "timestamp": "2026-09-03T16:12:28.231629+00:00",
+      "timestamp": "2026-09-03T19:18:53.276070+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -499,7 +499,7 @@
       "placement_target": "inline_after_starbucks_reserve_roastery",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
       "generated_caption": "Starbucks Reserve Roastery: While Starbucks is ubiquitous, the Reserve Roastery on Pike Street is a completely different experience.",
-      "timestamp": "2026-09-03T16:12:28.231644+00:00",
+      "timestamp": "2026-09-03T19:18:53.276091+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -2366,6 +2366,14 @@
     "provider": {
       "mode": "demo",
       "name": null
-    }
+    },
+    "sources": [
+      {
+        "source": "local",
+        "state": "unknown",
+        "candidates": 0,
+        "reason": "not_queried_fixture_run"
+      }
+    ]
   }
 }
