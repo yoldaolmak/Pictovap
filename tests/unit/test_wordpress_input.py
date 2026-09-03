@@ -6,7 +6,7 @@ import pytest
 import requests
 
 from pictovap.core.primitives import VisualBrief
-from pictovap.demo import create_wordpress_visual_plan
+from pictovap.api import create_wordpress_visual_plan
 from pictovap.services.wordpress import WordPressPostReadError
 
 

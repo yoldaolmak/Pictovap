@@ -3,7 +3,9 @@
 import json
 
 from pictovap.core.primitives import VisualBrief
-from pictovap.demo import create_visual_plan, generate_markdown_report, score_candidate
+from pictovap.api import create_visual_plan
+from pictovap.engine.reporting import generate_markdown_report
+from pictovap.engine.scoring import score_candidate
 
 
 def test_markdown_frontmatter_populates_brief_and_serializes(tmp_path):

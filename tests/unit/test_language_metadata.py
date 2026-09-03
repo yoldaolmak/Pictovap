@@ -8,7 +8,7 @@ from pictovap.core.language import detect_language
 from pictovap.core.primitives import VisualBrief
 from pictovap.core.profile import PublisherProfile
 from pictovap.core.demo_metadata import generate_local_alt_text, generate_local_caption
-from pictovap.demo import generate_markdown_report
+from pictovap.engine.reporting import generate_markdown_report
 
 FIXTURE_DIR = Path(__file__).resolve().parents[1] / "fixtures"
 TURKISH_ARTICLE_PATH = FIXTURE_DIR / "turkish-coffee-article.md"

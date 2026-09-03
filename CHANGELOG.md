@@ -19,6 +19,27 @@
 - Added `--fail-on-change` for CI drift gates while keeping editorial plan
   differences reviewable by default.
 
+### Changed
+
+- Extracted the planning pipeline out of `pictovap.demo` into a silent,
+  side-effect-free engine: `engine/planner.py` (plan construction),
+  `engine/scoring.py` (Fit Score), and `engine/reporting.py` (editor report
+  and artifact writing). The engine prints nothing and writes no files.
+- The demo's terminal walkthrough is now rendered from the returned plan
+  instead of being printed during planning, so the screen and the artifact can
+  no longer disagree. This corrects the license line, which previously showed a
+  Python enum (`LicenseType.CC0`) where the plan records `cc0`.
+- `pictovap.api` no longer suppresses engine output with `redirect_stdout`; the
+  engine has no output to suppress.
+- The plan artifact is labelled `Pictovap Visual Plan` instead of
+  `Pictovap Visual Finishing Demo`. A run that used fixture candidates is still
+  identified honestly by `runtime.provider.mode`.
+- Candidate fixtures moved to `pictovap.data.demo_candidates`. The engine holds
+  no fixture of its own: a caller that supplies no fallback pool gets an
+  honestly empty plan.
+- Regenerated the committed example plans, which had been left on an older
+  schema without `intent_proof` or `planning_diagnostics`.
+
 ### Fixed
 
 - Decision Pack proposals now fail closed when the selected candidate,
@@ -33,6 +54,9 @@
 
 ### Removed
 
+- Removed the duplicate `pictovap.demo.create_visual_plan()` and
+  `pictovap.demo.create_wordpress_visual_plan()`. `pictovap.api` is the single
+  planning API; `pictovap.demo` was already documented as internal.
 - Removed the deprecated compatibility namespace and duplicate console entry
   point. The distribution now ships only the canonical `pictovap` package and
   CLI.

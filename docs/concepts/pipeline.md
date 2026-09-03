@@ -83,11 +83,11 @@ print(brief.to_dict())
 src/
 └── pictovap/
     ├── core/         # Primitives and shared data structures
-    ├── engine/       # Pipeline orchestration
+    ├── engine/       # Planning engine (planner, scoring, reporting)
     ├── providers/    # Image source adapters
     ├── publishers/   # CMS placement adapters
-    ├── profiles/     # Publisher configurations
-    └── demo.py       # Local credential-free demo
+    ├── data/         # Sample article and demo candidate fixtures
+    └── demo.py       # Local credential-free demo runner
 ```
 
 ## Compatibility Note

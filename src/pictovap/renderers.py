@@ -10,8 +10,8 @@ class MarkdownReportRenderer:
     """Render the established Markdown editor report."""
 
     def render(self, plan: dict[str, Any]) -> str:
-        # Kept in demo for backward compatibility with the original report CLI.
-        from pictovap.demo import generate_markdown_report
+        # The shared renderer used by the CLI, the library API, and this plugin surface.
+        from pictovap.engine.reporting import generate_markdown_report
 
         return generate_markdown_report(plan)
 

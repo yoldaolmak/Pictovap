@@ -32,7 +32,8 @@ from pictovap.app.runtime import (
     construct_plugin,
     parse_adapter_options,
 )
-from pictovap.demo import generate_report_from_file, run_demo
+from pictovap.demo import run_demo
+from pictovap.engine.reporting import generate_report_from_file
 from pictovap.feedback import render_feedback_markdown, summarize_plan
 from pictovap.conformance import AdapterCheckError, check_adapter
 from pictovap.audit import audit_visual_plan, render_audit_markdown
@@ -331,6 +332,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             elif args.renderer_option:
                 raise RuntimeConfigurationError("Renderer options require --renderer")
             generate_report_from_file(args.plan, args.output, renderer=renderer)
+            print(f"Report written to {args.output}")
             return 0
         except (RuntimeConfigurationError, PluginError, AdapterConstructionError, OSError, ValueError) as e:
             print(f"Error generating report: {e}", file=sys.stderr)

@@ -96,4 +96,5 @@ See the [Adapter Contribution Guide](../contributing/adapters.md) for step-by-st
 
 All credentials for external adapters must come from environment variables, never
 from hardcoded values. The local demo must always be runnable without any `.env` file.
-The mock adapter in `demo.py` demonstrates the correct credential-free pattern.
+The candidate fixtures in `src/pictovap/data/demo_candidates.py` demonstrate the
+correct credential-free pattern.

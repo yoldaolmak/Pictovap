@@ -66,6 +66,11 @@ Everything else under `pictovap.demo`, `pictovap.app`, `pictovap.engine`,
 `pictovap.core` is internal unless named in the stable-contract table.
 Do not import internal helpers from an external adapter.
 
+`pictovap.api` is the only supported way to create a visual plan from Python.
+The planning engine behind it (`pictovap.engine.planner`) is internal and may
+move; `pictovap.demo` is a runner for the credential-free example and exposes
+no planning API of its own.
+
 ## Compatibility Rules
 
 - Patch releases do not intentionally break stable contracts.

@@ -1,10 +1,10 @@
 {
-  "pipeline": "Pictovap Visual Finishing Demo",
+  "pipeline": "Pictovap Visual Plan",
   "visual_brief": {
     "article_title": "Authentic Neapolitan Pizza Dough",
     "article_id": "demo-article-001",
     "article_language": "en",
-    "topic": "minimalist travel",
+    "topic": "Authentic Neapolitan Pizza Dough",
     "detected_location": null,
     "sections": [
       {
@@ -71,23 +71,24 @@
     "avoid_list": [],
     "editorial_notes": "",
     "confidence": 0.8,
-    "source_path": "examples/articles/recipe-post.md"
+    "source_path": "examples/articles/recipe-post.md",
+    "frontmatter": {}
   },
   "fit_scores": {
     "featured": [
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "featured",
-        "contextual_relevance": 1.67,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 10.67,
+        "final_score": 9.0,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -104,30 +105,44 @@
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
+        "candidate_id": "img-lake-06",
+        "slot_id": "featured",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 2.0,
+        "final_score": 9.0,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
         "candidate_id": "img-sunset-05",
         "slot_id": "featured",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 2.0,
-        "final_score": 8.83,
+        "final_score": 8.0,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=1.5"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "featured",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 2.0,
-        "final_score": 7.33,
+        "final_score": 6.5,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -150,16 +165,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_0",
-        "contextual_relevance": 1.67,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.17,
+        "final_score": 8.5,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -176,30 +191,44 @@
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
+        "candidate_id": "img-lake-06",
+        "slot_id": "section_0",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_0",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.33,
-        "decision": "selected",
-        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
+        "final_score": 7.5,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=7.5), manual review recommended"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_0",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 6.83,
+        "final_score": 6.0,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -222,16 +251,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_1",
-        "contextual_relevance": 1.67,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.17,
+        "final_score": 8.5,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -248,30 +277,44 @@
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
+        "candidate_id": "img-lake-06",
+        "slot_id": "section_1",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_1",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.33,
-        "decision": "selected",
-        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
+        "final_score": 7.5,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=7.5), manual review recommended"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_1",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 6.83,
+        "final_score": 6.0,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -294,16 +337,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_2",
-        "contextual_relevance": 1.67,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.17,
+        "final_score": 8.5,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -320,30 +363,44 @@
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
+        "candidate_id": "img-lake-06",
+        "slot_id": "section_2",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_2",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.33,
-        "decision": "selected",
-        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
+        "final_score": 7.5,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=7.5), manual review recommended"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_2",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 6.83,
+        "final_score": 6.0,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -366,16 +423,16 @@
       {
         "candidate_id": "img-backpack-01",
         "slot_id": "section_3",
-        "contextual_relevance": 1.67,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 10.17,
+        "final_score": 8.5,
         "decision": "selected",
-        "human_reason": "Strong fit: contextual=1.7, quality=3.0, license=2.0"
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
         "candidate_id": "img-forest-02",
@@ -392,30 +449,44 @@
         "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
       },
       {
+        "candidate_id": "img-lake-06",
+        "slot_id": "section_3",
+        "contextual_relevance": 0.0,
+        "section_relevance": 0.0,
+        "technical_quality": 3.0,
+        "duplication_risk": 0.0,
+        "source_trust": 2.0,
+        "license_confidence": 2.0,
+        "cms_suitability": 1.5,
+        "final_score": 8.5,
+        "decision": "selected",
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0"
+      },
+      {
         "candidate_id": "img-sunset-05",
         "slot_id": "section_3",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 3.0,
         "duplication_risk": 0.0,
         "source_trust": 1.5,
         "license_confidence": 1.5,
         "cms_suitability": 1.5,
-        "final_score": 8.33,
-        "decision": "selected",
-        "human_reason": "Strong fit: contextual=0.8, quality=3.0, license=1.5"
+        "final_score": 7.5,
+        "decision": "needs_review",
+        "human_reason": "Moderate fit (score=7.5), manual review recommended"
       },
       {
         "candidate_id": "img-lowres-04",
         "slot_id": "section_3",
-        "contextual_relevance": 0.83,
+        "contextual_relevance": 0.0,
         "section_relevance": 0.0,
         "technical_quality": 0.5,
         "duplication_risk": 0.0,
         "source_trust": 2.0,
         "license_confidence": 2.0,
         "cms_suitability": 1.5,
-        "final_score": 6.83,
+        "final_score": 6.0,
         "decision": "rejected",
         "human_reason": "Resolution too low (320x240)"
       },
@@ -437,22 +508,45 @@
   },
   "provenance_packs": [
     {
+      "image_id": "img-sunset-05",
+      "source_type": "api",
+      "provider": "unsplash_mock",
+      "source_url": "https://unsplash.com/photos/mock-sunset",
+      "local_source_path": null,
+      "license_status": "unsplash",
+      "attribution": "Photo by Jane Doe on Unsplash",
+      "original_filename": "sunset-mountains.jpg",
+      "generated_filename": "pictovap_sunset-mountains.webp",
+      "content_hash": "546a0986053c06d2",
+      "article_id": "demo-article-001",
+      "slot_id": "featured",
+      "placement_target": "featured_image",
+      "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+      "generated_caption": "Authentic Neapolitan Pizza Dough",
+      "timestamp": "2026-09-03T16:12:28.234362+00:00",
+      "processing_actions": [
+        "resize_1200",
+        "webp_convert",
+        "exif_strip"
+      ]
+    },
+    {
       "image_id": "img-backpack-01",
       "source_type": "local",
       "provider": "local",
       "source_url": null,
       "local_source_path": "examples/assets/minimal-backpack.jpg",
-      "license_status": "CC0",
+      "license_status": "cc0",
       "attribution": null,
       "original_filename": "minimal-backpack.jpg",
       "generated_filename": "pictovap_minimal-backpack.webp",
       "content_hash": "66007ff9d92b261c",
       "article_id": "demo-article-001",
-      "slot_id": "featured",
-      "placement_target": "featured_image",
+      "slot_id": "section_0",
+      "placement_target": "inline_after_ingredients",
       "generated_alt_text": "A clean editorial image of travel packing and minimalist gear.",
-      "generated_caption": "Authentic Neapolitan Pizza Dough",
-      "timestamp": "2026-07-09T19:45:57.868721",
+      "generated_caption": "Ingredients: You only need four simple ingredients: - 500g Tipo 00 Flour - 325ml Water (room temperature) - 10g Fine Sea Salt - 3g Fresh Yeast (or 1g active dry yeast)",
+      "timestamp": "2026-09-03T16:12:28.234377+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -465,17 +559,17 @@
       "provider": "local",
       "source_url": null,
       "local_source_path": "examples/assets/forest-path.jpg",
-      "license_status": "CC0",
+      "license_status": "cc0",
       "attribution": null,
       "original_filename": "forest-path.jpg",
       "generated_filename": "pictovap_forest-path.webp",
       "content_hash": "0c8d86d771e6d03f",
       "article_id": "demo-article-001",
-      "slot_id": "section_0",
-      "placement_target": "inline_after_ingredients",
+      "slot_id": "section_1",
+      "placement_target": "inline_after_the_mixing_process",
       "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
-      "generated_caption": "Ingredients: You only need four simple ingredients: - 500g Tipo 00 Flour - 325ml Water (room temperature) - 10g Fine Sea Salt - 3g Fresh Yeast (or 1g active dry yeast)",
-      "timestamp": "2026-07-09T19:45:57.868948",
+      "generated_caption": "The Mixing Process: Start by dissolving the salt in the water.",
+      "timestamp": "2026-09-03T16:12:28.234389+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -483,22 +577,22 @@
       ]
     },
     {
-      "image_id": "img-sunset-05",
-      "source_type": "api",
-      "provider": "unsplash_mock",
-      "source_url": "https://unsplash.com/photos/mock-sunset",
-      "local_source_path": null,
-      "license_status": "unsplash",
-      "attribution": "Photo by Jane Doe on Unsplash",
-      "original_filename": "sunset-mountains.jpg",
-      "generated_filename": "pictovap_sunset-mountains.webp",
-      "content_hash": "546a0986053c06d2",
+      "image_id": "img-lake-06",
+      "source_type": "local",
+      "provider": "local",
+      "source_url": null,
+      "local_source_path": "examples/assets/quiet-lake.jpg",
+      "license_status": "cc0",
+      "attribution": null,
+      "original_filename": "quiet-lake.jpg",
+      "generated_filename": "pictovap_quiet-lake.webp",
+      "content_hash": "5c35870778289827",
       "article_id": "demo-article-001",
-      "slot_id": "section_1",
-      "placement_target": "inline_after_the_mixing_process",
-      "generated_alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
-      "generated_caption": "The Mixing Process: Start by dissolving the salt in the water.",
-      "timestamp": "2026-07-09T19:45:57.868965",
+      "slot_id": "section_2",
+      "placement_target": "inline_after_fermentation",
+      "generated_alt_text": "A serene nature image showing a forest path surrounded by trees.",
+      "generated_caption": "Fermentation: Place the dough in a lightly oiled bowl, cover it with a damp cloth, and let it rest at room temperature for 2 hours.",
+      "timestamp": "2026-09-03T16:12:28.234399+00:00",
       "processing_actions": [
         "resize_1200",
         "webp_convert",
@@ -513,38 +607,2303 @@
     "placements": [
       {
         "slot_id": "featured",
-        "output_path": "pictovap_minimal-backpack.webp",
+        "output_path": "pictovap_sunset-mountains.webp",
         "target_section": "",
         "placement_strategy": "featured",
         "image_role": "featured",
-        "alt_text": "A clean editorial image of travel packing and minimalist gear.",
+        "alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
         "caption": "Authentic Neapolitan Pizza Dough"
       },
       {
         "slot_id": "section_0",
-        "output_path": "pictovap_forest-path.webp",
+        "output_path": "pictovap_minimal-backpack.webp",
         "target_section": "Ingredients",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A serene nature image showing a forest path surrounded by trees.",
+        "alt_text": "A clean editorial image of travel packing and minimalist gear.",
         "caption": "Ingredients: You only need four simple ingredients: - 500g Tipo 00 Flour - 325ml Water (room temperature) - 10g Fine Sea Salt - 3g Fresh Yeast (or 1g active dry yeast)"
       },
       {
         "slot_id": "section_1",
-        "output_path": "pictovap_sunset-mountains.webp",
+        "output_path": "pictovap_forest-path.webp",
         "target_section": "The Mixing Process",
         "placement_strategy": "after_heading",
         "image_role": "content",
-        "alt_text": "A scenic landscape photo capturing the sunset over distant mountains.",
+        "alt_text": "A serene nature image showing a forest path surrounded by trees.",
         "caption": "The Mixing Process: Start by dissolving the salt in the water."
+      },
+      {
+        "slot_id": "section_2",
+        "output_path": "pictovap_quiet-lake.webp",
+        "target_section": "Fermentation",
+        "placement_strategy": "after_heading",
+        "image_role": "content",
+        "alt_text": "A serene nature image showing a forest path surrounded by trees.",
+        "caption": "Fermentation: Place the dough in a lightly oiled bowl, cover it with a damp cloth, and let it rest at room temperature for 2 hours."
       }
     ]
   },
   "source_path": "examples/articles/recipe-post.md",
+  "candidates_evaluated": 6,
+  "planning_diagnostics": {
+    "algorithm": "deterministic_maximum_weight_assignment",
+    "policy": {
+      "minimum_score": 8.0,
+      "allow_candidate_reuse": false,
+      "require_selected_decision": true,
+      "similarity_threshold": 0.92,
+      "similarity_penalty": 2.0
+    },
+    "slots_requested": 5,
+    "slots_filled": 4,
+    "coverage_ratio": 0.8,
+    "total_score": 33.5,
+    "adjusted_total_score": 33.5,
+    "diversity_penalty": 0,
+    "similarity_pairs": [],
+    "unfilled_slots": [
+      "section_3"
+    ],
+    "warnings": [
+      "1 editorial slot(s) have no eligible unique candidate",
+      "Candidate pool is smaller than the requested slot count"
+    ]
+  },
+  "intent_proof": {
+    "schema_version": "1",
+    "status": "warning",
+    "graph": {
+      "schema_version": "1",
+      "compiler": "pictovap.visual-intent",
+      "article_id": "demo-article-001",
+      "article_title": "Authentic Neapolitan Pizza Dough",
+      "language": "en",
+      "topic": "Authentic Neapolitan Pizza Dough",
+      "publisher_profile": "sample-publisher",
+      "slots": [
+        {
+          "slot_id": "featured",
+          "role": "featured",
+          "target_heading": "",
+          "purpose": "featured_image",
+          "query_terms": [
+            "authentic",
+            "neapolitan",
+            "pizza",
+            "dough"
+          ],
+          "constraints": [
+            {
+              "code": "license_declared",
+              "kind": "hard",
+              "requirement": "candidate declares a usable license"
+            },
+            {
+              "code": "source_reference",
+              "kind": "hard",
+              "requirement": "candidate exposes a local path or source URL"
+            },
+            {
+              "code": "minimum_dimensions",
+              "kind": "hard",
+              "requirement": "candidate is at least 800x600 pixels"
+            },
+            {
+              "code": "semantic_alignment",
+              "kind": "soft",
+              "requirement": "candidate keywords align with the slot context"
+            },
+            {
+              "code": "technical_headroom",
+              "kind": "soft",
+              "requirement": "candidate meets the preferred 1200x800 dimensions"
+            },
+            {
+              "code": "cms_suitability",
+              "kind": "soft",
+              "requirement": "candidate fits the target placement role"
+            },
+            {
+              "code": "global_diversity",
+              "kind": "soft",
+              "requirement": "candidate does not create avoidable repetition"
+            }
+          ]
+        },
+        {
+          "slot_id": "section_0",
+          "role": "inline",
+          "target_heading": "Ingredients",
+          "purpose": "inline_after_ingredients",
+          "query_terms": [
+            "authentic",
+            "neapolitan",
+            "pizza",
+            "dough",
+            "ingredients",
+            "you",
+            "only",
+            "need",
+            "four",
+            "simple",
+            "500g",
+            "tipo"
+          ],
+          "constraints": [
+            {
+              "code": "license_declared",
+              "kind": "hard",
+              "requirement": "candidate declares a usable license"
+            },
+            {
+              "code": "source_reference",
+              "kind": "hard",
+              "requirement": "candidate exposes a local path or source URL"
+            },
+            {
+              "code": "minimum_dimensions",
+              "kind": "hard",
+              "requirement": "candidate is at least 800x600 pixels"
+            },
+            {
+              "code": "semantic_alignment",
+              "kind": "soft",
+              "requirement": "candidate keywords align with the slot context"
+            },
+            {
+              "code": "technical_headroom",
+              "kind": "soft",
+              "requirement": "candidate meets the preferred 1200x800 dimensions"
+            },
+            {
+              "code": "cms_suitability",
+              "kind": "soft",
+              "requirement": "candidate fits the target placement role"
+            },
+            {
+              "code": "global_diversity",
+              "kind": "soft",
+              "requirement": "candidate does not create avoidable repetition"
+            }
+          ]
+        },
+        {
+          "slot_id": "section_1",
+          "role": "inline",
+          "target_heading": "The Mixing Process",
+          "purpose": "inline_after_the_mixing_process",
+          "query_terms": [
+            "authentic",
+            "neapolitan",
+            "pizza",
+            "dough",
+            "mixing",
+            "process",
+            "start",
+            "dissolving",
+            "salt",
+            "water",
+            "once",
+            "dissolved"
+          ],
+          "constraints": [
+            {
+              "code": "license_declared",
+              "kind": "hard",
+              "requirement": "candidate declares a usable license"
+            },
+            {
+              "code": "source_reference",
+              "kind": "hard",
+              "requirement": "candidate exposes a local path or source URL"
+            },
+            {
+              "code": "minimum_dimensions",
+              "kind": "hard",
+              "requirement": "candidate is at least 800x600 pixels"
+            },
+            {
+              "code": "semantic_alignment",
+              "kind": "soft",
+              "requirement": "candidate keywords align with the slot context"
+            },
+            {
+              "code": "technical_headroom",
+              "kind": "soft",
+              "requirement": "candidate meets the preferred 1200x800 dimensions"
+            },
+            {
+              "code": "cms_suitability",
+              "kind": "soft",
+              "requirement": "candidate fits the target placement role"
+            },
+            {
+              "code": "global_diversity",
+              "kind": "soft",
+              "requirement": "candidate does not create avoidable repetition"
+            }
+          ]
+        },
+        {
+          "slot_id": "section_2",
+          "role": "inline",
+          "target_heading": "Fermentation",
+          "purpose": "inline_after_fermentation",
+          "query_terms": [
+            "authentic",
+            "neapolitan",
+            "pizza",
+            "dough",
+            "fermentation",
+            "place",
+            "lightly",
+            "oiled",
+            "bowl",
+            "cover",
+            "damp",
+            "cloth"
+          ],
+          "constraints": [
+            {
+              "code": "license_declared",
+              "kind": "hard",
+              "requirement": "candidate declares a usable license"
+            },
+            {
+              "code": "source_reference",
+              "kind": "hard",
+              "requirement": "candidate exposes a local path or source URL"
+            },
+            {
+              "code": "minimum_dimensions",
+              "kind": "hard",
+              "requirement": "candidate is at least 800x600 pixels"
+            },
+            {
+              "code": "semantic_alignment",
+              "kind": "soft",
+              "requirement": "candidate keywords align with the slot context"
+            },
+            {
+              "code": "technical_headroom",
+              "kind": "soft",
+              "requirement": "candidate meets the preferred 1200x800 dimensions"
+            },
+            {
+              "code": "cms_suitability",
+              "kind": "soft",
+              "requirement": "candidate fits the target placement role"
+            },
+            {
+              "code": "global_diversity",
+              "kind": "soft",
+              "requirement": "candidate does not create avoidable repetition"
+            }
+          ]
+        },
+        {
+          "slot_id": "section_3",
+          "role": "inline",
+          "target_heading": "Baking Preparation",
+          "purpose": "inline_after_baking_preparation",
+          "query_terms": [
+            "authentic",
+            "neapolitan",
+            "pizza",
+            "dough",
+            "baking",
+            "preparation",
+            "true",
+            "baked",
+            "wood-fired",
+            "oven",
+            "450",
+            "840"
+          ],
+          "constraints": [
+            {
+              "code": "license_declared",
+              "kind": "hard",
+              "requirement": "candidate declares a usable license"
+            },
+            {
+              "code": "source_reference",
+              "kind": "hard",
+              "requirement": "candidate exposes a local path or source URL"
+            },
+            {
+              "code": "minimum_dimensions",
+              "kind": "hard",
+              "requirement": "candidate is at least 800x600 pixels"
+            },
+            {
+              "code": "semantic_alignment",
+              "kind": "soft",
+              "requirement": "candidate keywords align with the slot context"
+            },
+            {
+              "code": "technical_headroom",
+              "kind": "soft",
+              "requirement": "candidate meets the preferred 1200x800 dimensions"
+            },
+            {
+              "code": "cms_suitability",
+              "kind": "soft",
+              "requirement": "candidate fits the target placement role"
+            },
+            {
+              "code": "global_diversity",
+              "kind": "soft",
+              "requirement": "candidate does not create avoidable repetition"
+            }
+          ]
+        }
+      ]
+    },
+    "ledger": [
+      {
+        "slot_id": "featured",
+        "candidate_id": "img-backpack-01",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1920x1280",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 2.0,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1920,
+          "height": 1280,
+          "source_reference": true,
+          "score": 9.0
+        }
+      },
+      {
+        "slot_id": "featured",
+        "candidate_id": "img-forest-02",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1600x1067",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 2.0,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1600,
+          "height": 1067,
+          "source_reference": true,
+          "score": 9.0
+        }
+      },
+      {
+        "slot_id": "featured",
+        "candidate_id": "img-lake-06",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1800x1200",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 2.0,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1800,
+          "height": 1200,
+          "source_reference": true,
+          "score": 9.0
+        }
+      },
+      {
+        "slot_id": "featured",
+        "candidate_id": "img-sunset-05",
+        "decision": "selected",
+        "assignment": "assigned",
+        "reason_codes": [
+          "assigned_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=1.5",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "unsplash",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "2400x1600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 2.0,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "unsplash_mock",
+          "license": "unsplash",
+          "width": 2400,
+          "height": 1600,
+          "source_reference": true,
+          "score": 8.0
+        }
+      },
+      {
+        "slot_id": "featured",
+        "candidate_id": "img-lowres-04",
+        "decision": "rejected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "minimum_dimensions",
+          "rejected_by_fit_policy"
+        ],
+        "human_reason": "Resolution too low (320x240)",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "owned",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "failed",
+            "observed": "320x240",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 0.5,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 2.0,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "owned",
+          "width": 320,
+          "height": 240,
+          "source_reference": true,
+          "score": 6.5
+        }
+      },
+      {
+        "slot_id": "featured",
+        "candidate_id": "img-generic-03",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=5.5), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "editorial",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "800x600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 2.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 2.0,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "stock",
+          "license": "editorial",
+          "width": 800,
+          "height": 600,
+          "source_reference": true,
+          "score": 5.5
+        }
+      },
+      {
+        "slot_id": "section_0",
+        "candidate_id": "img-backpack-01",
+        "decision": "selected",
+        "assignment": "assigned",
+        "reason_codes": [
+          "assigned_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1920x1280",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1920,
+          "height": 1280,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_0",
+        "candidate_id": "img-forest-02",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1600x1067",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1600,
+          "height": 1067,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_0",
+        "candidate_id": "img-lake-06",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1800x1200",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1800,
+          "height": 1200,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_0",
+        "candidate_id": "img-sunset-05",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=7.5), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "unsplash",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "2400x1600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "unsplash_mock",
+          "license": "unsplash",
+          "width": 2400,
+          "height": 1600,
+          "source_reference": true,
+          "score": 7.5
+        }
+      },
+      {
+        "slot_id": "section_0",
+        "candidate_id": "img-lowres-04",
+        "decision": "rejected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "minimum_dimensions",
+          "rejected_by_fit_policy"
+        ],
+        "human_reason": "Resolution too low (320x240)",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "owned",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "failed",
+            "observed": "320x240",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 0.5,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "owned",
+          "width": 320,
+          "height": 240,
+          "source_reference": true,
+          "score": 6.0
+        }
+      },
+      {
+        "slot_id": "section_0",
+        "candidate_id": "img-generic-03",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=5.0), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "editorial",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "800x600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 2.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "stock",
+          "license": "editorial",
+          "width": 800,
+          "height": 600,
+          "source_reference": true,
+          "score": 5.0
+        }
+      },
+      {
+        "slot_id": "section_1",
+        "candidate_id": "img-backpack-01",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1920x1280",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1920,
+          "height": 1280,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_1",
+        "candidate_id": "img-forest-02",
+        "decision": "selected",
+        "assignment": "assigned",
+        "reason_codes": [
+          "assigned_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1600x1067",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1600,
+          "height": 1067,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_1",
+        "candidate_id": "img-lake-06",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1800x1200",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1800,
+          "height": 1200,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_1",
+        "candidate_id": "img-sunset-05",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=7.5), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "unsplash",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "2400x1600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "unsplash_mock",
+          "license": "unsplash",
+          "width": 2400,
+          "height": 1600,
+          "source_reference": true,
+          "score": 7.5
+        }
+      },
+      {
+        "slot_id": "section_1",
+        "candidate_id": "img-lowres-04",
+        "decision": "rejected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "minimum_dimensions",
+          "rejected_by_fit_policy"
+        ],
+        "human_reason": "Resolution too low (320x240)",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "owned",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "failed",
+            "observed": "320x240",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 0.5,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "owned",
+          "width": 320,
+          "height": 240,
+          "source_reference": true,
+          "score": 6.0
+        }
+      },
+      {
+        "slot_id": "section_1",
+        "candidate_id": "img-generic-03",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=5.0), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "editorial",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "800x600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 2.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "stock",
+          "license": "editorial",
+          "width": 800,
+          "height": 600,
+          "source_reference": true,
+          "score": 5.0
+        }
+      },
+      {
+        "slot_id": "section_2",
+        "candidate_id": "img-backpack-01",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1920x1280",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1920,
+          "height": 1280,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_2",
+        "candidate_id": "img-forest-02",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1600x1067",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1600,
+          "height": 1067,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_2",
+        "candidate_id": "img-lake-06",
+        "decision": "selected",
+        "assignment": "assigned",
+        "reason_codes": [
+          "assigned_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1800x1200",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1800,
+          "height": 1200,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_2",
+        "candidate_id": "img-sunset-05",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=7.5), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "unsplash",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "2400x1600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "unsplash_mock",
+          "license": "unsplash",
+          "width": 2400,
+          "height": 1600,
+          "source_reference": true,
+          "score": 7.5
+        }
+      },
+      {
+        "slot_id": "section_2",
+        "candidate_id": "img-lowres-04",
+        "decision": "rejected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "minimum_dimensions",
+          "rejected_by_fit_policy"
+        ],
+        "human_reason": "Resolution too low (320x240)",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "owned",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "failed",
+            "observed": "320x240",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 0.5,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "owned",
+          "width": 320,
+          "height": 240,
+          "source_reference": true,
+          "score": 6.0
+        }
+      },
+      {
+        "slot_id": "section_2",
+        "candidate_id": "img-generic-03",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=5.0), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "editorial",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "800x600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 2.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "stock",
+          "license": "editorial",
+          "width": 800,
+          "height": 600,
+          "source_reference": true,
+          "score": 5.0
+        }
+      },
+      {
+        "slot_id": "section_3",
+        "candidate_id": "img-backpack-01",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1920x1280",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1920,
+          "height": 1280,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_3",
+        "candidate_id": "img-forest-02",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1600x1067",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1600,
+          "height": 1067,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_3",
+        "candidate_id": "img-lake-06",
+        "decision": "selected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Strong fit: contextual=0.0, quality=3.0, license=2.0",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "CC0",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "1800x1200",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "CC0",
+          "width": 1800,
+          "height": 1200,
+          "source_reference": true,
+          "score": 8.5
+        }
+      },
+      {
+        "slot_id": "section_3",
+        "candidate_id": "img-sunset-05",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=7.5), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "unsplash",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "2400x1600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "passed",
+            "observed": 3.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "unsplash_mock",
+          "license": "unsplash",
+          "width": 2400,
+          "height": 1600,
+          "source_reference": true,
+          "score": 7.5
+        }
+      },
+      {
+        "slot_id": "section_3",
+        "candidate_id": "img-lowres-04",
+        "decision": "rejected",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "minimum_dimensions",
+          "rejected_by_fit_policy"
+        ],
+        "human_reason": "Resolution too low (320x240)",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "owned",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "failed",
+            "observed": "320x240",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 0.5,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "local",
+          "license": "owned",
+          "width": 320,
+          "height": 240,
+          "source_reference": true,
+          "score": 6.0
+        }
+      },
+      {
+        "slot_id": "section_3",
+        "candidate_id": "img-generic-03",
+        "decision": "needs_review",
+        "assignment": "not_assigned",
+        "reason_codes": [
+          "not_selected_by_global_policy"
+        ],
+        "human_reason": "Moderate fit (score=5.0), manual review recommended",
+        "hard_constraints": [
+          {
+            "code": "license_declared",
+            "status": "passed",
+            "observed": "editorial",
+            "requirement": "non-empty license"
+          },
+          {
+            "code": "source_reference",
+            "status": "passed",
+            "observed": true,
+            "requirement": "local_path or source_url"
+          },
+          {
+            "code": "minimum_dimensions",
+            "status": "passed",
+            "observed": "800x600",
+            "requirement": "at least 800x600"
+          }
+        ],
+        "soft_constraints": [
+          {
+            "code": "semantic_alignment",
+            "status": "failed",
+            "observed": 0.0,
+            "requirement": "contextual + section relevance >= 1.0"
+          },
+          {
+            "code": "technical_headroom",
+            "status": "failed",
+            "observed": 2.0,
+            "requirement": "preferred technical quality"
+          },
+          {
+            "code": "cms_suitability",
+            "status": "passed",
+            "observed": 1.5,
+            "requirement": "CMS suitability >= 1.5"
+          },
+          {
+            "code": "global_diversity",
+            "status": "passed",
+            "observed": 0.0,
+            "requirement": "duplication risk <= 0"
+          }
+        ],
+        "evidence": {
+          "provider": "stock",
+          "license": "editorial",
+          "width": 800,
+          "height": 600,
+          "source_reference": true,
+          "score": 5.0
+        }
+      }
+    ],
+    "summary": {
+      "slots": 5,
+      "evaluations": 30,
+      "selected": 4,
+      "hard_constraint_failures": 5
+    }
+  },
   "profile": {
     "id": "sample-publisher",
     "brand": "Sample Publisher",
     "cms_type": "generic",
     "language": "en"
+  },
+  "runtime": {
+    "provider": {
+      "mode": "demo",
+      "name": null
+    }
   }
 }

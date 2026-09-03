@@ -136,11 +136,14 @@ No specific AI model or "Vision Chain" is a required architectural component.
 ```
 src/
   pictovap/
+    api.py        # Stable public planning API
     app/          # CLI entrypoint (demo / plan / report)
     core/         # Primitives, adapters, profile, pipeline sources
-    engine/       # Vision chain (multi-provider image analysis)
+    data/         # Sample article and deterministic demo candidates
+    engine/       # Planning engine: planner, scoring, reporting, vision chain
     providers/    # Image source adapters (local, Unsplash, DepositPhotos)
     publishers/   # CMS placement adapters (Ghost, Strapi)
     services/     # WordPress CMS adapter + supporting Gutenberg logic
+    demo.py       # Credential-free demo runner and its terminal rendering
     vision_templates.py  # Prompt templates for vision-backed metadata
 ```

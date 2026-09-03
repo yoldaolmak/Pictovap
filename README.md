@@ -117,10 +117,10 @@ pictovap demo
 
 ```text
   Brief:      4 slots from 3 sections
-  Evaluated:  5 candidates
-  Selected:   3 images
+  Evaluated:  6 candidates
+  Selected:   4 images
   Rejected:   4 candidates
-  Placements: 3 instructions
+  Placements: 4 instructions
 ```
 
 No `.env` file, no API keys, no network calls — every candidate and score

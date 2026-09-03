@@ -58,7 +58,7 @@ reports this back through `place()`'s `warnings`, it does not fail silently.
 Projects with a gallery/repeatable media field should subclass
 `StrapiPublisher` and override `place()`.
 
-### Mock (`src/pictovap/demo.py`)
+### Mock (`src/pictovap/engine/planner.py`)
 
 **Status: used by the credential-free demo**
 
