@@ -48,7 +48,7 @@ typecheck:
 	python3 -m pyright
 
 markdownlint:
-	npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
+	npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
 
 quality: lint typecheck markdownlint test
 

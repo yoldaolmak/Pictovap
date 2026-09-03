@@ -158,4 +158,4 @@ jobs:
           node-version: "24"
 
       - name: Check Markdown structure
-        run: npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
+        run: npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
