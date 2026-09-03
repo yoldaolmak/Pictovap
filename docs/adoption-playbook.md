@@ -140,7 +140,7 @@ for a copyable sequence.
 
 - The credential-free demo relies on mock assets and deterministic scoring, not live APIs.
 - Real API runs (with external model providers) require configuration not covered in this quick playbook.
-- WordPress is the most production-hardened CMS path. Ghost, Strapi, and Hugo
+- WordPress has the broadest in-tree CMS placement behavior. Ghost, Strapi, and Hugo
   reference paths exist, but broader downstream validation is still needed.
 - Pictovap does not claim broad downstream adoption yet. Six external PRs from
   five contributors have been merged; current adapter and Gutenberg issues are

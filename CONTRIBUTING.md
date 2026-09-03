@@ -9,8 +9,8 @@ editor-facing examples that make this workflow safer for WordPress/Gutenberg
 and other CMS integrations.
 
 > [!TIP]
-> The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) is the
-> current fastest path to a scoped contribution. Adapter and CMS issues require
+> The [Adapter Tracks](docs/contributing/adapter-sprint.md) are the fastest
+> path to a scoped contribution. Adapter and CMS issues require
 > a claim before implementation; issues marked `contribution: no-claim` are
 > intentionally independent first PRs and can be submitted directly.
 
@@ -45,7 +45,6 @@ the whole repository before starting.
 | --- | --- | --- |
 | [#65 Realistic article fixture for image placement](https://github.com/yoldaolmak/Pictovap/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | Docs/fixtures |
 | [#66 Editor-report terminology for CMS image placement](https://github.com/yoldaolmak/Pictovap/issues/66) | Plain-English explanation of CMS/image-placement terms for editors | Docs |
-| [#67 Negative image-source adapter fixture](https://github.com/yoldaolmak/Pictovap/issues/67) | One safe unusable-candidate fixture for adapter authors | Adapter tests/fixtures |
 | [#41 Gutenberg image-block insertion regression fixture](https://github.com/yoldaolmak/Pictovap/issues/41) | One synthetic fixture proving heading-based image placement, alt text, captions, and idempotency | WordPress/Gutenberg tests |
 | [#40 WordPress media-library upload response fixture](https://github.com/yoldaolmak/Pictovap/issues/40) | Mocked media-library response preserving ID, URL, alt text, caption, and safe metadata | WordPress REST tests |
 | [#42 Editor-report example for WordPress image placement review](https://github.com/yoldaolmak/Pictovap/issues/42) | Copyable Markdown example showing what an editor reviews before CMS publishing | Docs/examples |

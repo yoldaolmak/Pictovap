@@ -3,7 +3,7 @@
 Contribution status changes faster than a documentation page can be released.
 The canonical sources are therefore:
 
-- [July 2026 Adapter Sprint](adapter-sprint.md) for the current focused sprint.
+- [Adapter Tracks](adapter-sprint.md) for claimable provider and CMS integrations.
 - [WordPress Gutenberg Mini Sprint](wordpress-gutenberg-minisprint.md) for
   small fixture, test, and report contributions around image placement.
 - [Open `good first issue` work](https://github.com/yoldaolmak/Pictovap/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22good%20first%20issue%22) for all beginner-scoped issues.

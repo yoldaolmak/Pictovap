@@ -94,8 +94,8 @@ requiring any external credentials, API keys, or CMS connections. It uses:
 
 ## 8. WordPress as One CMS Adapter
 
-While WordPress is currently the most production-hardened target, it is merely
-one CMS adapter implementation. Pictovap does not assume WordPress as the
+While WordPress currently has the broadest in-tree placement behavior, it is
+merely one CMS adapter implementation. Pictovap does not assume WordPress as the
 conceptual center. Any CMS with an API can be supported by writing a new adapter
 that consumes the `CMSPlacement` primitive.
 
@@ -124,9 +124,12 @@ No specific AI model or "Vision Chain" is a required architectural component.
 
 ## 12. Current Limitations
 
-- Only the WordPress CMS adapter is production-hardened; Ghost and Strapi are
-  reference implementations (see [CMS Adapters](adapters/cms-adapters.md)
-  for exactly what each one does and doesn't do yet).
+- WordPress has the broadest in-tree placement behavior. Ghost and Strapi are
+  reference implementations with mocked API tests and documented functional
+  gaps (see [CMS Adapters](adapters/cms-adapters.md) for exactly what each one
+  does and doesn't do yet). No CMS adapter's live behavior against a specific
+  deployment is verified by this repository; validate against your own site
+  before relying on it for publishing.
 - Vision-backed metadata generation (`engine/vision_chain.py`) and the
   demo/plan pipeline's deterministic metadata generator
   (`core/demo_metadata.py`) are not yet unified into one code path.

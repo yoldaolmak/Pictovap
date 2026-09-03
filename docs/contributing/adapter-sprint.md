@@ -1,16 +1,12 @@
-# Pictovap Adapter Sprint — July 2026
+# Pictovap Adapter Tracks
 
-Pictovap 0.5.0 introduced third-party plugin discovery, reusable adapter
-contract tests, and a scaffold command. This sprint tests that contribution
-path with real provider and CMS integrations.
+Pictovap has third-party plugin discovery, reusable adapter contract tests, and
+a scaffold command. An installed plugin runs through `doctor`, provider-backed
+`plan`, and CMS `publish --dry-run`, so a contributor can prove an integration
+from outside this repository.
 
-Pictovap 0.6.0 closes the next gap: an installed plugin now runs through
-`doctor`, provider-backed `plan`, and CMS `publish --dry-run`, so a contributor
-can prove the integration outside the core repository.
-
-The sprint starts on July 14, 2026. We will review the first checkpoint on
-July 21 and the 30-day checkpoint on August 13. The issues remain valid after
-those dates; the dates are measurement boundaries, not artificial deadlines.
+The tracks below exercise that path with real provider and CMS integrations.
+They are open until their issue is closed; there is no window to miss.
 
 ## Available Tracks
 

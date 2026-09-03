@@ -73,6 +73,10 @@ Article Input → Visual Brief → Candidate Images → Fit Score
 - **Global selection** — eligible images are assigned across the whole article
   with a deterministic maximum-weight policy, preventing accidental reuse and
   exposing incomplete coverage.
+- **Source evidence** — every configured image source leaves a record in the
+  plan saying what it contributed, or why it contributed nothing. A source that
+  ran and found nothing (`observed`) is never confused with one that could not
+  run at all (`not_evaluable`) or was never queried (`unknown`).
 - **Provenance Pack** — a persistent audit trail for every selected image:
   source, license status, attribution, a content hash, and the exact
   processing actions applied. This is what makes "where did this image come
@@ -142,7 +146,6 @@ that task does not match your interests.
 | --- | --- | --- |
 | [#65 Realistic article fixture](https://github.com/yoldaolmak/Pictovap/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | `make contributor-smoke` |
 | [#66 Editor-report terminology](https://github.com/yoldaolmak/Pictovap/issues/66) | Plain-English CMS/image-placement terms for non-technical editors | `make markdownlint` |
-| [#67 Negative provider fixture](https://github.com/yoldaolmak/Pictovap/issues/67) | One safe unusable-candidate fixture for adapter authors | focused provider/unit test |
 
 No claim comment is required for these. Open a focused PR directly and paste
 the validation command output in the PR body.
@@ -351,11 +354,11 @@ After setup, run `make contributor-smoke` for the fastest check that the
 installed CLI, local demo, and anonymous feedback report all work.
 
 For the lowest-friction path, pick one of the
-[15-minute first PR issues](#want-a-15-minute-first-pr): #65, #66, or #67.
+[15-minute first PR issues](#want-a-15-minute-first-pr): #65 or #66.
 They are designed for contributors who want a real but narrow first change.
 
-The [July 2026 Adapter Sprint](docs/contributing/adapter-sprint.md) has three
-claimable provider and CMS integrations with exact acceptance tests.
+The [Adapter Tracks](docs/contributing/adapter-sprint.md) hold three claimable
+provider and CMS integrations with exact acceptance tests.
 The [WordPress Gutenberg Mini Sprint](docs/contributing/wordpress-gutenberg-minisprint.md)
 has small fixture, test, and editor-report issues for first-time contributors
 who want to work on image placement without a live CMS.

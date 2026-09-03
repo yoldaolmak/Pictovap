@@ -29,6 +29,12 @@
 
 ### Changed
 
+- Corrected public documentation that had drifted from the repository: a closed
+  issue was still advertised as an available first PR, a completed sprint was
+  still framed as current with past checkpoint dates, `AGENTS.md` pointed at a
+  fabricated URL and a legacy `src/pictova/` path, and `WordPress is
+  production-hardened` stated a maturity the repository's own evidence does not
+  support.
 - `pictovap.providers.deposit` now loads the project `.env` at import time like
   every other credentialed provider. DepositPhotos credentials previously
   resolved only when another provider module happened to be imported first.

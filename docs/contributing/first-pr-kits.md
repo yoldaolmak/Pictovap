@@ -115,9 +115,11 @@ Acceptance:
 - It does not imply that a real CMS was updated unless the example is clearly a
   dry run.
 
-## Kit 3: Negative image-source adapter fixture
+## Kit 3: Negative image-source adapter fixture (completed)
 
-Issue: [#67](https://github.com/yoldaolmak/Pictovap/issues/67)
+Issue: [#67](https://github.com/yoldaolmak/Pictovap/issues/67) — **closed.** The
+fixture now lives at `tests/fixtures/providers/`. This kit is kept as a worked
+example of the shape a good first PR takes, not as an available task.
 
 Goal: show how an adapter should handle an unusable candidate safely.
 
