@@ -67,8 +67,12 @@
 - `upload_media()` declares the file's own content type instead of announcing
   every upload as `image/webp`. A PNG or JPEG was stored in the media library
   under a type that did not match its bytes.
-- `providers/deposit.py` warns through `logging` instead of printing to stdout
-  from library code.
+- No library module writes to stdout any more. The WordPress CMS adapter printed
+  per-image upload progress and raw error strings from inside `place()`, and
+  `providers/deposit.py` and `providers/unsplash.py` printed or silently dropped
+  failed downloads. All of them now report through `logging`, and a hygiene test
+  fails the build if any module outside the CLI and the demo runner calls
+  `print`.
 - Decision Pack proposals now fail closed when the selected candidate,
   provenance, and placement evidence do not bind to the same candidate, slot,
   and generated filename.

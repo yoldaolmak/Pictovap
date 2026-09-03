@@ -5,10 +5,10 @@ Pictovap WordPress uploader — REST API media upload and attachment.
 
 import requests
 import json
+import logging
 import mimetypes
 import re
 import html
-import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -33,6 +33,9 @@ except Exception:  # pragma: no cover - package metadata unavailable (source tre
 
 AUTO_MEDIA_START = "<!-- yo:auto-media:start -->"
 AUTO_MEDIA_END = "<!-- yo:auto-media:end -->"
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class WordPressPostReadError(RuntimeError):
@@ -893,11 +896,11 @@ def upload_images_batch(
         return results
 
     for i, file_path in enumerate(image_files, 1):
-        print(f"\n[{i}/{len(image_files)}] Uploading: {Path(file_path).name}")
+        _LOGGER.info("Uploading %s of %s: %s", i, len(image_files), Path(file_path).name)
 
         meta = metadata_dict.get(file_path, {})
         if not meta:
-            print("  ✗ No metadata found", file=sys.stderr)
+            _LOGGER.warning("No metadata for %s", Path(file_path).name)
             results["failed"].append({
                 "file": file_path,
                 "error": "No metadata",
@@ -914,7 +917,7 @@ def upload_images_batch(
         )
 
         if not upload_result["success"]:
-            print(f"  ✗ Upload failed: {upload_result['error']}")
+            _LOGGER.warning("Upload failed for %s", Path(file_path).name)
             results["failed"].append({
                 "file": file_path,
                 "error": upload_result["error"],
@@ -922,7 +925,7 @@ def upload_images_batch(
             continue
 
         media_id = upload_result["media_id"]
-        print(f"  ✓ Uploaded: ID {media_id}", file=sys.stderr)
+        _LOGGER.info("Uploaded %s as media %s", Path(file_path).name, media_id)
 
         # Attach to post
         attach_result = uploader.attach_to_post(
@@ -931,7 +934,7 @@ def upload_images_batch(
         )
 
         if attach_result["success"]:
-            print(f"  ✓ Attached to post {post_id}")
+            _LOGGER.info("Attached media %s to post %s", media_id, post_id)
             results["uploaded"].append({
                 "file": Path(file_path).name,
                 "media_id": media_id,
@@ -944,7 +947,7 @@ def upload_images_batch(
                 "url": upload_result.get("url", ""),
             })
         else:
-            print(f"  ⚠️  Upload OK but attach failed: {attach_result['error']}")
+            _LOGGER.warning("Media %s uploaded but not attached to post %s", media_id, post_id)
             results["uploaded"].append({
                 "file": Path(file_path).name,
                 "media_id": media_id,
@@ -960,8 +963,8 @@ def upload_images_batch(
     content_result = uploader.append_media_to_post_content(post_id, results["uploaded"])
     results["content_update"] = content_result
     if content_result.get("success") and content_result.get("updated"):
-        print(f"\n✓ Post content updated: {content_result.get('inserted', 0)} image block added")
+        _LOGGER.info("Post %s content updated: %s block(s)", post_id, content_result.get("inserted", 0))
     elif not content_result.get("success"):
-        print(f"\n⚠️  Post content update failed: {content_result.get('error', 'unknown error')}")
+        _LOGGER.warning("Post %s content update failed", post_id)
 
     return results

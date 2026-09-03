@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import json
+import logging
 import os
 from typing import Dict, List
 
@@ -13,6 +14,8 @@ import requests
 from pictovap.utils.config import get_vil_dir, load_project_env
 
 load_project_env()
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class UnsplashSource:
@@ -87,7 +90,13 @@ class UnsplashSource:
                     json.dumps(metadata, indent=2, ensure_ascii=False)
                 )
                 downloaded.append(str(filepath))
-            except Exception:
+            except Exception as exc:
+                # A failed download in a batch must leave a trace. Log the
+                # failure class only: an error message can carry a request URL
+                # with an embedded access key.
+                _LOGGER.warning(
+                    "Skipped Unsplash download %s: %s", result.get("id", "?"), type(exc).__name__
+                )
                 continue
         return downloaded
 

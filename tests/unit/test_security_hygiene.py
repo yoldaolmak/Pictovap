@@ -269,3 +269,34 @@ def test_src_and_tests_free_of_personal_legacy_references():
     assert not violations, (
         "Personal-legacy references found in src/ or tests/:\n" + "\n".join(violations)
     )
+
+
+def test_library_code_does_not_write_to_stdout():
+    """Only the CLI and the demo runner may print.
+
+    A library that prints owns its caller's stdout. It also means the same fact
+    reaches a human twice, by two code paths that can disagree — which is how a
+    terminal view ends up contradicting the artifact it claims to describe.
+    Every other module reports through its return value or the logging module.
+    """
+    import ast
+    from pathlib import Path
+
+    presentation = {"app/cli.py", "demo.py"}
+    offenders = []
+    source_root = Path(__file__).resolve().parents[2] / "src" / "pictovap"
+
+    for module in sorted(source_root.rglob("*.py")):
+        relative = module.relative_to(source_root).as_posix()
+        if relative in presentation:
+            continue
+        tree = ast.parse(module.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == "print"
+            ):
+                offenders.append(f"{relative}:{node.lineno}")
+
+    assert offenders == [], f"library code writes to stdout: {offenders}"
