@@ -14,6 +14,7 @@ Requires the following environment variables:
 from __future__ import annotations
 
 import json
+import mimetypes
 import os
 from pathlib import Path
 from typing import Any, Dict, List
@@ -24,6 +25,14 @@ from pictovap.core.primitives import CMSPlacement
 from pictovap.utils.config import load_project_env
 
 load_project_env()
+
+
+def _content_type(filename: str) -> str:
+    """Declare the file's own type. The pipeline emits WebP, but this adapter
+    accepts any path, and a PNG announced as WebP is stored under a type that
+    does not match its bytes."""
+    content_type, _ = mimetypes.guess_type(filename)
+    return content_type or "application/octet-stream"
 
 
 class StrapiPublisher:
@@ -101,14 +110,29 @@ class StrapiPublisher:
             with open(file_path, "rb") as fh:
                 resp = self._session.post(
                     upload_url,
-                    files={"files": (file_p.name, fh, "image/webp")},
+                    files={"files": (file_p.name, fh, _content_type(file_p.name))},
                     data={"fileInfo": file_info},
                     timeout=30,
                 )
             resp.raise_for_status()
             uploaded = resp.json()
             if isinstance(uploaded, list):
+                if not uploaded:
+                    # An empty upload list would raise IndexError straight out
+                    # of the adapter. The contract is that a failure comes back
+                    # as a result, never as an exception.
+                    return {
+                        "success": False,
+                        "error": "Strapi upload returned no media entry",
+                        "file": file_p.name,
+                    }
                 uploaded = uploaded[0]
+            if not isinstance(uploaded, dict):
+                return {
+                    "success": False,
+                    "error": "Strapi upload returned an unexpected payload shape",
+                    "file": file_p.name,
+                }
 
             media_id = uploaded.get("id")
             # Strapi v4 returns relative URLs; build absolute

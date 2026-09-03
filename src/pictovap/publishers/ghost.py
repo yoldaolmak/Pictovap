@@ -14,6 +14,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import mimetypes
 import os
 import time
 from pathlib import Path
@@ -50,6 +51,14 @@ def _get_jwt_token(api_key: str) -> str:
 
     sig = hmac.new(bytes.fromhex(secret), signing_input, hashlib.sha256).digest()
     return f"{h}.{p}.{_b64(sig)}"
+
+
+def _content_type(filename: str) -> str:
+    """Declare the file's own type. The pipeline emits WebP, but this adapter
+    accepts any path, and a PNG announced as WebP is stored under a type that
+    does not match its bytes."""
+    content_type, _ = mimetypes.guess_type(filename)
+    return content_type or "application/octet-stream"
 
 
 class GhostPublisher:
@@ -113,7 +122,7 @@ class GhostPublisher:
                 resp = self._session.post(
                     upload_url,
                     headers=headers,
-                    files={"file": (file_p.name, fh, "image/webp")},
+                    files={"file": (file_p.name, fh, _content_type(file_p.name))},
                     data={"purpose": "image", "ref": file_p.name},
                     timeout=30,
                 )

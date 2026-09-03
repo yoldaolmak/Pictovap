@@ -64,9 +64,14 @@
   an earlier `Tips for Packing` while the real `Tips` heading sat further down
   the post. `_insert_block_after_heading` also fails closed on an empty target,
   which under the old substring test matched the first heading in the post.
-- `upload_media()` declares the file's own content type instead of announcing
-  every upload as `image/webp`. A PNG or JPEG was stored in the media library
+- All three CMS adapters declare the file's own content type instead of
+  announcing every upload as `image/webp`. WordPress, Ghost, and Strapi each
+  hardcoded the type while accepting any file path, so a PNG or JPEG was stored
   under a type that did not match its bytes.
+- `StrapiPublisher.upload_media()` returns a failure result instead of raising
+  `IndexError` when the upload response is an empty list, and rejects an
+  unexpected payload shape the same way. The adapter contract is that a failure
+  comes back as a result, never as an exception.
 - No library module writes to stdout any more. The WordPress CMS adapter printed
   per-image upload progress and raw error strings from inside `place()`, and
   `providers/deposit.py` and `providers/unsplash.py` printed or silently dropped

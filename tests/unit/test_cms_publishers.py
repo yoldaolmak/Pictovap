@@ -215,3 +215,36 @@ class TestStrapiPublisher:
         assert ctx["slug"] == "akyaka-travel-guide"
         assert "Turkey" in ctx["tags"]
         assert ctx["status"] == "published"
+
+
+def test_strapi_upload_returns_a_result_when_the_response_list_is_empty(monkeypatch, tmp_path):
+    """An empty upload list must not raise IndexError out of the adapter."""
+    from pictovap.publishers.strapi import StrapiPublisher
+
+    image = tmp_path / "photo.webp"
+    image.write_bytes(b"RIFF")
+
+    class _Response:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return []
+
+    publisher = StrapiPublisher(strapi_url="https://cms.test", api_token="t")
+    monkeypatch.setattr(publisher._session, "post", lambda *a, **k: _Response())
+
+    result = publisher.upload_media(str(image), title="Photo", alt_text="A photo")
+    assert result["success"] is False
+    assert "no media entry" in result["error"]
+
+
+def test_cms_adapters_declare_the_file_s_own_content_type(tmp_path):
+    """A PNG must not be uploaded to Ghost or Strapi announced as WebP."""
+    from pictovap.publishers.ghost import _content_type as ghost_type
+    from pictovap.publishers.strapi import _content_type as strapi_type
+
+    for guess in (ghost_type, strapi_type):
+        assert guess("photo.png") == "image/png"
+        assert guess("photo.webp") == "image/webp"
+        assert guess("photo.unknownext") == "application/octet-stream"
