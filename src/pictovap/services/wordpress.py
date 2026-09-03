@@ -5,6 +5,7 @@ Pictovap WordPress uploader — REST API media upload and attachment.
 
 import requests
 import json
+import mimetypes
 import re
 import html
 import sys
@@ -120,10 +121,13 @@ class WordPressUploader:
         with open(file_path, "rb") as f:
             file_data = f.read()
 
-        # Upload
+        # Upload. The pipeline generates WebP, but this method takes any path:
+        # declaring image/webp for a PNG stores it in the media library under a
+        # type that does not match its bytes.
+        content_type, _ = mimetypes.guess_type(file_p.name)
         headers = {
             "Content-Disposition": f'attachment; filename="{file_p.name}"',
-            "Content-Type": "image/webp",
+            "Content-Type": content_type or "application/octet-stream",
         }
 
         try:
@@ -762,17 +766,29 @@ def _insert_block_after_heading(
         flags=re.S | re.I,
     )
     target = _normalize_text(heading_text)
+    if not target:
+        # An empty target matches every heading under a substring test, which
+        # would silently place an image under the first heading of someone's
+        # live post. Callers route unanchored media elsewhere; fail closed here
+        # regardless of what a future caller does.
+        return content
 
-    for match in pattern.finditer(content):
-        level = int(match.group("level"))
-        if heading_level and level != heading_level:
-            continue
+    def _candidates(exact: bool):
+        for match in pattern.finditer(content):
+            level = int(match.group("level"))
+            if heading_level and level != heading_level:
+                continue
+            heading = _normalize_text(match.group(0))
+            if heading != target if exact else target not in heading:
+                continue
+            if _inside_code_like_block(content, match.start(), match.end()):
+                continue
+            yield match
 
-        heading_block = match.group(0)
-        if target not in _normalize_text(heading_block):
-            continue
-        if _inside_code_like_block(content, match.start(), match.end()):
-            continue
+    # Exact heading text wins. A substring match is only a fallback, because
+    # targeting "Tips" would otherwise land under an earlier "Tips for Packing"
+    # while the real "Tips" heading sits further down the post.
+    for match in list(_candidates(exact=True)) or list(_candidates(exact=False)):
 
         # Guardrail: skip insertion when an image already exists directly
         # above/below the heading, or with only one paragraph gap.

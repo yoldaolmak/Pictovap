@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import tempfile
 import urllib.parse
@@ -11,6 +12,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from pictovap.utils.config import load_project_env
+
+_LOGGER = logging.getLogger(__name__)
 
 # Every credentialed provider loads the project `.env` at import time. Reading
 # `os.environ` without this made DepositPhotos credentials work only when some
@@ -215,7 +218,7 @@ def search_and_download(
             path = download(r["id"], session_id, dest_dir=dest_dir)
             paths.append(path)
         except RuntimeError as e:
-            print(f"  Skipped ({r['id']}): {e}")
+            _LOGGER.warning("Skipped DepositPhotos candidate %s: %s", r["id"], e)
     return paths
 
 

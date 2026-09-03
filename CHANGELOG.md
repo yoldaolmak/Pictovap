@@ -59,6 +59,16 @@
 
 ### Fixed
 
+- WordPress heading targeting now prefers an exact heading match and only falls
+  back to a substring match. Targeting `Tips` previously placed the image under
+  an earlier `Tips for Packing` while the real `Tips` heading sat further down
+  the post. `_insert_block_after_heading` also fails closed on an empty target,
+  which under the old substring test matched the first heading in the post.
+- `upload_media()` declares the file's own content type instead of announcing
+  every upload as `image/webp`. A PNG or JPEG was stored in the media library
+  under a type that did not match its bytes.
+- `providers/deposit.py` warns through `logging` instead of printing to stdout
+  from library code.
 - Decision Pack proposals now fail closed when the selected candidate,
   provenance, and placement evidence do not bind to the same candidate, slot,
   and generated filename.
@@ -71,6 +81,10 @@
 
 ### Removed
 
+- Removed `pictovap.engine.publisher` and `pictovap.engine.quality`. Both were
+  unreferenced re-export shims over `services.wordpress` and
+  `core.media_quality`, with 0% test coverage and no importer anywhere in the
+  package, tests, examples, or documentation.
 - Removed the duplicate `pictovap.demo.create_visual_plan()` and
   `pictovap.demo.create_wordpress_visual_plan()`. `pictovap.api` is the single
   planning API; `pictovap.demo` was already documented as internal.
