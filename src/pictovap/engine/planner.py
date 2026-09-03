@@ -21,7 +21,11 @@ from pictovap.core.primitives import (
 )
 from pictovap.core.profile import PublisherProfile
 from pictovap.core.selection import select_assignments
-from pictovap.core.sources import fetch_candidates
+from pictovap.core.sources import (
+    UNKNOWN,
+    SourceAttempt,
+    fetch_candidates_with_evidence,
+)
 from pictovap.core.visual_similarity import collect_candidate_fingerprints
 from pictovap.engine.scoring import score_candidate
 from pictovap.intent import compile_intent_proof
@@ -29,6 +33,14 @@ from pictovap.testing.contracts import assert_image_source_contract
 
 
 PLAN_LABEL = "Pictovap Visual Plan"
+
+
+def _not_queried(profile: PublisherProfile | None, reason: str) -> list[SourceAttempt]:
+    """Record configured sources that this run deliberately did not query."""
+    return [
+        SourceAttempt(source=name, state=UNKNOWN, reason=reason)
+        for name in (profile.image_sources if profile else ())
+    ]
 
 
 def build_visual_plan(
@@ -67,18 +79,21 @@ def build_visual_plan(
     brief.article_id = brief.article_id or "demo-article-001"
 
     # 1. Collect candidates from an explicit plugin, the profile's configured
-    #    sources, or the caller's fallback pool — in that order.
+    #    sources, or the caller's fallback pool — in that order. Every
+    #    configured source gets an evidence record either way, so a plan can
+    #    tell an empty result apart from a source that was never evaluated.
     candidates: list[dict[str, Any]] = []
     explicit_provider = provider_adapter is not None
     provider_mode = "plugin" if explicit_provider else "profile"
+    query = brief.topic or brief.article_title
     if explicit_provider:
-        candidates = assert_image_source_contract(
-            provider_adapter,
-            query=brief.topic or brief.article_title,
-            count=8,
-        )
+        candidates = assert_image_source_contract(provider_adapter, query=query, count=8)
+        attempts = _not_queried(profile, "not_queried_explicit_provider")
     elif use_real_sources and profile:
-        candidates = fetch_candidates(profile, query=brief.topic or brief.article_title, count=8)
+        fetched = fetch_candidates_with_evidence(profile, query=query, count=8)
+        candidates, attempts = fetched.candidates, list(fetched.attempts)
+    else:
+        attempts = _not_queried(profile, "not_queried_fixture_run")
     if not candidates and not explicit_provider and fallback_candidates:
         candidates = [dict(candidate) for candidate in fallback_candidates]
         provider_mode = fallback_mode
@@ -182,6 +197,7 @@ def build_visual_plan(
                 "mode": provider_mode,
                 "name": provider_name if explicit_provider else None,
             },
+            "sources": [attempt.to_dict() for attempt in attempts],
         },
     }
 

@@ -62,6 +62,39 @@ All source credentials must come from environment variables. The local demo runs
 no `.env` file and no credentials. Sources that require credentials are simply not queried
 when their environment variable is unset.
 
+## Source Evidence in a Plan
+
+A source that returns nothing and a source that could not run at all are not the
+same fact, and a plan that shows only candidates cannot tell them apart. Every
+plan therefore carries one record per configured source under
+`runtime.sources`:
+
+| State | Meaning |
+| --- | --- |
+| `observed` | The adapter ran. `candidates` is what it actually returned, including zero. |
+| `not_evaluable` | No conclusion was possible. `reason` is `adapter_error` or `unimplemented_source`. |
+| `unknown` | The source was not queried, so its result is not known. `reason` says why. |
+
+```json
+{
+  "sources": [
+    {"source": "local", "state": "observed", "candidates": 3},
+    {"source": "unsplash", "state": "not_evaluable", "candidates": 0,
+     "reason": "adapter_error", "error_type": "HTTPError"},
+    {"source": "pixabay", "state": "not_evaluable", "candidates": 0,
+     "reason": "unimplemented_source"}
+  ]
+}
+```
+
+Only the exception class is recorded, never its message: an adapter's error text
+can carry a request URL with an embedded API key, and this record is serialized
+into a plan that gets committed, shared, and pasted into issues.
+
+Reading these states in the canonical way matters. `unknown` does not mean a
+source failed, and `not_evaluable` does not mean a source found nothing. Neither
+one licenses a claim that an article's visual coverage was fully assessed.
+
 ## Compatibility Note
 
 Product name: Pictovap.

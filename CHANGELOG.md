@@ -19,8 +19,19 @@
 - Added `--fail-on-change` for CI drift gates while keeping editorial plan
   differences reviewable by default.
 
+### Added
+
+- Every plan now records one evidence entry per configured image source under
+  `runtime.sources`, with the canonical states `observed`, `not_evaluable`, and
+  `unknown`. A source that returned nothing is no longer indistinguishable from
+  one that could not run. Only the exception class is recorded, never its
+  message, because adapter errors can carry credentialed request URLs.
+
 ### Changed
 
+- `pictovap.providers.deposit` now loads the project `.env` at import time like
+  every other credentialed provider. DepositPhotos credentials previously
+  resolved only when another provider module happened to be imported first.
 - Extracted the planning pipeline out of `pictovap.demo` into a silent,
   side-effect-free engine: `engine/planner.py` (plan construction),
   `engine/scoring.py` (Fit Score), and `engine/reporting.py` (editor report

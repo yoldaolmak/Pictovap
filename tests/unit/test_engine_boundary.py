@@ -90,3 +90,25 @@ def test_demo_module_exposes_no_second_public_api():
     assert not hasattr(demo, "create_wordpress_visual_plan")
     assert callable(api.create_visual_plan)
     assert callable(api.create_wordpress_visual_plan)
+
+
+def test_plan_records_evidence_for_every_configured_source():
+    """A plan must say what each configured source contributed, or why it did not."""
+    profile = PublisherProfile(
+        profile_id="test",
+        brand_name="Test Publisher",
+        image_sources=["local", "pixabay"],
+    )
+    plan = build_visual_plan(
+        ARTICLE,
+        profile,
+        use_real_sources=False,
+        fallback_candidates=MOCK_CANDIDATES,
+        fallback_mode="demo",
+    )
+    sources = plan["runtime"]["sources"]
+
+    assert [record["source"] for record in sources] == ["local", "pixabay"]
+    # A fixture run queried nothing, so no source result is known either way.
+    assert {record["state"] for record in sources} == {"unknown"}
+    assert {record["reason"] for record in sources} == {"not_queried_fixture_run"}

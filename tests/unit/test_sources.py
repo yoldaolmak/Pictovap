@@ -8,7 +8,7 @@ from PIL import Image
 
 from pictovap.core.adapters import ImageSourceAdapter
 from pictovap.core.profile import PublisherProfile
-from pictovap.core.sources import fetch_candidates
+from pictovap.core.sources import fetch_candidates, fetch_candidates_with_evidence
 from pictovap.providers.deposit import DepositPhotosSource
 from pictovap.providers.local import LocalFolderSource, _normalize_exif
 from pictovap.providers.openverse import OpenverseSource
@@ -174,3 +174,61 @@ def test_fetch_candidates_uses_openverse_when_configured():
 
     assert len(candidates) == 1
     assert candidates[0]["provider"] == "openverse"
+
+
+def test_source_evidence_separates_empty_from_unevaluable(monkeypatch):
+    """An empty result and a failed source must not look the same in a plan."""
+    monkeypatch.delenv("PICTOVAP_LOCAL_IMAGE_DIR", raising=False)
+
+    profile = PublisherProfile(
+        profile_id="test",
+        brand_name="Test Publisher",
+        image_sources=["local", "pixabay"],
+    )
+    result = fetch_candidates_with_evidence(profile, query="travel", count=5)
+    states = {attempt.source: attempt for attempt in result.attempts}
+
+    assert states["local"].state == "observed"
+    assert states["local"].candidates == 0
+    assert states["pixabay"].state == "not_evaluable"
+    assert states["pixabay"].reason == "unimplemented_source"
+
+
+def test_source_evidence_records_failures_without_leaking_messages():
+    """An adapter message can carry a URL with an API key. Only the class ships."""
+    profile = PublisherProfile(
+        profile_id="test",
+        brand_name="Test Publisher",
+        image_sources=["unsplash"],
+    )
+
+    def explode(self, query, count):
+        raise RuntimeError("https://api.example.com/search?client_id=SECRET-KEY-123")
+
+    with patch.object(UnsplashSource, "search_candidates", explode):
+        result = fetch_candidates_with_evidence(profile, query="travel", count=5)
+
+    attempt = result.attempts[0]
+    assert attempt.state == "not_evaluable"
+    assert attempt.reason == "adapter_error"
+    assert attempt.error_type == "RuntimeError"
+    assert "SECRET-KEY-123" not in json.dumps(attempt.to_dict())
+
+
+def test_source_evidence_marks_sources_that_were_never_queried(tmp_path, monkeypatch):
+    """A source skipped because the quota filled is unknown, not observed empty."""
+    image_path = tmp_path / "travel-photo.jpg"
+    Image.new("RGB", (2000, 1300), color="red").save(image_path)
+    monkeypatch.setenv("PICTOVAP_LOCAL_IMAGE_DIR", str(tmp_path))
+
+    profile = PublisherProfile(
+        profile_id="test",
+        brand_name="Test Publisher",
+        image_sources=["local", "openverse"],
+    )
+    result = fetch_candidates_with_evidence(profile, query="travel", count=1)
+    states = {attempt.source: attempt for attempt in result.attempts}
+
+    assert states["local"].state == "observed"
+    assert states["openverse"].state == "unknown"
+    assert states["openverse"].reason == "not_queried_count_satisfied"

@@ -10,6 +10,13 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from pictovap.utils.config import load_project_env
+
+# Every credentialed provider loads the project `.env` at import time. Reading
+# `os.environ` without this made DepositPhotos credentials work only when some
+# other provider module happened to be imported first.
+load_project_env()
+
 
 _API_URL = "https://api.depositphotos.com/"
 
