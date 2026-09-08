@@ -40,3 +40,13 @@ boundary. It records its own observations and lifecycle state separately, then
 may ask Core to produce or validate a visual decision. A successful Core plan
 does not imply that an enterprise system authorized, executed, published, or
 verified a change.
+
+## Deep-tech scope
+
+Core makes no deep-tech claim. The private Product's deep-tech candidate is
+Automatic Visual Lineage — transformation-resistant, uncertainty-calibrated
+reconstruction of visual identity and family relationships across a partially
+observed enterprise estate — and its three layers (Visual Lineage
+Intelligence, Visual Estate Intelligence, Visual Change Assurance) live in that
+application, not here. Core supplies portable visual-decision primitives a
+Product integration may consume.
