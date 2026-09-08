@@ -12,6 +12,9 @@ for a single article and knows visual decisions; it does not manage an
 organization's estate or operational lifecycle. Enterprise inventory, findings,
 authorization, orchestration, execution receipts, and live verification belong
 to a separate commercial application that consumes Core's public contracts.
+That application's deep-tech candidate (Automatic Visual Lineage) and its
+estate and change-assurance layers are outside this repository; Core itself
+makes no deep-tech claim.
 
 ```text
 Article → Visual Intent Graph → Candidate Evidence → Constraints
