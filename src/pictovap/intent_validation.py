@@ -9,13 +9,19 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from typing import Any
 
+from pictovap.core.states import (
+    AssignmentState,
+    CandidateDecision,
+    ConstraintKind,
+    ConstraintStatus,
+)
 from pictovap.intent import INTENT_SCHEMA_VERSION
 
 
-_DECISIONS = {"selected", "rejected", "needs_review"}
-_ASSIGNMENTS = {"assigned", "not_assigned"}
-_CONSTRAINT_KINDS = {"hard", "soft"}
-_CONSTRAINT_STATUSES = {"passed", "failed"}
+_DECISIONS = {d.value for d in CandidateDecision}
+_ASSIGNMENTS = {a.value for a in AssignmentState}
+_CONSTRAINT_KINDS = {k.value for k in ConstraintKind}
+_CONSTRAINT_STATUSES = {s.value for s in ConstraintStatus}
 
 
 def _issue(code: str, path: str, message: str) -> dict[str, str]:
@@ -151,6 +157,9 @@ def validate_intent_proof(
     assigned_count = 0
     hard_failure_entries = 0
     assigned_by_slot: dict[str, int] = {}
+    require_selected = True
+    if isinstance(graph, Mapping) and isinstance(graph.get("policy"), Mapping):
+        require_selected = bool(graph["policy"].get("require_selected_decision", True))
     if ledger is not None:
         for index, raw_entry in enumerate(ledger):
             path = f"$.ledger[{index}]"
@@ -180,12 +189,15 @@ def validate_intent_proof(
                     f"{path}.assignment",
                     "Assignment must be assigned or not_assigned.",
                 ))
-            elif assignment == "assigned":
+            elif assignment == AssignmentState.ASSIGNED.value:
                 assigned_count += 1
                 if slot_valid:
                     slot_key = str(slot_id)
                     assigned_by_slot[slot_key] = assigned_by_slot.get(slot_key, 0) + 1
-                if entry.get("decision") != "selected":
+                decision = entry.get("decision")
+                if decision == CandidateDecision.REJECTED.value or (
+                    require_selected and decision != CandidateDecision.SELECTED.value
+                ):
                     errors.append(_issue(
                         "intent_assignment_decision_mismatch",
                         f"{path}.assignment",

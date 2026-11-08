@@ -5,6 +5,14 @@ from pathlib import Path
 
 
 _ENV_LOADED = False
+_LOADED_ENV_PATH: Path | None = None
+
+
+def reset_project_env() -> None:
+    """Reset the cached environment load state."""
+    global _ENV_LOADED, _LOADED_ENV_PATH
+    _ENV_LOADED = False
+    _LOADED_ENV_PATH = None
 
 
 def get_workspace_root() -> Path:
@@ -26,11 +34,11 @@ def get_workspace_root() -> Path:
 
 
 def load_project_env() -> None:
-    global _ENV_LOADED
-    if _ENV_LOADED:
+    global _ENV_LOADED, _LOADED_ENV_PATH
+    env_path = get_workspace_root() / ".env"
+    if _ENV_LOADED and _LOADED_ENV_PATH == env_path:
         return
 
-    env_path = get_workspace_root() / ".env"
     if env_path.exists():
         for line in env_path.read_text().splitlines():
             if "=" not in line or line.startswith("#"):
@@ -42,6 +50,7 @@ def load_project_env() -> None:
             os.environ.setdefault(key.strip(), value)
 
     _ENV_LOADED = True
+    _LOADED_ENV_PATH = env_path
 
 
 def env_str(name: str, default: str | None = None) -> str | None:

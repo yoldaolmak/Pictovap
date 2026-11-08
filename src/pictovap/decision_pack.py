@@ -7,16 +7,18 @@ or applies CMS changes.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
+import copy
 from typing import Any
 
+from pictovap.core.states import ApplicationStatus, ReviewAction, ReviewStatus
 from pictovap.validation import validate_visual_plan
 
 
 DECISION_PACK_SCHEMA_VERSION = "1"
 _KIND = "pictovap.decision-pack"
-_REVIEW_STATUSES = {"pending", "reviewed"}
-_REVIEW_ACTIONS = {"accept", "replace", "reject"}
+_REVIEW_STATUSES = {s.value for s in ReviewStatus}
+_REVIEW_ACTIONS = {a.value for a in ReviewAction}
 
 
 def _issue(code: str, path: str, message: str) -> dict[str, str]:
@@ -316,8 +318,8 @@ def build_decision_pack(
             "language": brief.get("article_language"),
         },
         "slots": slots,
-        "review": {"status": "pending", "decisions": []},
-        "application": {"status": "not_applied", "receipts": []},
+        "review": {"status": ReviewStatus.PENDING.value, "decisions": []},
+        "application": {"status": ApplicationStatus.NOT_APPLIED.value, "receipts": []},
     }
     if pack_id is not None:
         decision_pack["pack_id"] = pack_id
@@ -585,4 +587,63 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
     }
 
 
-__all__ = ["DECISION_PACK_SCHEMA_VERSION", "build_decision_pack", "validate_decision_pack"]
+def transition_decision_pack_review(
+    pack: Mapping[str, Any],
+    decisions: Iterable[Mapping[str, Any]],
+    *,
+    complete: bool | None = None,
+) -> dict[str, Any]:
+    """Transition a Decision Pack's review state deterministically.
+
+    Validates input pack, performs an immutable update with the provided
+    review decisions, resolves status ('pending' or 'reviewed'), and validates
+    the resulting pack before returning it.
+    """
+    initial_validation = validate_decision_pack(pack)
+    if initial_validation["status"] != "passed":
+        codes = [error["code"] for error in initial_validation["errors"]]
+        raise ValueError(f"Input decision pack is invalid: {codes}")
+
+    new_pack = copy.deepcopy(dict(pack))
+    decisions_list = [dict(d) for d in decisions]
+
+    if complete is True:
+        target_status = ReviewStatus.REVIEWED.value
+    elif complete is False:
+        target_status = ReviewStatus.PENDING.value
+    else:
+        slots = new_pack.get("slots", [])
+        slot_ids = {
+            str(s.get("slot_id"))
+            for s in slots
+            if isinstance(s, Mapping) and s.get("slot_id")
+        }
+        decision_slots = {
+            str(d.get("slot_id"))
+            for d in decisions_list
+            if d.get("slot_id") is not None
+        }
+        if slot_ids and slot_ids.issubset(decision_slots):
+            target_status = ReviewStatus.REVIEWED.value
+        else:
+            target_status = ReviewStatus.PENDING.value
+
+    new_pack["review"] = {
+        "status": target_status,
+        "decisions": decisions_list,
+    }
+
+    result_validation = validate_decision_pack(new_pack)
+    if result_validation["status"] != "passed":
+        codes = [error["code"] for error in result_validation["errors"]]
+        raise ValueError(f"Transitioned decision pack is invalid: {codes}")
+
+    return new_pack
+
+
+__all__ = [
+    "DECISION_PACK_SCHEMA_VERSION",
+    "build_decision_pack",
+    "transition_decision_pack_review",
+    "validate_decision_pack",
+]

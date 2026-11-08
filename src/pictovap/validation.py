@@ -10,6 +10,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
+from pictovap.core.sources import SourceAttempt
+from pictovap.core.states import ProviderRuntimeMode, SourceEpistemicState
 from pictovap.intent_validation import validate_intent_proof
 
 
@@ -226,6 +228,54 @@ def validate_visual_plan(plan: Mapping[str, Any], *, strict: bool = False) -> di
             "Planning diagnostics are recommended for auditable integrations.",
         ))
         checks["diagnostics"] = {"status": "warning"}
+
+    runtime = root.get("runtime")
+    if runtime is not None and isinstance(runtime, Mapping):
+        provider = runtime.get("provider")
+        if isinstance(provider, Mapping):
+            mode = provider.get("mode")
+            if mode not in {m.value for m in ProviderRuntimeMode}:
+                errors.append(_issue(
+                    "invalid_provider_mode",
+                    "$.runtime.provider.mode",
+                    f"Provider mode {mode!r} is not a valid ProviderRuntimeMode.",
+                ))
+        sources = runtime.get("sources")
+        if isinstance(sources, list):
+            valid_source_states = {s.value for s in SourceEpistemicState}
+            for i, src in enumerate(sources):
+                src_path = f"$.runtime.sources[{i}]"
+                if not isinstance(src, Mapping):
+                    errors.append(_issue("invalid_source_format", src_path, "Source record must be an object."))
+                    continue
+                state_val = src.get("state")
+                if state_val not in valid_source_states:
+                    errors.append(_issue(
+                        "invalid_source_state",
+                        src_path,
+                        f"Source attempt state {state_val!r} is not a valid SourceEpistemicState.",
+                    ))
+                    continue
+                candidates = src.get("candidates", 0)
+                reason = src.get("reason")
+                error_type = src.get("error_type")
+                try:
+                    SourceAttempt(
+                        source=str(src.get("source", "")),
+                        state=state_val,
+                        candidates=candidates if isinstance(candidates, int) else -1,
+                        reason=reason,
+                        error_type=error_type,
+                    )
+                except ValueError as exc:
+                    errors.append(_issue(
+                        "invalid_source_invariant",
+                        src_path,
+                        str(exc),
+                    ))
+        checks["runtime"] = {
+            "status": "passed" if not any(item["path"].startswith("$.runtime") for item in errors) else "failed"
+        }
 
     missing_provenance = sorted(set(slot_ids) - pack_slots)
     missing_placement = sorted(pack_slots - placement_slots)

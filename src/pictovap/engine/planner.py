@@ -171,6 +171,7 @@ def build_visual_plan(
         candidates,
         all_scores,
         selection.assignments,
+        selection_policy=selection.policy,
     )
 
     return {

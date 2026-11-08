@@ -32,6 +32,7 @@ from pictovap.app.runtime import (
     construct_plugin,
     parse_adapter_options,
 )
+from pictovap.core.states import DoctorStatus, PublishStatus
 from pictovap.demo import run_demo
 from pictovap.engine.reporting import generate_report_from_file
 from pictovap.feedback import render_feedback_markdown, summarize_plan
@@ -303,7 +304,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 dry_run=args.dry_run,
             )
             _print_json(result)
-            return 0
+            return 0 if result["status"] in {PublishStatus.READY.value, PublishStatus.COMPLETED.value} else 1
         except (FileNotFoundError, ValueError, PluginError, AdapterConstructionError) as e:
             print(f"Error publishing plan: {e}", file=sys.stderr)
             return 1
@@ -317,7 +318,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 cms_options=parse_adapter_options(args.cms_option),
             )
             _print_json(result)
-            return 0 if result["status"] == "ready" else 1
+            return 0 if result["status"] == DoctorStatus.READY.value else 1
         except (RuntimeConfigurationError, PluginError, AdapterConstructionError) as e:
             print(f"Error checking plugins: {e}", file=sys.stderr)
             return 1

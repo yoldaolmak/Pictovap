@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from typing import Any, Mapping
 
+from pictovap.core.states import CandidateDecision
 from pictovap.core.visual_similarity import visual_similarity
 
 
@@ -72,7 +73,9 @@ class SelectionResult:
 def _eligible(score: Any, policy: SelectionPolicy) -> bool:
     if score.final_score < policy.minimum_score:
         return False
-    return not policy.require_selected_decision or score.decision == "selected"
+    return CandidateDecision(score.decision).is_eligible(
+        require_selected=policy.require_selected_decision
+    )
 
 
 def _pair_penalty(

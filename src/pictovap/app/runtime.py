@@ -12,6 +12,12 @@ from typing import Any, Iterable, cast
 from pictovap import __version__
 from pictovap.core.primitives import CMSPlacement
 from pictovap.api import create_visual_plan, create_wordpress_visual_plan
+from pictovap.core.states import (
+    DoctorStatus,
+    PublishMode,
+    PublishStatus,
+    resolve_publish_status,
+)
 from pictovap.plugins import AdapterKind, iter_plugins, load_plugin
 from pictovap.testing.contracts import validate_placement_result
 from pictovap.validation import validate_visual_plan
@@ -165,7 +171,7 @@ class PipelineRunner:
 
         healthy = all(plugin["load"] == "ok" for plugin in plugins)
         return {
-            "status": "ready" if healthy else "unhealthy",
+            "status": DoctorStatus.READY.value if healthy else DoctorStatus.UNHEALTHY.value,
             "pictovap": __version__,
             "python": platform.python_version(),
             "plugins": plugins,
@@ -211,21 +217,31 @@ class PipelineRunner:
         """Validate a plan and pass its typed placement to an installed CMS plugin."""
         placement = _read_placement(plan, cms)
         adapter = construct_plugin("cms", cms, cms_options)
-        envelope: dict[str, Any] = {
-            "status": "ready" if dry_run else "completed",
-            "mode": "dry-run" if dry_run else "publish",
-            "cms": {"name": cms, "option_keys": sorted((cms_options or {}).keys())},
-            "placement": placement.to_dict(),
-            "summary": {"planned": len(placement.placements)},
-        }
+
         if dry_run:
-            return envelope
+            return {
+                "status": PublishStatus.READY.value,
+                "mode": PublishMode.DRY_RUN.value,
+                "cms": {"name": cms, "option_keys": sorted((cms_options or {}).keys())},
+                "placement": placement.to_dict(),
+                "summary": {"planned": len(placement.placements)},
+            }
 
         result = adapter.place(placement)  # type: ignore[attr-defined]
         validate_placement_result(result)
-        envelope["result"] = dict(result)
-        envelope["status"] = "partial" if result["failed"] else "completed"
-        return envelope
+        status = resolve_publish_status(
+            dry_run=False,
+            placed_count=len(result["placed"]),
+            failed_count=len(result["failed"]),
+        )
+        return {
+            "status": status,
+            "mode": PublishMode.PUBLISH.value,
+            "cms": {"name": cms, "option_keys": sorted((cms_options or {}).keys())},
+            "placement": placement.to_dict(),
+            "summary": {"planned": len(placement.placements)},
+            "result": dict(result),
+        }
 
     def plan_wordpress_post(
         self,
