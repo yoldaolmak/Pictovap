@@ -93,6 +93,13 @@ class StrapiPublisher:
             dict with ``success``, ``media_id`` (Strapi numeric file ID),
             ``url``, ``title``, ``alt_text``.
         """
+        if not file_path or ".." in Path(file_path).parts or Path(file_path).name.startswith("."):
+            return {
+                "success": False,
+                "error": f"Unsafe file path rejected: {file_path}",
+                "file": Path(file_path).name if file_path else "",
+            }
+
         file_p = Path(file_path)
         if not file_p.exists():
             return {"success": False, "error": f"File not found: {file_path}"}

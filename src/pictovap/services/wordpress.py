@@ -114,6 +114,13 @@ class WordPressUploader:
         Returns:
             dict with media_id and details
         """
+        if not file_path or ".." in Path(file_path).parts or Path(file_path).name.startswith("."):
+            return {
+                "success": False,
+                "error": f"Unsafe file path rejected: {file_path}",
+                "file": Path(file_path).name if file_path else "",
+            }
+
         file_p = Path(file_path)
         if not file_p.exists():
             return {"success": False, "error": f"File not found: {file_path}"}
@@ -282,6 +289,7 @@ class WordPressUploader:
             metadata_dict=metadata_dict,
             post_id=post_id,
             site=self.site,
+            uploader=self,
         )
 
         placed: List[Dict[str, Any]] = []
@@ -864,6 +872,7 @@ def upload_images_batch(
     metadata_dict: Dict,  # filepath → {alt, title, caption, description}
     post_id: int,
     site: str = "demo",
+    uploader: Optional[WordPressUploader] = None,
 ) -> Dict:
     """Upload multiple processed images and attach to post
 
@@ -874,11 +883,12 @@ def upload_images_batch(
         site: site name prefix for env-based credentials (e.g. "myblog"
             reads MYBLOG_URL / MYBLOG_USER / MYBLOG_APP_PASSWORD;
             "demo" falls back to WP_*)
+        uploader: optional pre-configured WordPressUploader instance to reuse
 
     Returns:
         dict with results
     """
-    uploader = WordPressUploader(site=site)
+    uploader = uploader or WordPressUploader(site=site)
     results = {
         "site": site,
         "post_id": post_id,

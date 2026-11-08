@@ -227,7 +227,9 @@ def _analyze_gemini_flash(
                 wait = 5 * (2 ** attempt)  # 5s, 10s, 20s
                 time.sleep(wait)
                 continue
-            raise RuntimeError(f"Gemini API error {e.code}: {e.reason}") from e
+            raise RuntimeError(f"Gemini API error {e.code}: {e.reason}") from None
+        except urllib.error.URLError as e:
+            raise RuntimeError(f"Gemini API request failed: {e.reason}") from None
 
     if data is None:
         raise RuntimeError("Gemini API request failed after retries")

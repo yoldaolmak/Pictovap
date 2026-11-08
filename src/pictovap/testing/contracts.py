@@ -113,6 +113,54 @@ def sample_placement() -> CMSPlacement:
     )
 
 
+def sample_visual_plan(article_id: str = "contract-test") -> dict[str, Any]:
+    """Return a minimal deterministic visual plan fixture for contract testing."""
+    return {
+        "visual_brief": {
+            "article_id": article_id,
+            "article_title": "Contract Test Visual Plan",
+            "article_language": "en",
+            "image_slots": [{"slot_id": "featured", "purpose": "featured_image"}],
+        },
+        "fit_scores": {
+            "featured": [{
+                "candidate_id": "candidate-contract-1",
+                "slot_id": "featured",
+                "final_score": 9.2,
+                "decision": "selected",
+            }]
+        },
+        "provenance_packs": [{
+            "image_id": "candidate-contract-1",
+            "provider": "local",
+            "slot_id": "featured",
+            "generated_filename": "contract-test.webp",
+        }],
+        "cms_placement": {
+            "article_id": article_id,
+            "placements": [{
+                "slot_id": "featured",
+                "output_path": "images/contract-test.webp",
+                "image_role": "featured",
+                "alt_text": "Contract test alt",
+                "caption": "Contract test caption",
+            }],
+        },
+        "planning_diagnostics": {
+            "slots_requested": 1,
+            "slots_filled": 1,
+            "coverage_ratio": 1.0,
+        },
+    }
+
+
+def sample_decision_pack(article_id: str = "contract-test") -> dict[str, Any]:
+    """Return a minimal deterministic Decision Pack fixture for contract testing."""
+    from pictovap.decision_pack import build_decision_pack
+
+    return build_decision_pack(sample_visual_plan(article_id=article_id))
+
+
 def sample_candidate(candidate_id: str = "contract-test") -> dict[str, Any]:
     """Return one complete, JSON-safe image candidate fixture.
 
@@ -172,6 +220,8 @@ __all__ = [
     "assert_report_renderer_contract",
     "sample_placement",
     "sample_candidate",
+    "sample_visual_plan",
+    "sample_decision_pack",
     "validate_candidates",
     "validate_placement_result",
 ]

@@ -24,6 +24,7 @@ from .plan_diff import diff_visual_plans, plan_diff_to_json, render_plan_diff_ma
 from .benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
 from .registry import registry_entries, registry_payload, registry_to_json, render_registry_markdown
 from .decision_pack import build_decision_pack, validate_decision_pack
+from .testing import sample_decision_pack, sample_visual_plan
 from .intent import (
     build_decision_ledger,
     build_visual_intent_graph,
@@ -81,6 +82,8 @@ __all__ = [
     "render_registry_markdown",
     "build_decision_pack",
     "validate_decision_pack",
+    "sample_visual_plan",
+    "sample_decision_pack",
     "build_decision_ledger",
     "build_visual_intent_graph",
     "compile_intent_proof",

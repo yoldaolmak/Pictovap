@@ -14,6 +14,7 @@ from pictovap.core.primitives import CMSPlacement
 from pictovap.api import create_visual_plan, create_wordpress_visual_plan
 from pictovap.plugins import AdapterKind, iter_plugins, load_plugin
 from pictovap.testing.contracts import validate_placement_result
+from pictovap.validation import validate_visual_plan
 
 
 class RuntimeConfigurationError(ValueError):
@@ -84,6 +85,11 @@ def construct_plugin(
         ) from exc
 
 
+def _validate_safe_output_path(output_path: str) -> None:
+    if not output_path or ".." in Path(output_path).parts or Path(output_path).name.startswith("."):
+        raise ValueError(f"Unsafe placement output_path rejected: {output_path!r}")
+
+
 def _read_placement(plan_path: str | Path, cms_name: str) -> CMSPlacement:
     path = Path(plan_path)
     if not path.exists():
@@ -94,8 +100,17 @@ def _read_placement(plan_path: str | Path, cms_name: str) -> CMSPlacement:
         raise ValueError(f"Plan is not valid JSON: {path}") from exc
     if not isinstance(payload, dict):
         raise ValueError("Plan root must be an object")
+
+    if "visual_brief" in payload or "cms_placement" in payload or "provenance_packs" in payload:
+        validation = validate_visual_plan(payload)
+        if validation["status"] != "passed":
+            codes = ", ".join(err["code"] for err in validation.get("errors", []))
+            raise ValueError(f"Visual plan failed validation before publish: {codes}")
+
     placement_data = payload.get("cms_placement", payload)
     placement = CMSPlacement.from_dict(placement_data)
+    for instr in placement.placements:
+        _validate_safe_output_path(instr.output_path)
     placement.adapter_target = cms_name
     placement.target_platform = cms_name
     return placement

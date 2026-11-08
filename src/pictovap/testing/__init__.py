@@ -6,7 +6,9 @@ from pictovap.testing.contracts import (
     assert_image_source_contract,
     assert_report_renderer_contract,
     sample_candidate,
+    sample_decision_pack,
     sample_placement,
+    sample_visual_plan,
     validate_candidates,
     validate_placement_result,
 )
@@ -17,7 +19,9 @@ __all__ = [
     "assert_image_source_contract",
     "assert_report_renderer_contract",
     "sample_candidate",
+    "sample_decision_pack",
     "sample_placement",
+    "sample_visual_plan",
     "validate_candidates",
     "validate_placement_result",
 ]
