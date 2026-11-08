@@ -104,7 +104,7 @@ We enforce strict coding standards to keep the repository maintainable.
 
 ### Architecture Rules
 As detailed in the [Architecture Guide](ARCHITECTURE.md):
-- **App Layer (`src/pictovap/app`)**: Contains HTTP servers, CLI entrypoints, and argument parsers. *No business logic allowed.*
+- **App Layer (`src/pictovap/app`)**: Contains CLI entrypoints, argument parsers, and runtime orchestration. *No business logic allowed.*
 - **Engine Layer (`src/pictovap/engine`)**: Contains the core logic. *Cannot import from app/.*
 - **Providers Layer (`src/pictovap/providers`)**: External image-source integrations
   such as Unsplash, DepositPhotos, and Openverse. *Cannot import from engine/.*

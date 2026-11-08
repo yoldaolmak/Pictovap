@@ -38,7 +38,7 @@ verified against `ImageSourceAdapter` directly
 
 Reads images from a local directory. No credentials required.
 
-```python
+```bash
 PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images  # .env or environment variable
 ```
 
@@ -46,7 +46,7 @@ PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images  # .env or environment variable
 
 Queries the Unsplash API using keyword terms derived from the Visual Brief.
 
-```python
+```bash
 UNSPLASH_ACCESS_KEY=your_key_here  # .env
 ```
 
@@ -54,7 +54,7 @@ UNSPLASH_ACCESS_KEY=your_key_here  # .env
 
 Queries licensed stock images. Requires an active account.
 
-```python
+```bash
 DEPOSIT_API_KEY=your_key_here  # .env
 ```
 
@@ -64,7 +64,7 @@ Queries openverse.org, which aggregates openly licensed and public domain
 media from many sources. No API key required — requests are restricted to
 results licensed for commercial use and modification.
 
-```python
+```bash
 # No .env variable needed. Add "openverse" to a profile's image_sources.
 ```
 
@@ -73,7 +73,7 @@ results licensed for commercial use and modification.
 Queries the Pexels API. Requires a free API key (sign up at
 https://www.pexels.com/api/, approval is typically instant).
 
-```python
+```bash
 PEXELS_API_KEY=your_key_here  # .env
 ```
 

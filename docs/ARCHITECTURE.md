@@ -1,28 +1,37 @@
 # Pictovap Architecture
 
-Pictovap is an open-source image-planning and CMS placement framework for publishers.
-It is designed as a headless, modular pipeline that transforms raw text content
-into a fully visually-populated publishing package.
+Pictovap Core is an open-source, headless framework for article-aware image
+planning and portable CMS placement decisions. It turns article structure and
+candidate image evidence into a reviewable plan. A resulting plan is **not**
+proof that a CMS write was authorized, executed, published, or independently
+verified.
 
 ## 1. Product Boundary
 
-Pictovap solves the gap between "the text is written" and "the page is visually
-complete and published in the CMS."
+Pictovap Core addresses the decision boundary between written article
+content and a proposed, reviewable visual publishing plan.
 
 It is **not**:
 - A stock photo search tool
 - A Digital Asset Management (DAM) system
 - A generic AI image generator
 
-It is the article-aware automation layer that understands editorial layout needs,
-selects matching images, tracks licensing provenance, generates metadata, and
-places the images into the CMS.
+It is the article-aware decision layer that describes editorial image needs,
+evaluates candidates, records provenance, prepares metadata, and supplies CMS
+placement instructions. An adapter may execute a separately authorized CMS
+operation; no Core planning result alone confers that authority.
 
 ## 2. Core Boundary
 
-Pictovap is public infrastructure, not an enterprise estate-management
-application. It knows how to form, explain, validate, and transport a visual
-decision. It does not own organization inventory, user authority, job state,
+> **Core knows visual decisions. Product governs the visual estate and its lifecycle.**
+
+Pictovap Core is public infrastructure, not an enterprise estate-management
+application. Core owns the Visual Brief, Fit Score and selection policies,
+Provenance Pack, Decision Pack, CMS Placement, Public API, CLI, adapter
+protocols, deterministic planning, explainability, and validation. The
+separate enterprise Product owns the Visual Estate and Field, source
+observations, lineage and findings, authorization, execution, and independent
+verification. Core never owns organization inventory, user authority, job state,
 live observations, or CMS execution history. See the
 [Core/Product Boundary](architecture/core-product-boundary.md) for the
 enforced ownership split.
@@ -60,8 +69,9 @@ Analysis (Visual Brief)
   -> Review (Decision Pack)
 ```
 
-Each stage produces a serializable object that feeds the next. The core engine
-orchestrates this flow without any hardcoded dependencies on external systems.
+Each stage contributes a serializable planning artifact. The core planner
+does not require a live CMS, organization database, or enterprise workflow
+runtime. Provider and CMS adapters are optional integration boundaries.
 
 ## 5. Decision Pack and Review Boundary
 
@@ -77,8 +87,10 @@ Pictovap connects to the outside world via two types of adapters:
 
 - **Image Source Adapters** (`src/pictovap/providers/`): Supply candidate images.
   Examples: Local directory, Unsplash, DepositPhotos.
-- **CMS Placement Adapters** (`src/pictovap/publishers/`): Consume the CMS
-  Placement plan and execute native API calls.
+- **CMS Placement Adapters** (`src/pictovap/publishers/` and
+  `src/pictovap/services/`): Consume approved placement instructions; live
+  calls, credentials, and effects are adapter-specific. An offline plan or
+  dry run is not evidence of a completed publish.
   Examples: WordPress, Ghost, Strapi.
 
 The core pipeline is adapter-agnostic.

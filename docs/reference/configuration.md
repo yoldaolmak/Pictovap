@@ -13,6 +13,7 @@ None of them are required — `pictovap demo` runs with zero configuration, and
 | `DEPOSIT_API_KEY` | For the DepositPhotos source | DepositPhotos API key |
 | `DEPOSIT_LOGIN_USER` | For the DepositPhotos source | DepositPhotos account username |
 | `DEPOSIT_LOGIN_PASSWORD` | For the DepositPhotos source | DepositPhotos account password |
+| `PEXELS_API_KEY` | For the Pexels source | Pexels API key |
 
 See [Image Source Adapters](../adapters/image-sources.md) for the full contract.
 
@@ -42,6 +43,7 @@ search path does not require `PICTOVAP_VIL_DIR`.
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `GEMINI_API_KEY` | No | Enables Gemini Flash vision analysis for alt text/captions |
+| `GEMINI_VISION_MODEL` | No | Vision model name (default: `gemini-2.0-flash`) |
 
 If neither `GEMINI_API_KEY` nor a local LM Studio instance (`localhost:1234`) is
 available, `pictovap plan` falls back to the deterministic, dictionary-based
@@ -53,6 +55,7 @@ metadata generator — no vision key is required to run the pipeline.
 # Image sources (all optional)
 PICTOVAP_LOCAL_IMAGE_DIR=/path/to/images
 UNSPLASH_ACCESS_KEY=abc123
+PEXELS_API_KEY=your_key_here
 
 # Runtime paths (optional)
 PICTOVAP_WORKSPACE_DIR=/path/to/project
@@ -66,4 +69,5 @@ WP_APP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
 
 # Vision-backed metadata (optional)
 GEMINI_API_KEY=your-key-here
+GEMINI_VISION_MODEL=gemini-2.0-flash
 ```
