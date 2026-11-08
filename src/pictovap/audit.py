@@ -12,6 +12,7 @@ from collections import Counter
 from collections.abc import Mapping
 from typing import Any
 
+from pictovap.core.states import aggregate_check_status
 from pictovap.validation import validate_visual_plan
 
 
@@ -157,7 +158,10 @@ def audit_visual_plan(plan: Mapping[str, Any], *, strict: bool = False) -> dict[
 
     failed_checks = sum(check["status"] == "failed" for check in checks.values())
     warning_checks = sum(check["status"] == "warning" for check in checks.values())
-    status = "failed" if failed_checks else ("warning" if warning_checks else "passed")
+    status = aggregate_check_status(
+        (check["status"] for check in checks.values()),
+        strict=strict,
+    )
     return {
         "schema_version": "1",
         "status": status,

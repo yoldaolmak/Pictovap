@@ -6,6 +6,7 @@ import json
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+from pictovap.core.states import PlanDiffStatus
 from pictovap.validation import validate_visual_plan
 
 
@@ -317,7 +318,7 @@ def diff_visual_plans(
 
     return {
         "schema_version": PLAN_DIFF_SCHEMA_VERSION,
-        "status": "changed" if total_changes else "unchanged",
+        "status": PlanDiffStatus.CHANGED.value if total_changes else PlanDiffStatus.UNCHANGED.value,
         "change_sources": change_sources,
         "identity": {
             "before_article_id": before_id,
@@ -461,6 +462,6 @@ def render_plan_diff_markdown(result: Mapping[str, Any]) -> str:
         lines, "Planning Diagnostics Changes", _sequence(result.get("diagnostics_changes"))
     )
 
-    if result.get("status") == "unchanged":
+    if result.get("status") == PlanDiffStatus.UNCHANGED.value:
         lines.extend(["No editorial plan changes were detected.", ""])
     return "\n".join(lines)

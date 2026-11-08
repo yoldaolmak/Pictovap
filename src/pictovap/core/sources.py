@@ -22,15 +22,16 @@ from dataclasses import dataclass
 from typing import Any, Dict, List
 
 from pictovap.core.profile import PublisherProfile
+from pictovap.core.states import SourceAttemptReason, SourceEpistemicState
 
 
 # Epistemic states, matching the vocabulary used across Pictovap contracts:
 #   observed       the adapter ran; `candidates` is what it actually returned
 #   not_evaluable  the adapter could not produce a conclusion at all
 #   unknown        the source was not queried, so its result is not known
-OBSERVED = "observed"
-NOT_EVALUABLE = "not_evaluable"
-UNKNOWN = "unknown"
+OBSERVED = SourceEpistemicState.OBSERVED.value
+NOT_EVALUABLE = SourceEpistemicState.NOT_EVALUABLE.value
+UNKNOWN = SourceEpistemicState.UNKNOWN.value
 
 
 @dataclass(frozen=True)
@@ -42,6 +43,32 @@ class SourceAttempt:
     candidates: int = 0
     reason: str | None = None
     error_type: str | None = None
+
+    def __post_init__(self) -> None:
+        try:
+            st = SourceEpistemicState(self.state)
+        except ValueError:
+            raise ValueError(f"Invalid SourceAttempt state: {self.state!r}")
+        object.__setattr__(self, "state", st.value)
+
+        if self.candidates < 0:
+            raise ValueError("SourceAttempt.candidates cannot be negative")
+
+        if st == SourceEpistemicState.OBSERVED:
+            if self.error_type is not None:
+                raise ValueError("Observed SourceAttempt cannot carry error_type")
+        elif st == SourceEpistemicState.NOT_EVALUABLE:
+            if self.candidates != 0:
+                raise ValueError("not_evaluable SourceAttempt must have 0 candidates")
+            if not self.reason or not str(self.reason).strip():
+                raise ValueError("not_evaluable SourceAttempt requires a reason")
+        elif st == SourceEpistemicState.UNKNOWN:
+            if self.candidates != 0:
+                raise ValueError("unknown SourceAttempt must have 0 candidates")
+            if self.error_type is not None:
+                raise ValueError("unknown SourceAttempt cannot carry error_type")
+            if not self.reason or not str(self.reason).strip():
+                raise ValueError("unknown SourceAttempt requires a reason")
 
     def to_dict(self) -> dict[str, Any]:
         record: dict[str, Any] = {
@@ -152,8 +179,13 @@ def _fetch_from_source(
 
 
 __all__ = [
+    "NOT_EVALUABLE",
+    "OBSERVED",
     "SourceAttempt",
+    "SourceAttemptReason",
+    "SourceEpistemicState",
     "SourceFetchResult",
+    "UNKNOWN",
     "fetch_candidates",
     "fetch_candidates_with_evidence",
 ]

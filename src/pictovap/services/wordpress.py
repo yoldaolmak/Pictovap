@@ -13,6 +13,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from pictovap.core.primitives import CMSPlacement
+from pictovap.core.states import (
+    MediaGuardStatus,
+    MediaIntegrityState,
+    guard_status_for_state,
+)
 from pictovap.services.post_media_guard import (
     assess_post_media,
     load_post_media_manifest,
@@ -569,7 +574,14 @@ class WordPressUploader:
         """Check, adopt, or safely reconstruct Pictovap-managed media blocks."""
         post = self.fetch_post_context(post_id)
         if not post:
-            return {"command": "guard", "status": "failed", "error": "Post context could not be loaded"}
+            return {
+                "command": "guard",
+                "status": MediaGuardStatus.FAILED.value,
+                "state": MediaIntegrityState.INVALID.value,
+                "site": self.site,
+                "post_id": post_id,
+                "error": "Post context could not be loaded",
+            }
 
         try:
             manifest = load_post_media_manifest(self.site, post_id)
@@ -581,8 +593,9 @@ class WordPressUploader:
                 if not items:
                     return {
                         "command": "guard",
-                        "status": "untracked",
-                        "state": "untracked",
+                        "status": MediaGuardStatus.UNTRACKED.value,
+                        "state": MediaIntegrityState.UNTRACKED.value,
+                        "site": self.site,
                         "post_id": post_id,
                         "error": "No media blocks were available to adopt",
                     }
@@ -596,15 +609,15 @@ class WordPressUploader:
             if manifest is None:
                 return {
                     "command": "guard",
-                    "status": "untracked",
-                    "state": "untracked",
+                    "status": MediaGuardStatus.UNTRACKED.value,
+                    "state": MediaIntegrityState.UNTRACKED.value,
                     "site": self.site,
                     "post_id": post_id,
                 }
 
             integrity = assess_post_media(manifest, post.get("content_raw", "") or "")
             repaired = False
-            if integrity["state"] == "drift" and repair:
+            if integrity["state"] == MediaIntegrityState.DRIFT.value and repair:
                 result = self.append_media_to_post_content(
                     post_id,
                     manifest.get("media_items", []),
@@ -613,8 +626,8 @@ class WordPressUploader:
                 if not result.get("success"):
                     return {
                         "command": "guard",
-                        "status": "failed",
-                        "state": "drift",
+                        "status": MediaGuardStatus.FAILED.value,
+                        "state": MediaIntegrityState.DRIFT.value,
                         "site": self.site,
                         "post_id": post_id,
                         "repair": result,
@@ -623,9 +636,9 @@ class WordPressUploader:
                 post = self.fetch_post_context(post_id)
                 manifest = load_post_media_manifest(self.site, post_id) or manifest
                 integrity = assess_post_media(manifest, post.get("content_raw", "") or "")
-                repaired = integrity["state"] == "healthy"
+                repaired = integrity["state"] == MediaIntegrityState.HEALTHY.value
 
-            status = "success" if integrity["state"] in {"healthy", "empty"} else "drift"
+            status = guard_status_for_state(integrity["state"])
             return {
                 "command": "guard",
                 "status": status,
@@ -639,8 +652,8 @@ class WordPressUploader:
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             return {
                 "command": "guard",
-                "status": "failed",
-                "state": "invalid",
+                "status": MediaGuardStatus.FAILED.value,
+                "state": MediaIntegrityState.INVALID.value,
                 "site": self.site,
                 "post_id": post_id,
                 "error": str(exc),

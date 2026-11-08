@@ -10,11 +10,14 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
-from typing import Any, Iterable, Mapping
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any, Iterable, Mapping
 
 from pictovap.core.primitives import FitScore, VisualBrief
 from pictovap.core.profile import PublisherProfile
+
+if TYPE_CHECKING:
+    from pictovap.core.selection import SelectionPolicy
 
 
 INTENT_SCHEMA_VERSION = "1"
@@ -65,9 +68,10 @@ class VisualIntentGraph:
     topic: str
     publisher_profile: str
     slots: tuple[VisualIntentSlot, ...]
+    policy: Mapping[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        result: dict[str, Any] = {
             "schema_version": INTENT_SCHEMA_VERSION,
             "compiler": "pictovap.visual-intent",
             "article_id": self.article_id,
@@ -77,6 +81,9 @@ class VisualIntentGraph:
             "publisher_profile": self.publisher_profile,
             "slots": [slot.to_dict() for slot in self.slots],
         }
+        if self.policy:
+            result["policy"] = dict(self.policy)
+        return result
 
 
 def _terms(*values: str) -> tuple[str, ...]:
@@ -91,7 +98,11 @@ def _terms(*values: str) -> tuple[str, ...]:
     return tuple(words[:12])
 
 
-def build_visual_intent_graph(brief: VisualBrief, profile: PublisherProfile) -> VisualIntentGraph:
+def build_visual_intent_graph(
+    brief: VisualBrief,
+    profile: PublisherProfile,
+    selection_policy: SelectionPolicy | None = None,
+) -> VisualIntentGraph:
     """Compile a VisualBrief into a stable, explainable intent graph."""
     constraints = (
         IntentConstraint("license_declared", "hard", "candidate declares a usable license"),
@@ -105,7 +116,10 @@ def build_visual_intent_graph(brief: VisualBrief, profile: PublisherProfile) -> 
     slots = tuple(
         VisualIntentSlot(
             slot_id=str(raw_slot.get("slot_id", "")),
-            role="featured" if raw_slot.get("slot_id") == "featured" else "inline",
+            role="featured" if (
+                str(raw_slot.get("slot_id", "")) == "featured"
+                or str(raw_slot.get("purpose", "")) == "featured_image"
+            ) else "inline",
             target_heading=str(raw_slot.get("target_heading", "")),
             purpose=str(raw_slot.get("purpose", "")),
             query_terms=_terms(
@@ -118,6 +132,13 @@ def build_visual_intent_graph(brief: VisualBrief, profile: PublisherProfile) -> 
         )
         for raw_slot in brief.image_slots
     )
+    policy_dict = {
+        "require_selected_decision": (
+            selection_policy.require_selected_decision
+            if selection_policy is not None
+            else True
+        )
+    }
     return VisualIntentGraph(
         article_id=str(brief.article_id or ""),
         article_title=brief.article_title,
@@ -125,6 +146,7 @@ def build_visual_intent_graph(brief: VisualBrief, profile: PublisherProfile) -> 
         topic=brief.topic,
         publisher_profile=profile.profile_id,
         slots=slots,
+        policy=policy_dict,
     )
 
 
@@ -235,9 +257,10 @@ def compile_intent_proof(
     candidates: Iterable[Mapping[str, Any]],
     scored_slots: Iterable[tuple[Mapping[str, Any], Iterable[FitScore]]],
     assignments: Mapping[str, FitScore],
+    selection_policy: SelectionPolicy | None = None,
 ) -> dict[str, Any]:
     """Compile the graph and decision ledger into a proof-carrying plan block."""
-    graph = build_visual_intent_graph(brief, profile)
+    graph = build_visual_intent_graph(brief, profile, selection_policy=selection_policy)
     ledger = build_decision_ledger(graph, candidates, scored_slots, assignments)
     selected = sum(entry["assignment"] == "assigned" for entry in ledger)
     hard_failures = sum(

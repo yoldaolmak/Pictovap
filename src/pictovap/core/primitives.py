@@ -20,6 +20,8 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
+from pictovap.core.states import CandidateDecision
+
 
 def _json_safe(value: Any) -> Any:
     """Convert YAML values to deterministic JSON-compatible values."""
@@ -172,10 +174,30 @@ class VisualBrief:
         title = str(frontmatter.get("title", "")).strip()
         sections = []
         current_section = None
+        in_fence = False
+        fence_marker = ""
         for line in lines:
             stripped = line.strip()
-            if stripped.startswith("# ") and not title:
-                title = stripped[2:].strip()
+            if in_fence:
+                if stripped.startswith(fence_marker):
+                    in_fence = False
+                    fence_marker = ""
+                elif current_section is not None and stripped:
+                    current_section["lines"].append(stripped)
+                continue
+
+            if stripped.startswith("```") or stripped.startswith("~~~"):
+                in_fence = True
+                fence_marker = stripped[:3]
+                if current_section is not None and stripped:
+                    current_section["lines"].append(stripped)
+                continue
+
+            if stripped.startswith("# "):
+                if not title:
+                    title = stripped[2:].strip()
+                else:
+                    current_section = None
             elif stripped.startswith("## "):
                 current_section = {"heading": stripped[3:].strip(), "level": "h2", "lines": []}
                 sections.append(current_section)
@@ -351,6 +373,9 @@ class FitScore:
     final_score: float = 0.0
     decision: str = "needs_review"  # selected | rejected | needs_review
     human_reason: str = ""
+
+    def __post_init__(self) -> None:
+        self.decision = CandidateDecision(self.decision).value
 
     def to_dict(self) -> Dict[str, Any]:
         return {

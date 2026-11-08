@@ -12,6 +12,7 @@ import re
 import tempfile
 from typing import Any, Dict, Iterable, List, Optional
 
+from pictovap.core.states import MediaIntegrityState
 from pictovap.utils.config import env_str, get_workspace_root
 
 
@@ -195,7 +196,15 @@ def assess_post_media(manifest: Dict[str, Any], content_raw: str) -> Dict[str, A
     present = extract_media_ids(content_raw)
     present_set = set(present)
     missing = [media_id for media_id in expected if media_id not in present_set]
-    state = "empty" if not expected else ("drift" if missing else "healthy")
+    state = (
+        MediaIntegrityState.EMPTY.value
+        if not expected
+        else (
+            MediaIntegrityState.DRIFT.value
+            if missing
+            else MediaIntegrityState.HEALTHY.value
+        )
+    )
     return {
         "state": state,
         "expected_media_ids": expected,
