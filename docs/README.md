@@ -2,16 +2,40 @@
 
 Welcome to the Pictovap documentation.
 
-Pictovap is for content publishers who spend hours finding free images and
-placing them in articles. WordPress Gutenberg is the first-class integration
-today; the adapter-based core remains CMS-neutral.
+This documentation covers **Pictovap Core**, the public Python framework
+for article-aware visual planning and reviewable CMS placement. It reads article
+structure, creates a Visual Brief, evaluates candidates with Fit Scores,
+records provenance, and prepares a Decision Pack and CMS Placement
+instructions. WordPress Gutenberg has the broadest in-tree integration, but
+Core is CMS-neutral.
 
-It turns that manual loop into an inspectable workflow, from image search to
-a reviewable publishing plan.
+> **Core knows visual decisions. Product governs the visual estate and its lifecycle.**
 
-It reads article structure, creates a Visual Brief, evaluates candidate images with Fit Scores, records Provenance Packs, generates metadata, and prepares CMS Placement instructions.
+Core is not the separate enterprise application: it does not maintain site-wide
+visual observations, govern operator permissions, or verify live execution.
+Start with the [Core/Product boundary](architecture/core-product-boundary.md)
+for the ownership map, then [Architecture](ARCHITECTURE.md) and the
+[API Stability Policy](../API_STABILITY.md) for integration contracts.
 
 ## Navigation
+
+### Start by Goal
+
+- **Evaluate (Engineers, Architects, Reviewers):**
+  - Run the credential-free demo: `pictovap demo`
+  - Verify offline determinism: [Golden Corpus Benchmark](concepts/golden-corpus.md) (`pictovap benchmark --corpus tests/corpus`)
+  - Inspect intent and audit: [Decision Pack](concepts/decision-pack.md) and [Plan Diff](concepts/plan-diff.md) (`pictovap explain`, `pictovap audit`, `pictovap diff`)
+  - Architectural guarantees: [Core/Product Boundary](architecture/core-product-boundary.md), [Architecture](ARCHITECTURE.md), [API Stability Policy](../API_STABILITY.md)
+- **Use (Developers, Publishers):**
+  - Get started in 5 minutes: [Quickstart](quickstart.md)
+  - Full end-to-end user journey: [Using Pictovap](guides/using-pictovap.md)
+  - Connect a CMS: [WordPress Setup](guides/wordpress-setup.md)
+  - Configuration & options: [Configuration Reference](reference/configuration.md) and [CLI Reference](reference/cli.md)
+- **Extend (Contributors, Integrators):**
+  - Public Python API: `pictovap.api.create_visual_plan`, `build_decision_pack`, `validate_decision_pack`
+  - Adapter architecture: [Framework Guide](framework.md) and [Adapter Overview](adapters/overview.md)
+  - Plugin authoring: [Building Adapter Plugins](contributing/plugins.md)
+  - Contract testing: `pictovap.testing` (`assert_image_source_contract`, `assert_cms_adapter_contract`, `sample_visual_plan`, `sample_decision_pack`)
 
 ### Guides
 

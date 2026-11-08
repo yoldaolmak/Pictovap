@@ -27,13 +27,15 @@ not change without a deprecation notice and migration guidance.
 | `pictovap.core.visual_similarity` | `compute_visual_fingerprint()` and `visual_similarity()` for deterministic, local-only editorial diversity signals. |
 | `pictovap.validation` | `validate_visual_plan()` for side-effect-free validation of serialized plans in CI and external integrations. |
 | Adapter data | The required candidate fields, CMS placement-result fields, and validation helpers published by `pictovap.testing`. |
-| `pictovap.testing.sample_candidate()` | A deterministic, JSON-safe candidate fixture for provider adapter tests. |
+| `pictovap.testing` fixtures | Deterministic, JSON-safe fixtures: `sample_candidate()`, `sample_placement()`, `sample_visual_plan()`, and `sample_decision_pack()`. |
 | CMS plan types | `CMSPlacement` and `PlacementInstruction` serialization used by `CMSAdapter.place()`. |
 | Publisher Profile v1 | `PublisherProfile`, `from_mapping()`, `from_yaml()`, and `publisher-profile-v1.schema.json`. |
 | Plugin entry points | `pictovap.image_sources`, `pictovap.cms`, and `pictovap.report_renderers`. |
 
 An adapter should depend only on these surfaces and use the contract assertions
-in `pictovap.testing` in its own test suite.
+in `pictovap.testing` in its own test suite (`pictovap.testing` provides
+`sample_visual_plan()` and `sample_decision_pack()` alongside `sample_candidate()`
+and `sample_placement()`).
 
 ## Experimental Surfaces
 
@@ -51,7 +53,10 @@ minor release while the framework is still pre-1.0:
 - `pictovap.registry` metadata and registry presentation details
 - `pictovap.plan_diff`, the plan-diff schema, and Markdown presentation details
 - `pictovap.decision_pack` and the Decision Pack schema; they are the
-  versioned, read-only foundation for future editor review surfaces
+  versioned, read-only foundation for future editor review surfaces.
+  `validate_decision_pack()` guarantees input immutability (never mutates the
+  passed mapping) and accepts optional root `pack_id` and `engine_version`
+  strings
 - CLI convenience commands and their human-readable output
 - built-in provider and CMS adapter implementation details
 

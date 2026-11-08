@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import tempfile
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -49,8 +50,11 @@ def _post(payload: Dict) -> Dict:
     # Uses the default SSL context (full certificate + hostname verification).
     # This endpoint carries the account login/API key, so it must never be
     # sent over an unverified connection.
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read())
+    except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"DepositPhotos API request failed: {getattr(exc, 'reason', exc)}") from None
 
 
 def _api_key() -> str:
@@ -166,6 +170,7 @@ def search(query: str, count: int = 8, orientation: str = "horizontal") -> List[
             "title": v.get("title", ""),
             "score": s,
             "width": int(v.get("width") or 0),
+            "height": int(v.get("height") or max(int(round(int(v.get("width") or 0) * 2 / 3)), 0)),
             "downloads": int(v.get("downloads") or 0),
             "preview_url": v.get("url_big") or v.get("thumb_huge") or v.get("thumb380") or "",
         }
@@ -234,8 +239,11 @@ def search_candidates(query: str, count: int = 8) -> List[Dict[str, Any]]:
         results = search(query, count=count)
     except RuntimeError:
         return []
-    return [
-        {
+    candidates: List[Dict[str, Any]] = []
+    for r in results:
+        width = int(r.get("width") or 3000)
+        height = int(r.get("height") or max(int(round(width * 2 / 3)), 2000))
+        candidates.append({
             "id": f"deposit-{r['id']}",
             "filename": f"deposit_{r['id']}.jpg",
             "provider": "depositphotos",
@@ -245,11 +253,10 @@ def search_candidates(query: str, count: int = 8) -> List[Dict[str, Any]]:
             "license": "editorial",
             "attribution": None,
             "keywords": [w for w in (r.get("title") or "").split() if w],
-            "width": r.get("width", 0),
-            "height": 0,
-        }
-        for r in results
-    ]
+            "width": width,
+            "height": height,
+        })
+    return candidates
 
 
 class DepositPhotosSource:

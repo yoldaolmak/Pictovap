@@ -49,14 +49,33 @@ def score_candidate(candidate: dict[str, Any], slot: dict[str, Any], brief: Visu
     dup_risk = 0.0
 
     # Source trust
-    provider = candidate.get("provider", "")
-    trust_map = {"local": 2.0, "unsplash_mock": 1.5, "stock": 1.0}
+    provider = str(candidate.get("provider", "")).strip().lower()
+    trust_map = {
+        "local": 2.0,
+        "unsplash_mock": 1.5,
+        "unsplash": 1.5,
+        "openverse": 1.5,
+        "pexels": 1.5,
+        "depositphotos": 1.5,
+        "stock": 1.0,
+    }
     source_trust = trust_map.get(provider, 1.0)
 
     # License confidence
     lic = candidate.get("license", "unknown")
-    lic_map = {"CC0": 2.0, "owned": 2.0, "unsplash": 1.5, "editorial": 0.5, "unknown": 0.0}
-    license_conf = lic_map.get(lic, 0.5)
+    lic_norm = str(lic).strip().lower()
+    lic_map = {
+        "cc0": 2.0,
+        "public_domain": 2.0,
+        "owned": 2.0,
+        "unsplash": 1.5,
+        "pexels": 1.5,
+        "cc-by": 1.5,
+        "cc-by-sa": 1.2,
+        "editorial": 0.5,
+        "unknown": 0.0,
+    }
+    license_conf = lic_map.get(lic_norm, 0.5)
 
     # CMS suitability: landscape preferred for featured
     if slot_purpose == "featured_image":

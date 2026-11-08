@@ -240,13 +240,23 @@ def _asset_is_complete(asset: Any) -> bool:
     )
 
 
-def build_decision_pack(plan: Mapping[str, Any]) -> dict[str, Any]:
+def build_decision_pack(
+    plan: Mapping[str, Any],
+    *,
+    pack_id: str | None = None,
+    engine_version: str | None = None,
+) -> dict[str, Any]:
     """Build a portable review package from one validated visual plan.
 
     The source plan remains the computational record. A Decision Pack groups
     its candidate, provenance, placement, and intent evidence by slot, then
     adds empty review and application state for a downstream editorial surface.
     """
+    if pack_id is not None and (not isinstance(pack_id, str) or not pack_id.strip()):
+        raise ValueError("pack_id must be a non-empty string.")
+    if engine_version is not None and (not isinstance(engine_version, str) or not engine_version.strip()):
+        raise ValueError("engine_version must be a non-empty string.")
+
     validation = validate_visual_plan(plan)
     if validation["status"] != "passed":
         raise ValueError("Visual plan must pass validation before building a Decision Pack.")
@@ -297,7 +307,7 @@ def build_decision_pack(plan: Mapping[str, Any]) -> dict[str, Any]:
         })
 
     article_id = brief.get("article_id") or placement.get("article_id")
-    decision_pack = {
+    decision_pack: dict[str, Any] = {
         "schema_version": DECISION_PACK_SCHEMA_VERSION,
         "kind": _KIND,
         "article": {
@@ -309,6 +319,10 @@ def build_decision_pack(plan: Mapping[str, Any]) -> dict[str, Any]:
         "review": {"status": "pending", "decisions": []},
         "application": {"status": "not_applied", "receipts": []},
     }
+    if pack_id is not None:
+        decision_pack["pack_id"] = pack_id
+    if engine_version is not None:
+        decision_pack["engine_version"] = engine_version
     decision_pack_validation = validate_decision_pack(decision_pack)
     if decision_pack_validation["status"] != "passed":
         codes = ", ".join(error["code"] for error in decision_pack_validation["errors"])
@@ -343,6 +357,10 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
         ))
     if root.get("kind") != _KIND:
         errors.append(_issue("decision_pack_kind", "$.kind", f"Decision Pack kind must be {_KIND!r}."))
+    if "pack_id" in root:
+        _string(root.get("pack_id"), "decision_pack_id", "$.pack_id", errors)
+    if "engine_version" in root:
+        _string(root.get("engine_version"), "decision_pack_engine_version", "$.engine_version", errors)
     checks["schema"] = {"status": "passed" if not errors else "failed"}
 
     article = _object(root.get("article"), "$.article", errors)

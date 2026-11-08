@@ -87,20 +87,11 @@ def _install(monkeypatch, provider=ExternalProvider, cms=ExternalCMS):
     monkeypatch.setattr("pictovap.plugins.metadata.entry_points", lambda: FakeEntryPoints(points))
 
 
+from pictovap.testing.contracts import sample_visual_plan
+
+
 def _write_plan(path):
-    path.write_text(json.dumps({
-        "cms_placement": {
-            "article_id": "article-42",
-            "adapter_target": "generic",
-            "target_platform": "generic",
-            "placements": [{
-                "slot_id": "featured",
-                "output_path": "featured.webp",
-                "image_role": "featured",
-                "alt_text": "A useful image",
-            }],
-        },
-    }), encoding="utf-8")
+    path.write_text(json.dumps(sample_visual_plan("article-42")), encoding="utf-8")
 
 
 def test_adapter_options_support_environment_and_json_scalars(monkeypatch):
