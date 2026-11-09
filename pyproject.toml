@@ -33,7 +33,8 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "Pillow>=13.0.0",
+    "Pillow>=13.0.0; python_version >= '3.11'",
+    "Pillow>=12.3.0; python_version < '3.11'",
     "PyYAML>=6.0.2",
     "requests>=2.32.3",
     "urllib3>=2.8.0",
