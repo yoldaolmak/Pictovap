@@ -16,7 +16,9 @@ import hmac
 import json
 import mimetypes
 import os
+import tempfile
 import time
+import urllib.parse
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -61,6 +63,31 @@ def _content_type(filename: str) -> str:
     return content_type or "application/octet-stream"
 
 
+_IMAGE_EXTENSIONS = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".avif"}
+
+
+def _is_safe_upload_path(file_path: str) -> bool:
+    if not file_path:
+        return False
+    file_p = Path(file_path)
+    if ".." in file_p.parts:
+        return False
+    if file_p.name.startswith("."):
+        return False
+    if any(part.startswith(".") for part in file_p.parts):
+        try:
+            temp_root = Path(tempfile.gettempdir()).resolve()
+            if not file_p.resolve().is_relative_to(temp_root):
+                return False
+        except Exception:
+            return False
+    if file_p.is_symlink():
+        return False
+    if file_p.suffix.lower() not in _IMAGE_EXTENSIONS:
+        return False
+    return True
+
+
 class GhostPublisher:
     """Upload and attach images to Ghost CMS posts via the Admin API.
 
@@ -87,6 +114,9 @@ class GhostPublisher:
                 "GhostPublisher requires GHOST_URL and GHOST_ADMIN_API_KEY "
                 "(e.g. set them in your .env file)."
             )
+        parsed = urllib.parse.urlparse(self.base_url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError(f"GhostPublisher requires a valid http or https URL: {self.base_url!r}")
         self._session = requests.Session()
 
     def _auth_headers(self) -> Dict[str, str]:
@@ -110,7 +140,7 @@ class GhostPublisher:
             dict with ``success``, ``media_id`` (the CDN url used as id),
             ``url``, ``title``, ``alt_text``.
         """
-        if not file_path or ".." in Path(file_path).parts or Path(file_path).name.startswith("."):
+        if not _is_safe_upload_path(file_path):
             return {
                 "success": False,
                 "error": f"Unsafe file path rejected: {file_path}",
@@ -120,6 +150,12 @@ class GhostPublisher:
         file_p = Path(file_path)
         if not file_p.exists():
             return {"success": False, "error": f"File not found: {file_path}"}
+        if not file_p.is_file():
+            return {
+                "success": False,
+                "error": f"Unsafe file path rejected: {file_path}",
+                "file": file_p.name,
+            }
 
         upload_url = f"{self.base_url}/ghost/api/admin/images/upload/"
         headers = self._auth_headers()

@@ -204,7 +204,7 @@ def _analyze_gemini_flash(
 
     url = (
         f"https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{model}:generateContent?key={api_key}"
+        f"{model}:generateContent"
     )
 
     # Basic retry with backoff on rate limiting / transient unavailability.
@@ -217,7 +217,10 @@ def _analyze_gemini_flash(
         try:
             req = urllib.request.Request(
                 url, data=body, method="POST",
-                headers={"Content-Type": "application/json"},
+                headers={
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": api_key,
+                },
             )
             with urllib.request.urlopen(req, timeout=30) as resp:
                 data = json.loads(resp.read())

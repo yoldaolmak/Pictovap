@@ -16,6 +16,8 @@ from __future__ import annotations
 import json
 import mimetypes
 import os
+import tempfile
+import urllib.parse
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -33,6 +35,31 @@ def _content_type(filename: str) -> str:
     does not match its bytes."""
     content_type, _ = mimetypes.guess_type(filename)
     return content_type or "application/octet-stream"
+
+
+_IMAGE_EXTENSIONS = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".avif"}
+
+
+def _is_safe_upload_path(file_path: str) -> bool:
+    if not file_path:
+        return False
+    file_p = Path(file_path)
+    if ".." in file_p.parts:
+        return False
+    if file_p.name.startswith("."):
+        return False
+    if any(part.startswith(".") for part in file_p.parts):
+        try:
+            temp_root = Path(tempfile.gettempdir()).resolve()
+            if not file_p.resolve().is_relative_to(temp_root):
+                return False
+        except Exception:
+            return False
+    if file_p.is_symlink():
+        return False
+    if file_p.suffix.lower() not in _IMAGE_EXTENSIONS:
+        return False
+    return True
 
 
 class StrapiPublisher:
@@ -66,6 +93,9 @@ class StrapiPublisher:
                 "StrapiPublisher requires STRAPI_URL and STRAPI_API_TOKEN "
                 "(set them in your .env file or pass directly)."
             )
+        parsed = urllib.parse.urlparse(self.base_url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError(f"StrapiPublisher requires a valid http or https URL: {self.base_url!r}")
         self._session = requests.Session()
         self._session.headers.update({"Authorization": f"Bearer {self._token}"})
         # Defaults used by place(); a single Strapi content-type field can only
@@ -93,7 +123,7 @@ class StrapiPublisher:
             dict with ``success``, ``media_id`` (Strapi numeric file ID),
             ``url``, ``title``, ``alt_text``.
         """
-        if not file_path or ".." in Path(file_path).parts or Path(file_path).name.startswith("."):
+        if not _is_safe_upload_path(file_path):
             return {
                 "success": False,
                 "error": f"Unsafe file path rejected: {file_path}",
@@ -103,6 +133,12 @@ class StrapiPublisher:
         file_p = Path(file_path)
         if not file_p.exists():
             return {"success": False, "error": f"File not found: {file_path}"}
+        if not file_p.is_file():
+            return {
+                "success": False,
+                "error": f"Unsafe file path rejected: {file_path}",
+                "file": file_p.name,
+            }
 
         upload_url = f"{self.base_url}/api/upload"
 
