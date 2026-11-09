@@ -91,8 +91,20 @@ def construct_plugin(
         ) from exc
 
 
+_ALLOWED_IMAGE_EXTENSIONS = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".avif"}
+
+
 def _validate_safe_output_path(output_path: str) -> None:
-    if not output_path or ".." in Path(output_path).parts or Path(output_path).name.startswith("."):
+    if not output_path:
+        raise ValueError(f"Unsafe placement output_path rejected: {output_path!r}")
+    path = Path(output_path)
+    if (
+        path.is_absolute()
+        or ".." in path.parts
+        or any(part.startswith(".") for part in path.parts)
+        or path.is_symlink()
+        or path.suffix.lower() not in _ALLOWED_IMAGE_EXTENSIONS
+    ):
         raise ValueError(f"Unsafe placement output_path rejected: {output_path!r}")
 
 

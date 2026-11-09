@@ -9,6 +9,8 @@ import logging
 import mimetypes
 import re
 import html
+import tempfile
+import urllib.parse
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -67,6 +69,31 @@ def _post_read_error(post_id: int, exc: requests.exceptions.RequestException) ->
     return WordPressPostReadError(message)
 
 
+_IMAGE_EXTENSIONS = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".avif"}
+
+
+def _is_safe_upload_path(file_path: str) -> bool:
+    if not file_path:
+        return False
+    file_p = Path(file_path)
+    if ".." in file_p.parts:
+        return False
+    if file_p.name.startswith("."):
+        return False
+    if any(part.startswith(".") for part in file_p.parts):
+        try:
+            temp_root = Path(tempfile.gettempdir()).resolve()
+            if not file_p.resolve().is_relative_to(temp_root):
+                return False
+        except Exception:
+            return False
+    if file_p.is_symlink():
+        return False
+    if file_p.suffix.lower() not in _IMAGE_EXTENSIONS:
+        return False
+    return True
+
+
 class WordPressUploader:
     """Upload processed images to WordPress via REST API"""
 
@@ -88,6 +115,9 @@ class WordPressUploader:
                 f"(expected {prefix}URL/{prefix}USER/{prefix}APP_PASSWORD "
                 "or WP_URL/WP_USER/WP_APP_PASSWORD in .env)"
             )
+        parsed = urllib.parse.urlparse(self.base_url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError(f"WordPressUploader requires a valid http or https URL: {self.base_url!r}")
         assert self.base_url is not None
         assert self.user is not None
         assert self.password is not None
@@ -119,7 +149,7 @@ class WordPressUploader:
         Returns:
             dict with media_id and details
         """
-        if not file_path or ".." in Path(file_path).parts or Path(file_path).name.startswith("."):
+        if not _is_safe_upload_path(file_path):
             return {
                 "success": False,
                 "error": f"Unsafe file path rejected: {file_path}",
@@ -129,6 +159,12 @@ class WordPressUploader:
         file_p = Path(file_path)
         if not file_p.exists():
             return {"success": False, "error": f"File not found: {file_path}"}
+        if not file_p.is_file():
+            return {
+                "success": False,
+                "error": f"Unsafe file path rejected: {file_path}",
+                "file": file_p.name,
+            }
 
         endpoint = f"{self.base_url}/wp-json/wp/v2/media"
 
@@ -386,7 +422,7 @@ class WordPressUploader:
                 # Single wp:image
                 item = valid_items[0]
                 media_id = item.get("media_id")
-                url = item.get("url", "")
+                url = _escape_attr(item.get("url", ""))
                 alt_text = _escape_attr(item.get("alt", ""))
                 caption = _escape_html(item.get("caption", ""))
                 block = (
@@ -403,7 +439,7 @@ class WordPressUploader:
                 block += '<figure class="wp-block-gallery has-nested-images columns-default is-cropped">\n'
                 for item in valid_items:
                     media_id = item.get("media_id")
-                    url = item.get("url", "")
+                    url = _escape_attr(item.get("url", ""))
                     alt_text = _escape_attr(item.get("alt", ""))
                     caption = _escape_html(item.get("caption", ""))
                     block += (

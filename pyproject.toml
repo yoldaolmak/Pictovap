@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=83.0.0", "wheel"]
+requires = ["setuptools>=84.2.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -33,9 +33,10 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "Pillow>=10.4.0",
+    "Pillow>=13.0.0",
     "PyYAML>=6.0.2",
     "requests>=2.32.3",
+    "urllib3>=2.8.0",
 ]
 
 [project.optional-dependencies]

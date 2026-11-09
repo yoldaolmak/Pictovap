@@ -39,14 +39,16 @@ class UnsplashSource:
             return []
         url = f"{self.api_url}/search/photos"
         params = {
-            "client_id": self.access_key,
             "query": query,
             "page": page,
             "per_page": count,
             "order_by": "relevant",
         }
+        headers = {
+            "Authorization": f"Client-ID {self.access_key}",
+        }
         try:
-            resp = requests.get(url, params=params, timeout=10)
+            resp = requests.get(url, params=params, headers=headers, timeout=10)
             resp.raise_for_status()
             return resp.json().get("results", [])
         except Exception:

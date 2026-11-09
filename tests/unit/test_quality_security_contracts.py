@@ -14,11 +14,12 @@ from pictovap import (
     validate_decision_pack,
     validate_visual_plan,
 )
-from pictovap.app.runtime import PipelineRunner
+from pictovap.app.runtime import PipelineRunner, _validate_safe_output_path
 from pictovap.core.primitives import CMSPlacement, PlacementInstruction, VisualBrief
 from pictovap.engine.scoring import score_candidate
 from pictovap.engine.vision_chain import _analyze_gemini_flash
 from pictovap.providers.deposit import DepositPhotosSource
+from pictovap.providers.unsplash import UnsplashSource
 from pictovap.publishers.ghost import GhostPublisher
 from pictovap.publishers.strapi import StrapiPublisher
 from pictovap.services.wordpress import WordPressUploader
@@ -342,3 +343,197 @@ def test_build_decision_pack_optional_metadata():
     v_bad_v = validate_decision_pack(pack_bad_v)
     assert v_bad_v["status"] == "failed"
     assert any(err["code"] == "decision_pack_engine_version" for err in v_bad_v["errors"])
+
+
+# 8. Remediated security regression tests
+def test_validate_safe_output_path_enforces_relative_images(tmp_path):
+    with pytest.raises(ValueError, match="Unsafe placement output_path rejected"):
+        _validate_safe_output_path("/etc/passwd")
+
+    with pytest.raises(ValueError, match="Unsafe placement output_path rejected"):
+        _validate_safe_output_path("script.py")
+
+    with pytest.raises(ValueError, match="Unsafe placement output_path rejected"):
+        _validate_safe_output_path("images/.hidden.webp")
+
+    # Symlink output path test
+    target_img = tmp_path / "real.webp"
+    target_img.write_bytes(b"data")
+    sym = tmp_path / "sym.webp"
+    sym.symlink_to(target_img)
+    with pytest.raises(ValueError, match="Unsafe placement output_path rejected"):
+        _validate_safe_output_path(str(sym))
+
+    # Valid relative images pass
+    _validate_safe_output_path("images/hero.webp")
+    _validate_safe_output_path("images/section.png")
+    _validate_safe_output_path("images/photo.jpg")
+
+
+def test_upload_media_rejects_non_images_symlinks_and_system_files(tmp_path, monkeypatch):
+    monkeypatch.setenv("WP_URL", "https://wp.example.com")
+    monkeypatch.setenv("WP_USER", "admin")
+    monkeypatch.setenv("WP_APP_PASSWORD", "secret")
+    monkeypatch.setenv("GHOST_URL", "https://ghost.example.com")
+    monkeypatch.setenv("GHOST_ADMIN_API_KEY", "id:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+    monkeypatch.setenv("STRAPI_URL", "https://strapi.example.com")
+    monkeypatch.setenv("STRAPI_API_TOKEN", "strapi_secret")
+
+    wp = WordPressUploader()
+    ghost = GhostPublisher()
+    strapi = StrapiPublisher()
+
+    text_file = tmp_path / "secret.txt"
+    text_file.write_text("secrets", encoding="utf-8")
+
+    real_img = tmp_path / "real.webp"
+    real_img.write_bytes(b"RIFF....WEBP")
+
+    symlink_img = tmp_path / "symlink.webp"
+    symlink_img.symlink_to(real_img)
+
+    for uploader in (wp, ghost, strapi):
+        # Non-image extension rejected
+        res_txt = uploader.upload_media(file_path=str(text_file), title="T", alt_text="A")
+        assert res_txt["success"] is False
+        assert "Unsafe file path rejected" in res_txt["error"]
+
+        # Symlink rejected
+        res_sym = uploader.upload_media(file_path=str(symlink_img), title="T", alt_text="A")
+        assert res_sym["success"] is False
+        assert "Unsafe file path rejected" in res_sym["error"]
+
+        # Arbitrary system file rejected
+        res_sys = uploader.upload_media(file_path="/etc/passwd", title="T", alt_text="A")
+        assert res_sys["success"] is False
+        assert "Unsafe file path rejected" in res_sys["error"]
+
+
+def test_cms_base_url_scheme_validation(monkeypatch):
+    # Ghost
+    with pytest.raises(ValueError, match="valid http or https URL"):
+        GhostPublisher(ghost_url="ftp://example.ghost.io", admin_api_key="id:key")
+    with pytest.raises(ValueError, match="valid http or https URL"):
+        GhostPublisher(ghost_url="file:///etc/passwd", admin_api_key="id:key")
+
+    # Strapi
+    with pytest.raises(ValueError, match="valid http or https URL"):
+        StrapiPublisher(strapi_url="javascript:alert(1)", api_token="secret")
+    with pytest.raises(ValueError, match="valid http or https URL"):
+        StrapiPublisher(strapi_url="cms.example.com", api_token="secret")
+
+    # WordPress
+    monkeypatch.setenv("WP_URL", "ftp://wp.example.com")
+    monkeypatch.setenv("WP_USER", "admin")
+    monkeypatch.setenv("WP_APP_PASSWORD", "secret")
+    with pytest.raises(ValueError, match="valid http or https URL"):
+        WordPressUploader()
+
+
+def test_unsplash_search_passes_api_key_in_auth_header_not_params(monkeypatch):
+    monkeypatch.setenv("UNSPLASH_ACCESS_KEY", "secret-unsplash-key")
+    source = UnsplashSource()
+
+    captured_kwargs = {}
+
+    def mock_get(url, **kwargs):
+        captured_kwargs.update(kwargs)
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"results": []}
+        return mock_response
+
+    import unittest.mock
+    from unittest.mock import MagicMock
+    monkeypatch.setattr("requests.get", mock_get)
+
+    results = source.search("travel", count=3)
+    assert results == []
+    assert "client_id" not in captured_kwargs.get("params", {})
+    assert captured_kwargs.get("headers", {}).get("Authorization") == "Client-ID secret-unsplash-key"
+
+
+def test_gemini_vision_passes_api_key_in_header_not_query(monkeypatch, tmp_path):
+    secret_key = "AIzaSyTEST_HEADER_KEY_67890"
+    monkeypatch.setenv("GEMINI_API_KEY", secret_key)
+
+    img_path = tmp_path / "test.jpg"
+    Image.new("RGB", (100, 100), color="blue").save(img_path)
+
+    captured_req = []
+
+    def mock_urlopen(req, *args, **kwargs):
+        captured_req.append(req)
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = json.dumps({
+            "candidates": [{
+                "content": {
+                    "parts": [{"text": '{"description": "A blue test image", "suggested_alt": "Blue test"}'}]
+                }
+            }]
+        }).encode("utf-8")
+        mock_resp.__enter__.return_value = mock_resp
+        return mock_resp
+
+    from unittest.mock import MagicMock
+    monkeypatch.setattr("urllib.request.urlopen", mock_urlopen)
+
+    result = _analyze_gemini_flash(str(img_path), "test hint", {"title": "Test"})
+    assert "description" in result
+
+    assert len(captured_req) == 1
+    req = captured_req[0]
+    assert "?key=" not in req.full_url
+    assert secret_key not in req.full_url
+    assert req.headers.get("X-goog-api-key") == secret_key
+
+
+def test_wordpress_insert_media_blocks_escapes_image_url(monkeypatch, tmp_path):
+    monkeypatch.setenv("WP_URL", "https://wp.example.com")
+    monkeypatch.setenv("WP_USER", "admin")
+    monkeypatch.setenv("WP_APP_PASSWORD", "secret")
+    monkeypatch.setenv("PICTOVAP_POST_MANIFEST_DIR", str(tmp_path / "manifests"))
+
+    uploader = WordPressUploader()
+
+    current_post_content = "<!-- wp:heading -->\n<h2>Travel Tips</h2>\n<!-- /wp:heading -->\n<p>Body</p>"
+
+    def mock_fetch(post_id):
+        return {"content_raw": current_post_content, "id": post_id}
+
+    monkeypatch.setattr(uploader, "fetch_post_context", mock_fetch)
+
+    captured_updates = []
+
+    def mock_post(url, **kwargs):
+        nonlocal current_post_content
+        payload = kwargs.get("json", {})
+        if "content" in payload:
+            current_post_content = payload["content"]
+        captured_updates.append(payload)
+        resp = MagicMock()
+        resp.raise_for_status = lambda: None
+        resp.json.return_value = {"id": 42}
+        return resp
+
+    from unittest.mock import MagicMock
+    monkeypatch.setattr(uploader.session, "post", mock_post)
+
+    media_items = [
+        {
+            "media_id": 101,
+            "url": 'https://example.com/pic.jpg?x=1&y=2" onerror="alert(1)',
+            "alt": 'Alt " quote',
+            "caption": 'Caption <script>',
+            "heading": "Travel Tips",
+        }
+    ]
+
+    result = uploader.append_media_to_post_content(post_id=42, media_items=media_items)
+    assert result.get("success") is True
+
+    assert len(captured_updates) == 1
+    updated_html = captured_updates[0].get("content", "")
+    assert '&quot; onerror=&quot;alert(1)' in updated_html
+    assert 'onerror="alert(1)"' not in updated_html
+    assert '&quot; quote' in updated_html
+    assert '&lt;script&gt;' in updated_html
