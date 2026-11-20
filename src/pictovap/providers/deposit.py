@@ -250,7 +250,9 @@ def search_candidates(query: str, count: int = 8) -> List[Dict[str, Any]]:
             "source_type": "api",
             "local_path": None,
             "source_url": r.get("preview_url"),
-            "license": "editorial",
+            # A search preview is not a purchased file or a licence grant.
+            # Even an API editorial flag states content type, not allowed use.
+            "license": "unknown",
             "attribution": None,
             "keywords": [w for w in (r.get("title") or "").split() if w],
             "width": width,

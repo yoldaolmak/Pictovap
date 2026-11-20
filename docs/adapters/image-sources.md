@@ -52,7 +52,9 @@ UNSPLASH_ACCESS_KEY=your_key_here  # .env
 
 ### DepositPhotos — `DepositPhotosSource` (`src/pictovap/providers/deposit.py`)
 
-Queries licensed stock images. Requires an active account.
+Queries Depositphotos search previews, **not automatically licensed stock assets**. A returned preview is assigned `license=unknown`: it has not been downloaded, purchased, cleared for the particular publisher or approved for use. Requires an active account and a separately authenticated entitlement for paid downloads.
+
+Search results can inform a reviewable visual brief, but must not clear a publishing rights gate. Licensed original bytes, licensee and seat/website scope, receipt, individual vs business terms, editorial-only restrictions and the intended placement require a separate recorded acquisition/review step. Consumer subscription quotas are not verified by this adapter. The Far Routes project maintains its own private owner-reported 200-per-cycle intake budget; that journal is **not** part of Pictovap Core.
 
 ```bash
 DEPOSIT_API_KEY=your_key_here  # .env

@@ -232,3 +232,19 @@ def test_source_evidence_marks_sources_that_were_never_queried(tmp_path, monkeyp
     assert states["local"].state == "observed"
     assert states["openverse"].state == "unknown"
     assert states["openverse"].reason == "not_queried_count_satisfied"
+
+
+def test_depositphotos_search_is_not_licensed(monkeypatch):
+    """Search metadata must not be mistaken for a licensed editorial asset."""
+    from pictovap.providers import deposit
+
+    monkeypatch.setattr(deposit, "search", lambda query, count: [{
+        "id": "12345", "title": "Actual workshop building",
+        "preview_url": "https://example.com/preview.jpg",
+        "width": 3200, "height": 2100,
+    }])
+    candidates = DepositPhotosSource().search_candidates("workshop", 1)
+    assert len(candidates) == 1
+    assert candidates[0]["id"] == "deposit-12345"
+    assert candidates[0]["license"] == "unknown"
+    assert candidates[0]["local_path"] is None
