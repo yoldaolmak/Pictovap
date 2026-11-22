@@ -89,8 +89,7 @@ def _collect_review_decisions(pack: dict[str, Any], actor: str) -> dict[str, Any
         print(f"Heading: {slot.get('target_heading') or 'not specified'}")
         print(f"Proposed: {proposal.get('candidate_id') or 'none'}")
         print(f"Observed license: {provenance.get('license_status') or 'unknown'}")
-        if provenance.get("source_url"):
-            print(f"Source: {provenance['source_url']}")
+        print(f"Provider: {provenance.get('provider') or 'unknown'}")
         if provenance.get("attribution"):
             print(f"Attribution: {provenance['attribution']}")
         for candidate in slot["candidates"]:
