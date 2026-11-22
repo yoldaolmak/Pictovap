@@ -63,7 +63,7 @@ def preview_decision_pack(
         active_asset: Any = None
         if action == "accept":
             active_asset = proposal
-        elif action == "replace":
+        elif action == "replace" and decision is not None:
             active_asset = decision["replacement"]
         if active_asset is not None:
             selected += 1
