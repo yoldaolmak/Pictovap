@@ -20,31 +20,36 @@ change**. A separate authorized integration can later consume the result.
 - Serializable Visual Plans, explain/audit/diff commands, and offline corpus
   validation. Missing source observations are recorded explicitly.
 - Decision Pack schema 1 builder, validator, and pure review-state transition
-  helper with actor/time and accept/replace/reject validation. All remain
-  side-effect-free; `application.status` is `not_applied`.
+  helper with actor/time and accept/replace/reject validation.
+- Development CLI: interactive `pictovap review` and read-only
+  `review-preview`. The source plan stays unchanged, decisions are stored,
+  rejected candidates cannot be replacements, and license uncertainty remains
+  visible. No provider or CMS call occurs in the review.
 - WordPress placement adapter is the broadest CMS implementation. External
   live CMS success and asset rights are **not** implied by local tests.
 
-**Missing:** An editor-facing workflow that turns a proposed Decision Pack
-into an inspectable, reviewed pack; a proposal-to-reviewed preview diff; and
-a WordPress reference surface consuming those same contracts.
+**Missing:** A WordPress Gutenberg reference review surface, convenient
+selection of a fully evidenced replacement image without supplying its
+existing asset JSON, and independent feedback from a real editor. The CLI
+review is not a graphical editor or production outcome.
 
-### Next vertical slice — complete review without CMS access
+### Next vertical slice — review where an editor already works
 
-1. Use a real, non-sensitive article fixture to generate a Decision Pack and
-   display proposed slots, candidate evidence, provenance, and gaps.
-2. Collect accept/replace/reject decisions with actor and timestamp using
-   the existing transition helper; preserve the source plan unchanged.
-3. Show a clear proposal-versus-reviewed preview (including replacements,
-   rejections, remaining coverage, and unresolved license/review questions).
-4. Export and reload the reviewed pack. Confirm validation succeeds and
-   `application.status` remains `not_applied` with no CMS/provider writes.
+1. Run the complete CLI review on a realistic, non-sensitive Gutenberg
+   article; inspect the proposal, accepted/rejected/replaced candidates,
+   unknown rights, and coverage gaps.
+2. Reuse the same Decision Pack and pure transition helper in a WordPress
+   preview-only reference surface. No CMS writes or hidden state.
+3. Preserve the reviewed pack for a separately authorized integration;
+   explicitly show that a review never means `application=completed`.
+4. Ask a real editor to test slot decisions and record failure cases before
+   expanding to more CMSs.
 
-**Acceptance evidence:** An editor can finish and inspect a reviewed result
-from an article without hand-editing JSON. A rejected/unlicensed/unbound
-candidate, missing actor/time, duplicate slot decision, or attempted CMS side
-effect must fail clearly. Demonstrate with fixtures and tests; request a real
-editor trial separately. Do not call a successful offline run customer proof.
+**Acceptance evidence:** A publisher can make and inspect decisions without
+editing decision JSON, cannot select a hard-rejected or unbound replacement,
+and sees outstanding rights questions. The WordPress reference must pass
+mocked Gutenberg fixtures before any live, permissioned trial. Local CI
+and a real editor's successful review are distinct evidence.
 
 ## After the review slice
 

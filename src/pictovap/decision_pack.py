@@ -529,6 +529,22 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
                             expected_candidate_id=None,
                             errors=errors,
                         )
+                        # An editor may reconsider a needs_review candidate, but
+                        # a candidate explicitly rejected by hard constraints is
+                        # not eligible to become the replacement asset.
+                        if replacement_id is not None and isinstance(raw_candidates, list):
+                            for scored in raw_candidates:
+                                if (
+                                    isinstance(scored, Mapping)
+                                    and scored.get("candidate_id") == replacement_id
+                                    and scored.get("decision") == "rejected"
+                                ):
+                                    errors.append(_issue(
+                                        "decision_pack_replacement_rejected_candidate",
+                                        f"{path}.replacement.candidate_id",
+                                        "A rejected candidate cannot be used as a replacement.",
+                                    ))
+                                    break
                         proposal = decision_slot.get("proposal")
                         if (
                             replacement_id is not None

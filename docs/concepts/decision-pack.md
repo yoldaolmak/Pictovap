@@ -44,8 +44,12 @@ New packs begin with:
 ```
 
 Application remains `not_applied` with no execution receipts even after a
-review. The complete editor interaction and proposal-to-reviewed preview
-diff are not shipped yet; see the [Roadmap](../ROADMAP.md).
+review. The development CLI provides interactive
+`pictovap review --plan plan.json --actor editor --output reviewed.json`
+and read-only `pictovap review-preview` comparison. Editors can accept,
+reject, or load an existing replacement evidence record; no CMS is contacted.
+The terminal is not yet a graphical Gutenberg review surface. See the
+[CLI Reference](../reference/cli.md) and [Roadmap](../ROADMAP.md).
 
 Build and validate a pack from an already validated Visual Plan:
 

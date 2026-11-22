@@ -60,6 +60,38 @@ pictovap report \
 pictovap report --plan output/plan.json --output output/report.html --renderer html-review
 ```
 
+### Complete an interactive editorial review
+
+Review one planned article's image slots without editing the Decision Pack
+directly or contacting providers and CMSs:
+
+```bash
+pictovap review --plan plan.json --actor editor@example.test \
+  --output reviewed.json --preview preview.md
+```
+
+The terminal shows each slot's proposed image, available scored candidates,
+and observed license evidence. Choose accept, replace, or reject; quit without
+writing output. Replacement requires the path to an existing JSON object with
+`candidate_id`, `provenance`, and `placement` bound to the slot and candidate.
+This does not purchase, license, upload, or publish an image.
+
+The command refuses to overwrite existing outputs. It validates each decision
+and writes a complete reviewed Decision Pack with actor/timestamp records and
+`application.status=not_applied`. To continue a pending pack instead of
+rebuilding from a Visual Plan, use `--pack pending.json` instead of `--plan`.
+
+A reviewed pack can be reloaded and compared against the original source:
+
+```bash
+pictovap review-preview --plan plan.json --reviewed reviewed.json
+pictovap review-preview --plan plan.json --reviewed reviewed.json --format json
+```
+
+The preview rejects changed source evidence, fake application receipts, and
+mismatched articles. Unknown rights remain visible and are not legal approval.
+This is a local terminal editor flow, not a WordPress user interface.
+
 ### Create an Anonymous Validation Summary
 
 When asking for help or reporting a result, create a small artifact that

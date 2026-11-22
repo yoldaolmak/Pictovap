@@ -93,10 +93,27 @@ pack = build_decision_pack(plan)
 assert validate_decision_pack(pack)["status"] == "passed"
 ```
 
-The review-state transition helper exists; a complete editor-facing
-Plan → Review → Preview Diff interface does **not** yet ship. See
+To complete an editor review without hand-editing the Decision Pack JSON,
+run the interactive, offline command on the **development checkout**:
+
+```bash
+pictovap review --plan plan.json --actor editor@example.test \
+  --output reviewed-pack.json --preview review-preview.md
+
+pictovap review-preview --plan plan.json \
+  --reviewed reviewed-pack.json --format markdown
+```
+
+For each slot, accept the proposed asset, reject the slot, or supply an
+existing JSON replacement evidence record containing `candidate_id`,
+`provenance`, and `placement`. A replacement must belong to a scored,
+non-rejected candidate and have consistent asset bindings. The review
+preserves the original plan and records `application.status=not_applied`.
+
+This is a terminal review workflow, **not** a graphical WordPress review
+surface or an assertion of license rights. See
 [Decision Pack](docs/concepts/decision-pack.md) and
-[Roadmap](docs/ROADMAP.md) for that development target.
+[Roadmap](docs/ROADMAP.md).
 
 ## Sources, CMS, and rights
 
