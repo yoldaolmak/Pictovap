@@ -89,11 +89,17 @@ def _collect_review_decisions(pack: dict[str, Any], actor: str) -> dict[str, Any
         print(f"Heading: {slot.get('target_heading') or 'not specified'}")
         print(f"Proposed: {proposal.get('candidate_id') or 'none'}")
         print(f"Observed license: {provenance.get('license_status') or 'unknown'}")
+        if provenance.get("source_url"):
+            print(f"Source: {provenance['source_url']}")
+        if provenance.get("attribution"):
+            print(f"Attribution: {provenance['attribution']}")
         for candidate in slot["candidates"]:
             print(
                 f"  {candidate.get('candidate_id')}: "
                 f"{candidate.get('decision')} / score {candidate.get('final_score', '?')}"
             )
+            if candidate.get("human_reason"):
+                print(f"    Reason: {candidate['human_reason']}")
         while True:
             choice = input("Choose [a]ccept, [r]eplace, re[j]ect, [q]uit: ").strip().lower()
             if choice == "q":
@@ -446,7 +452,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 target = Path(args.output).resolve()
                 if target in {Path(args.plan or args.pack).resolve(), Path(args.reviewed).resolve()}:
                     raise ValueError("Preview cannot overwrite its source or reviewed pack")
-            _write_text_or_print(rendered, args.output)
+                if target.exists():
+                    raise ValueError(f"Refusing to overwrite existing preview: {target}")
+                with target.open("x", encoding="utf-8") as stream:
+                    stream.write(rendered)
+            print(rendered, end="")
             return 0
         except (OSError, TypeError, ValueError) as e:
             print(f"Error previewing editor review: {e}", file=sys.stderr)
