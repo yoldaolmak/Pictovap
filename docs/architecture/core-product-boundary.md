@@ -1,60 +1,49 @@
-# Core and Product Boundary
+# Pictovap Product Contract and Core Boundary
 
-Pictovap Core is a public, standalone framework for making and transporting
-visual editorial decisions. Commercial applications may consume Core, but Core
-must remain usable by an independent developer for one article or inside a
-custom pipeline.
+**Pictovap** helps publishers decide which images belong in an article, why,
+and where those images could be placed. Editors need decisions they can review
+and explain, with visible source and license uncertainty, instead of repeating
+an opaque image-selection process for every page.
 
-> **Core knows visual decisions. Product governs the visual estate and its lifecycle.**
+**Founding boundary:** Core knows visual decisions. Product governs the
+visual estate and its lifecycle.
 
-## What belongs in Core
+## Public Core
 
-- Visual Brief, Fit Score and selection policies, Provenance Pack, Decision Pack, and CMS Placement primitives
-- publisher-profile schemas and deterministic policy inputs
-- adapter protocols, reference adapters, Public API, CLI, validation, explainability, and diff
-- credential-safe, side-effect-free deterministic planning and review contracts
+The public, independently usable Python package `pictovap` handles a single
+article: Visual Brief, Fit Score, candidate evidence, provenance, intent proof,
+Decision Pack, CMS Placement, explanations, validation, and adapter contracts.
+Planning must not require an organization account, hosted service, enterprise
+database, or specific CMS. WordPress is a reference integration, not the
+framework's identity.
 
-Core never requires a hosted account, organization record, private service, or
-particular CMS. A framework consumer can plan, validate, and transport a
-single article without creating enterprise state.
+A source/license record describes observed evidence, **not** an automatic
+purchase, rights grant, or legal approval. A proposed or reviewed plan is
+**not** proof of CMS authorization, application, publication, or verification.
+An adapter may perform a separately authorized action; that action needs its
+own result and must not be inferred from the plan.
 
-## What does not belong in Core
+## Separate Enterprise Product
 
-- Visual Estate and Field inventory (organization, site, page, section, asset, or placement) across an enterprise estate
-- crawl and source observations, version history, lineage, findings, prioritization, or dashboards
-- roles, permissions, operator authority, queues, retries, idempotency, or execution receipts
-- private policy evaluation, orchestration, live verification, independent closure, or remediation engines
+The commercial Product may consume versioned Core contracts while owning
+multi-page/site visual inventory, observations over time, lineage candidates,
+findings, operator roles, permissions, orchestration, idempotency, execution
+receipts, and independent live verification. These capabilities are neither
+implemented nor accepted merely because Core passes an offline test.
 
-Those are application concerns. They may depend on Core's public contracts,
-but must not be imported into, required by, or represented as hidden state in
-the public framework.
+The Product cannot silently grant authority to discovered behaviors or
+treat review state as an execution receipt. Keep the data, identity, and
+authority boundaries explicit at integration points.
 
-## Responsibility and evidence matrix
+## Scope and evidence
 
-| Concern | Public Core | Enterprise Product |
+| Concern | Core | Enterprise Product |
 | --- | --- | --- |
-| Article-aware image selection, explainability, provenance | Owns | May consume exported contracts |
-| Portable Decision Pack, CMS Placement, adapter protocols | Owns | Integrates with explicit API/schema pins |
-| Multi-page asset and placement inventory, observation history | Does not own | Owns |
-| Lineage candidates, findings, priorities and operator workspace | Does not own | Owns |
-| User authority, execution receipts, verification and closure | Does not own | Owns |
-| Live source freshness, customer deployment, outcome validation | Cannot infer from a plan | Must demonstrate separately |
+| One-article visual decisions, evidence, and portable review | Owns | Consumes explicit contracts |
+| CMS adapter interface and placement proposal | Owns | Authorizes and verifies its operations |
+| Site-wide history, user authority, execution lifecycle | Does not own | Owns |
+| Real publisher outcomes | Cannot infer | Must verify independently |
 
-The public Python distribution is `pictovap`; the separate enterprise
-implementation is not distributed as part of that package. The names may
-share a brand, but their implementation status, tests, data freshness and
-customer claims are never interchangeable.
-
-## Integration rule
-
-A product integration accepts Core's serialized contracts at a deliberate
-boundary. It records its own observations and lifecycle state separately, then
-may ask Core to produce or validate a visual decision. A successful Core plan
-does not imply that an enterprise system authorized, executed, published, or
-verified a change.
-
-## Scope discipline
-
-Core makes no multi-page visual-estate, lineage-inference, or live-execution
-claims. It provides portable, deterministic visual-decision primitives that an
-enterprise product integration may consume.
+Architecture and implementation locations: [Architecture](../ARCHITECTURE.md).
+Public compatibility commitments: [API Stability](../../API_STABILITY.md).
+Current priorities: [Roadmap](../ROADMAP.md).
