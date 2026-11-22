@@ -233,3 +233,20 @@ def test_editor_preview_escapes_table_controls():
     rendered = render_review_preview(preview_decision_pack(pack, reviewed))
 
     assert r"heading\|featured" in rendered
+
+
+def test_review_does_not_echo_signed_source_url(tmp_path, monkeypatch, capsys):
+    pack = sample_decision_pack()
+    pack["slots"][0]["proposal"]["provenance"]["source_url"] = (
+        "https://media.example.test/image.jpg?signature=demo-secret"
+    )
+    source = tmp_path / "pending.json"
+    dest = tmp_path / "reviewed.json"
+    source.write_text(json.dumps(pack), encoding="utf-8")
+    monkeypatch.setattr("builtins.input", lambda _: "a")
+
+    assert cli.main([
+        "review", "--pack", str(source),
+        "--actor", "editor", "--output", str(dest),
+    ]) == 0
+    assert "demo-secret" not in capsys.readouterr().out
