@@ -1,114 +1,62 @@
-# Pictovap Roadmap
+# Pictovap Core Roadmap
 
-Pictovap is becoming a **proof-carrying editorial visual compiler**. The
-product is not another stock-image search or alt-text utility. It compiles
-article intent, candidate evidence, publisher policy, and CMS placement into a
-reviewable visual plan whose decisions can be explained later.
+**Direction:** A proof-carrying visual decision compiler for publishers:
+article intent, candidate evidence, publisher policy, and CMS placement become
+one explainable, reviewable plan. The [Core/Product Boundary](architecture/core-product-boundary.md)
+defines what Core owns; enterprise visual-estate governance remains a separate
+application, not a prerequisite for this open-source framework.
 
-## Public Core scope
+## Current user job — review an article's visual plan
 
-This roadmap is for Pictovap Core, the public framework. Core remains usable
-for a single article and knows visual decisions; it does not manage an
-organization's estate or operational lifecycle. Enterprise inventory, findings,
-authorization, orchestration, execution receipts, and live verification belong
-to a separate commercial application that consumes Core's public contracts.
-Core knows visual decisions for a single article; multi-page visual estate
-governance, source observations, lineage and findings, authorization, and live
-verification belong to the separate enterprise application.
+A publisher should be able to provide one article, review why each candidate
+fits or fails, accept or replace its proposed image (or reject the slot), and
+compare the reviewed result with the original proposal **without making a CMS
+change**. A separate authorized integration can later consume the result.
 
-```text
-Article → Visual Intent Graph → Candidate Evidence → Constraints
-        → Decision Ledger → Provenance Pack → CMS Placement
-        → Decision Pack → Editor Review → Product integration boundary
-```
+**Working in Core today:**
 
-## North-star contract
+- Credential-free demo; article-derived Visual Brief; source adapters;
+  deterministic scoring, global assignment, provenance, and CMS placement.
+- Serializable Visual Plans, explain/audit/diff commands, and offline corpus
+  validation. Missing source observations are recorded explicitly.
+- Decision Pack schema 1 builder, validator, and pure review-state transition
+  helper with actor/time and accept/replace/reject validation. All remain
+  side-effect-free; `application.status` is `not_applied`.
+- WordPress placement adapter is the broadest CMS implementation. External
+  live CMS success and asset rights are **not** implied by local tests.
 
-Every plan should answer five questions without rerunning a provider:
+**Missing:** An editor-facing workflow that turns a proposed Decision Pack
+into an inspectable, reviewed pack; a proposal-to-reviewed preview diff; and
+a WordPress reference surface consuming those same contracts.
 
-1. What visual job did this article section require?
-2. Which hard and soft constraints were applied?
-3. Why was each candidate selected, rejected, or left for review?
-4. What license, source, accessibility, and processing evidence was observed?
-5. What did an editor decide, without implying that a CMS application occurred?
+### Next vertical slice — complete review without CMS access
 
-## Phase 0 — Public foundation (complete)
+1. Use a real, non-sensitive article fixture to generate a Decision Pack and
+   display proposed slots, candidate evidence, provenance, and gaps.
+2. Collect accept/replace/reject decisions with actor and timestamp using
+   the existing transition helper; preserve the source plan unchanged.
+3. Show a clear proposal-versus-reviewed preview (including replacements,
+   rejections, remaining coverage, and unresolved license/review questions).
+4. Export and reload the reviewed pack. Confirm validation succeeds and
+   `application.status` remains `not_applied` with no CMS/provider writes.
 
-- [x] Visual Brief, Fit Score, Provenance Pack, and CMS Placement primitives
-- [x] Stable public Python API and adapter protocols
-- [x] WordPress-first, CMS-neutral integration model
-- [x] Credential-free local demo and real non-editable package smoke test
-- [x] CI, security hygiene, CodeQL, dependency review, and Scorecard workflow
-- [x] Contributor starter kits, standalone adapter examples, and Codespaces setup
-- [x] PyPI publishing, compatibility policy, and release notes
-- [x] Golden corpus benchmark across six editorial shapes
-- [x] Read-only adapter registry for built-ins and installed plugins
+**Acceptance evidence:** An editor can finish and inspect a reviewed result
+from an article without hand-editing JSON. A rejected/unlicensed/unbound
+candidate, missing actor/time, duplicate slot decision, or attempted CMS side
+effect must fail clearly. Demonstrate with fixtures and tests; request a real
+editor trial separately. Do not call a successful offline run customer proof.
 
-## Phase 1 — Visual Intent Compiler (current)
+## After the review slice
 
-This is the main product transformation. New work should strengthen this
-contract before adding another provider or CMS adapter.
+- **Editorial policy and resilience:** versioned visual rules, alternate-image
+  simulation, coverage and diversity diagnostics. Implement based on observed
+  editorial failures, not speculative orchestration.
+- **Reference integrations:** WordPress Plan → Review → Preview Diff first,
+  then adapter capability checks and safe dry-run behavior for other CMSs.
+- **Ecosystem:** harden public contracts, publish compatibility-tested external
+  adapters, and collect reproducible publisher feedback before claiming
+  adoption. A hosted account or MCP server is not required for Core to work.
 
-- [x] Visual Intent Graph derived from article structure and publisher profile
-- [x] Hard/soft constraint vocabulary for license, source, dimensions, fit, CMS, and diversity
-- [x] Decision Ledger with candidate evidence and global-assignment reasons
-- [x] Additive `intent_proof` schema in every generated plan
-- [x] `pictovap explain` read-only editor/CI report
-- [x] Golden-corpus assertions for intent proof coverage
-- [x] Intent proof validator with stable error codes
-- [x] Plan diff: explain what changed when article, profile, or candidates change
-
-## Phase 2 — Decision Pack and reference review surface (current)
-
-The Decision Pack is the portable review contract. It does not duplicate the
-planning engine: it groups its existing evidence by slot and records review
-state. Its `not_applied` application value is a negative sentinel, not an
-execution lifecycle or receipt contract. WordPress is the first reference
-review surface, not the conceptual center of the framework.
-
-- [x] Decision Pack schema 1 builder and side-effect-free validator
-- [x] Explicit `pending` review and `not_applied` application states
-- [ ] Editor decision receipt: accept, replace, or reject with actor and time
-- [ ] Preview diff between a proposed and reviewed Decision Pack
-- [ ] WordPress review surface: Plan → Review → Preview Diff
-- [ ] Document the hand-off from a reviewed pack to Product-owned execution
-
-Authorization, Apply, idempotency, rollback, execution receipts, and live
-verification remain private Product responsibilities and are not future Core
-Phase 2 deliverables.
-
-## Phase 3 — Editorial policy, corpus, and resilience
-
-- [ ] Publisher Visual Constitution: explicit, versioned visual policy YAML
-- [ ] Constraint policy overrides in Publisher Profile v2
-- [ ] Fallback simulation when a selected image is removed or becomes unusable
-- [ ] Coverage delta and risk report for alternative assignments
-- [ ] Cross-article duplicate and source-concentration policy
-- [ ] CMS capability matrix for crop, caption, alt text, and media-library behavior
-
-## Phase 4 — Integration surfaces
-
-- [ ] CMS capability adapters for placement validation and safe dry-runs
-- [ ] MCP server only after the public intent and proof contracts stabilize
-- [ ] External adapter conformance badge backed by contract receipts
-- [ ] Stable Framework ABI v1 after one complete compatibility cycle
-
-## Phase 5 — Ecosystem and adoption
-
-- [ ] Third-party adapter packages with independent CI and compatibility pins
-- [ ] External publisher case studies with reproducible, non-sensitive evidence
-- [ ] Contributor issue tracks for intent rules, policy fixtures, and CMS behavior
-- [ ] Release cadence tied to benchmark, compatibility, and security gates
-
-## Daily delivery rule
-
-Each development day should deliver one bounded vertical slice:
-
-1. one contract or behavior change
-2. one regression or corpus fixture
-3. one user-facing explanation or example
-4. focused quality gates and a pushed commit
-
-We will not use daily commits to inflate activity, add redundant providers, or
-make unsupported adoption claims. The repository should become visibly more
-useful to an editor and safer for an external adapter author after every slice.
+Completed capabilities are described in the
+[README](../README.md) and [API Stability](../API_STABILITY.md), not repeated
+as historical delivery or CI checkpoints here.
