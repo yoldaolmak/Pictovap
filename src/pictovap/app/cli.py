@@ -22,6 +22,8 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, Sequence
 
 from pictovap import __version__
@@ -33,6 +35,12 @@ from pictovap.app.runtime import (
     parse_adapter_options,
 )
 from pictovap.core.states import DoctorStatus, PublishStatus
+from pictovap.decision_pack import (
+    build_decision_pack,
+    transition_decision_pack_review,
+    validate_decision_pack,
+)
+from pictovap.review import preview_decision_pack, render_review_preview
 from pictovap.demo import run_demo
 from pictovap.engine.reporting import generate_report_from_file
 from pictovap.feedback import render_feedback_markdown, summarize_plan
@@ -62,6 +70,65 @@ def _write_text_or_print(rendered: str, output: str | None) -> None:
         with open(output, "w", encoding="utf-8") as output_file:
             output_file.write(rendered)
     print(rendered, end="")
+
+
+def _collect_review_decisions(pack: dict[str, Any], actor: str) -> dict[str, Any]:
+    """Prompt for explicit editorial actions; never call providers or a CMS."""
+    decisions = list(pack["review"]["decisions"])
+    already = {decision["slot_id"] for decision in decisions}
+    article = pack["article"]
+    print(f"Review article: {article.get('title') or article.get('id')}")
+    print("These decisions do not authorize a CMS write or grant image rights.")
+    for slot in pack["slots"]:
+        slot_id = slot["slot_id"]
+        if slot_id in already:
+            continue
+        proposal = slot["proposal"]
+        provenance = proposal.get("provenance") or {}
+        print(f"\nSlot: {slot_id} — {slot.get('purpose') or 'image'}")
+        print(f"Heading: {slot.get('target_heading') or 'not specified'}")
+        print(f"Proposed: {proposal.get('candidate_id') or 'none'}")
+        print(f"Observed license: {provenance.get('license_status') or 'unknown'}")
+        for candidate in slot["candidates"]:
+            print(
+                f"  {candidate.get('candidate_id')}: "
+                f"{candidate.get('decision')} / score {candidate.get('final_score', '?')}"
+            )
+        while True:
+            choice = input("Choose [a]ccept, [r]eplace, re[j]ect, [q]uit: ").strip().lower()
+            if choice == "q":
+                raise KeyboardInterrupt
+            if choice not in {"a", "r", "j"}:
+                print("Choose a, r, j, or q.")
+                continue
+            action = {"a": "accept", "r": "replace", "j": "reject"}[choice]
+            decision: dict[str, Any] = {
+                "slot_id": slot_id,
+                "action": action,
+                "actor": actor,
+                "decided_at": datetime.now(timezone.utc).isoformat(),
+            }
+            if action == "replace":
+                replacement_path = input(
+                    "Path to existing replacement evidence JSON (candidate_id, provenance, placement): "
+                ).strip()
+                try:
+                    with open(replacement_path, encoding="utf-8") as stream:
+                        replacement = json.load(stream)
+                    if not isinstance(replacement, dict):
+                        raise ValueError("Replacement evidence must be a JSON object")
+                    decision["replacement"] = replacement
+                except (OSError, ValueError, TypeError) as e:
+                    print(f"Invalid replacement evidence: {e}")
+                    continue
+            try:
+                transition_decision_pack_review(pack, decisions + [decision], complete=False)
+            except ValueError as e:
+                print(f"Decision rejected: {e}")
+                continue
+            decisions.append(decision)
+            break
+    return transition_decision_pack_review(pack, decisions, complete=True)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -199,6 +266,28 @@ def build_parser() -> argparse.ArgumentParser:
         help="Return exit status 1 when the plans differ, for CI drift gates",
     )
 
+    review = sub.add_parser(
+        "review", help="Review visual candidates interactively, without CMS writes"
+    )
+    review_source = review.add_mutually_exclusive_group(required=True)
+    review_source.add_argument("--plan", help="Valid visual plan JSON to review")
+    review_source.add_argument("--pack", help="Pending Decision Pack JSON to continue")
+    review.add_argument("--actor", required=True, help="Editor identifier for decisions")
+    review.add_argument("--output", required=True, help="New JSON file for reviewed Decision Pack")
+    review.add_argument("--preview", help="New Markdown file for review preview")
+
+    review_preview = sub.add_parser(
+        "review-preview", help="Compare an article proposal with its editor-reviewed pack"
+    )
+    preview_source = review_preview.add_mutually_exclusive_group(required=True)
+    preview_source.add_argument("--plan", help="Original visual plan JSON")
+    preview_source.add_argument("--pack", help="Original proposed Decision Pack JSON")
+    review_preview.add_argument("--reviewed", required=True, help="Reviewed Decision Pack JSON")
+    review_preview.add_argument(
+        "--format", choices=("markdown", "json"), default="markdown"
+    )
+    review_preview.add_argument("--output", help="Optional comparison report path")
+
     plugins = sub.add_parser("plugins", help="List installed third-party adapter plugins")
     plugins.add_argument("--kind", choices=("provider", "cms", "renderer"), help="Filter by adapter kind")
 
@@ -294,6 +383,74 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not args.output:
             _print_json(plan_output)
         return 0
+
+    if args.command == "review":
+        try:
+            actor = args.actor.strip()
+            if not actor:
+                raise ValueError("Editor identifier must not be empty")
+            source = Path(args.plan or args.pack).resolve()
+            output_path = Path(args.output).resolve()
+            preview_path = Path(args.preview).resolve() if args.preview else None
+            requested = [output_path] + ([preview_path] if preview_path else [])
+            if len(set(requested)) != len(requested) or source in requested:
+                raise ValueError("Review input, JSON output and preview paths must be distinct")
+            for destination in requested:
+                if destination.exists():
+                    raise ValueError(f"Refusing to overwrite existing file: {destination}")
+            with source.open(encoding="utf-8") as stream:
+                payload = json.load(stream)
+            pack = build_decision_pack(payload) if args.plan else payload
+            if validate_decision_pack(pack)["status"] != "passed":
+                raise ValueError("Input Decision Pack did not pass validation")
+            if pack["review"]["status"] != "pending":
+                raise ValueError("Decision Pack is already reviewed; use review-preview")
+            reviewed = _collect_review_decisions(pack, actor)
+            comparison = preview_decision_pack(pack, reviewed)
+            rendered = render_review_preview(comparison)
+            print(rendered, end="")
+            created: list[Path] = []
+            try:
+                with output_path.open("x", encoding="utf-8") as stream:
+                    created.append(output_path)
+                    json.dump(reviewed, stream, ensure_ascii=False, indent=2)
+                    stream.write("\n")
+                if preview_path:
+                    with preview_path.open("x", encoding="utf-8") as stream:
+                        created.append(preview_path)
+                        stream.write(rendered)
+            except OSError:
+                for path in created:
+                    path.unlink(missing_ok=True)
+                raise
+            print(f"Reviewed Decision Pack written to {output_path}")
+            return 0
+        except (OSError, ValueError, TypeError, EOFError, KeyboardInterrupt) as e:
+            print(f"Review not saved: {e or 'cancelled'}", file=sys.stderr)
+            return 1
+
+    if args.command == "review-preview":
+        try:
+            with open(args.plan or args.pack, encoding="utf-8") as stream:
+                original = json.load(stream)
+            with open(args.reviewed, encoding="utf-8") as stream:
+                reviewed = json.load(stream)
+            pack = build_decision_pack(original) if args.plan else original
+            comparison = preview_decision_pack(pack, reviewed)
+            rendered = (
+                json.dumps(comparison, ensure_ascii=False, indent=2) + "\n"
+                if args.format == "json"
+                else render_review_preview(comparison)
+            )
+            if args.output:
+                target = Path(args.output).resolve()
+                if target in {Path(args.plan or args.pack).resolve(), Path(args.reviewed).resolve()}:
+                    raise ValueError("Preview cannot overwrite its source or reviewed pack")
+            _write_text_or_print(rendered, args.output)
+            return 0
+        except (OSError, TypeError, ValueError) as e:
+            print(f"Error previewing editor review: {e}", file=sys.stderr)
+            return 1
 
     if args.command == "publish":
         try:
