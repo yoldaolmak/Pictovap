@@ -1,427 +1,130 @@
 # Pictovap
 
-<p align="center">
-  <img src="docs/assets/logo.png" alt="Pictovap Logo" width="200" />
-</p>
-
 [![PyPI](https://img.shields.io/pypi/v/pictovap.svg)](https://pypi.org/project/pictovap/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/pictovap.svg)](https://pypistats.org/packages/pictovap)
-[![Python versions](https://img.shields.io/pypi/pyversions/pictovap.svg)](https://pypi.org/project/pictovap/)
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/yoldaolmak/Pictovap)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap Core is an open-source visual-decision framework for publishers.**
-It turns an article's image needs into a reviewable, provenance-aware plan:
-which images fit, why they were selected, and where a CMS adapter could place
-them. WordPress Gutenberg has the broadest in-tree integration; Core's public
-contracts remain CMS-neutral.
+**Pictovap Core** is an open-source, CLI-first visual-decision framework for
+publishers. Given an article and image candidates, it explains which images
+fit each section, why, what source/license evidence is known, and how a CMS
+could place them. The output is reviewable; it is not publication approval.
 
-## Why This Exists
+Pictovap grew out of an editorial workflow at
+[Yoldaolmak.com](https://yoldaolmak.com). See the
+[case study](docs/case-studies/yoldaolmak.md) for the original problem and
+its limits. Pictovap is not a stock-photo library, generic AI image
+generator, DAM, or WordPress-only tool.
 
-Pictovap began with a production pain at
-[Yoldaolmak.com](https://yoldaolmak.com), an independent Turkish travel
-publisher. Long-form guides repeatedly reached the same last-mile bottleneck:
-an editor still had to find rights-appropriate images, decide which section
-each one belonged to, prepare metadata, upload assets to WordPress, and place
-Gutenberg blocks by hand. That work could take tens of minutes per article,
-and its cost grew directly with publishing volume.
-
-This was not an abstract feature request. The project was extracted from that
-workflow so the hard-won parts could become reusable, reviewable open-source
-infrastructure for other publishers and CMS integrations. The original
-production case and its boundaries are documented in the
-[Yoldaolmak case study](docs/case-studies/yoldaolmak.md).
-
-## The Problem
-
-Every publisher runs the same manual routine before an article can go live:
-find images that actually fit the section they're going into, check whether
-the license permits the intended use, resize and convert them to the site's
-format, write alt text and a caption for each one, and place them at the
-right point in the CMS. None of this is hard, individually. It is, however,
-*repetitive*, *easy to get wrong under deadline pressure*, and it *scales
-linearly with how much a publisher writes*. Skipped alt text quietly erodes
-accessibility and SEO. Untracked image provenance is a license or attribution
-problem waiting to surface later, when it's expensive to fix. None of this
-shows up in a style guide — it shows up as an hour of an editor's afternoon,
-per article, forever.
-
-Point solutions exist for pieces of this: stock photo plugins, DAM systems,
-generic AI image generators. What's largely missing is the connective layer
-— something that reads what the article actually needs, evaluates candidates
-against that need with a visible, auditable reason for every accept and
-reject, and hands a CMS a placement plan it can execute without a human
-re-deriving the same context from scratch.
-
-## How It Works
-
-Pictovap is that connective layer, built as an open, adapter-based pipeline
-rather than a closed SaaS product:
+## What works
 
 ```text
-Article Input → Visual Brief → Candidate Images → Fit Score
-              → Provenance Pack → CMS Placement → Decision Pack → Editor Report
+Article → Visual Brief → Candidates → Fit Score + intent proof
+        → Global selection → Provenance + CMS placement
+        → Visual Plan → explain / audit / diff → Decision Pack
 ```
 
-- **Visual Brief** — a structured read of what imagery the article actually
-  needs, derived from its heading structure and content, not from a generic
-  "insert 3 images" rule.
-- **Fit Score** — every candidate is scored against the brief with a
-  transparent, deterministic reason attached (`selected`, `rejected`, or
-  `needs_review`, plus why). No black-box relevance number.
-- **Provenance Pack** — a persistent audit trail for every selected image:
-  source, license status, attribution, a content hash, and the exact
-  processing actions applied. This is what makes "where did this image come
-  from and are we allowed to use it" answerable six months later.
-- **CMS Placement** — a CMS-agnostic plan describing where and how each image
-  should be placed, independent of whether the destination is WordPress,
-  Ghost, Strapi, or something a contributor writes an adapter for tomorrow.
-- **Decision Pack** — a portable, versioned aggregate of the brief, scores,
-  provenance, and placements for human review and downstream tooling, without
-  triggering CMS writes.
-- **Editor Report** — a human-readable Markdown review surface, so an editor
-  signs off on a report, not raw JSON, before anything reaches production.
-- **Global selection** — eligible images are assigned across the whole article
-  with a deterministic maximum-weight policy, preventing accidental reuse and
-  exposing incomplete coverage.
-- **Source evidence** — every configured image source leaves a record in the
-  plan saying what it contributed, or why it contributed nothing. A source that
-  ran and found nothing (`observed`) is never confused with one that could not
-  run at all (`not_evaluable`) or was never queried (`unknown`).
+- Deterministic article-aware selection with reasons for rejected and chosen
+  candidates, slot coverage, and explicit source-attempt evidence.
+- Portable provenance, metadata, CMS placement instructions, and a
+  side-effect-free Decision Pack builder, validator, and review transition.
+- Local and remote image-source adapters; WordPress as the broadest CMS
+  adapter, with reference Ghost and Strapi implementations.
+- A credential-free demo, a golden corpus benchmark, external-adapter
+  contracts, and English/Turkish deterministic metadata templates.
 
-The differentiator is the inspectable chain of portable decisions rather than
-an opaque, hosted-only result. The credential-free demo below runs the entire
-pipeline end-to-end, with zero API keys and zero network calls, so you can read
-exactly what it does before you ever hand it a real site.
+Core knows visual decisions for **one article**. A separate enterprise
+Product owns site-wide visual inventory, permissions, execution lifecycle,
+and independent verification. Read the
+[Product Contract](docs/architecture/core-product-boundary.md) for that split.
 
-Pictovap is not a stock photo search tool, a DAM, a generic AI image
-generator, or a WordPress-only plugin. It has no graphical interface yet — it
-is a CLI-first, adapter-based core, with the editor report as the intended
-human review surface and CMS adapters as the machine-facing execution layer.
+## Get started
 
-## Core and Enterprise Product
+Requires Python 3.10+. The published stable release is **0.12.0**;
+`main` is the unreleased **0.13.0** development line. Check
+[Release Status](docs/release-status.md) before comparing them.
 
-> **Core knows visual decisions. Product governs the visual estate and its lifecycle.**
-
-Pictovap has two complementary scopes, not two competing implementations:
-
-| Layer | Owns | Does not claim |
-| --- | --- | --- |
-| **Public Pictovap Core** (this repository, PyPI `pictovap`) | Article-level Visual Brief, candidate evaluation, provenance, Decision Pack, reviewable CMS placement, public API and adapters | Enterprise visual-estate history, operator authority, live monitoring, independent closure |
-| **Enterprise Product** (separate enterprise application) | Multi-page estate observation, visual lineage candidates, findings, operator workflows, authorization and verification using explicit Core integration contracts | That Core's article plan alone authorizes publication or proves a customer outcome |
-
-The boundary is deliberate: Core can run independently with its CLI or Python
-API, without the Product, a hosted account, or a specific CMS. The Product
-consumes Core at explicit, versioned integration points; its separate evidence,
-deployment and maturity claims do not transfer to Core. See the
-[Core/Product boundary](docs/architecture/core-product-boundary.md),
-[Architecture](docs/ARCHITECTURE.md), and
-[API Stability](API_STABILITY.md).
-
-## Quickstart
-
-Requires Python 3.10 or newer.
-
-### Release status
-
-The current stable release is **0.12.0** on
-[PyPI](https://pypi.org/project/pictovap/0.12.0/) and
-[GitHub](https://github.com/yoldaolmak/Pictovap/releases/tag/v0.12.0).
-The `main` branch contains the next unreleased **0.13.0** development line;
-see the [release status page](docs/release-status.md) before comparing a
-checkout with the package installed from PyPI.
-
-**Option A: Install stable 0.12.0 from PyPI:**
+Install the published package:
 
 ```bash
-pip install pictovap
+python -m pip install pictovap
 pictovap demo
 ```
 
-**Option B: Run unreleased 0.13.0 from an editable checkout:**
+Or use a development checkout:
 
 ```bash
 git clone https://github.com/yoldaolmak/Pictovap.git
 cd Pictovap
-pip install -e ".[test]"
+python -m pip install -e ".[test]"
 pictovap demo
 ```
 
-```text
-  Brief:      4 slots from 3 sections
-  Evaluated:  6 candidates
-  Selected:   4 images
-  Rejected:   4 candidates
-  Placements: 4 instructions
-```
-
-No `.env` file, no API keys, no network calls — every candidate and score
-above comes from deterministic mock data, on purpose. This is the demo's
-guarantee, not just its default state.
-
-## Reading & Integration Paths
-
-Start with the track matching your goal:
-
-### 1. Evaluate
-*For engineers, architects, and technical reviewers:*
-- **Zero-credential demo:** Run `pictovap demo` locally without API keys or accounts.
-- **Golden Corpus benchmark:** Verify deterministic offline planning across editorial shapes with `pictovap benchmark --corpus tests/corpus` (see the [Golden Corpus Guide](docs/concepts/golden-corpus.md)).
-- **Decision Pack & explainability:** Inspect intent and audit readiness with `pictovap explain`, `pictovap audit`, and `pictovap diff` (see [Decision Pack](docs/concepts/decision-pack.md) and [Plan Diff](docs/concepts/plan-diff.md)).
-- **Foundations:** Read the [Core/Product Boundary](docs/architecture/core-product-boundary.md), [Architecture](docs/ARCHITECTURE.md), and [API Stability Policy](API_STABILITY.md).
-
-### 2. Use
-*For developers and publishers integrating Pictovap into a publishing workflow:*
-- **Fast start:** Follow the 5-minute [Quickstart Guide](docs/quickstart.md).
-- **End-to-end journey:** See [Using Pictovap](docs/guides/using-pictovap.md) for the workflow from configuration to publishing.
-- **WordPress placement:** Connect WordPress Gutenberg using [WordPress Setup](docs/guides/wordpress-setup.md).
-- **Configuration & CLI:** Consult the [Configuration Reference](docs/reference/configuration.md) and [CLI Reference](docs/reference/cli.md).
-
-### 3. Extend
-*For contributors building adapters, renderers, or contract integrations:*
-- **Public Python API:** Plan programmatically via `pictovap.api.create_visual_plan`, `build_decision_pack`, and `validate_decision_pack`.
-- **Adapter design:** Read the [Framework Guide](docs/framework.md) and [Adapter Overview](docs/adapters/overview.md).
-- **Plugins:** Scaffold independent packages with [Building Adapter Plugins](docs/contributing/plugins.md).
-- **Contract testing:** Verify third-party adapters against `pictovap.testing` helpers (`assert_image_source_contract`, `assert_cms_adapter_contract`, `sample_visual_plan`, `sample_decision_pack`).
-
-## Want a 15-Minute First PR?
-
-If you want to contribute without learning the whole framework first, start
-with one of these no-claim issues. Each one is intentionally small, safe, and
-credential-free:
-
-**Recommended path: [#65 realistic article fixture](https://github.com/yoldaolmak/Pictovap/issues/65).**
-It changes one synthetic Markdown fixture, needs no credentials, and can be
-validated with `make contributor-smoke`. Use the alternatives below only when
-that task does not match your interests.
-
-| Issue | What you add | Validation |
-| --- | --- | --- |
-| [#65 Realistic article fixture](https://github.com/yoldaolmak/Pictovap/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | `make contributor-smoke` |
-| [#66 Editor-report terminology](https://github.com/yoldaolmak/Pictovap/issues/66) | Plain-English CMS/image-placement terms for non-technical editors | `make markdownlint` |
-
-No claim comment is required for these. Open a focused PR directly and paste
-the validation command output in the PR body.
-
-## Try Your Own Article
+The demo uses deterministic local data: no credentials or network access.
+For your own Markdown article, start with the
+[sample publisher profile](examples/profiles/sample-publisher.yaml):
 
 ```bash
 pictovap plan \
-  --article path/to/your/article.md \
+  --article article.md \
   --profile examples/profiles/sample-publisher.yaml \
-  --output my-plan.json \
-  --report my-report.md
+  --output plan.json \
+  --report editor-report.md
+
+pictovap validate --plan plan.json
+pictovap explain --plan plan.json --format markdown
+pictovap audit --plan plan.json --format markdown
 ```
 
-`my-plan.json` is the canonical, machine-readable artifact for adapters and
-automation. `my-report.md` is the same plan, rendered for a human editor to
-review before anything gets published.
-
-Validate the hand-off locally or in adapter CI before a CMS is involved:
+The JSON plan is a machine-readable proposal. The report and explanation
+provide a reviewable editor view. Use `pictovap diff` to compare existing
+plans without contacting providers or the CMS:
 
 ```bash
-pictovap validate --plan my-plan.json
+pictovap diff --before plan-old.json --after plan.json --format markdown
+pictovap benchmark --corpus tests/corpus
 ```
 
-For the final editor/CI hand-off, generate a read-only audit covering slot
-coverage, provenance and license status, alt text, unresolved review decisions,
-and duplicate selections:
+A Python integration can build a Decision Pack from a validated plan:
 
-```bash
-pictovap audit --plan my-plan.json --format markdown --output plan-audit.md
+```python
+from pictovap import build_decision_pack, validate_decision_pack
+
+pack = build_decision_pack(plan)
+assert validate_decision_pack(pack)["status"] == "passed"
 ```
 
-Use `--strict` when any unresolved editorial warning should block publishing.
+The review-state transition helper exists; a complete editor-facing
+Plan → Review → Preview Diff interface does **not** yet ship. See
+[Decision Pack](docs/concepts/decision-pack.md) and
+[Roadmap](docs/ROADMAP.md) for that development target.
 
-The validator is side-effect-free: it does not contact providers, read
-credentials, write files, or call a CMS. Add `--strict` when audit gaps such as
-missing planning diagnostics should fail the check.
+## Sources, CMS, and rights
 
-If you try Pictovap with a real non-sensitive article, please report whether
-the slots, scores, and report matched your editorial intent in a
-[new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md).
-To share a safe copy-paste report with Python and coarse OS metadata but
-without article text, paths, URLs, or credentials:
+Built-in image sources include local files, Unsplash, DepositPhotos,
+Openverse, and Pexels. Live providers may require credentials; unavailable
+sources must be recorded as **not evaluable**, not silently reported as
+zero search results. Search results do not establish purchased image rights.
+For example, a Depositphotos preview is not a licensed asset.
 
-```bash
-pictovap feedback --plan my-plan.json --format markdown
-```
+WordPress supports the broadest in-tree placement behavior. Ghost and
+Strapi are reference adapters with documented gaps. A plan, dry run, or
+reviewed pack does not authorize or prove a CMS update. Check rights,
+deployment credentials, and the actual CMS result independently.
 
-External adapters should use only the documented public contracts. See the
-[API Stability Policy](API_STABILITY.md) for stable, experimental, and
-internal surfaces.
+## Documentation and contributing
 
-For the shortest implementation path, see the
-[Framework Guide](docs/framework.md) and the runnable
-[external renderer package](examples/external-renderer-package/README.md).
+- [Documentation portal](docs/README.md) — choose Evaluate, Use, or Extend
+- [Quickstart](docs/quickstart.md) and [WordPress setup](docs/guides/wordpress-setup.md)
+- [Architecture](docs/ARCHITECTURE.md) and [API Stability](API_STABILITY.md)
+- [Adapter contracts](docs/adapters/overview.md) and [plugin authoring](docs/contributing/plugins.md)
+- [Developer guide](docs/DEVELOPER.md) and [contributing](CONTRIBUTING.md)
 
-Contributors can verify the full offline planning contract across six common
-article shapes:
+Small first contributions: [realistic article fixture (#65)](https://github.com/yoldaolmak/Pictovap/issues/65)
+or [editor-report terminology (#66)](https://github.com/yoldaolmak/Pictovap/issues/66).
+If you test a real, non-sensitive article, use
+[publisher feedback](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md);
+do not attach credentials or private article data.
 
-```bash
-pictovap benchmark --corpus tests/corpus --format markdown
-```
-
-See the [golden corpus guide](docs/concepts/golden-corpus.md) and the
-[framework compatibility contract](FRAMEWORK_COMPATIBILITY.md) before building
-an external adapter.
-
-Discover the available extension points without installing or constructing
-anything:
-
-```bash
-pictovap registry list --format markdown
-```
-
-For the deeper editorial reasoning behind a plan, inspect its proof-carrying
-intent decisions:
-
-```bash
-pictovap explain --plan my-plan.json --format markdown
-```
-
-The [Visual Intent Compiler](docs/concepts/visual-intent-compiler.md) records
-hard constraints, soft constraints, candidate evidence, and global assignment
-reasons without calling a provider again.
-
-Compare two stored plans without rerunning providers or touching a CMS:
-
-```bash
-pictovap diff \
-  --before plan-before.json \
-  --after plan-after.json \
-  --format markdown
-```
-
-The [Visual Plan Diff](docs/concepts/plan-diff.md) separates article, profile,
-candidate, policy, and CMS-placement changes. Add `--fail-on-change` only when
-using the command as a CI drift gate.
-
-If you already use a Markdown-to-WordPress importer, AI draft plugin, media
-upload script, or CMS automation tool, Pictovap should sit before that publish
-step as the visual-finishing layer. See
-[Ecosystem Integrations](docs/ecosystem-integrations.md) and the
-[Markdown-to-WordPress pre-publish workflow](examples/workflows/markdown-to-wordpress-prepublish.md).
-To generate a copyable integration packet for an adjacent project:
-
-```bash
-pictovap ecosystem match \
-  --tool markdown-to-wordpress \
-  --project-name md2wp \
-  --format markdown \
-  --output pictovap-integration.md
-```
-
-## Adapters
-
-Pictovap connects to the outside world only through adapters — the core
-pipeline has no hardcoded dependency on any specific image provider or CMS.
-
-**Image sources:** Pictovap ships in-tree adapters for local folders,
-Unsplash, DepositPhotos, Openverse, and Pexels. Their protocol behavior and
-request/response handling are covered by unit tests; live availability depends
-on each provider and the credentials supplied by the publisher. Pixabay and
-Wikimedia Commons are open contribution opportunities — see
-[Good First Issues](docs/contributing/good-first-issues.md). See
-[Image Source Adapters](docs/adapters/image-sources.md).
-
-**CMS placement:** WordPress is the most complete in-tree adapter. Ghost and
-Strapi are reference implementations with mocked API tests and documented
-limitations. See [CMS Adapters](docs/adapters/cms-adapters.md) and
-[WordPress Setup](docs/guides/wordpress-setup.md).
-
-You do not need WordPress credentials to run the demo, create a local visual
-plan, or generate an editor report. WordPress credentials are only needed when
-Pictovap contacts a live WordPress site for actions such as reading Gutenberg
-posts, uploading media, or updating post content. Those credentials must live
-in `.env` or another local secret store, never in the repository. WordPress is
-one CMS adapter; Pictovap's core output is the CMS Placement plan.
-
-Image-source adapters degrade gracefully when unconfigured — a missing API key
-produces an empty result, not a crash, so a partially configured profile still
-runs. CMS adapters fail clearly when publishing credentials are missing.
-Writing a new adapter means implementing one method (`search_candidates` or
-`place`) against a documented `Protocol`; see the
-[Adapter Overview](docs/adapters/overview.md).
-
-Third-party adapters can ship as independent Python packages. Generate a
-working package with `pictovap scaffold provider <name>` or
-`pictovap scaffold cms <name>`. The generated package includes a contract
-fixture, Makefile, and minimal GitHub Actions workflow; validate it with
-`pictovap.testing` and expose it through a standard Python entry point. See
-[Building Adapter Plugins](docs/contributing/plugins.md).
-
-An installed plugin is a first-class runtime component, not only a discovered
-class. The same external package can be checked, planned, previewed, and run:
-
-```bash
-pictovap doctor --provider acme-images
-pictovap plan --article article.md --provider acme-images --output plan.json
-pictovap publish --plan plan.json --cms acme-cms --dry-run
-```
-
-Constructor settings are repeatable `KEY=VALUE` options. For credentials, use
-`KEY=@ENV_VAR`; Pictovap resolves the environment value without echoing it in
-diagnostics or output.
-
-## Language-Aware by Design
-
-Pictovap's own code, comments, and documentation are English. The
-credential-free deterministic metadata path currently supports Turkish and
-English: article language is detected automatically (or set explicitly via the
-publisher profile), and alt text and captions follow that language. Other
-language codes can travel through the profile and visual-plan contracts, but
-their deterministic metadata templates are not yet implemented.
-
-## Current Status and Limitations
-
-Pictovap is early open-source infrastructure. It has a genuinely
-credential-free local demo, documented core primitives, a real test suite,
-and a working adapter model — it does not yet claim broad ecosystem adoption
-or a large external contributor base.
-
-Specifically:
-
-- WordPress has the broadest in-tree placement behavior. Ghost and Strapi have
-  mocked API tests and documented functional gaps; validate them against your
-  own deployment before relying on them for publishing (see
-  [CMS Adapters](docs/adapters/cms-adapters.md)).
-- The credential-free demo always uses deterministic mock candidates by
-  design, regardless of what's configured in `.env` — `pictovap plan` is
-  where real, credentialed sources are used.
-- Deterministic structural extraction and local metadata templates are tested
-  for English and Turkish; other languages currently require a contributor
-  language pack or an external metadata provider.
-
-## Compatibility Note
-
-Product name: Pictovap. The Python package, import name, and console-script
-entry point are all `pictovap`; see
-[Brand & Naming](docs/architecture/naming.md).
-
-## Contributing
-
-**Zero-install contribution:** You don't need a local Python environment to contribute. Click **Code -> Create codespace on main** in GitHub to launch a configured, browser-based VS Code environment with the project dependencies ready to run.
-
-After setup, run `make contributor-smoke` for the fastest check that the
-installed CLI, local demo, and anonymous feedback report all work.
-
-For the lowest-friction path, pick one of the
-[15-minute first PR issues](#want-a-15-minute-first-pr): #65 or #66.
-They are designed for contributors who want a real but narrow first change.
-
-The [Adapter Tracks](docs/contributing/adapter-sprint.md) hold three claimable
-provider and CMS integrations with exact acceptance tests.
-The [WordPress Gutenberg Mini Sprint](docs/contributing/wordpress-gutenberg-minisprint.md)
-has small fixture, test, and editor-report issues for first-time contributors
-who want to work on image placement without a live CMS.
-
-See the [Documentation Portal](docs/README.md) for architecture, concepts,
-and adapter-writing guides, and [DEVELOPER.md](docs/DEVELOPER.md) for the
-contribution workflow. Pull requests that add a new image source or CMS
-adapter, improve test coverage, or fix documentation are all welcome.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
+Pictovap is MIT licensed ([LICENSE](LICENSE)). It has working offline
+tests and adapters, but does not claim a graphical UI, broad adoption,
+licensed rights from search alone, or verified publishing outcomes.

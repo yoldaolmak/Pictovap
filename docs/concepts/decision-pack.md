@@ -1,33 +1,40 @@
-# Decision Pack
+# Decision Pack — editor review contract
 
-A Decision Pack is Pictovap's portable hand-off from planning to editorial
-review. It is built from a validated visual plan, but it is not another
-planning engine and does not rerun image sources, score candidates, or write to
-a CMS.
+An editor reviewing an article's images needs to see the proposed image for
+each slot, its alternatives, why each candidate fits or fails, its provenance,
+and where it might be placed. A Decision Pack groups this existing plan
+evidence for review **without rerunning sources or modifying a CMS**.
 
 ```text
-Visual plan evidence
-  → Decision Pack (proposal by slot)
-  → Editor review surface
-  → Product integration boundary
+Validated Visual Plan → proposed Decision Pack
+                      → editor accepts / replaces / rejects each slot
+                      → reviewed Decision Pack → preview comparison
+                      → separately authorized Product integration
 ```
 
-## What it carries
+## What the editor can decide
 
-For each image slot, schema 1 groups:
+Each slot contains an editorial purpose, target heading, scored candidates,
+intent evidence, and an optional proposal with candidate, provenance, and
+placement bound together. Review decisions must identify the slot, action,
+actor, and timestamp.
 
-- the editorial purpose and target heading;
-- every scored candidate already present in the plan;
-- the proposed selected asset, provenance record, and placement instruction;
-- any compiled intent-ledger evidence already present in the plan.
+- **Accept:** retain the existing proposed asset and its evidence.
+- **Replace:** choose a different scored candidate with complete provenance
+  and placement bound to the same slot.
+- **Reject:** leave the slot without an approved image.
 
-It also reserves distinct top-level state for review and application. This
-separation prevents a user interface from presenting a proposed placement as if
-it had been accepted or published.
+A missing proposal cannot be accepted as valid evidence. Partially bound
+assets, duplicate slot decisions, and mismatched filenames or candidate IDs
+fail validation. License uncertainty remains visible for editor judgment;
+a review decision does not grant image rights.
 
-## Current boundary
+## What exists now
 
-Decision Pack schema 1 is experimental and read-only. A newly built pack has:
+Schema 1 supports `pending` and `reviewed` states, validates completed
+decisions and exposes a pure review transition helper in
+`pictovap.decision_pack`. It is experimental and side-effect-free.
+New packs begin with:
 
 ```json
 {
@@ -36,25 +43,11 @@ Decision Pack schema 1 is experimental and read-only. A newly built pack has:
 }
 ```
 
-The validator recognizes a complete editor review with one `accept`, `replace`,
-or `reject` decision per slot, including an actor and timestamp. `accept`
-retains the proposal's fully bound candidate, provenance, and placement.
-`replace` must carry a different scored candidate with its own provenance and
-placement, all bound to the same candidate and slot IDs. The placement output
-filename must also match the filename recorded by provenance. It does not write
-those decisions, apply a CMS change, create a rollback point, or claim that a
-CMS action occurred.
+Application remains `not_applied` with no execution receipts even after a
+review. The complete editor interaction and proposal-to-reviewed preview
+diff are not shipped yet; see the [Roadmap](../ROADMAP.md).
 
-An unfilled slot may keep all three proposal fields null while review is
-pending. That slot can later be rejected or replaced, but it cannot be accepted
-as if evidence existed. Partially populated proposal evidence is always invalid.
-
-The `application` object is deliberately fixed to `not_applied` with an empty
-receipt list. It prevents a Core review artifact from being mistaken for proof
-of execution. Authorization, idempotency, rollback, execution receipts, and
-live verification are owned by the separate Product lifecycle.
-
-## Python API
+Build and validate a pack from an already validated Visual Plan:
 
 ```python
 from pictovap import build_decision_pack, validate_decision_pack
@@ -65,18 +58,6 @@ if result["status"] != "passed":
     raise ValueError(result["errors"])
 ```
 
-Both functions are side-effect-free. The source visual plan must already pass
-`validate_visual_plan()` before a pack can be built.
-
-## Product role
-
-Pictovap Core is the planning and evidence layer. A WordPress Gutenberg
-integration is the first intended reference review surface, not a replacement
-for the CMS-neutral core. The Core user flow ends at a reviewed preview:
-
-```text
-Plan → Review → Preview Diff → Product integration boundary
-```
-
-Schema 1 represents Plan and Review only. Product-owned execution must not be
-implied by a pending or reviewed Decision Pack.
+A downstream publisher must independently authorize an actual CMS change,
+record the action result, and verify the live outcome. See the
+[Core/Product Contract](../architecture/core-product-boundary.md).

@@ -1,164 +1,61 @@
-# Pictovap Architecture
+# Pictovap Core Architecture
 
-Pictovap Core is an open-source, headless framework for article-aware image
-planning and portable CMS placement decisions. It turns article structure and
-candidate image evidence into a reviewable plan. A resulting plan is **not**
-proof that a CMS write was authorized, executed, published, or independently
-verified.
+This is the code and responsibility map for the public `pictovap` package.
+For product identity, scope, rights and authority rules see the
+[Core/Product Contract](architecture/core-product-boundary.md). For
+compatibility guarantees see [API Stability](../API_STABILITY.md).
 
-## 1. Product Boundary
-
-Pictovap Core addresses the decision boundary between written article
-content and a proposed, reviewable visual publishing plan.
-
-It is **not**:
-- A stock photo search tool
-- A Digital Asset Management (DAM) system
-- A generic AI image generator
-
-It is the article-aware decision layer that describes editorial image needs,
-evaluates candidates, records provenance, prepares metadata, and supplies CMS
-placement instructions. An adapter may execute a separately authorized CMS
-operation; no Core planning result alone confers that authority.
-
-## 2. Core Boundary
-
-> **Core knows visual decisions. Product governs the visual estate and its lifecycle.**
-
-Pictovap Core is public infrastructure, not an enterprise estate-management
-application. Core owns the Visual Brief, Fit Score and selection policies,
-Provenance Pack, Decision Pack, CMS Placement, Public API, CLI, adapter
-protocols, deterministic planning, explainability, and validation. The
-separate enterprise Product owns the Visual Estate and Field, source
-observations, lineage and findings, authorization, execution, and independent
-verification. Core never owns organization inventory, user authority, job state,
-live observations, or CMS execution history. See the
-[Core/Product Boundary](architecture/core-product-boundary.md) for the
-enforced ownership split.
-
-## 3. Core Primitives
-
-The architecture revolves around four core data primitives
-(defined in `src/pictovap/core/primitives.py`) that move sequentially
-through the pipeline:
-
-1. **[Visual Brief](concepts/visual-brief.md)**: Structured extraction of what
-   imagery the article needs, based on heading structure and content.
-2. **[Fit Score](concepts/fit-score.md)**: Transparent, deterministic evaluation
-   of candidate images against the brief's requirements (context, quality, license).
-3. **[Provenance Pack](concepts/provenance-pack.md)**: Persistent audit trail
-   recording the origin, license, processing actions, and generated metadata
-   for every selected image.
-4. **[CMS Placement](concepts/cms-placement.md)**: CMS-agnostic plan for where
-   images should be injected into the target platform.
-
-The **[Decision Pack](concepts/decision-pack.md)** is a portable aggregate of
-these primitives for editorial review. It keeps proposed evidence and human
-review state distinct from Product-owned execution; it is not a replacement
-for the underlying planning record.
-
-## 4. Data Flow
-
-The engine operates sequentially:
+## Data flow
 
 ```text
-Analysis (Visual Brief)
-  -> Selection (Fit Score)
-  -> Processing (Provenance Pack)
-  -> Placement (CMS Placement)
-  -> Review (Decision Pack)
+Markdown/article + publisher profile
+  → Visual Brief + source-attempt evidence
+  → candidate scoring and intent constraints
+  → global selection + decision ledger
+  → provenance and CMS placement proposal
+  → validated Visual Plan
+  → Decision Pack (pending → reviewed) + explain/audit/diff
+  → optional external editor/CMS integration
 ```
 
-Each stage contributes a serializable planning artifact. The core planner
-does not require a live CMS, organization database, or enterprise workflow
-runtime. Provider and CMS adapters are optional integration boundaries.
+The engine compiles data without user-facing output or file writes. A renderer
+or CLI writes artifacts from that data. A plan or reviewed pack does not prove
+an authorized CMS write or a live result. Provider errors and unknown license
+rights must remain visible rather than being converted to positive evidence.
 
-## 5. Decision Pack and Review Boundary
+## Modules and boundaries
 
-Pictovap Core remains CMS-neutral. A Decision Pack can be consumed by a
-Gutenberg sidebar, a Ghost integration, a CLI review workflow, or an agent
-tool without rerunning providers. Schema 1 is read-only: it models a proposed
-plan and an editor review, but it neither applies a CMS change nor claims a
-rollback guarantee. WordPress is the first reference review surface.
+| Code location | Responsibility |
+| --- | --- |
+| `core/primitives.py`, `core/profile.py` | Visual Brief, scores, provenance, placements, publisher inputs |
+| `core/adapters.py`, `core/sources.py`, `core/states.py` | Public adapter protocols, epistemic source records, explicit states |
+| `engine/planner.py`, `engine/scoring.py`, `core/selection.py` | Deterministic per-article planning, scoring, global assignment |
+| `intent.py`, `intent_validation.py`, `validation.py` | Proof/constraint ledger and side-effect-free plan validation |
+| `decision_pack.py`, `plan_diff.py` | Portable review contract, pure review transitions, plan comparison |
+| `engine/reporting.py`, `renderers/`, `app/` | Human-readable output, CLI workflow, artifact writing |
+| `api.py` | Stable public planning entry point |
+| `providers/` | Local, Unsplash, DepositPhotos, Openverse, Pexels image candidates |
+| `services/wordpress.py`, `publishers/` | WordPress and reference Ghost/Strapi CMS adapters |
+| `testing/`, `registry.py`, `plugins.py` | Contract fixtures, discovery and external-adapter integration |
 
-## 6. Adapter Model
+The current adapters may contact providers or a CMS when explicitly invoked.
+Credential isolation, path containment, transport safety, license evidence,
+and safe application are adapter-specific concerns. A dry run is not a write.
+Review-state transitions remain pure, and `application.status=not_applied`
+is a negative sentinel, not an execution receipt.
 
-Pictovap connects to the outside world via two types of adapters:
+## Deployment reality and known gaps
 
-- **Image Source Adapters** (`src/pictovap/providers/`): Supply candidate images.
-  Examples: Local directory, Unsplash, DepositPhotos.
-- **CMS Placement Adapters** (`src/pictovap/publishers/` and
-  `src/pictovap/services/`): Consume approved placement instructions; live
-  calls, credentials, and effects are adapter-specific. An offline plan or
-  dry run is not evidence of a completed publish.
-  Examples: WordPress, Ghost, Strapi.
+- The demo and golden corpus run offline on deterministic candidates. They
+  prove the local pipeline, not provider uptime, a granted license, or a
+  particular publisher's CMS deployment.
+- WordPress has the broadest in-tree adapter behavior; Ghost and Strapi have
+  mocked API tests with documented gaps. See [CMS Adapters](adapters/cms-adapters.md).
+- Decision Pack construction and validated review transitions exist, but no
+  complete graphical editor review/preview-diff workflow is shipped.
+- Vision-backed metadata and deterministic demo/plan metadata are separate
+  paths today; the deterministic templates cover English and Turkish.
 
-The core pipeline is adapter-agnostic.
-
-## 7. Credential-Free Demo Path
-
-The local demo (`make demo`) runs the entire pipeline end-to-end without
-requiring any external credentials, API keys, or CMS connections. It uses:
-
-- A local directory of mock image metadata as the source adapter.
-- Deterministic rules for scoring and metadata generation.
-- A mock CMS adapter that outputs the placement plan to a local JSON file.
-
-## 8. WordPress as One CMS Adapter
-
-While WordPress currently has the broadest in-tree placement behavior, it is
-merely one CMS adapter implementation. Pictovap does not assume WordPress as the
-conceptual center. Any CMS with an API can be supported by writing a new adapter
-that consumes the `CMSPlacement` primitive.
-
-## 9. Yoldaolmak.com as Dogfooding Case Study
-
-Pictovap was extracted from the production infrastructure of a travel publisher,
-yoldaolmak.com. That site's original profile (`examples/profiles/yoldaolmak.py`)
-and specific constraints represent a dogfooding case study and one possible
-configuration, not the default path or product center. See
-[Publisher Profiles](reference/publisher-profiles.md) for the current,
-supported YAML-based configuration format.
-
-## 10. Metadata Generation as Optional Adapter Behavior
-
-While Pictovap produces standard metadata (Alt Text, SEO Title, Caption), the
-exact mechanism is source-agnostic. It may be generated via an AI metadata
-adapter (e.g., via external model providers) or fall back to rule-based templates.
-No specific AI model or "Vision Chain" is a required architectural component.
-
-## 11. Package/CLI Naming
-
-- **Product name:** Pictovap.
-- Python package (`src/pictovap/`), import name, and console-script entry point
-  are all `pictovap`.
-- See [Brand & Naming](architecture/naming.md) for the full reasoning.
-
-## 12. Current Limitations
-
-- WordPress has the broadest in-tree placement behavior. Ghost and Strapi are
-  reference implementations with mocked API tests and documented functional
-  gaps (see [CMS Adapters](adapters/cms-adapters.md) for exactly what each one
-  does and doesn't do yet). No CMS adapter's live behavior against a specific
-  deployment is verified by this repository; validate against your own site
-  before relying on it for publishing.
-- Vision-backed metadata generation (`engine/vision_chain.py`) and the
-  demo/plan pipeline's deterministic metadata generator
-  (`core/demo_metadata.py`) are not yet unified into one code path.
-
-## Package Layout
-
-```
-src/
-  pictovap/
-    api.py        # Stable public planning API
-    app/          # CLI entrypoint (demo / plan / report)
-    core/         # Primitives, adapters, profile, pipeline sources
-    data/         # Sample article and deterministic demo candidates
-    engine/       # Planning engine: planner, scoring, reporting, vision chain
-    providers/    # Image source adapters (local, Unsplash, DepositPhotos)
-    publishers/   # CMS placement adapters (Ghost, Strapi)
-    services/     # WordPress CMS adapter + supporting Gutenberg logic
-    demo.py       # Credential-free demo runner and its terminal rendering
-    vision_templates.py  # Prompt templates for vision-backed metadata
-```
+For contributor setup and verification commands use the
+[Developer Guide](DEVELOPER.md). For editor-facing Decision Pack semantics
+see [Decision Pack](concepts/decision-pack.md).
