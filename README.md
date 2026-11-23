@@ -146,5 +146,6 @@ If you test a real, non-sensitive article, use
 do not attach credentials or private article data.
 
 Pictovap is MIT licensed ([LICENSE](LICENSE)). It has working offline
-tests and adapters, but does not claim a graphical UI, broad adoption,
-licensed rights from search alone, or verified publishing outcomes.
+tests and adapters and a reference Gutenberg review sidebar, but does not
+claim a production-ready graphical editor, broad adoption, licensed rights
+from search alone, or verified publishing outcomes.
