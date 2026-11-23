@@ -124,6 +124,19 @@ pictovap plan \
 `--wordpress-site publisher` reads `PUBLISHER_URL`, `PUBLISHER_USER`, and
 `PUBLISHER_APP_PASSWORD`. Omit it to use the default `WP_` variables.
 
+## Preview-only Gutenberg review
+
+For editors testing a local, read-only workflow, the
+[Gutenberg review sidebar](../../examples/wordpress-review-sidebar/README.md)
+is a separate reference WordPress plugin. It imports a pending Decision Pack
+for the existing post, collects draft accept/replace/reject choices, and
+downloads decisions for Python Core to validate. It never saves the post,
+contacts a media source, or grants publishing or license permission.
+
+Prepare the input with `pictovap review-pack` and complete the validated
+handoff with `pictovap review-import`. A real WordPress editor session and
+explicit user acceptance remain unverified.
+
 ## Live publishing
 
 Live publishing sends HTTP requests to your WordPress REST API endpoints
