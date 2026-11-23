@@ -236,7 +236,7 @@ test("invalid image cannot render; removing and unmounting revoke all blob URLs"
         node.type === "input" && node.props.accept === "image/jpeg,image/png,image/gif,image/webp"
     );
     updated[0].props.onChange({
-        target: { files: [inputFile("photo.jpg", [0xff, 0xd8, 0xff], "image/jpeg")] }
+        target: { files: [inputFile("photo.jpg", Uint8Array.from([0xff, 0xd8, 0xff]), "image/jpeg")] }
     });
     await eventually(() => ui.all().find((node) => node.type === "img"));
     ui.unmount();
