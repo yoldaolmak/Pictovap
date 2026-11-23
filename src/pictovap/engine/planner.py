@@ -44,8 +44,8 @@ def _not_queried(profile: PublisherProfile | None, reason: str) -> list[SourceAt
 
 
 def _planned_provenance(
-    candidate: Mapping[str, Any],
-    slot: Mapping[str, Any],
+    candidate: dict[str, Any],
+    slot: dict[str, Any],
     brief: VisualBrief,
 ) -> ProvenancePack:
     """Prepare source-backed proposal evidence; no asset is processed or licensed."""
@@ -78,7 +78,7 @@ def _planned_provenance(
 
 def _planned_placement(
     provenance: ProvenancePack,
-    slot: Mapping[str, Any],
+    slot: dict[str, Any],
 ) -> PlacementInstruction:
     """Create a CMS-neutral placement proposal, not an instruction to publish."""
     return PlacementInstruction(
