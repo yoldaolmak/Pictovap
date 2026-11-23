@@ -184,6 +184,36 @@
                                     el("p", null, "Reason: " + candidate.human_reason) : null
                             );
                         })),
+                        slot.alternatives ? el("div", {
+                            className: "pictovap-alternatives"
+                        },
+                            el("h4", null, "Source-backed alternatives"),
+                            slot.alternatives.length ? slot.alternatives.map(function (alternative) {
+                                var evidence = alternative.provenance || {};
+                                var candidate = slot.candidates.find(function (item) {
+                                    return item.candidate_id === alternative.candidate_id;
+                                });
+                                return el("div", {
+                                    className: "pictovap-alternative",
+                                    key: alternative.candidate_id
+                                },
+                                    el("p", null, "Candidate: " + alternative.candidate_id),
+                                    el("p", null, "Provider: " + (evidence.provider || "unknown")),
+                                    el("p", null, "Rights evidence: " +
+                                        (evidence.license_status || "unknown")),
+                                    candidate && candidate.human_reason ?
+                                        el("p", null, "Reason: " + candidate.human_reason) : null,
+                                    el(Button, {
+                                        variant: current && current.action === "replace" &&
+                                            current.replacement.candidate_id === alternative.candidate_id ?
+                                            "primary" : "secondary",
+                                        onClick: function () {
+                                            choose(slot.slot_id, "replace", alternative);
+                                        }
+                                    }, "Choose " + alternative.candidate_id)
+                                );
+                            }) : el("p", null, "No evidenced alternative is eligible.")
+                        ) : null,
                         el("div", { className: "pictovap-actions" },
                             el(Button, {
                                 variant: current && current.action === "accept" ?
@@ -197,14 +227,16 @@
                                 onClick: function () { choose(slot.slot_id, "reject"); }
                             }, "Reject")
                         ),
-                        el("label", null, "Replace using existing atomic evidence JSON"),
-                        el("input", {
-                            type: "file",
-                            accept: ".json,application/json",
-                            onChange: function (event) {
-                                importReplacement(slot.slot_id, event);
-                            }
-                        }),
+                        !slot.alternatives ? el("div", null,
+                            el("label", null, "Legacy pack: import replacement evidence JSON"),
+                            el("input", {
+                                type: "file",
+                                accept: ".json,application/json",
+                                onChange: function (event) {
+                                    importReplacement(slot.slot_id, event);
+                                }
+                            })
+                        ) : null,
                         el("p", { className: "pictovap-preview" },
                             "Preview (not Core-validated): " + row.action +
                             " · " + (row.chosen || "no image") +
