@@ -15,6 +15,7 @@ from pictovap.decision_pack import (
 )
 from pictovap.engine.planner import build_visual_plan
 from pictovap.review import preview_decision_pack
+from pictovap.validation import validate_visual_plan
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -22,13 +23,16 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def _real_planning_slice():
     profile = PublisherProfile(profile_id="editor-demo", brand_name="Editor demo")
-    return build_visual_plan(
+    plan = build_visual_plan(
         ROOT / "examples/articles/travel-guide.md",
         profile,
         use_real_sources=False,
         fallback_candidates=MOCK_CANDIDATES,
         fallback_mode="demo",
     )
+    validation = validate_visual_plan(plan)
+    assert validation["status"] == "passed", validation["errors"]
+    return plan
 
 
 def _complete_review(pack, replacing_slot=None, replacement=None):
