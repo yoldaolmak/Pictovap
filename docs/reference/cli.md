@@ -92,6 +92,35 @@ The preview rejects changed source evidence, fake application receipts, and
 mismatched articles. Unknown rights remain visible and are not legal approval.
 This is a local terminal editor flow, not a WordPress user interface.
 
+### Review an existing WordPress post in Gutenberg (reference)
+
+For an existing Gutenberg post, first create a visual plan with
+`pictovap plan --wordpress-post 42 --wordpress-site publisher`.
+Export the portable pending Decision Pack:
+
+```bash
+pictovap review-pack --plan plan.json --output pending-pack.json
+```
+
+The [reference sidebar](../../examples/wordpress-review-sidebar/README.md)
+lets the current authorized editor open this file, make draft decisions and
+download a local JSON file. The browser does not write WordPress metadata
+or publish anything. Import the downloaded draft using **the same exact
+pending pack bytes**:
+
+```bash
+pictovap review-import --pack pending-pack.json \
+  --decisions review-decisions.json \
+  --output reviewed.json --preview reviewed.md
+```
+
+Core checks the original pack SHA-256 fingerprint, article binding, every
+decision and full replacement provenance before writing a reviewed artifact.
+A forged or changed pack, unknown slot, missing editor identifier, rejected
+replacement candidate, or application receipt fails. Output files are not
+overwritten. The exported editor identity is a **claim**, not cryptographic
+proof of user authentication, and reviewed status is not CMS authorization.
+
 ### Create an Anonymous Validation Summary
 
 When asking for help or reporting a result, create a small artifact that
