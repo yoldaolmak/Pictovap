@@ -152,3 +152,13 @@ def test_review_pack_requires_valid_source_plan_and_refuses_overwrite(tmp_path):
     original = dest.read_bytes()
     assert cli.main(["review-pack", "--plan", str(source), "--output", str(dest)]) == 1
     assert dest.read_bytes() == original
+
+
+def test_review_import_rejects_invalid_or_timezone_free_timestamp(tmp_path):
+    _, pack_path = _prepare(tmp_path)
+    for index, timestamp in enumerate(("not-a-time", "2026-11-23T08:00:00", "")):
+        draft = _draft(pack_path)
+        draft["decisions"][0]["decided_at"] = timestamp
+        result, output, _ = _import(tmp_path, pack_path, draft, suffix=f"-time-{index}")
+        assert result == 1
+        assert not output.exists()
