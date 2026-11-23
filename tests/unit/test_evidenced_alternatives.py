@@ -147,3 +147,14 @@ def test_empty_and_duplicate_evidenced_alternatives_are_guarded():
     assert "decision_pack_alternative_is_proposal" in {
         error["code"] for error in validation["errors"]
     }
+
+
+def test_explicit_credential_free_demo_is_valid_but_invented_modes_fail():
+    plan = _real_planning_slice()
+    assert plan["runtime"]["provider"]["mode"] == "demo"
+    plan["runtime"]["provider"]["mode"] = "claiming-success"
+    validation = validate_visual_plan(plan)
+    assert validation["status"] == "failed"
+    assert "invalid_provider_mode" in {
+        error["code"] for error in validation["errors"]
+    }
