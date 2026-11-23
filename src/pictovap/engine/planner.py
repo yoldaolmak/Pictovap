@@ -187,7 +187,10 @@ def build_visual_plan(
             choices.append({
                 "candidate_id": score.candidate_id,
                 "provenance": evidence.to_dict(),
-                "placement": _planned_placement(evidence, slot).to_dict(),
+                "placement": {
+                    **_planned_placement(evidence, slot).to_dict(),
+                    "candidate_id": score.candidate_id,
+                },
             })
         review_alternatives[slot_id] = choices
 
