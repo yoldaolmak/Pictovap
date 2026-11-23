@@ -1,0 +1,145 @@
+"""Editor alternatives come from actual plan candidates, never invented UI metadata."""
+
+import copy
+import json
+from pathlib import Path
+
+import pytest
+
+from pictovap.core.profile import PublisherProfile
+from pictovap.data.demo_candidates import MOCK_CANDIDATES
+from pictovap.decision_pack import (
+    build_decision_pack,
+    transition_decision_pack_review,
+    validate_decision_pack,
+)
+from pictovap.engine.planner import build_visual_plan
+from pictovap.review import preview_decision_pack
+
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def _real_planning_slice():
+    profile = PublisherProfile(profile_id="editor-demo", brand_name="Editor demo")
+    return build_visual_plan(
+        ROOT / "examples/articles/travel-guide.md",
+        profile,
+        use_real_sources=False,
+        fallback_candidates=MOCK_CANDIDATES,
+        fallback_mode="demo",
+    )
+
+
+def _complete_review(pack, replacing_slot=None, replacement=None):
+    decisions = []
+    for slot in pack["slots"]:
+        action = (
+            "replace" if slot["slot_id"] == replacing_slot
+            else "accept" if slot["proposal"]["candidate_id"] else "reject"
+        )
+        decision = {
+            "slot_id": slot["slot_id"],
+            "action": action,
+            "actor": "editor@example.test",
+            "decided_at": "2026-11-23T09:00:00Z",
+        }
+        if action == "replace":
+            decision["replacement"] = copy.deepcopy(replacement)
+        decisions.append(decision)
+    return transition_decision_pack_review(pack, decisions, complete=True)
+
+
+def test_actual_pipeline_carries_eligible_source_evidence_to_review():
+    plan = _real_planning_slice()
+    original_plan = copy.deepcopy(plan)
+    assert "review_alternatives" in plan
+    pack = build_decision_pack(plan)
+    assert validate_decision_pack(pack)["status"] == "passed"
+    assert plan == original_plan
+    assert any(slot.get("alternatives") for slot in pack["slots"])
+
+    score_tables = plan["fit_scores"]
+    for slot in pack["slots"]:
+        original_ids = {s["candidate_id"] for s in score_tables[slot["slot_id"]]}
+        for alternative in slot["alternatives"]:
+            candidate = alternative["candidate_id"]
+            assert candidate in original_ids
+            assert candidate != slot["proposal"]["candidate_id"]
+            assert alternative["provenance"]["image_id"] == candidate
+            assert alternative["placement"]["candidate_id"] == candidate
+            assert alternative["placement"]["slot_id"] == slot["slot_id"]
+            assert alternative["placement"]["output_path"].endswith(
+                alternative["provenance"]["generated_filename"]
+            )
+            assert next(
+                s for s in score_tables[slot["slot_id"]] if s["candidate_id"] == candidate
+            )["decision"] != "rejected"
+
+
+def test_one_click_selection_survives_review_and_read_only_diff(tmp_path):
+    plan = _real_planning_slice()
+    pack = build_decision_pack(plan)
+    original = copy.deepcopy(pack)
+    slot = next(s for s in pack["slots"] if s["alternatives"])
+    replacement = slot["alternatives"][0]
+    reviewed = _complete_review(pack, slot["slot_id"], replacement)
+
+    assert pack == original
+    assert validate_decision_pack(reviewed)["status"] == "passed"
+    assert reviewed["application"] == {"status": "not_applied", "receipts": []}
+    preview = preview_decision_pack(pack, reviewed)
+    chosen = next(row for row in preview["slots"] if row["slot_id"] == slot["slot_id"])
+    assert chosen["action"] == "replace"
+    assert chosen["reviewed_candidate"] == replacement["candidate_id"]
+
+    exported = tmp_path / "reviewed.json"
+    exported.write_text(json.dumps(reviewed), encoding="utf-8")
+    assert validate_decision_pack(json.loads(exported.read_text()))["status"] == "passed"
+
+
+def test_unlisted_replacement_cannot_fabricate_owned_license():
+    plan = _real_planning_slice()
+    pack = build_decision_pack(plan)
+    slot = next(s for s in pack["slots"] if s["alternatives"])
+    fake = copy.deepcopy(slot["alternatives"][0])
+    fake["provenance"]["license_status"] = "owned"
+    with pytest.raises(ValueError, match="decision_pack_replacement_not_evidenced"):
+        _complete_review(pack, slot["slot_id"], fake)
+
+
+def test_hard_rejected_alternative_cannot_enter_review_inventory():
+    pack = build_decision_pack(_real_planning_slice())
+    slot = next(s for s in pack["slots"] if s["alternatives"])
+    candidate = slot["alternatives"][0]["candidate_id"]
+    for score in slot["candidates"]:
+        if score["candidate_id"] == candidate:
+            score["decision"] = "rejected"
+    validation = validate_decision_pack(pack)
+    assert validation["status"] == "failed"
+    assert "decision_pack_alternative_rejected" in {
+        error["code"] for error in validation["errors"]
+    }
+
+
+def test_legacy_packs_without_alternatives_remain_compatible():
+    from pictovap.testing.contracts import sample_decision_pack
+
+    legacy = sample_decision_pack()
+    assert "alternatives" not in legacy["slots"][0]
+    assert validate_decision_pack(legacy)["status"] == "passed"
+
+
+def test_empty_and_duplicate_evidenced_alternatives_are_guarded():
+    pack = build_decision_pack(_real_planning_slice())
+    slot = next(s for s in pack["slots"] if s["alternatives"])
+    slot["alternatives"].append(copy.deepcopy(slot["alternatives"][0]))
+    validation = validate_decision_pack(pack)
+    assert "decision_pack_duplicate_alternative" in {
+        error["code"] for error in validation["errors"]
+    }
+    slot["alternatives"] = [slot["proposal"]]
+    validation = validate_decision_pack(pack)
+    assert "decision_pack_alternative_is_proposal" in {
+        error["code"] for error in validation["errors"]
+    }
