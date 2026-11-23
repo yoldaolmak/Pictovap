@@ -244,3 +244,36 @@ test("invalid image cannot render; removing and unmounting revoke all blob URLs"
         ["blob:locally-selected-1", "blob:locally-selected-2"]);
     assert.equal(ui.getRemoteRequests(), 0);
 });
+
+
+test("a stale local file read cannot restore preview after changing Decision Pack", async () => {
+    const ui = harness();
+    ui.importFile();
+    const inputs = await eventually(() => {
+        const candidates = ui.all().filter((node) =>
+            node.type === "input" &&
+            node.props.accept === "image/jpeg,image/png,image/gif,image/webp"
+        );
+        return candidates.length === 2 ? candidates : null;
+    });
+
+    let finishRead;
+    const slowLocal = {
+        name: "photo.jpg",
+        type: "image/jpeg",
+        size: 6,
+        slice: () => ({
+            arrayBuffer: () => new Promise((resolve) => { finishRead = resolve; })
+        })
+    };
+    inputs[0].props.onChange({ target: { files: [slowLocal] } });
+    await eventually(() => typeof finishRead === "function");
+    ui.importFile();
+    finishRead(Uint8Array.from([0xff, 0xd8, 0xff, 0xe0, 0, 1]).buffer);
+    await new Promise((done) => setTimeout(done, 10));
+
+    assert.equal(ui.getCreated(), 0);
+    assert.equal(ui.all().filter((node) => node.type === "img").length, 0);
+    assert.equal(ui.getRemoteRequests(), 0);
+    ui.unmount();
+});
