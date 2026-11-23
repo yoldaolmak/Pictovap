@@ -1,13 +1,15 @@
 /* Read-only Gutenberg editorial review. Local files only; no WordPress write calls. */
-(function (wp, config, model) {
+(function (wp, config, model, localPreview) {
     "use strict";
 
     if (!wp || !wp.plugins || !wp.editor || !wp.editor.PluginSidebar ||
-            !wp.element || !model || !config) {
+            !wp.element || !model || !config || !localPreview) {
         return;
     }
     var el = wp.element.createElement;
     var useState = wp.element.useState;
+    var useRef = wp.element.useRef;
+    var useEffect = wp.element.useEffect;
     var Button = wp.components.Button;
     var Notice = wp.components.Notice;
     var PluginSidebar = wp.editor.PluginSidebar;
@@ -58,6 +60,120 @@
         var errorState = useState("");
         var error = errorState[0];
         var setError = errorState[1];
+        var localState = useState(Object.create(null));
+        var localUrls = localState[0];
+        var setLocalUrls = localState[1];
+        var activeUrlsRef = useRef(Object.create(null));
+        var requestsRef = useRef(Object.create(null));
+        var generationRef = useRef(0);
+
+        function clearLocalPreviews(updateState) {
+            generationRef.current += 1;
+            Object.keys(activeUrlsRef.current).forEach(function (key) {
+                window.URL.revokeObjectURL(activeUrlsRef.current[key]);
+            });
+            activeUrlsRef.current = Object.create(null);
+            requestsRef.current = Object.create(null);
+            if (updateState) {
+                setLocalUrls(Object.create(null));
+            }
+        }
+
+        // Object URLs live only in the editor. Revoke on replacement,
+        // pack change and unmount, including stale asynchronous selections.
+        useEffect(function () {
+            return function () { clearLocalPreviews(false); };
+        }, []);
+
+        function localKey(slotId, candidateId) {
+            return JSON.stringify([slotId, candidateId]);
+        }
+
+        function removeLocalPreview(key) {
+            requestsRef.current[key] = (requestsRef.current[key] || 0) + 1;
+            if (activeUrlsRef.current[key]) {
+                window.URL.revokeObjectURL(activeUrlsRef.current[key]);
+                delete activeUrlsRef.current[key];
+            }
+            setLocalUrls(function (previous) {
+                var next = Object.assign(Object.create(null), previous);
+                delete next[key];
+                return next;
+            });
+        }
+
+        function selectLocalPreview(slotId, asset, event) {
+            var file = event.target.files && event.target.files[0];
+            if (!file) {
+                return;
+            }
+            var key = localKey(slotId, asset.candidate_id);
+            var generation = generationRef.current;
+            var request = (requestsRef.current[key] || 0) + 1;
+            requestsRef.current[key] = request;
+            localPreview.validateLocalImage(file, asset).then(function () {
+                if (generationRef.current !== generation ||
+                        requestsRef.current[key] !== request) {
+                    return;
+                }
+                var url = window.URL.createObjectURL(file);
+                // No URL from imported JSON may ever be used as an image src.
+                if (generationRef.current !== generation ||
+                        requestsRef.current[key] !== request) {
+                    window.URL.revokeObjectURL(url);
+                    return;
+                }
+                var existing = activeUrlsRef.current[key];
+                activeUrlsRef.current[key] = url;
+                if (existing) {
+                    window.URL.revokeObjectURL(existing);
+                }
+                setLocalUrls(function (previous) {
+                    var next = Object.assign(Object.create(null), previous);
+                    next[key] = url;
+                    return next;
+                });
+                setError("");
+            }).catch(function (error) {
+                if (generationRef.current === generation &&
+                        requestsRef.current[key] === request) {
+                    setError("Local image preview not shown: " + error.message);
+                }
+            });
+        }
+
+        function renderLocalPreview(slotId, asset) {
+            var key = localKey(slotId, asset.candidate_id);
+            var names = localPreview.expectedNames(asset);
+            var url = localUrls[key];
+            return el("div", { className: "pictovap-local-preview", key: key },
+                el("p", null, "Local visual comparison (no upload)"),
+                names.length ? el("label", null,
+                    "Choose an image on this device matching " + names.join(" or "),
+                    el("input", {
+                        type: "file",
+                        accept: "image/jpeg,image/png,image/gif,image/webp",
+                        onChange: function (event) {
+                            selectLocalPreview(slotId, asset, event);
+                        }
+                    })
+                ) : el("p", null, "No safe filename recorded for this candidate."),
+                url ? el("div", null,
+                    el("img", {
+                        src: url,
+                        alt: "Local-only candidate preview " + asset.candidate_id,
+                        loading: "lazy",
+                        decoding: "async"
+                    }),
+                    el(Button, {
+                        variant: "tertiary",
+                        onClick: function () { removeLocalPreview(key); }
+                    }, "Remove local preview")
+                ) : null,
+                el("p", { className: "pictovap-local-hint" },
+                    "Filename and image signature checked. File identity and license are not verified.")
+            );
+        }
         var ready = pack ? pack.slots.filter(function (s) {
             return Object.prototype.hasOwnProperty.call(decisionsBySlot, s.slot_id);
         }).length : 0;
@@ -88,7 +204,9 @@
 
         function importPack(event) {
             var file = event.target.files && event.target.files[0];
-            // Clear the old decisions immediately; invalid imports must not retain them.
+            // Clear prior decisions and local image URLs, even on invalid imports.
+            clearLocalPreviews(true);
+            var importGeneration = generationRef.current;
             setPack(null);
             setSha256("");
             setDecisionsBySlot(Object.create(null));
@@ -96,13 +214,16 @@
                 return;
             }
             fileToTextAndFingerprint(file).then(function (result) {
+                if (generationRef.current !== importGeneration) { return; }
                 var imported = JSON.parse(result.text);
                 model.checkPack(imported, config.postId);
                 setPack(imported);
                 setSha256(result.fingerprint);
                 setError("");
             }).catch(function (e) {
-                setError("Pack was not loaded: " + e.message);
+                if (generationRef.current === importGeneration) {
+                    setError("Pack was not loaded: " + e.message);
+                }
             });
         }
 
@@ -174,6 +295,7 @@
                         el("p", null, "Provider: " + (provenance.provider || "unknown")),
                         el("p", null, "Rights evidence: " +
                             (provenance.license_status || "unknown")),
+                        proposal.candidate_id ? renderLocalPreview(slot.slot_id, proposal) : null,
                         el("ul", null, slot.candidates.map(function (candidate) {
                             return el("li", { key: candidate.candidate_id },
                                 candidate.candidate_id + " · " +
@@ -201,6 +323,7 @@
                                     el("p", null, "Provider: " + (evidence.provider || "unknown")),
                                     el("p", null, "Rights evidence: " +
                                         (evidence.license_status || "unknown")),
+                                    renderLocalPreview(slot.slot_id, alternative),
                                     candidate && candidate.human_reason ?
                                         el("p", null, "Reason: " + candidate.human_reason) : null,
                                     el(Button, {
@@ -259,4 +382,4 @@
     }
 
     wp.plugins.registerPlugin("pictovap-review-sidebar", { render: EditorSidebar });
-})(window.wp, window.PictovapReviewConfig, window.PictovapReviewModel);
+})(window.wp, window.PictovapReviewConfig, window.PictovapReviewModel, window.PictovapLocalPreview);

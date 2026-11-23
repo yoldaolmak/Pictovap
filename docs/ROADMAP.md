@@ -40,10 +40,16 @@ eligible choices and their rights status, and Python Core rejects modified or
 invented replacement evidence. Older packs remain readable and can still
 accept independently supplied atomic evidence.
 
-**Still missing:** A permissioned real WordPress editor trial, visual image
-preview from explicitly chosen local files, live editor usability feedback,
-and any authorized apply/verification capability. The reference sidebar
-alone is not production acceptance.
+**Local visual comparison:** The reference Gutenberg sidebar accepts
+explicitly selected local image files for proposal/alternative candidates,
+checks the recorded filename and image signature, and displays temporary
+browser-only image previews. Image `blob:` URLs are revoked on replacement,
+pack import or unmount; source URLs are never fetched for this feature.
+
+**Still missing:** A permissioned real WordPress editor trial, independent
+proof that a chosen local file matches the actual provider asset, live
+usability feedback, and authorized apply/verification capability. The
+reference sidebar alone is not production acceptance.
 
 ### Next vertical slice — review where an editor already works
 
@@ -51,10 +57,11 @@ alone is not production acceptance.
    non-sensitive Gutenberg post. Check sidebar compatibility, post-ID
    binding, one-click alternatives, rights warnings and the Core-imported
    reviewed pack, without touching post content.
-2. Provide an explicitly local, non-network image preview path for editor
-   comparison without treating source URLs as licensed previews.
-3. Collect editor failure cases and improve selection/coverage behavior
-   before any separately authorized publishing action or new CMS adapters.
+2. Observe a real editor comparing local proposal and alternative images.
+   Check pack switching, `blob:` URL cleanup, mobile sidebar layout and
+   accessibility in an actual Gutenberg browser.
+3. Collect editor failures and improve selection/coverage behavior before
+   separately authorized publishing work or new CMS adapters.
 
 **Acceptance evidence:** A publisher can make and inspect decisions without
 editing decision JSON, cannot select a hard-rejected or unbound replacement,

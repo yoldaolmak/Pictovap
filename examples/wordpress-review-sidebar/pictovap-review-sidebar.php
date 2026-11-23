@@ -35,9 +35,16 @@ function pictovap_review_enqueue_sidebar() {
         true
     );
     wp_enqueue_script(
+        'pictovap-local-preview',
+        $root . 'assets/local-preview.js',
+        array(),
+        '0.1.0',
+        true
+    );
+    wp_enqueue_script(
         'pictovap-review-sidebar',
         $root . 'assets/sidebar.js',
-        array( 'pictovap-review-model', 'wp-plugins', 'wp-editor', 'wp-element', 'wp-components' ),
+        array( 'pictovap-review-model', 'pictovap-local-preview', 'wp-plugins', 'wp-editor', 'wp-element', 'wp-components' ),
         '0.1.0',
         true
     );

@@ -30,3 +30,28 @@
     border-left: 3px solid #646970;
     padding-left: 8px;
 }
+
+.pictovap-local-preview {
+    margin: 12px 0;
+    padding: 10px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+.pictovap-local-preview img {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 8px 0;
+}
+.pictovap-local-preview .pictovap-local-hint {
+    font-size: 12px;
+    color: #50575e;
+    margin-bottom: 0;
+}
+.pictovap-alternative {
+    padding: 8px 0;
+    border-top: 1px solid #dcdcde;
+}

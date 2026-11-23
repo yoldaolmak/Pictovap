@@ -113,11 +113,13 @@ or invented replacement in new packs, and always keeps
 `application.status=not_applied`.
 
 A Gutenberg [reference review sidebar](examples/wordpress-review-sidebar/README.md)
-now supports offline per-post decisions in a visual panel. The sidebar exports
-only an unverified local draft; Core verifies the original pack fingerprint
-and decisions with `pictovap review-import` before producing a reviewed pack.
-It never updates a WordPress post. This reference has not passed a real
-WordPress editor trial. See [Decision Pack](docs/concepts/decision-pack.md)
+now supports offline per-post decisions, one-click source-evidenced
+alternatives and local image comparisons. Editors explicitly choose
+local image files; no remote image URL is loaded, and image bytes are not
+uploaded or exported. The sidebar exports only an unverified local draft;
+Core verifies the original pack fingerprint and decisions with
+`pictovap review-import` before producing a reviewed pack. It never
+updates a WordPress post. This reference has not passed a real editor trial. See [Decision Pack](docs/concepts/decision-pack.md)
 and [Roadmap](docs/ROADMAP.md).
 
 ## Sources, CMS, and rights

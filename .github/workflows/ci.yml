@@ -163,8 +163,9 @@ jobs:
       - name: Check Gutenberg reference review (no npm install)
         run: |
           node --check examples/wordpress-review-sidebar/assets/review-model.js
+          node --check examples/wordpress-review-sidebar/assets/local-preview.js
           node --check examples/wordpress-review-sidebar/assets/sidebar.js
-          node --test examples/wordpress-review-sidebar/tests/review-model.test.cjs
+          node --test examples/wordpress-review-sidebar/tests/*.test.cjs
           if command -v php >/dev/null 2>&1; then
             php -l examples/wordpress-review-sidebar/pictovap-review-sidebar.php
           fi
