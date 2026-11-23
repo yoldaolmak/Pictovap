@@ -22,10 +22,12 @@ explicitly downloads a decisions file.
 4. Open post #42 in Gutenberg. Import `pending-pack.json` in the
    **Pictovap Review** sidebar. The sidebar is available only to users
    authorized to edit that specific existing post.
-5. Accept or reject proposed images, or import *existing* replacement evidence
-   JSON for a scored, non-rejected candidate. That JSON must already contain
-   atomic `candidate_id`, `provenance`, and `placement` fields.
-   Unknown rights remain unknown; a source search preview is not a license.
+5. Accept or reject proposed images, or click an evidenced alternative
+   directly in the sidebar. New plans include the complete candidate,
+   provenance, and placement proposals; no separate replacement JSON is
+   required. Older packs still support importing an existing atomic
+   replacement evidence file. Unknown rights remain unknown, and a source
+   search preview is not a licensed image.
 6. Inspect the per-slot **not yet Core-validated** preview and download the
    locally generated review decisions JSON. WordPress content is untouched.
 7. Use the original pack and downloaded draft to obtain a valid reviewed
