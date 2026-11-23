@@ -1,0 +1,32 @@
+.pictovap-review {
+    padding: 16px;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+.pictovap-review input[type="file"] {
+    display: block;
+    width: 100%;
+    margin: 8px 0 16px;
+}
+.pictovap-review .pictovap-progress {
+    font-weight: 600;
+}
+.pictovap-review .pictovap-slot {
+    border-top: 1px solid #dcdcde;
+    padding: 16px 0;
+}
+.pictovap-review .pictovap-slot h3 {
+    font-size: 14px;
+}
+.pictovap-review .pictovap-slot ul {
+    padding-left: 18px;
+}
+.pictovap-review .pictovap-actions {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+}
+.pictovap-review .pictovap-preview {
+    border-left: 3px solid #646970;
+    padding-left: 8px;
+}

@@ -110,10 +110,13 @@ existing JSON replacement evidence record containing `candidate_id`,
 non-rejected candidate and have consistent asset bindings. The review
 preserves the original plan and records `application.status=not_applied`.
 
-This is a terminal review workflow, **not** a graphical WordPress review
-surface or an assertion of license rights. See
-[Decision Pack](docs/concepts/decision-pack.md) and
-[Roadmap](docs/ROADMAP.md).
+A Gutenberg [reference review sidebar](examples/wordpress-review-sidebar/README.md)
+now supports offline per-post decisions in a visual panel. The sidebar exports
+only an unverified local draft; Core verifies the original pack fingerprint
+and decisions with `pictovap review-import` before producing a reviewed pack.
+It never updates a WordPress post. This reference has not passed a real
+WordPress editor trial. See [Decision Pack](docs/concepts/decision-pack.md)
+and [Roadmap](docs/ROADMAP.md).
 
 ## Sources, CMS, and rights
 
@@ -143,5 +146,6 @@ If you test a real, non-sensitive article, use
 do not attach credentials or private article data.
 
 Pictovap is MIT licensed ([LICENSE](LICENSE)). It has working offline
-tests and adapters, but does not claim a graphical UI, broad adoption,
-licensed rights from search alone, or verified publishing outcomes.
+tests and adapters and a reference Gutenberg review sidebar, but does not
+claim a production-ready graphical editor, broad adoption, licensed rights
+from search alone, or verified publishing outcomes.

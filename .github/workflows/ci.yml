@@ -159,3 +159,12 @@ jobs:
 
       - name: Check Markdown structure
         run: npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
+
+      - name: Check Gutenberg reference review (no npm install)
+        run: |
+          node --check examples/wordpress-review-sidebar/assets/review-model.js
+          node --check examples/wordpress-review-sidebar/assets/sidebar.js
+          node --test examples/wordpress-review-sidebar/tests/review-model.test.cjs
+          if command -v php >/dev/null 2>&1; then
+            php -l examples/wordpress-review-sidebar/pictovap-review-sidebar.php
+          fi

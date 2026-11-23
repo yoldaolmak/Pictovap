@@ -51,8 +51,11 @@ is a negative sentinel, not an execution receipt.
   particular publisher's CMS deployment.
 - WordPress has the broadest in-tree adapter behavior; Ghost and Strapi have
   mocked API tests with documented gaps. See [CMS Adapters](adapters/cms-adapters.md).
-- Decision Pack construction and validated review transitions exist, but no
-  complete graphical editor review/preview-diff workflow is shipped.
+- A Gutenberg reference sidebar under `examples/wordpress-review-sidebar/`
+  imports one pending pack, gathers local draft decisions and previews them
+  without CMS writes. `review-pack` and `review-import` CLI commands keep
+  authoritative final validation in Python Core; browser-side review is not
+  a WordPress publication receipt or a proven live deployment.
 - Vision-backed metadata and deterministic demo/plan metadata are separate
   paths today; the deterministic templates cover English and Turkish.
 

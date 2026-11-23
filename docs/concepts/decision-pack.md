@@ -48,7 +48,11 @@ review. The development CLI provides interactive
 `pictovap review --plan plan.json --actor editor --output reviewed.json`
 and read-only `pictovap review-preview` comparison. Editors can accept,
 reject, or load an existing replacement evidence record; no CMS is contacted.
-The terminal is not yet a graphical Gutenberg review surface. See the
+The [Gutenberg reference sidebar](../../examples/wordpress-review-sidebar/README.md)
+offers an in-editor review draft without CMS writes. Use `review-pack` to
+create its input and `review-import` to validate the downloaded draft's exact
+source fingerprint and review evidence in Python Core. The sidebar alone
+does not establish a valid reviewed pack or a licensed asset. See the
 [CLI Reference](../reference/cli.md) and [Roadmap](../ROADMAP.md).
 
 Build and validate a pack from an already validated Visual Plan:
