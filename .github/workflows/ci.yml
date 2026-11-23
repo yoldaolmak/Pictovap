@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 15
     strategy:
       matrix:
@@ -63,7 +63,7 @@ jobs:
 
   adapter-examples:
     name: Standalone adapter packages
-    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:
@@ -117,7 +117,7 @@ jobs:
           python -m build --wheel --outdir /tmp/pictovap-renderer-wheel examples/external-renderer-package
 
   typecheck:
-    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:
@@ -143,7 +143,7 @@ jobs:
           pyright
 
   lint:
-    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:
@@ -169,7 +169,7 @@ jobs:
         run: flake8 src/ --max-line-length=120
 
   markdown:
-    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:
