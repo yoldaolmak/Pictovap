@@ -459,6 +459,16 @@ def main(argv: Sequence[str] | None = None) -> int:
                 or not all(isinstance(item, dict) for item in draft["decisions"])
             ):
                 raise ValueError("Review decisions must be a list of objects")
+            for item in draft["decisions"]:
+                timestamp = item.get("decided_at")
+                if not isinstance(timestamp, str):
+                    raise ValueError("Review decisions require a timezone-aware timestamp")
+                try:
+                    parsed_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                except ValueError:
+                    raise ValueError("Review timestamp must be valid ISO 8601") from None
+                if parsed_time.tzinfo is None or parsed_time.utcoffset() is None:
+                    raise ValueError("Review timestamp must include a timezone offset")
             reviewed = transition_decision_pack_review(pack, draft["decisions"], complete=True)
             comparison = preview_decision_pack(pack, reviewed)
             created: list[Path] = []
