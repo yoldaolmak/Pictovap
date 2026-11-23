@@ -104,11 +104,13 @@ pictovap review-preview --plan plan.json \
   --reviewed reviewed-pack.json --format markdown
 ```
 
-For each slot, accept the proposed asset, reject the slot, or supply an
-existing JSON replacement evidence record containing `candidate_id`,
-`provenance`, and `placement`. A replacement must belong to a scored,
-non-rejected candidate and have consistent asset bindings. The review
-preserves the original plan and records `application.status=not_applied`.
+For each slot, accept the proposal, reject the image, or select an eligible
+alternative. New plans include source-backed alternative evidence: the
+Gutenberg reference sidebar offers direct one-click choices with no
+replacement JSON preparation. Older plans can still use an existing atomic
+`candidate_id`/`provenance`/`placement` record. Core rejects a changed
+or invented replacement in new packs, and always keeps
+`application.status=not_applied`.
 
 A Gutenberg [reference review sidebar](examples/wordpress-review-sidebar/README.md)
 now supports offline per-post decisions in a visual panel. The sidebar exports
