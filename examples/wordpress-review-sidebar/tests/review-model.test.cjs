@@ -184,3 +184,50 @@ test("duplicate and invented editor decisions cannot be exported", () => {
         /Unknown review slot/
     );
 });
+
+test("source-backed alternatives support direct selection without evidence file", () => {
+    const proposal = pack();
+    proposal.slots[0].alternatives = [alternative()];
+    model.checkPack(proposal, 42);
+    const picked = proposal.slots[0].alternatives[0];
+    const decision = model.makeDecision(
+        proposal, "featured", "replace", "editor", "2026-11-23T08:00:00Z", picked
+    );
+    const view = model.preview(proposal, [decision]);
+    assert.equal(view[0].chosen, "asset-2");
+    assert.equal(view[0].license, "unknown");
+    const draft = model.exportDraft(proposal, "b".repeat(64), [decision]);
+    assert.deepEqual(draft.decisions[0].replacement, picked);
+    assert.equal(proposal.review.status, "pending");
+    assert.equal(proposal.application.status, "not_applied");
+});
+
+test("invented or modified source-backed evidence is rejected even for scored candidate", () => {
+    const proposal = pack();
+    proposal.slots[0].alternatives = [alternative()];
+    const tampered = JSON.parse(JSON.stringify(alternative()));
+    tampered.provenance.license_status = "owned";
+    assert.throws(
+        () => model.makeDecision(proposal, "featured", "replace", "editor",
+            "2026-11-23T08:00:00Z", tampered),
+        /source-backed/
+    );
+    const rejected = pack();
+    rejected.slots[0].candidates[1].decision = "rejected";
+    rejected.slots[0].alternatives = [alternative()];
+    assert.throws(() => model.checkPack(rejected, 42), /non-rejected/);
+    const forged = pack();
+    forged.slots[0].alternatives = [alternative()];
+    forged.slots[0].alternatives[0].placement.output_path = "images/other.webp";
+    assert.throws(() => model.checkPack(forged, 42), /mismatched/);
+});
+
+test("older packs retain explicit evidence-file replacement contract", () => {
+    const proposal = pack();
+    model.checkPack(proposal, 42);
+    const choice = model.makeDecision(
+        proposal, "featured", "replace", "editor", "2026-11-23T08:00:00Z",
+        alternative()
+    );
+    assert.equal(choice.replacement.candidate_id, "asset-2");
+});
