@@ -20,6 +20,8 @@ Commands matching the public library API:
 from __future__ import annotations
 
 import argparse
+import hashlib
+import hmac
 import json
 import sys
 from datetime import datetime, timezone
@@ -271,6 +273,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Return exit status 1 when the plans differ, for CI drift gates",
     )
 
+    review_pack = sub.add_parser(
+        "review-pack", help="Export an unreviewed Decision Pack from a valid visual plan"
+    )
+    review_pack.add_argument("--plan", required=True, help="Visual Plan JSON")
+    review_pack.add_argument("--output", required=True, help="New Decision Pack JSON path")
+
+    review_import = sub.add_parser(
+        "review-import", help="Validate Gutenberg review decisions against the original Decision Pack"
+    )
+    review_import.add_argument("--pack", required=True, help="Original Decision Pack file (unchanged)")
+    review_import.add_argument("--decisions", required=True, help="Downloaded Gutenberg review decisions file")
+    review_import.add_argument("--output", required=True, help="New validated reviewed Decision Pack")
+    review_import.add_argument("--preview", help="Optional new Markdown preview file")
+
     review = sub.add_parser(
         "review", help="Review visual candidates interactively, without CMS writes"
     )
@@ -388,6 +404,82 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not args.output:
             _print_json(plan_output)
         return 0
+
+    if args.command == "review-pack":
+        try:
+            input_path = Path(args.plan).resolve()
+            output_path = Path(args.output).resolve()
+            if input_path == output_path or output_path.exists():
+                raise ValueError("Decision Pack output must be a new, distinct file")
+            with input_path.open(encoding="utf-8") as stream:
+                plan_payload = json.load(stream)
+            pack = build_decision_pack(plan_payload)
+            with output_path.open("x", encoding="utf-8") as stream:
+                json.dump(pack, stream, ensure_ascii=False, indent=2)
+                stream.write("\n")
+            print(f"Pending Decision Pack written to {output_path}")
+            return 0
+        except (OSError, ValueError, TypeError) as e:
+            print(f"Error exporting Decision Pack: {e}", file=sys.stderr)
+            return 1
+
+    if args.command == "review-import":
+        try:
+            pack_path = Path(args.pack).resolve()
+            decisions_path = Path(args.decisions).resolve()
+            output_path = Path(args.output).resolve()
+            preview_path = Path(args.preview).resolve() if args.preview else None
+            output_paths = [output_path] + ([preview_path] if preview_path else [])
+            if (
+                len(set(output_paths)) != len(output_paths)
+                or any(p in {pack_path, decisions_path} or p.exists() for p in output_paths)
+            ):
+                raise ValueError("Review outputs must be new files distinct from both inputs")
+            pack_bytes = pack_path.read_bytes()
+            pack = json.loads(pack_bytes.decode("utf-8"))
+            with decisions_path.open(encoding="utf-8") as stream:
+                draft = json.load(stream)
+            if not isinstance(draft, dict) or set(draft) != {
+                "kind", "schema_version", "article_id", "source_sha256", "decisions"
+            }:
+                raise ValueError("Unrecognized review draft format")
+            if draft["kind"] != "pictovap.review-decisions" or draft["schema_version"] != "1":
+                raise ValueError("Unsupported review draft kind or version")
+            if not hmac.compare_digest(
+                str(draft["source_sha256"]),
+                hashlib.sha256(pack_bytes).hexdigest(),
+            ):
+                raise ValueError("Original Decision Pack fingerprint does not match this draft")
+            if not isinstance(pack, dict) or not isinstance(pack.get("article"), dict):
+                raise ValueError("Malformed source Decision Pack")
+            if str(pack["article"].get("id")) != draft["article_id"]:
+                raise ValueError("Review article identity does not match source pack")
+            if (
+                not isinstance(draft["decisions"], list)
+                or not all(isinstance(item, dict) for item in draft["decisions"])
+            ):
+                raise ValueError("Review decisions must be a list of objects")
+            reviewed = transition_decision_pack_review(pack, draft["decisions"], complete=True)
+            comparison = preview_decision_pack(pack, reviewed)
+            created: list[Path] = []
+            try:
+                with output_path.open("x", encoding="utf-8") as stream:
+                    created.append(output_path)
+                    json.dump(reviewed, stream, ensure_ascii=False, indent=2)
+                    stream.write("\n")
+                if preview_path:
+                    with preview_path.open("x", encoding="utf-8") as stream:
+                        created.append(preview_path)
+                        stream.write(render_review_preview(comparison))
+            except OSError:
+                for created_path in created:
+                    created_path.unlink(missing_ok=True)
+                raise
+            print(f"Reviewed Decision Pack written to {output_path}")
+            return 0
+        except (OSError, ValueError, TypeError, UnicodeError) as e:
+            print(f"Review import failed: {e}", file=sys.stderr)
+            return 1
 
     if args.command == "review":
         try:
