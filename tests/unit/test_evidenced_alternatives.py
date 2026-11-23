@@ -1,6 +1,7 @@
 """Editor alternatives come from actual plan candidates, never invented UI metadata."""
 
 import copy
+import hashlib
 import json
 from pathlib import Path
 
@@ -158,3 +159,68 @@ def test_explicit_credential_free_demo_is_valid_but_invented_modes_fail():
     assert "invalid_provider_mode" in {
         error["code"] for error in validation["errors"]
     }
+
+
+def test_gutenberg_style_one_click_roundtrip_uses_existing_cli_bridge(tmp_path):
+    from pictovap.app import cli
+
+    plan = _real_planning_slice()
+    plan_path = tmp_path / "plan.json"
+    pack_path = tmp_path / "pending-pack.json"
+    decisions_path = tmp_path / "review-decisions.json"
+    reviewed_path = tmp_path / "reviewed.json"
+    preview_path = tmp_path / "preview.md"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    assert cli.main([
+        "review-pack", "--plan", str(plan_path), "--output", str(pack_path),
+    ]) == 0
+    pack = json.loads(pack_path.read_text(encoding="utf-8"))
+    chosen_slot = next(slot for slot in pack["slots"] if slot["alternatives"])
+    decisions = []
+    for slot in pack["slots"]:
+        action = (
+            "replace" if slot["slot_id"] == chosen_slot["slot_id"]
+            else "accept" if slot["proposal"]["candidate_id"] else "reject"
+        )
+        decision = {
+            "slot_id": slot["slot_id"],
+            "action": action,
+            "actor": "editor@example.test",
+            "decided_at": "2026-11-23T09:00:00Z",
+        }
+        if action == "replace":
+            decision["replacement"] = copy.deepcopy(chosen_slot["alternatives"][0])
+        decisions.append(decision)
+
+    draft = {
+        "kind": "pictovap.review-decisions",
+        "schema_version": "1",
+        "article_id": str(pack["article"]["id"]),
+        "source_sha256": hashlib.sha256(pack_path.read_bytes()).hexdigest(),
+        "decisions": decisions,
+    }
+    decisions_path.write_text(json.dumps(draft), encoding="utf-8")
+    assert cli.main([
+        "review-import", "--pack", str(pack_path),
+        "--decisions", str(decisions_path),
+        "--output", str(reviewed_path), "--preview", str(preview_path),
+    ]) == 0
+    reviewed = json.loads(reviewed_path.read_text())
+    assert validate_decision_pack(reviewed)["status"] == "passed"
+    assert reviewed["application"] == {"status": "not_applied", "receipts": []}
+    assert "Editor Review Preview" in preview_path.read_text()
+
+    # A malicious draft that upgrades source rights cannot be imported.
+    draft["decisions"][0]["action"] = "reject"
+    draft["decisions"][0].pop("replacement", None)
+    replacement_entry = next(
+        decision for decision in draft["decisions"] if decision["action"] == "replace"
+    )
+    replacement_entry["replacement"]["provenance"]["license_status"] = "owned"
+    decisions_path.write_text(json.dumps(draft), encoding="utf-8")
+    assert cli.main([
+        "review-import", "--pack", str(pack_path),
+        "--decisions", str(decisions_path),
+        "--output", str(tmp_path / "forged.json"),
+    ]) == 1
+    assert not (tmp_path / "forged.json").exists()
