@@ -6,7 +6,6 @@ Pictovap WordPress uploader — REST API media upload and attachment.
 import requests
 import json
 import logging
-import mimetypes
 import re
 import html
 import tempfile
@@ -14,6 +13,7 @@ import urllib.parse
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from pictovap.utils.media_type import upload_content_type
 from pictovap.core.primitives import CMSPlacement
 from pictovap.core.states import (
     MediaGuardStatus,
@@ -175,10 +175,9 @@ class WordPressUploader:
         # Upload. The pipeline generates WebP, but this method takes any path:
         # declaring image/webp for a PNG stores it in the media library under a
         # type that does not match its bytes.
-        content_type, _ = mimetypes.guess_type(file_p.name)
         headers = {
             "Content-Disposition": f'attachment; filename="{file_p.name}"',
-            "Content-Type": content_type or "application/octet-stream",
+            "Content-Type": upload_content_type(file_p.name),
         }
 
         try:
