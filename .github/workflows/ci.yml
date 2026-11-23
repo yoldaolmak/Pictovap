@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
     timeout-minutes: 15
     strategy:
       matrix:
@@ -57,7 +57,7 @@ jobs:
 
   adapter-examples:
     name: Standalone adapter packages
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
     timeout-minutes: 10
 
     steps:
@@ -105,7 +105,7 @@ jobs:
           python -m build --wheel --outdir /tmp/pictovap-renderer-wheel examples/external-renderer-package
 
   typecheck:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
     timeout-minutes: 10
 
     steps:
@@ -125,7 +125,7 @@ jobs:
           pyright
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
     timeout-minutes: 10
 
     steps:
@@ -145,7 +145,7 @@ jobs:
         run: flake8 src/ --max-line-length=120
 
   markdown:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, pictovap-isolated-ci]
     timeout-minutes: 10
 
     steps:
