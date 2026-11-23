@@ -34,10 +34,16 @@ in-browser draft preview, and a downloaded decisions file. Python Core
 verifies the exact original pack and review decisions via SHA-256 before it
 produces a reviewed Decision Pack. No CMS writes or automatic image fetching.
 
-**Still missing:** A permissioned real WordPress editor trial, convenient
-replacement evidence selection without a separate JSON document, live editor
-usability feedback, and any authorized apply/verification capability. The
-reference implementation alone is not production acceptance.
+**One-click alternative selection now available:** New plans contain
+source-backed alternative candidate evidence. The reference sidebar displays
+eligible choices and their rights status, and Python Core rejects modified or
+invented replacement evidence. Older packs remain readable and can still
+accept independently supplied atomic evidence.
+
+**Still missing:** A permissioned real WordPress editor trial, visual image
+preview from explicitly chosen local files, live editor usability feedback,
+and any authorized apply/verification capability. The reference sidebar
+alone is not production acceptance.
 
 ### Next vertical slice — review where an editor already works
 
