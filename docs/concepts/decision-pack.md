@@ -21,7 +21,9 @@ actor, and timestamp.
 
 - **Accept:** retain the existing proposed asset and its evidence.
 - **Replace:** choose a different scored candidate with complete provenance
-  and placement bound to the same slot.
+  and placement bound to the same slot. New plans include eligible source-backed
+  alternatives that the Gutenberg panel can select directly. The candidate's
+  reported license remains evidence, not permission.
 - **Reject:** leave the slot without an approved image.
 
 A missing proposal cannot be accepted as valid evidence. Partially bound
