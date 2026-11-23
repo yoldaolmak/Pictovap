@@ -211,8 +211,6 @@ def test_gutenberg_style_one_click_roundtrip_uses_existing_cli_bridge(tmp_path):
     assert "Editor Review Preview" in preview_path.read_text()
 
     # A malicious draft that upgrades source rights cannot be imported.
-    draft["decisions"][0]["action"] = "reject"
-    draft["decisions"][0].pop("replacement", None)
     replacement_entry = next(
         decision for decision in draft["decisions"] if decision["action"] == "replace"
     )
