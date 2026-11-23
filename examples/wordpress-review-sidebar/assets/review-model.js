@@ -83,6 +83,27 @@
                         candidate.decision === "selected";
                 }), "Proposed image must be a scored selected candidate.");
             }
+            if (Object.prototype.hasOwnProperty.call(slot, "alternatives")) {
+                requireValue(Array.isArray(slot.alternatives) &&
+                    slot.alternatives.length <= MAX_CANDIDATES,
+                    "Invalid source-backed alternative list.");
+                var alternativeIds = Object.create(null);
+                slot.alternatives.forEach(function (alternative) {
+                    requireValue(object(alternative) && nonempty(alternative.candidate_id) &&
+                        validAsset(alternative, slot.slot_id, alternative.candidate_id),
+                        "Alternative evidence is incomplete or mismatched.");
+                    var alternativeId = alternative.candidate_id;
+                    requireValue(alternativeId !== proposedId && !alternativeIds[alternativeId],
+                        "Duplicate or proposed candidate in alternative list.");
+                    alternativeIds[alternativeId] = true;
+                    requireValue(slot.candidates.some(function (candidate) {
+                        return object(candidate) &&
+                            candidate.slot_id === slot.slot_id &&
+                            candidate.candidate_id === alternativeId &&
+                            candidate.decision !== "rejected";
+                    }), "Alternative must be a scored non-rejected candidate.");
+                });
+            }
         });
         return pack;
     }
@@ -123,6 +144,11 @@
             }), "Replacement must be a scored, non-rejected candidate.");
             requireValue(validAsset(replacement, slotId, replacement.candidate_id),
                 "Replacement evidence is incomplete or mismatched.");
+            if (Object.prototype.hasOwnProperty.call(slot, "alternatives")) {
+                requireValue(slot.alternatives.some(function (alternative) {
+                    return JSON.stringify(alternative) === JSON.stringify(replacement);
+                }), "Replacement must match source-backed alternative evidence.");
+            }
             decision.replacement = JSON.parse(JSON.stringify(replacement));
         }
         return decision;
@@ -155,10 +181,10 @@
         requireValue(Array.isArray(decisions) &&
             decisions.length === pack.slots.length, "Every slot needs an editor decision.");
         var unique = Object.create(null);
-        decisions.forEach(function (decision) {
+        var verifiedDecisions = decisions.map(function (decision) {
             requireValue(!unique[decision.slot_id], "Duplicate slot review.");
             unique[decision.slot_id] = true;
-            makeDecision(pack, decision.slot_id, decision.action,
+            return makeDecision(pack, decision.slot_id, decision.action,
                 decision.actor, decision.decided_at, decision.replacement);
         });
         return {
@@ -166,7 +192,7 @@
             schema_version: "1",
             article_id: String(pack.article.id),
             source_sha256: sha256,
-            decisions: JSON.parse(JSON.stringify(decisions))
+            decisions: verifiedDecisions
         };
     }
 
