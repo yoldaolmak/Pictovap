@@ -28,10 +28,16 @@ change**. A separate authorized integration can later consume the result.
 - WordPress placement adapter is the broadest CMS implementation. External
   live CMS success and asset rights are **not** implied by local tests.
 
-**Missing:** A WordPress Gutenberg reference review surface, convenient
-selection of a fully evidenced replacement image without supplying its
-existing asset JSON, and independent feedback from a real editor. The CLI
-review is not a graphical editor or production outcome.
+**Now implemented in a reference plugin:** An import-only Gutenberg sidebar
+for the current post, per-slot accept/reject/replacement decisions, an
+in-browser draft preview, and a downloaded decisions file. Python Core
+verifies the exact original pack and review decisions via SHA-256 before it
+produces a reviewed Decision Pack. No CMS writes or automatic image fetching.
+
+**Still missing:** A permissioned real WordPress editor trial, convenient
+replacement evidence selection without a separate JSON document, live editor
+usability feedback, and any authorized apply/verification capability. The
+reference implementation alone is not production acceptance.
 
 ### Next vertical slice — review where an editor already works
 
