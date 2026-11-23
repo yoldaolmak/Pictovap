@@ -58,12 +58,16 @@
             pack.slots.length <= MAX_SLOTS, "Pack must contain 1–100 image slots.");
 
         var seen = Object.create(null);
+        var totalCandidates = 0;
         pack.slots.forEach(function (slot) {
             requireValue(object(slot) && nonempty(slot.slot_id), "A slot lacks an ID.");
             requireValue(!seen[slot.slot_id], "Duplicate slot IDs are forbidden.");
             seen[slot.slot_id] = true;
             requireValue(Array.isArray(slot.candidates) &&
                 slot.candidates.length <= MAX_CANDIDATES, "Invalid candidate list.");
+            totalCandidates += slot.candidates.length;
+            requireValue(totalCandidates <= MAX_CANDIDATES,
+                "Too many scored candidates for a single browser review.");
             requireValue(object(slot.proposal), "Slot proposal is missing.");
             var proposedId = slot.proposal.candidate_id;
             var proposalEmpty = proposedId == null &&
