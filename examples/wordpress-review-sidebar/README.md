@@ -28,9 +28,17 @@ explicitly downloads a decisions file.
    required. Older packs still support importing an existing atomic
    replacement evidence file. Unknown rights remain unknown, and a source
    search preview is not a licensed image.
-6. Inspect the per-slot **not yet Core-validated** preview and download the
-   locally generated review decisions JSON. WordPress content is untouched.
-7. Use the original pack and downloaded draft to obtain a valid reviewed
+6. To compare the proposed image with alternatives, explicitly choose a
+   matching image file from your device in each **Local visual comparison**
+   area. JPEG, PNG, GIF and WebP are supported, up to 8 MB. The filename must
+   match the candidate's recorded original or generated filename, and the
+   file's image signature must match its type. No file is uploaded.
+   Previews use temporary browser-only `blob:` URLs that are revoked on
+   replacement, pack import or panel shutdown. Filename and format checks
+   do **not** establish asset identity or licensed image rights.
+7. Inspect the per-slot **not yet Core-validated** decision preview and
+   download the local review decisions JSON. WordPress content is untouched.
+8. Use the original pack and downloaded draft to obtain a valid reviewed
    Decision Pack and a portable comparison:
 
    `pictovap review-import --pack pending-pack.json --decisions review-decisions.json --output reviewed.json --preview reviewed.md`
@@ -50,9 +58,11 @@ The result remains `application.status=not_applied`, not a publish receipt.
 - New-post screens are deliberately unsupported until a stable post ID exists.
 - The sidebar's checks improve usability; Python Core is the authoritative
   schema/transition validator. The browser cannot grant image rights.
-- Asset URLs are not automatically fetched: previews may be unlicensed or
-  signed URLs that leak private credentials. All input evidence is potentially
-  private; do not attach these files to public issues.
+- Imported asset URLs are never fetched for visual comparison: these URLs
+  may be unlicensed or contain signed credentials. A preview requires an
+  explicit local file selection, and image bytes are never exported in review
+  decisions. This visual preview is ephemeral, not verified asset provenance.
+  Keep article/source evidence private and out of public issues.
 - There is no drag-and-drop placement, automatic asset purchase, or live image
   verification. WordPress publishing remains a separately authorized process.
 
@@ -64,5 +74,6 @@ The result remains `application.status=not_applied`, not a publish receipt.
 
 `php -l examples/wordpress-review-sidebar/pictovap-review-sidebar.php`
 
-CI executes the Node and Python tests. A successful UI render and a real editor
-review in a supported WordPress version remain separate acceptance gates.
+CI runs Node models, simulated Gutenberg UI lifecycle, Python contract tests
+and PHP syntax checks. A real Gutenberg editor trial in a supported WordPress
+version remains a separate acceptance gate.
