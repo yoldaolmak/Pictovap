@@ -47,15 +47,14 @@ alone is not production acceptance.
 
 ### Next vertical slice — review where an editor already works
 
-1. Run the complete CLI review on a realistic, non-sensitive Gutenberg
-   article; inspect the proposal, accepted/rejected/replaced candidates,
-   unknown rights, and coverage gaps.
-2. Reuse the same Decision Pack and pure transition helper in a WordPress
-   preview-only reference surface. No CMS writes or hidden state.
-3. Preserve the reviewed pack for a separately authorized integration;
-   explicitly show that a review never means `application=completed`.
-4. Ask a real editor to test slot decisions and record failure cases before
-   expanding to more CMSs.
+1. Run one permissioned staging WordPress editor session with a realistic,
+   non-sensitive Gutenberg post. Check sidebar compatibility, post-ID
+   binding, one-click alternatives, rights warnings and the Core-imported
+   reviewed pack, without touching post content.
+2. Provide an explicitly local, non-network image preview path for editor
+   comparison without treating source URLs as licensed previews.
+3. Collect editor failure cases and improve selection/coverage behavior
+   before any separately authorized publishing action or new CMS adapters.
 
 **Acceptance evidence:** A publisher can make and inspect decisions without
 editing decision JSON, cannot select a hard-rejected or unbound replacement,
