@@ -143,3 +143,44 @@ test("unset proposal cannot be accepted; duplicate slot IDs cannot be imported",
     repeated.slots.push(JSON.parse(JSON.stringify(repeated.slots[0])));
     assert.throws(() => model.checkPack(repeated, 42), /Duplicate slot/);
 });
+
+
+test("aggregate candidate limit prevents oversized browser rendering", () => {
+    const oversized = pack();
+    const slot = oversized.slots[0];
+    const original = slot.candidates[0];
+    slot.candidates = [original].concat(Array.from({ length: 699 }, (_, i) => ({
+        slot_id: "featured",
+        candidate_id: "other-" + i,
+        decision: "needs_review"
+    })));
+    const second = JSON.parse(JSON.stringify(slot));
+    second.slot_id = "inline";
+    second.proposal = {
+        candidate_id: null, provenance: null, placement: null
+    };
+    oversized.slots.push(second);
+    assert.throws(() => model.checkPack(oversized, "42"), /Too many scored candidates/);
+});
+
+test("duplicate and invented editor decisions cannot be exported", () => {
+    const proposed = pack();
+    const second = JSON.parse(JSON.stringify(proposed.slots[0]));
+    second.slot_id = "inline";
+    second.proposal = {
+        candidate_id: null, provenance: null, placement: null
+    };
+    proposed.slots.push(second);
+    const choice = model.makeDecision(
+        proposed, "featured", "reject", "editor", "2026-11-23T08:00:00Z"
+    );
+    assert.throws(
+        () => model.exportDraft(proposed, "a".repeat(64), [choice, choice]),
+        /Duplicate slot/
+    );
+    const forged = { ...choice, slot_id: "unknown" };
+    assert.throws(
+        () => model.exportDraft(proposed, "a".repeat(64), [choice, forged]),
+        /Unknown review slot/
+    );
+});
