@@ -46,22 +46,25 @@ checks the recorded filename and image signature, and displays temporary
 browser-only image previews. Image `blob:` URLs are revoked on replacement,
 pack import or unmount; source URLs are never fetched for this feature.
 
-**Still missing:** A permissioned real WordPress editor trial, independent
-proof that a chosen local file matches the actual provider asset, live
-usability feedback, and authorized apply/verification capability. The
-reference sidebar alone is not production acceptance.
+**Real Gutenberg acceptance proven:** An authorized editor session on an
+existing Gutenberg post verified sidebar registration, post-ID binding,
+one-click alternatives, rights evidence display, local visual comparison
+without upload, draft decisions export, Core review-import validation,
+negative security rejection (wrong post, forged replacement, tampered
+fingerprint, unauthorized user), and zero WordPress post/media mutations.
 
-### Next vertical slice — review where an editor already works
+**Still missing:** Independent proof that a chosen local file matches the
+actual provider asset, live editorial feedback on production sites, and
+separately authorized publish execution.
 
-1. Run one permissioned staging WordPress editor session with a realistic,
-   non-sensitive Gutenberg post. Check sidebar compatibility, post-ID
-   binding, one-click alternatives, rights warnings and the Core-imported
-   reviewed pack, without touching post content.
-2. Observe a real editor comparing local proposal and alternative images.
-   Check pack switching, `blob:` URL cleanup, mobile sidebar layout and
-   accessibility in an actual Gutenberg browser.
-3. Collect editor failures and improve selection/coverage behavior before
-   separately authorized publishing work or new CMS adapters.
+### Next vertical slice — editorial policy and resilience
+
+1. Editorial policy and resilience: versioned visual rules, alternate-image
+   simulation, coverage and diversity diagnostics based on observed failures.
+2. Observe live production editors comparing local proposal and alternative
+   images across diverse post templates and themes.
+3. Reference integrations: WordPress Plan → Review → Preview Diff first, then
+   adapter capability checks and safe dry-run behavior for other CMSs.
 
 **Acceptance evidence:** A publisher can make and inspect decisions without
 editing decision JSON, cannot select a hard-rejected or unbound replacement,

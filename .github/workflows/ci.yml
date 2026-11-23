@@ -165,6 +165,7 @@ jobs:
           node --check examples/wordpress-review-sidebar/assets/review-model.js
           node --check examples/wordpress-review-sidebar/assets/local-preview.js
           node --check examples/wordpress-review-sidebar/assets/sidebar.js
+          node --check examples/wordpress-review-sidebar/tests/gutenberg-acceptance.e2e.cjs
           node --test examples/wordpress-review-sidebar/tests/*.test.cjs
           if command -v php >/dev/null 2>&1; then
             php -l examples/wordpress-review-sidebar/pictovap-review-sidebar.php

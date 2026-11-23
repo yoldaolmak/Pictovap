@@ -1,4 +1,4 @@
-.PHONY: install check-python contributor-smoke test benchmark lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check
+.PHONY: install check-python contributor-smoke test benchmark lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check gutenberg-acceptance
 
 help:
 	@echo "Pictovap - Visual Finishing Engine"
@@ -65,3 +65,7 @@ venv:
 
 security-check:
 	pytest --no-cov tests/unit/test_security_hygiene.py -v
+
+gutenberg-acceptance:
+	python3 scripts/verify_gutenberg_acceptance.py
+

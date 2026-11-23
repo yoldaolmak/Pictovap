@@ -66,7 +66,9 @@ The result remains `application.status=not_applied`, not a publish receipt.
 - There is no drag-and-drop placement, automatic asset purchase, or live image
   verification. WordPress publishing remains a separately authorized process.
 
-## Offline verification
+## Acceptance and verification
+
+### Offline verification
 
 `node --test examples/wordpress-review-sidebar/tests/review-model.test.cjs`
 
@@ -75,5 +77,23 @@ The result remains `application.status=not_applied`, not a publish receipt.
 `php -l examples/wordpress-review-sidebar/pictovap-review-sidebar.php`
 
 CI runs Node models, simulated Gutenberg UI lifecycle, Python contract tests
-and PHP syntax checks. A real Gutenberg editor trial in a supported WordPress
-version remains a separate acceptance gate.
+and PHP syntax checks.
+
+### Real Gutenberg editor acceptance suite
+
+An end-to-end acceptance suite tests the reference sidebar inside a real
+WordPress Gutenberg block editor session using Playwright and headless
+Chromium:
+
+`python3 scripts/verify_gutenberg_acceptance.py`
+
+This suite exercises:
+- Real Gutenberg login and post-bound sidebar registration.
+- Source Decision Pack import and post ID verification.
+- Rights evidence and reason presentation.
+- One-click source-evidenced alternative replacement.
+- Safe local visual comparison via ephemeral `blob:` URLs.
+- Rejection of mismatched or corrupt image signatures.
+- Rejection of mismatched article IDs and unauthorized roles.
+- Python Core review-import verification and negative validation gates.
+- Complete WordPress post content and media library zero-mutation verification.
