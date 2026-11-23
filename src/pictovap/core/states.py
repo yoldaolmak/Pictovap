@@ -96,6 +96,7 @@ class ProviderRuntimeMode(str, Enum):
     PLUGIN = "plugin"
     PROFILE = "profile"
     FALLBACK = "fallback"
+    DEMO = "demo"  # Explicit credential-free demo, not a provider failure.
     DEMO_FALLBACK = "demo-fallback"
 
 

@@ -103,10 +103,12 @@ pictovap review-pack --plan plan.json --output pending-pack.json
 ```
 
 The [reference sidebar](../../examples/wordpress-review-sidebar/README.md)
-lets the current authorized editor open this file, make draft decisions and
-download a local JSON file. The browser does not write WordPress metadata
-or publish anything. Import the downloaded draft using **the same exact
-pending pack bytes**:
+lets the current authorized editor open this file, make draft decisions,
+select a source-backed alternative in one click, and download a local JSON
+file. New plans retain the actual provider candidate evidence needed for
+this; no editor-created license claim is accepted. The browser does not
+write WordPress metadata or publish anything. Import the downloaded draft
+using **the same exact pending pack bytes**:
 
 ```bash
 pictovap review-import --pack pending-pack.json \

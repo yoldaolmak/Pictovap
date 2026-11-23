@@ -43,6 +43,55 @@ def _not_queried(profile: PublisherProfile | None, reason: str) -> list[SourceAt
     ]
 
 
+def _planned_provenance(
+    candidate: dict[str, Any],
+    slot: dict[str, Any],
+    brief: VisualBrief,
+) -> ProvenancePack:
+    """Prepare source-backed proposal evidence; no asset is processed or licensed."""
+    content = f"{candidate['id']}:{candidate['filename']}"
+    content_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
+    generated_filename = f"pictovap_{candidate['filename'].rsplit('.', 1)[0]}.webp"
+    return ProvenancePack(
+        image_id=str(candidate["id"]),
+        source_type=candidate.get("source_type", "local"),
+        provider=candidate.get("provider", "local"),
+        source_url=candidate.get("source_url"),
+        local_source_path=candidate.get("local_path"),
+        license_status=candidate.get("license", "unknown"),
+        attribution=candidate.get("attribution"),
+        original_filename=candidate["filename"],
+        generated_filename=generated_filename,
+        content_hash=content_hash,
+        article_id=brief.article_id,
+        slot_id=slot["slot_id"],
+        placement_target=slot.get("purpose", ""),
+        generated_alt_text=generate_local_alt_text(
+            candidate, slot, language=brief.article_language
+        ),
+        generated_caption=generate_local_caption(
+            candidate, slot, language=brief.article_language
+        ),
+        processing_actions=["resize_1200", "webp_convert", "exif_strip"],
+    )
+
+
+def _planned_placement(
+    provenance: ProvenancePack,
+    slot: dict[str, Any],
+) -> PlacementInstruction:
+    """Create a CMS-neutral placement proposal, not an instruction to publish."""
+    return PlacementInstruction(
+        slot_id=provenance.slot_id,
+        output_path=provenance.generated_filename,
+        target_section=slot.get("target_heading", ""),
+        placement_strategy="featured" if provenance.slot_id == "featured" else "after_heading",
+        image_role="featured" if provenance.slot_id == "featured" else "content",
+        alt_text=provenance.generated_alt_text,
+        caption=provenance.generated_caption,
+    )
+
+
 def build_visual_plan(
     article_path: Path | None,
     profile: PublisherProfile,
@@ -112,51 +161,43 @@ def build_visual_plan(
     candidate_fingerprints = collect_candidate_fingerprints(candidates)
     selection = select_assignments(score_map, candidate_fingerprints=candidate_fingerprints)
 
-    packs = []
-    for slot, _slot_scores in all_scores:
-        score = selection.assignments.get(slot["slot_id"])
-        if score is None:
-            continue
-        candidate = next(item for item in candidates if item["id"] == score.candidate_id)
-        content = f"{candidate['id']}:{candidate['filename']}"
-        content_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
-        generated_filename = f"pictovap_{candidate['filename'].rsplit('.', 1)[0]}.webp"
-        packs.append(ProvenancePack(
-            image_id=candidate["id"],
-            source_type=candidate.get("source_type", "local"),
-            provider=candidate.get("provider", "local"),
-            source_url=candidate.get("source_url"),
-            local_source_path=candidate.get("local_path"),
-            license_status=candidate.get("license", "unknown"),
-            attribution=candidate.get("attribution"),
-            original_filename=candidate["filename"],
-            generated_filename=generated_filename,
-            content_hash=content_hash,
-            article_id=brief.article_id,
-            slot_id=slot["slot_id"],
-            placement_target=slot.get("purpose", ""),
-            generated_alt_text=generate_local_alt_text(
-                candidate, slot, language=brief.article_language
-            ),
-            generated_caption=generate_local_caption(
-                candidate, slot, language=brief.article_language
-            ),
-            processing_actions=["resize_1200", "webp_convert", "exif_strip"],
-        ))
+    # Selection and editor alternatives share one evidence/placement compiler.
+    # Alternatives refer to actual provider candidate records. They are proposals:
+    # source rights, local processing and CMS execution remain unverified.
+    candidate_by_id = {str(item["id"]): item for item in candidates}
+    packs: list[ProvenancePack] = []
+    review_alternatives: dict[str, list[dict[str, Any]]] = {}
+    for slot, slot_scores in all_scores:
+        slot_id = slot["slot_id"]
+        assigned = selection.assignments.get(slot_id)
+        choices: list[dict[str, Any]] = []
+        if assigned is not None:
+            packs.append(
+                _planned_provenance(candidate_by_id[assigned.candidate_id], slot, brief)
+            )
+        for score in slot_scores:
+            if score.decision == "rejected" or (
+                assigned is not None and score.candidate_id == assigned.candidate_id
+            ):
+                continue
+            candidate = candidate_by_id.get(score.candidate_id)
+            if candidate is None:
+                continue
+            evidence = _planned_provenance(candidate, slot, brief)
+            choices.append({
+                "candidate_id": score.candidate_id,
+                "provenance": evidence.to_dict(),
+                "placement": {
+                    **_planned_placement(evidence, slot).to_dict(),
+                    "candidate_id": score.candidate_id,
+                },
+            })
+        review_alternatives[slot_id] = choices
 
-    # 4. Turn each pack into one CMS-neutral placement instruction.
     instructions = []
     for pack in packs:
         slot = next((item for item in brief.image_slots if item["slot_id"] == pack.slot_id), {})
-        instructions.append(PlacementInstruction(
-            slot_id=pack.slot_id,
-            output_path=pack.generated_filename,
-            target_section=slot.get("target_heading", ""),
-            placement_strategy="featured" if pack.slot_id == "featured" else "after_heading",
-            image_role="featured" if pack.slot_id == "featured" else "content",
-            alt_text=pack.generated_alt_text,
-            caption=pack.generated_caption,
-        ))
+        instructions.append(_planned_placement(pack, slot))
 
     placement = CMSPlacement(
         article_id=brief.article_id,
@@ -182,6 +223,7 @@ def build_visual_plan(
             for slot, scores in all_scores
         },
         "provenance_packs": [pack.to_dict() for pack in packs],
+        "review_alternatives": review_alternatives,
         "cms_placement": placement.to_dict(),
         "source_path": serialized_source,
         "candidates_evaluated": len(candidates),

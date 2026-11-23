@@ -282,6 +282,10 @@ def build_decision_pack(
         if isinstance(entry, Mapping) and isinstance(entry.get("slot_id"), str):
             evidence_by_slot.setdefault(str(entry["slot_id"]), []).append(dict(entry))
 
+    alternatives_by_slot = plan.get("review_alternatives")
+    if "review_alternatives" in plan and not isinstance(alternatives_by_slot, Mapping):
+        raise ValueError("review_alternatives must be a mapping keyed by slot ID")
+
     slots: list[dict[str, Any]] = []
     for raw_slot in brief["image_slots"]:
         if not isinstance(raw_slot, Mapping):
@@ -292,7 +296,7 @@ def build_decision_pack(
         slot_placement = placements.get(slot_id)
         if slot_placement is not None and provenance is not None:
             slot_placement["candidate_id"] = provenance.get("image_id")
-        slots.append({
+        record: dict[str, Any] = {
             "slot_id": slot_id,
             "purpose": str(slot.get("purpose", "")),
             "target_heading": str(slot.get("target_heading", "")),
@@ -306,7 +310,10 @@ def build_decision_pack(
                 "placement": slot_placement,
             },
             "evidence": evidence_by_slot.get(slot_id, []),
-        })
+        }
+        if isinstance(alternatives_by_slot, Mapping):
+            record["alternatives"] = copy.deepcopy(alternatives_by_slot.get(slot_id, []))
+        slots.append(record)
 
     article_id = brief.get("article_id") or placement.get("article_id")
     decision_pack: dict[str, Any] = {
@@ -446,6 +453,50 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
                         expected_candidate_id=expected_candidate_id,
                         errors=errors,
                     )
+
+            # New plans carry source-backed alternatives. Legacy packs without
+            # the optional field remain valid and keep their existing review API.
+            if "alternatives" in slot:
+                alternatives = _list(slot.get("alternatives"), f"{path}.alternatives", errors)
+                alt_ids: set[str] = set()
+                if alternatives is not None:
+                    scored_by_id = {
+                        candidate.get("candidate_id"): candidate
+                        for candidate in candidates or []
+                        if isinstance(candidate, Mapping)
+                    }
+                    for alt_index, raw_alt in enumerate(alternatives):
+                        alt_path = f"{path}.alternatives[{alt_index}]"
+                        alternative = _object(raw_alt, alt_path, errors)
+                        if alternative is None or not isinstance(slot_id, str):
+                            continue
+                        alt_id = _validate_asset_binding(
+                            alternative,
+                            slot_id=slot_id,
+                            path=alt_path,
+                            candidate_ids=candidate_ids,
+                            expected_candidate_id=None,
+                            errors=errors,
+                        )
+                        if alt_id is None:
+                            continue
+                        if alt_id in alt_ids:
+                            errors.append(_issue(
+                                "decision_pack_duplicate_alternative", alt_path,
+                                "Alternative candidate IDs must be distinct within a slot.",
+                            ))
+                        alt_ids.add(alt_id)
+                        if isinstance(proposal, Mapping) and alt_id == proposal.get("candidate_id"):
+                            errors.append(_issue(
+                                "decision_pack_alternative_is_proposal", alt_path,
+                                "The proposed asset cannot be an alternative to itself.",
+                            ))
+                        scored = scored_by_id.get(alt_id)
+                        if isinstance(scored, Mapping) and scored.get("decision") == "rejected":
+                            errors.append(_issue(
+                                "decision_pack_alternative_rejected", alt_path,
+                                "A hard-rejected candidate cannot be an available alternative.",
+                            ))
     checks["slots"] = {"status": "passed" if raw_slots is not None and not any(
         item["path"].startswith("$.slots") for item in errors
     ) else "failed", "slots": len(slot_ids)}
@@ -545,6 +596,19 @@ def validate_decision_pack(pack: Any) -> dict[str, Any]:
                                         "A rejected candidate cannot be used as a replacement.",
                                     ))
                                     break
+                        # When the source plan includes an alternative inventory,
+                        # the reviewed asset must be exactly one of its complete
+                        # source-backed evidence records, not editor-invented data.
+                        if "alternatives" in decision_slot:
+                            available = decision_slot.get("alternatives")
+                            if not isinstance(available, list) or not any(
+                                replacement_obj == alternative for alternative in available
+                            ):
+                                errors.append(_issue(
+                                    "decision_pack_replacement_not_evidenced",
+                                    f"{path}.replacement",
+                                    "Replacement must match an original evidenced alternative.",
+                                ))
                         proposal = decision_slot.get("proposal")
                         if (
                             replacement_id is not None
