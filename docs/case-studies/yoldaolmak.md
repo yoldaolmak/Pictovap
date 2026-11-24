@@ -1,9 +1,8 @@
 # Case Study: Yoldaolmak.com
 
-Pictovap was extracted from the production infrastructure of
-[Yoldaolmak.com](https://yoldaolmak.com), a high-volume independent travel publisher.
-This case study documents the problem that motivated the project and the architecture
-that solved it.
+[Yoldaolmak.com](https://yoldaolmak.com) is a first-party publisher pilot.
+This case study describes its visual workflow and the bounded evaluation of
+Pictovap Core; it is not an independent customer result.
 
 ## The Problem
 
@@ -26,7 +25,7 @@ article volume and was entirely manual.
 
 ## The Solution
 
-By implementing the four Pictovap primitives, Yoldaolmak automated this pipeline:
+The pilot evaluated the four Pictovap primitives in this workflow:
 
 - The `VisualBrief` reads the drafted article content, extracting geographic intent
   (e.g., "Istanbul") and identifying missing visual slots per section.
@@ -53,10 +52,3 @@ The project welcomes case studies from:
 - Publishers using different CMS platforms
 - Publishers in different languages
 - Publishers with different image source configurations
-
-## Compatibility Note
-
-Product name: Pictovap.
-The Python package and CLI are `pictovap`.
-The `yoldaolmak` site profile in `src/pictovap/profiles/` is one example publisher
-profile, not the conceptual center of the project.
