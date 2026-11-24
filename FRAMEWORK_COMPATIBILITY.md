@@ -72,7 +72,7 @@ line it supports and the exact contract-test version used.
 ## What is not a compatibility promise
 
 Implementation modules under `pictovap.demo`, `pictovap.services`,
-`pictovap.image_sources`, and `pictovap.publishers` may evolve behind the stable
+`pictovap.providers`, and `pictovap.publishers` may evolve behind the stable
 interfaces. Internal helper functions, CLI wording, and diagnostic detail are
 not an ABI. Use the public API and adapter protocols rather than importing
 pipeline internals.
