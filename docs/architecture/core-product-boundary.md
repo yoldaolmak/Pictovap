@@ -19,7 +19,7 @@ The product family is an open-core strategy, not a mandatory runtime
 dependency. Product may consume versioned serialized Core contracts or use
 its own compatible implementation. Core must remain independently usable
 without Product. Enterprise-only intellectual property and operations belong
-in Product, not in the public Core. Pictova is an unrelated legacy project.
+in Product, not in the public Core.
 
 ## Public Core
 
