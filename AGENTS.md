@@ -13,9 +13,12 @@ for implementation status, not hand-off notes or historical reports.
 - Change only authorized repository code and documentation. A visual plan or
   review is never permission to contact a provider, purchase an asset, change
   a CMS, or claim a published outcome.
-- Core is independently usable for one article. Enterprise inventory,
-  permissions, execution lifecycle, and live outcome verification belong to
-  the separate Product; do not introduce them as hidden Core dependencies.
+- Framework is independently usable for one article and owns the shared
+  visual decision implementation consumed by Product through stable released
+  APIs. Enterprise inventory, lineage, permissions, execution and independent
+  verification belong to Product; never import or disclose private Product IP.
+- Version shared API/schema changes, test backward compatibility and release
+  the Framework before Product adopts the new version.
 - Keep documentation independent of any pilot publisher. Preserve source
   identities only in evidence, pilot records, and necessary technical links.
 
