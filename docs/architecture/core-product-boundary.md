@@ -8,6 +8,19 @@ an opaque image-selection process for every page.
 **Founding boundary:** Core knows visual decisions. Product governs the
 visual estate and its lifecycle.
 
+## Open-core commercial strategy
+
+Pictovap Core remains public under the MIT license. Its strategic role is
+distribution, adoption, interoperability, and technical reputation. The
+separate private Enterprise Product is the commercial offering. Existing MIT
+rights remain intact; Core is not an exclusive proprietary licensing asset.
+
+The product family is an open-core strategy, not a mandatory runtime
+dependency. Product may consume versioned serialized Core contracts or use
+its own compatible implementation. Core must remain independently usable
+without Product. Enterprise-only intellectual property and operations belong
+in Product, not in the public Core. Pictova is an unrelated legacy project.
+
 ## Public Core
 
 The public, independently usable Python package `pictovap` handles a single
@@ -25,7 +38,7 @@ own result and must not be inferred from the plan.
 
 ## Separate Enterprise Product
 
-The commercial Product may consume versioned Core contracts while owning
+The commercial Product may consume versioned serialized Core contracts while owning
 multi-page/site visual inventory, observations over time, lineage candidates,
 findings, operator roles, permissions, orchestration, idempotency, execution
 receipts, and independent live verification. These capabilities are neither
