@@ -4,6 +4,10 @@
 
 ### Added
 
+- Stabilized Decision Pack schema 1 build/validation/review transition and
+  Intent Proof schema 1 validation for released Framework consumers.
+  Product integration must pass independent compatibility and replay gates.
+
 - Added a deterministic golden-corpus benchmark covering six editorial shapes.
 - Added `pictovap benchmark` for offline JSON or Markdown compatibility receipts.
 - Added the Framework ABI v1 compatibility summary for external adapter authors.
