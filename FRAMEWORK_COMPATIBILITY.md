@@ -13,8 +13,8 @@ The following surfaces are stable for the current pre-1.0 framework line:
 - `pictovap.testing.contracts` assertions and complete candidate fields
 - visual-plan JSON sections required by `pictovap.validate_visual_plan()`
 - Publisher Profile YAML schema version 1
-- installed adapter entry-point groups (`pictovap.providers`,
-  `pictovap.cms`, and `pictovap.renderers`)
+- installed adapter entry-point groups (`pictovap.image_sources`,
+  `pictovap.cms`, and `pictovap.report_renderers`)
 
 The golden corpus benchmark and its CLI are integration tooling. They are
 stable for this repository's contributor and CI workflow, but the benchmark

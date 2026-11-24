@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 15
     strategy:
       matrix:
@@ -21,10 +21,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          python-version: ${{ matrix.python-version }}
+          version: "0.13.9"
+          enable-cache: false
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: |
+          uv python install ${{ matrix.python-version }}
+          uv venv --python ${{ matrix.python-version }} --seed "$RUNNER_TEMP/pictovap-python"
+          echo "$RUNNER_TEMP/pictovap-python/bin" >> "$GITHUB_PATH"
 
       - name: Cache dependencies
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -57,7 +64,7 @@ jobs:
 
   adapter-examples:
     name: Standalone adapter packages
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:
@@ -65,10 +72,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          python-version: "3.12"
+          version: "0.13.9"
+          enable-cache: false
+
+      - name: Set up Python
+        run: |
+          uv python install 3.12
+          uv venv --python 3.12 --seed "$RUNNER_TEMP/pictovap-python"
+          echo "$RUNNER_TEMP/pictovap-python/bin" >> "$GITHUB_PATH"
 
       - name: Install Pictovap and standalone packages
         run: |
@@ -105,7 +119,7 @@ jobs:
           python -m build --wheel --outdir /tmp/pictovap-renderer-wheel examples/external-renderer-package
 
   typecheck:
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:
@@ -113,10 +127,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          python-version: "3.12"
+          version: "0.13.9"
+          enable-cache: false
+
+      - name: Set up Python
+        run: |
+          uv python install 3.12
+          uv venv --python 3.12 --seed "$RUNNER_TEMP/pictovap-python"
+          echo "$RUNNER_TEMP/pictovap-python/bin" >> "$GITHUB_PATH"
 
       - name: Run static type checks
         run: |
@@ -125,7 +146,7 @@ jobs:
           pyright
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:
@@ -133,10 +154,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          python-version: "3.12"
+          version: "0.13.9"
+          enable-cache: false
+
+      - name: Set up Python
+        run: |
+          uv python install 3.12
+          uv venv --python 3.12 --seed "$RUNNER_TEMP/pictovap-python"
+          echo "$RUNNER_TEMP/pictovap-python/bin" >> "$GITHUB_PATH"
 
       - name: Install linters
         run: pip install ".[lint]"
@@ -145,7 +173,7 @@ jobs:
         run: flake8 src/ --max-line-length=120
 
   markdown:
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'pictovap-isolated-ci' }}
     timeout-minutes: 10
 
     steps:

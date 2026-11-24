@@ -14,7 +14,6 @@ Requires the following environment variables:
 from __future__ import annotations
 
 import json
-import mimetypes
 import os
 import tempfile
 import urllib.parse
@@ -24,17 +23,10 @@ from typing import Any, Dict, List
 import requests
 
 from pictovap.core.primitives import CMSPlacement
+from pictovap.utils.media_type import upload_content_type as _content_type
 from pictovap.utils.config import load_project_env
 
 load_project_env()
-
-
-def _content_type(filename: str) -> str:
-    """Declare the file's own type. The pipeline emits WebP, but this adapter
-    accepts any path, and a PNG announced as WebP is stored under a type that
-    does not match its bytes."""
-    content_type, _ = mimetypes.guess_type(filename)
-    return content_type or "application/octet-stream"
 
 
 _IMAGE_EXTENSIONS = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".avif"}
