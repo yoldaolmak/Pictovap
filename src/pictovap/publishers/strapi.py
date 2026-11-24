@@ -22,12 +22,11 @@ from typing import Any, Dict, List
 
 import requests
 
-from pictovap.utils.media_type import upload_content_type as _content_type
 from pictovap.core.primitives import CMSPlacement
+from pictovap.utils.media_type import upload_content_type as _content_type
 from pictovap.utils.config import load_project_env
 
 load_project_env()
-
 
 
 _IMAGE_EXTENSIONS = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".avif"}

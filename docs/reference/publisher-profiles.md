@@ -88,10 +88,7 @@ For Python callers, validate an in-memory profile explicitly with
 `profile.validate()`. Profiles created through `from_yaml()` and
 `from_mapping()` are validated automatically.
 
-## Compatibility Note
+## Profile portability
 
-Product name, Python package, and CLI: Pictovap / `pictovap`.
-`examples/profiles/sample-publisher.yaml` is a
-reference example, not the only supported configuration --
-`examples/profiles/yoldaolmak.py` shows the older, pre-`PublisherProfile`
-per-site convention this format replaced.
+Use `examples/profiles/sample-publisher.yaml` as a generic starting point.
+Site-specific pilot profiles are not required for installation or operation.

@@ -13,8 +13,8 @@ import urllib.parse
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from pictovap.utils.media_type import upload_content_type
 from pictovap.core.primitives import CMSPlacement
+from pictovap.utils.media_type import upload_content_type
 from pictovap.core.states import (
     MediaGuardStatus,
     MediaIntegrityState,

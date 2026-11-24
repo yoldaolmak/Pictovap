@@ -2,7 +2,8 @@
 
 ## Product Name
 
-**Pictovap** is the public product name. It is used in:
+**Pictovap Core** is the public framework in the Pictovap product family.
+The distribution name remains **Pictovap**. It is used in:
 - README and documentation
 - GitHub repository name
 - PyPI package name
@@ -22,10 +23,6 @@ identity.
 | CLI command | `pictovap` | One canonical automation entry point |
 | Repository | `Pictovap` | GitHub repository name |
 | PyPI package | `pictovap` | Published package name |
-
-## Etymology
-
-The name derives from Latin *pictus* (past participle of *pingere*, to paint or depict) combined with the suffix *-vap*, suggesting visual automation for publishers.
 
 ## Compatibility
 

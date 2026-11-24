@@ -24,6 +24,11 @@ current capabilities and runnable commands.
 A plan is not an authorization, licensed purchase, CMS publication,
 or independently verified outcome.
 
+## Evidence
+
+- [Publisher pilot case study](case-studies/yoldaolmak.md) — bounded first-party evidence.
+- [Release status](release-status.md) — published and development versions.
+
 ## Extend the framework
 
 - [Core/Product Contract](architecture/core-product-boundary.md) — ownership

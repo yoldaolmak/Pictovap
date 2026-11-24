@@ -6,9 +6,7 @@ This document tracks Pictovap's progress toward achieving open-source maturity a
 
 Pictovap is a published early-stage open-source package. The public core and release path are working; adoption and independently validated usage remain the missing evidence.
 
-The stable published release is [0.12.0](release-status.md). The repository
-`main` branch is preparing unreleased 0.13.0 work; do not use the development
-checkout as evidence that 0.13.0 is already on PyPI.
+The stable published release is [0.13.0](release-status.md).
 
 ## Current Evidence
 
@@ -19,10 +17,10 @@ checkout as evidence that 0.13.0 is already on PyPI.
 - Clear release notes and changelog
 - Contribution templates and starter issues
 - Adoption playbook for early users
-- Single-publisher dogfooding case study (Yoldaolmak)
-- Tagged releases through v0.12.0
+- First-party publisher pilot case study
+- Tagged releases through v0.13.0
 - Published `pictovap` package on PyPI
-- Green main-branch CI and release workflows for v0.12.0
+- Verified package publication and release workflow for v0.13.0
 - CodeQL, dependency review, and OpenSSF Scorecard workflows
 - Six external pull requests merged from five unique community contributors
 - Third-party adapter discovery through standard Python entry points
@@ -70,7 +68,7 @@ The release infrastructure is live. The goals for the next maturity milestone ar
 ## Next Steps
 
 1. Use the [external tester message](external-tester-message.md) to invite reproducible demo feedback and the recommended first PR path.
-2. Direct provider and CMS contributors to the v0.12.0 scaffold, runtime, and contract test kit.
+2. Direct provider and CMS contributors to the v0.13.0 scaffold, runtime, and contract test kit.
 3. Document a second publisher profile to demonstrate generality.
 4. Monitor branch protection, CodeQL, dependency review, OpenSSF Scorecard, and the
    [Criticality Score workflow](https://github.com/yoldaolmak/Pictovap/actions/workflows/criticality.yml).
