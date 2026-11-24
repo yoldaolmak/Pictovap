@@ -4,7 +4,7 @@
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap Core** is an open-source, CLI-first visual-decision framework for
+**Pictovap Framework** is an open-source, CLI-first visual-decision framework for
 publishers. Given an article and image candidates, it explains which images
 fit each section, why, what source/license evidence is known, and how a CMS
 could place them. The output is reviewable; it is not publication approval.
@@ -28,11 +28,11 @@ Article → Visual Brief → Candidates → Fit Score + intent proof
 - A credential-free demo, a golden corpus benchmark, external-adapter
   contracts, and English/Turkish deterministic metadata templates.
 
-Core knows visual decisions for **one article**. A separate enterprise
-Product owns site-wide visual inventory, permissions, execution lifecycle,
-and independent verification. See the
-[Core/Product boundary](docs/architecture/core-product-boundary.md).
-Core remains MIT-licensed and independently usable.
+Framework owns visual decisions for **one article**. Pictovap Product is the
+proprietary enterprise platform built on the Framework in the approved target
+architecture. It owns site-wide visual inventory, lineage, governance,
+execution and independent verification. Framework is independently usable
+under MIT. See the [Framework/Product boundary](docs/architecture/core-product-boundary.md).
 
 ## Get started
 
