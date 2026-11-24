@@ -1,51 +1,31 @@
 # Release status
 
-This page is the canonical public explanation of which Pictovap version is
-safe to install and which version is still being developed.
+## Stable release
 
-## Stable published release
-
-- Version: **0.12.0**
-- PyPI: <https://pypi.org/project/pictovap/0.12.0/>
-- GitHub release: <https://github.com/yoldaolmak/Pictovap/releases/tag/v0.12.0>
-- Tag: `v0.12.0`
-
-Install the stable release with:
+- Version: **0.13.0**
+- Published: 2026-11-24
+- PyPI: <https://pypi.org/project/pictovap/0.13.0/>
+- GitHub: [v0.13.0](https://github.com/yoldaolmak/Pictovap/releases/tag/v0.13.0)
+- Tag: `v0.13.0`
+- Commit: `aa353988f2927ffa90af4afc46ef435c31811c62`
+- [Release notes](release-notes/v0.13.0.md)
+- [Publication and clean-wheel acceptance](https://github.com/yoldaolmak/Pictovap/actions/runs/45391982550)
 
 ```bash
-python -m pip install --upgrade pictovap
+python -m pip install pictovap==0.13.0
 ```
 
-The unpinned command above resolves the latest package published to PyPI. It
-does not install the unreleased contents of the repository `main` branch.
+The published wheel and source distribution passed release checks. The tag
+and GitHub Release bind the exact published source commit. Product integration
+has its own acceptance gate.
 
-## Development version on `main`
+## Release identity
 
-- Version declared by the checkout: **0.13.0**
-- Publication state: **unreleased**
-- Changelog: [0.13.0 development entries](../CHANGELOG.md)
-- Prepared release notes: [v0.13.0](release-notes/v0.13.0.md)
+The declared package version, immutable Git tag, GitHub Release, and PyPI
+distribution must agree. Development changes after a release are not part of
+that published distribution.
 
-The `main` branch may contain changes that are not present in the stable PyPI
-package. Do not describe `0.13.0` as published until its tag, GitHub release,
-and PyPI upload all exist and have been checked against one another.
-
-## Release identity rule
-
-For every published version, these four identifiers must agree:
-
-1. `pyproject.toml` and `src/pictovap/__init__.py`
-2. the Git tag (`vX.Y.Z`)
-3. the GitHub release attached to that tag
-4. the PyPI distribution version
-
-The repository may prepare the next version on `main`, but its documentation
-must label that version as unreleased until the final three public artifacts
-exist.
-
-A release request changes `release-request.json` in a reviewed PR. After merge,
-the protected publish workflow validates package identity, runs tests and a
-clean-wheel smoke test, publishes to PyPI, and creates the GitHub release
-for the exact tested commit. The release environment remains authoritative.
-A tag-triggered release also requires the same identity and publication gates.
-Do not update the published status until all release artifacts are verified.
+A reviewed change to `release-request.json` initiates the protected release
+workflow. The workflow validates version identity, tests the package, verifies
+a clean wheel, publishes to PyPI, and creates the matching GitHub Release.
+Tag-triggered releases retain the same identity and publication checks.
