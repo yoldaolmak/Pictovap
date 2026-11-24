@@ -19,7 +19,7 @@ checkout as evidence that 0.13.0 is already on PyPI.
 - Clear release notes and changelog
 - Contribution templates and starter issues
 - Adoption playbook for early users
-- Single-publisher dogfooding case study (Yoldaolmak)
+- First-party publisher pilot case study
 - Tagged releases through v0.12.0
 - Published `pictovap` package on PyPI
 - Green main-branch CI and release workflows for v0.12.0
