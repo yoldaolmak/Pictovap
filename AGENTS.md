@@ -16,8 +16,8 @@ for implementation status, not hand-off notes or historical reports.
 - Core is independently usable for one article. Enterprise inventory,
   permissions, execution lifecycle, and live outcome verification belong to
   the separate Product; do not introduce them as hidden Core dependencies.
-- Pictovap is unrelated to the legacy Pictova project. Do not preserve
-  personal paths or private infrastructure for compatibility.
+- Keep documentation independent of any pilot publisher. Preserve source
+  identities only in evidence, pilot records, and necessary technical links.
 
 ## Engineering invariants
 
