@@ -15,11 +15,16 @@ distribution, adoption, interoperability, and technical reputation. The
 separate private Enterprise Product is the commercial offering. Existing MIT
 rights remain intact; Core is not an exclusive proprietary licensing asset.
 
-The product family is an open-core strategy, not a mandatory runtime
-dependency. Product may consume versioned serialized Core contracts or use
-its own compatible implementation. Core must remain independently usable
-without Product. Enterprise-only intellectual property and operations belong
-in Product, not in the public Core.
+The approved target is a one-way dependency: Pictovap Product builds on
+Pictovap Framework through a released, version-pinned public API. Framework
+owns shared visual decision contracts and their implementation; Product owns
+enterprise intelligence, state, authority, execution and verification. The
+Framework must remain independently usable without Product. A historical
+compatible copy may be retained only for evidenced replay needs, never as a
+second evolving implementation. Enterprise-only IP stays private.
+
+Dependency migration is an engineering acceptance gate, not an assertion that
+existing Product installations already use Framework.
 
 ## Public Core
 
@@ -38,7 +43,7 @@ own result and must not be inferred from the plan.
 
 ## Separate Enterprise Product
 
-The commercial Product may consume versioned serialized Core contracts while owning
+The commercial Product consumes shared Framework contracts in the target architecture while owning
 multi-page/site visual inventory, observations over time, lineage candidates,
 findings, operator roles, permissions, orchestration, idempotency, execution
 receipts, and independent live verification. These capabilities are neither
@@ -52,7 +57,7 @@ authority boundaries explicit at integration points.
 
 | Concern | Core | Enterprise Product |
 | --- | --- | --- |
-| One-article visual decisions, evidence, and portable review | Owns | Consumes explicit contracts |
+| One-article visual decisions, evidence, and portable review | Owns | Consumes the versioned public API |
 | CMS adapter interface and placement proposal | Owns | Authorizes and verifies its operations |
 | Site-wide history, user authority, execution lifecycle | Does not own | Owns |
 | Real publisher outcomes | Cannot infer | Must verify independently |
