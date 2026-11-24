@@ -4,16 +4,12 @@
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap Core** is an open-source, CLI-first visual-decision framework for
+**Pictovap Framework** is an open-source, CLI-first visual-decision framework for
 publishers. Given an article and image candidates, it explains which images
 fit each section, why, what source/license evidence is known, and how a CMS
 could place them. The output is reviewable; it is not publication approval.
 
-Pictovap grew out of an editorial workflow at
-[Yoldaolmak.com](https://yoldaolmak.com). See the
-[case study](docs/case-studies/yoldaolmak.md) for the original problem and
-its limits. Pictovap is not a stock-photo library, generic AI image
-generator, DAM, or WordPress-only tool.
+Pictovap is CMS-independent and does not require a hosted service.
 
 ## What works
 
@@ -32,10 +28,11 @@ Article → Visual Brief → Candidates → Fit Score + intent proof
 - A credential-free demo, a golden corpus benchmark, external-adapter
   contracts, and English/Turkish deterministic metadata templates.
 
-Core knows visual decisions for **one article**. A separate enterprise
-Product owns site-wide visual inventory, permissions, execution lifecycle,
-and independent verification. Read the
-[Product Contract](docs/architecture/core-product-boundary.md) for that split.
+Framework owns visual decisions for **one article**. Pictovap Product is the
+proprietary enterprise platform built on the Framework in the approved target
+architecture. It owns site-wide visual inventory, lineage, governance,
+execution and independent verification. Framework is independently usable
+under MIT. See the [Framework/Product boundary](docs/architecture/core-product-boundary.md).
 
 ## Get started
 
@@ -104,23 +101,10 @@ pictovap review-preview --plan plan.json \
   --reviewed reviewed-pack.json --format markdown
 ```
 
-For each slot, accept the proposal, reject the image, or select an eligible
-alternative. New plans include source-backed alternative evidence: the
-Gutenberg reference sidebar offers direct one-click choices with no
-replacement JSON preparation. Older plans can still use an existing atomic
-`candidate_id`/`provenance`/`placement` record. Core rejects a changed
-or invented replacement in new packs, and always keeps
-`application.status=not_applied`.
-
-A Gutenberg [reference review sidebar](examples/wordpress-review-sidebar/README.md)
-now supports offline per-post decisions, one-click source-evidenced
-alternatives and local image comparisons. Editors explicitly choose
-local image files; no remote image URL is loaded, and image bytes are not
-uploaded or exported. The sidebar exports only an unverified local draft;
-Core verifies the original pack fingerprint and decisions with
-`pictovap review-import` before producing a reviewed pack. It never
-updates a WordPress post. This reference has not passed a real editor trial. See [Decision Pack](docs/concepts/decision-pack.md)
-and [Roadmap](docs/ROADMAP.md).
+Review proposals and eligible alternatives offline with the CLI or the
+[Gutenberg reference sidebar](examples/wordpress-review-sidebar/README.md).
+See [Decision Pack](docs/concepts/decision-pack.md) for review and import
+semantics. Review never updates a CMS post.
 
 ## Sources, CMS, and rights
 
@@ -143,11 +127,7 @@ deployment credentials, and the actual CMS result independently.
 - [Adapter contracts](docs/adapters/overview.md) and [plugin authoring](docs/contributing/plugins.md)
 - [Developer guide](docs/DEVELOPER.md) and [contributing](CONTRIBUTING.md)
 
-Small first contributions: [realistic article fixture (#65)](https://github.com/yoldaolmak/Pictovap/issues/65)
-or [editor-report terminology (#66)](https://github.com/yoldaolmak/Pictovap/issues/66).
-If you test a real, non-sensitive article, use
-[publisher feedback](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md);
-do not attach credentials or private article data.
+For contribution opportunities and safe feedback, see [Contributing](CONTRIBUTING.md).
 
 Pictovap is MIT licensed ([LICENSE](LICENSE)). It has working offline
 tests and adapters and a reference Gutenberg review sidebar, but does not

@@ -1,62 +1,27 @@
-# Case Study: Yoldaolmak.com
+# First-Party Publisher Pilot: Yoldaolmak.com
 
-Pictovap was extracted from the production infrastructure of
-[Yoldaolmak.com](https://yoldaolmak.com), a high-volume independent travel publisher.
-This case study documents the problem that motivated the project and the architecture
-that solved it.
+[Yoldaolmak.com](https://yoldaolmak.com) is a first-party editorial pilot
+environment for Pictovap Core. It is not an independent customer reference.
 
-## The Problem
+## Workflow under evaluation
 
-Before Pictovap, the editorial workflow at Yoldaolmak had a bottleneck in visual operations.
-A typical 2,000-word travel guide required:
+A long-form article requires editorial image selection, source and license
+review, metadata preparation, and placement in a CMS. The pilot provides
+a realistic workflow for evaluating these capabilities.
 
-1. **Analysis** — an editor reading the text to identify missing images
-   (e.g., "We need a photo of the Galata Tower here, and Turkish tea here").
-2. **Sourcing** — searching through DepositPhotos, Unsplash, or local photo archives
-   to find candidates.
-3. **Curation** — rejecting images that looked too generic, had wrong aspect ratios,
-   or had already been used in a previous post.
-4. **Processing** — downloading heavy source files, resizing them, converting to WebP,
-   and writing SEO-optimized alt text and captions in Turkish.
-5. **Placement** — manually uploading each image to the WordPress media library and
-   inserting Gutenberg blocks at the correct paragraph.
+Core produces an article-level visual brief, candidate fit scores,
+provenance evidence, CMS placement proposals, and a reviewable Decision
+Pack. The site uses WordPress and Turkish-language editorial metadata;
+neither is a requirement of the framework.
 
-This process could take tens of minutes per long-form travel article. It scaled linearly with
-article volume and was entirely manual.
+## Evidence boundary
 
-## The Solution
+This case study describes the workflow and intended evaluation, not a
+measured productivity result. No independently recorded operator acceptance,
+time-saving comparison, authorized publishing outcome, or external customer
+adoption is established by this document.
 
-By implementing the four Pictovap primitives, Yoldaolmak automated this pipeline:
-
-- The `VisualBrief` reads the drafted article content, extracting geographic intent
-  (e.g., "Istanbul") and identifying missing visual slots per section.
-- The `FitScore` engine evaluates candidate images deterministically, discarding images
-  that fail the brand's editorial constraints (forbidden patterns, license requirements,
-  resolution thresholds).
-- The `ProvenancePack` tracks image origin, license, and processing actions, maintaining
-  an audit trail for every placed image.
-- The WordPress adapter reads the `CMSPlacement` plan and injects Gutenberg image blocks
-  natively into the CMS.
-
-## The Result
-
-Before Pictovap, visual finishing could take tens of minutes per long-form travel article. Pictovap turns that workflow into a single pipeline run, but results still require editorial review before publishing.
-
-## What This Case Study Is Not
-
-This is a single-publisher dogfooding case.
-It is not evidence of broad external adoption.
-The reusable part is the primitive/adapters model.
-The site-specific part is WordPress, Turkish-language metadata, and yoldaolmak's editorial profile.
-
-The project welcomes case studies from:
-- Publishers using different CMS platforms
-- Publishers in different languages
-- Publishers with different image source configurations
-
-## Compatibility Note
-
-Product name: Pictovap.
-The Python package and CLI are `pictovap`.
-The `yoldaolmak` site profile in `src/pictovap/profiles/` is one example publisher
-profile, not the conceptual center of the project.
+The [golden corpus](../concepts/golden-corpus.md) and
+[release status](../release-status.md) describe reproducible technical evidence
+separately. Source access, rights clearance, and actual CMS outcomes require
+their own evidence.
