@@ -42,3 +42,10 @@ For every published version, these four identifiers must agree:
 The repository may prepare the next version on `main`, but its documentation
 must label that version as unreleased until the final three public artifacts
 exist.
+
+A release request changes `release-request.json` in a reviewed PR. After merge,
+the protected publish workflow validates package identity, runs tests and a
+clean-wheel smoke test, publishes to PyPI, and creates the GitHub release
+for the exact tested commit. The release environment remains authoritative.
+A tag-triggered release also requires the same identity and publication gates.
+Do not update the published status until all release artifacts are verified.
