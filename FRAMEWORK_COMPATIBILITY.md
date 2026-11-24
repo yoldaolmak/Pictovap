@@ -25,18 +25,21 @@ JSON shape is versioned as schema 1 for this release line, but adapter authors
 should continue to depend on the adapter protocols and entry-point groups,
 not on registry presentation details.
 
-The additive `intent_proof` plan block is experimental schema 1. It exposes the
+The additive `intent_proof` plan block has a versioned schema-1 validation contract from 0.13.0. It exposes the
 Visual Intent Graph and Decision Ledger for review and tooling. Integrations
 must tolerate its absence and must not treat the proof as a legal license
 guarantee; it is a structured record of the evidence Pictovap observed. The
 public `validate_intent_proof()` helper checks this block without side effects
-and returns `intent_*` error codes for the current experimental schema.
+and returns `intent_*` error codes for the current schema.
 
-Decision Pack schema 1 is also experimental. `build_decision_pack()` projects
+Decision Pack schema 1 is a stable public contract from 0.13.0. `build_decision_pack()` projects
 an already-valid visual plan into a portable review package; its default
 `pending` review and `not_applied` application state are read-only. It does not
 authorize provider calls or CMS writes. Future review receipts and application
 receipts will require an additive schema revision and migration guidance.
+`validate_decision_pack()` and `transition_decision_pack_review()` are pure
+public functions. Product consumes these versioned contracts; no enterprise
+execution authority is exposed by them.
 
 ## Compatibility rules
 
