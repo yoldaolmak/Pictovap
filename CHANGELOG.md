@@ -33,12 +33,8 @@
 
 ### Changed
 
-- Corrected public documentation that had drifted from the repository: a closed
-  issue was still advertised as an available first PR, a completed sprint was
-  still framed as current with past checkpoint dates, `AGENTS.md` pointed at a
-  fabricated URL and a legacy `src/pictova/` path, and `WordPress is
-  production-hardened` stated a maturity the repository's own evidence does not
-  support.
+- Updated documentation to reflect the supported API, release status, and
+  verified capabilities.
 - `pictovap.providers.deposit` now loads the project `.env` at import time like
   every other credentialed provider. DepositPhotos credentials previously
   resolved only when another provider module happened to be imported first.
@@ -466,8 +462,7 @@
 ### Changed
 * Standardized the importable package, console script, product, and PyPI
   distribution identity as `pictovap`.
-* `YOUnsplashDownloader` renamed to `UnsplashSource`, completing the
-  removal of legacy "YO" branding from adapter class names
+* Standardized the Unsplash adapter as `UnsplashSource`.
 
 ### Added
 * runnable adapter examples under `examples/adapters/` (image source and
@@ -496,10 +491,10 @@
   English stopwords instead of topic-specific vocabulary
 * CI installs the package the way PyPI users get it
   (`pip install ".[test]"` instead of an editable install), and a hygiene
-  test permanently scans `src/` and `tests/` for personal-legacy leftovers
+  test checks `src/` and `tests/` for non-portable paths and identifiers.
 
 ### Removed
-* ~2,400 lines of dead code inherited from the legacy personal project
+* ~2,400 lines of unused code
   (unused slug engine, unused metadata generator, unused image filter,
   hardcoded geography aliases), none of it reachable from the pipeline
 
