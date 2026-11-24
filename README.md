@@ -36,9 +36,8 @@ under MIT. See the [Framework/Product boundary](docs/architecture/core-product-b
 
 ## Get started
 
-Requires Python 3.10+. The published stable release is **0.12.0**;
-`main` is the unreleased **0.13.0** development line. Check
-[Release Status](docs/release-status.md) before comparing them.
+Requires Python 3.10+. The published stable release is **0.13.0**. See
+[Release Status](docs/release-status.md) for package and source identity.
 
 Install the published package:
 
