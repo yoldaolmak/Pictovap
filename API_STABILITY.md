@@ -26,6 +26,8 @@ not change without a deprecation notice and migration guidance.
 | `pictovap.core.selection` | `SelectionPolicy`, `SelectionResult`, and `select_assignments()`, including optional candidate fingerprints and additive diversity diagnostics. |
 | `pictovap.core.visual_similarity` | `compute_visual_fingerprint()` and `visual_similarity()` for deterministic, local-only editorial diversity signals. |
 | `pictovap.validation` | `validate_visual_plan()` for side-effect-free validation of serialized plans in CI and external integrations. |
+| `pictovap.decision_pack` | From 0.13.0: schema 1, `build_decision_pack()`, `validate_decision_pack()`, `transition_decision_pack_review()`; no input mutation or CMS authority. |
+| `pictovap.intent_validation` | From 0.13.0: `validate_intent_proof()` and schema 1 validation result. |
 | Adapter data | The required candidate fields, CMS placement-result fields, and validation helpers published by `pictovap.testing`. |
 | `pictovap.testing` fixtures | Deterministic, JSON-safe fixtures: `sample_candidate()`, `sample_placement()`, `sample_visual_plan()`, and `sample_decision_pack()`. |
 | CMS plan types | `CMSPlacement` and `PlacementInstruction` serialization used by `CMSAdapter.place()`. |
@@ -47,16 +49,9 @@ minor release while the framework is still pre-1.0:
 - built-in renderer presentation details in `pictovap.renderers`
 - `pictovap.vision_templates`, including prompt wording and the optional
   `VisionTemplate.max_output_tokens` tuning field
-- `intent_proof` in serialized plans and the `pictovap.intent` compiler helpers
-- `pictovap.intent_validation.validate_intent_proof()` and its `intent_*` error
-  codes (experimental until the intent schema reaches v1)
+- `pictovap.intent` compiler helpers beyond the stable schema-1 validation contract
 - `pictovap.registry` metadata and registry presentation details
 - `pictovap.plan_diff`, the plan-diff schema, and Markdown presentation details
-- `pictovap.decision_pack` and the Decision Pack schema; they are the
-  versioned, read-only foundation for future editor review surfaces.
-  `validate_decision_pack()` guarantees input immutability (never mutates the
-  passed mapping) and accepts optional root `pack_id` and `engine_version`
-  strings
 - CLI convenience commands and their human-readable output
 - built-in provider and CMS adapter implementation details
 
@@ -83,7 +78,11 @@ no planning API of its own.
   an actionable migration path, and at least one subsequent minor release in
   which the old path continues to work.
 - New optional JSON fields and YAML fields are additive. Consumers must ignore
-  fields they do not recognize.
+  fields they do not recognize. Schema-1 decision and intent validation may
+  reject unsafe or inconsistent evidence; a security correction is not a
+  reason to silently reinterpret historical records.
+- The Product integration pins a released Framework version and runs
+  differential, retained-evidence and clean-wheel tests before upgrading.
 - A new Publisher Profile schema version is a new contract. Pictovap will not
   reinterpret an existing schema version silently.
 - Before a release, the project runs its public contract tests and a clean
