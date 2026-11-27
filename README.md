@@ -1,15 +1,19 @@
-# Pictovap
+# ActoVisio Framework
 
 [![PyPI](https://img.shields.io/pypi/v/pictovap.svg)](https://pypi.org/project/pictovap/)
 [![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Pictovap Framework** is an open-source, CLI-first visual-decision framework for
+**ActoVisio Framework** is an open-source, CLI-first visual-decision framework for
 publishers. Given an article and image candidates, it explains which images
 fit each section, why, what source/license evidence is known, and how a CMS
 could place them. The output is reviewable; it is not publication approval.
 
-Pictovap is CMS-independent and does not require a hosted service.
+Formerly Pictovap Framework, it retains the `pictovap` Python package, CLI,
+repository and existing public contracts. The display-name change does not
+alter MIT rights or require the separate enterprise application.
+
+ActoVisio Framework is CMS-independent and does not require a hosted service.
 
 ## What works
 
@@ -28,7 +32,7 @@ Article → Visual Brief → Candidates → Fit Score + intent proof
 - A credential-free demo, a golden corpus benchmark, external-adapter
   contracts, and English/Turkish deterministic metadata templates.
 
-Framework owns visual decisions for **one article**. Pictovap Product is the
+Framework owns visual decisions for **one article**. ActoVisio is the
 proprietary enterprise platform built on the Framework in the approved target
 architecture. It owns site-wide visual inventory, lineage, governance,
 execution and independent verification. Framework is independently usable
@@ -128,7 +132,7 @@ deployment credentials, and the actual CMS result independently.
 
 For contribution opportunities and safe feedback, see [Contributing](CONTRIBUTING.md).
 
-Pictovap is MIT licensed ([LICENSE](LICENSE)). It has working offline
+ActoVisio Framework is MIT licensed ([LICENSE](LICENSE)). It has working offline
 tests and adapters and a reference Gutenberg review sidebar, but does not
 claim a production-ready graphical editor, broad adoption, licensed rights
 from search alone, or verified publishing outcomes.
