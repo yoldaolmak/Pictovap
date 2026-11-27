@@ -22,6 +22,14 @@ for implementation status, not hand-off notes or historical reports.
 - Keep documentation independent of any pilot publisher. Preserve source
   identities only in evidence, pilot records, and necessary technical links.
 
+## Visual judgment
+
+Start from the actual article section and reader need. Compare subject identity,
+contextual relevance, information value, crop/placement, duplication and rights;
+prefer no image over a misleading or unsupported one. Keep visual suitability,
+provenance, license and actual placement separate. Verify useful decisions against
+reviewable examples and meaningful alternatives, not planner scores alone.
+
 ## Engineering invariants
 
 - The planner returns data without printing or writing files. Render
