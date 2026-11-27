@@ -1,6 +1,6 @@
-# Pictovap Documentation
+# ActoVisio Framework Documentation
 
-Pictovap Core prepares explainable visual plans for individual articles.
+ActoVisio Framework (package and CLI `pictovap`) prepares explainable visual plans for individual articles.
 Choose the path matching your task; the [README](../README.md) explains
 current capabilities and runnable commands.
 

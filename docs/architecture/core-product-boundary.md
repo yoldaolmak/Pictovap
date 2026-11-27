@@ -1,6 +1,6 @@
 # Framework and Product Boundary
 
-**Pictovap** helps publishers decide which images belong in an article, why,
+**ActoVisio Framework** helps publishers decide which images belong in an article, why,
 and where those images could be placed. Editors need decisions they can review
 and explain, with visible source and license uncertainty, instead of repeating
 an opaque image-selection process for every page.
@@ -10,13 +10,16 @@ visual estate and its lifecycle.
 
 ## Open-core commercial strategy
 
-Pictovap Framework is public under the MIT license. Its strategic role is
+ActoVisio Framework (formerly Pictovap Framework) is public under the MIT
+license. Its package, CLI and repository identifiers remain `pictovap`.
+The shared display-brand root does not make Framework a free tier of the
+separate enterprise application. Its strategic role is
 distribution, adoption, interoperability, and technical reputation. The
 separate private Enterprise Product is the commercial offering. Existing MIT
 rights remain intact; Framework is not an exclusive proprietary licensing asset.
 
-The approved target is a one-way dependency: Pictovap Product builds on
-Pictovap Framework through a released, version-pinned public API. Framework
+The approved target is a one-way dependency: ActoVisio builds on
+ActoVisio Framework through a released, version-pinned public API. Framework
 owns shared visual decision contracts and their implementation; Product owns
 enterprise intelligence, state, authority, execution and verification. The
 Framework must remain independently usable without Product. A historical
