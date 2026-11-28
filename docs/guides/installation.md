@@ -9,23 +9,23 @@ Full setup guide covering all Pictovap components.
 - A CMS with an available adapter (WordPress, Ghost, or Strapi) — only if you intend
   to publish for real. None of this is required to run the demo.
 
-## Install the last published stable release
+## Install the published canonical release
 
-For most users, one command installs the package and registers the `pictovap`
-CLI:
+For most users, one command installs the package and registers the
+`actovisio-framework` CLI:
 
 ```bash
-pip install pictovap==0.13.0
-pictovap demo
+pip install actovisio-framework
+actovisio-framework demo
 ```
 
 That's it — the demo needs no credentials, no `.env`, and no network access.
+The legacy `pictovap==0.13.0` release remains available on PyPI; the separate
+`pictovap` 0.14.0 compatibility wheel is not published by the canonical release.
 
-## Install the 0.14.0 candidate from source
+## Install from source (editable)
 
-The new PyPI name is not yet published. The checkout uses the new CLI and import.
-
-If you plan to modify Pictovap, install from a checkout in editable mode:
+If you plan to modify ActoVisio Framework, install from a checkout in editable mode:
 
 ```bash
 git clone https://github.com/yoldaolmak/ActoVisio-Framework.git
@@ -88,7 +88,7 @@ actovisio-framework plan --article path/to/article.md --profile examples/profile
 
 **`actovisio-framework: command not found`**
 Make sure your virtualenv is active and the install completed
-(`pip install -e .` from a source checkout; use the legacy command for 0.13.0).
+(`pip install -e .` from a source checkout; use `pictovap` only for the legacy 0.13.0 release).
 
 **`plan` returns empty candidates**
 Check that at least one entry in the profile's `image_sources` is actually configured

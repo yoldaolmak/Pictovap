@@ -1,12 +1,14 @@
 # Changelog
 
-## [0.14.0] - Unreleased
+## [0.14.0] - 2026-11-28
 
 - Adopt `actovisio-framework` distribution and CLI and `actovisio_framework` imports.
 - Deprecated: legacy package/import/CLI names remain available through a separate
   compatibility distribution pinned to the matching canonical release.
 - Retain schema-1 Decision Packs, plugin entry-point groups, configuration and
-  historic release identity. No publication or Product integration is claimed.
+  historic release identity. Canonical `actovisio-framework` 0.14.0 is published
+  on PyPI; separate legacy compatibility wheel publication and Product
+  integration remain independent gates.
 
 ## [0.13.0] - 2026-11-24
 

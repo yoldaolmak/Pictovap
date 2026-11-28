@@ -6,7 +6,7 @@ This document tracks Pictovap's progress toward achieving open-source maturity a
 
 Pictovap is a published early-stage open-source package. The public core and release path are working; adoption and independently validated usage remain the missing evidence.
 
-The stable published release is [0.13.0](release-status.md).
+The stable published canonical release is [0.14.0](release-status.md) (`actovisio-framework`). Legacy `pictovap` 0.13.0 remains preserved.
 
 ## Current Evidence
 
@@ -18,9 +18,9 @@ The stable published release is [0.13.0](release-status.md).
 - Contribution templates and starter issues
 - Adoption playbook for early users
 - First-party publisher pilot case study
-- Tagged releases through v0.13.0
-- Published `pictovap` package on PyPI
-- Verified package publication and release workflow for v0.13.0
+- Tagged releases through v0.14.0
+- Published `actovisio-framework` (0.14.0) and legacy `pictovap` (0.13.0) packages on PyPI
+- Verified package publication and release workflow for v0.14.0
 - CodeQL, dependency review, and OpenSSF Scorecard workflows
 - Six external pull requests merged from five unique community contributors
 - Third-party adapter discovery through standard Python entry points

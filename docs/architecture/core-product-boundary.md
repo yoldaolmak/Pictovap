@@ -11,7 +11,7 @@ visual estate and its lifecycle.
 ## Open-core commercial strategy
 
 ActoVisio Framework (formerly Pictovap Framework) is public under the MIT
-license. Its 0.14.0 candidate uses `actovisio-framework` (distribution and CLI) and
+license. Release 0.14.0 uses `actovisio-framework` (distribution and CLI) and
 `actovisio_framework` (import). The published `pictovap` 0.13.0 and a separate
 legacy compatibility distribution preserve existing integration paths.
 The shared display-brand root does not make Framework a free tier of the
