@@ -8,7 +8,7 @@ Follow this final pre-release sequence before publishing a new ActoVisio Framewo
 - [ ] All unit tests pass (`pytest tests/unit -v`)
 - [ ] Demo runs successfully (`make demo`)
 - [ ] Docs link check passes (`make check-docs`)
-- [ ] Public-language guard passes (`pytest tests/unit/test_public_language.py -v`)
+- [ ] Security hygiene and public-boundary guards pass (`make security-check`)
 - [ ] Package builds without errors (`python -m build`)
 - [ ] CHANGELOG.md updated with release date and all sections
 - [ ] Release notes prepared in `docs/release-notes/`
@@ -26,7 +26,7 @@ Before tagging:
 * tests pass
 * demo runs
 * docs links pass
-* public-language guard passes
+* security hygiene and public-boundary guards pass
 * package builds
 * CI is green on main
 * release notes ready
