@@ -56,7 +56,7 @@ def test_wordpress_module_import():
 
 
 def test_package_version_matches_pyproject():
-    """pictovap.__version__ must stay in sync with pyproject.toml — it
+    """actovisio_framework.__version__ must stay in sync with pyproject.toml — it
     drifted once (package said 0.2.0 while pyproject said 0.2.1)."""
     import re
 
@@ -65,4 +65,4 @@ def test_package_version_matches_pyproject():
     pyproject = (REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
     match = re.search(r'^version\s*=\s*"([^"]+)"', pyproject, flags=re.M)
     assert match is not None, "version not found in pyproject.toml"
-    assert pictovap.__version__ == match.group(1)
+    assert actovisio_framework.__version__ == match.group(1)

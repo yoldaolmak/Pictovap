@@ -32,7 +32,7 @@ runs:
         
     - name: Install Pictovap
       shell: bash
-      run: pip install pictovap
+      run: pip install actovisio-framework
 
     - name: Run Pictovap Plan
       shell: bash
@@ -47,4 +47,4 @@ runs:
         if [[ -n "$PICTOVAP_PROFILE" ]]; then
           plan_args+=(--profile "$PICTOVAP_PROFILE")
         fi
-        pictovap "${plan_args[@]}"
+        actovisio-framework "${plan_args[@]}"

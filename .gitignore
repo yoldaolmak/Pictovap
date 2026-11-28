@@ -57,7 +57,10 @@ outreach/
 
 # Exception: packaged sample data shipped with the wheel (real code, not
 # personal/local app data — see [tool.setuptools.package-data] in pyproject.toml)
-!src/pictovap/data/
-!src/pictovap/data/**
-src/pictovap/data/__pycache__/
-src/pictovap/data/**/*.pyc
+!src/actovisio_framework/data/
+!src/actovisio_framework/data/**
+src/actovisio_framework/data/__pycache__/
+src/actovisio_framework/data/**/*.pyc
+
+!compat/pictovap/src/pictovap/data/
+!compat/pictovap/src/pictovap/data/**

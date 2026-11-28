@@ -175,7 +175,7 @@ def test_pictovap_plan_works_with_turkish_article(tmp_path):
     output_md = tmp_path / "turkish-plan.md"
     
     result = subprocess.run([
-        str(Path(sys.executable).with_name("pictovap")), "plan",
+        str(Path(sys.executable).with_name("actovisio-framework")), "plan",
         "--article", str(TURKISH_ARTICLE_PATH),
         "--profile", "examples/profiles/sample-publisher.yaml",
         "--output", str(output_json),

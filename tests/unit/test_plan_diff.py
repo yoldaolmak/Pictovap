@@ -252,7 +252,7 @@ def test_cli_supports_markdown_output_and_ci_fail_on_change(tmp_path):
         [
             sys.executable,
             "-m",
-            "pictovap",
+            "actovisio_framework",
             "diff",
             "--before",
             str(before_path),
@@ -283,7 +283,7 @@ def test_cli_returns_zero_for_change_without_ci_gate(tmp_path):
         [
             sys.executable,
             "-m",
-            "pictovap",
+            "actovisio_framework",
             "diff",
             "--before",
             str(before_path),

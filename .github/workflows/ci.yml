@@ -50,10 +50,10 @@ jobs:
         run: pytest tests/unit -v
 
       - name: Golden corpus benchmark
-        run: python -m pictovap benchmark --corpus tests/corpus
+        run: python -m actovisio_framework benchmark --corpus tests/corpus
 
       - name: Demo smoke test
-        run: python -m pictovap.demo
+        run: python -m actovisio_framework.demo
 
   adapter-examples:
     name: Standalone adapter packages
@@ -70,7 +70,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Pictovap and standalone packages
+      - name: Install ActoVisio Framework and standalone packages
         run: |
           python -m pip install --upgrade pip
           pip install ".[test]"
@@ -89,13 +89,13 @@ jobs:
 
       - name: Verify plugin discovery and conformance
         run: |
-          pictovap plugins --kind provider
-          pictovap plugins --kind cms
-          pictovap plugins --kind renderer
-          pictovap adapter check --kind provider --name pixabay
-          pictovap adapter check --kind provider --name wikimedia
-          pictovap adapter check --kind cms --name hugo
-          pictovap adapter check --kind renderer --name external-html-review
+          actovisio-framework plugins --kind provider
+          actovisio-framework plugins --kind cms
+          actovisio-framework plugins --kind renderer
+          actovisio-framework adapter check --kind provider --name pixabay
+          actovisio-framework adapter check --kind provider --name wikimedia
+          actovisio-framework adapter check --kind cms --name hugo
+          actovisio-framework adapter check --kind renderer --name external-html-review
 
       - name: Build standalone wheels
         run: |
@@ -158,7 +158,7 @@ jobs:
           node-version: "24"
 
       - name: Check Markdown structure
-        run: npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
+        run: npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/actovisio_framework/**/*.md' 'tests/**/*.md'
 
       - name: Check Gutenberg reference review (no npm install)
         run: |
@@ -170,3 +170,23 @@ jobs:
           if command -v php >/dev/null 2>&1; then
             php -l examples/wordpress-review-sidebar/pictovap-review-sidebar.php
           fi
+
+  wheel-identity:
+    name: Canonical and legacy wheel compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.11"
+      - name: Build both distributions without publishing
+        run: |
+          python -m pip install build
+          python -m build --wheel --outdir "$RUNNER_TEMP/canonical-wheel"
+          python -m build --wheel --outdir "$RUNNER_TEMP/legacy-wheel" compat/pictovap
+      - name: Verify isolated installation, old upgrade and retained contracts
+        run: |
+          python scripts/check_package_migration.py "$RUNNER_TEMP/canonical-wheel" "$RUNNER_TEMP/legacy-wheel"

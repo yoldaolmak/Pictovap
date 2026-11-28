@@ -1,7 +1,7 @@
 .PHONY: install check-python contributor-smoke test benchmark lint typecheck markdownlint quality contribution-check clean demo help venv check-docs security-check gutenberg-acceptance
 
 help:
-	@echo "Pictovap - Visual Finishing Engine"
+	@echo "ActoVisio Framework - Visual Finishing Engine"
 	@echo ""
 	@echo "Available targets:"
 	@echo "  demo        Run the local credential-free demo"
@@ -21,10 +21,10 @@ help:
 	@echo "  security-check  Run security hygiene tests"
 
 demo:
-	python3 -m pictovap.demo
+	python3 -m actovisio_framework.demo
 
 check-python:
-	@python3 -c 'import sys; sys.exit("Pictovap requires Python 3.10+. Use python3.11+ and recreate the virtualenv.") if sys.version_info < (3, 10) else None'
+	@python3 -c 'import sys; sys.exit("ActoVisio Framework requires Python 3.10+. Use python3.11+ and recreate the virtualenv.") if sys.version_info < (3, 10) else None'
 
 contributor-smoke: check-python
 	python3 scripts/contributor_smoke.py
@@ -36,7 +36,7 @@ test:
 	python3 -m pytest tests/unit -v
 
 benchmark:
-	python3 -m pictovap benchmark --corpus tests/corpus --format markdown
+	python3 -m actovisio_framework benchmark --corpus tests/corpus --format markdown
 
 check-docs:
 	python3 -m pytest --no-cov tests/unit/test_demo.py::test_docs_readme_links_resolve -v
@@ -48,7 +48,7 @@ typecheck:
 	python3 -m pyright
 
 markdownlint:
-	npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/pictovap/**/*.md' 'tests/**/*.md'
+	npx --yes markdownlint-cli2@0.23.0 --config .markdownlint.json 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'SECURITY.md' 'CODE_OF_CONDUCT.md' 'CHANGELOG.md' 'docs/**/*.md' 'examples/**/*.md' 'src/actovisio_framework/**/*.md' 'tests/**/*.md'
 
 quality: lint typecheck markdownlint test
 

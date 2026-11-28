@@ -28,9 +28,9 @@ def _run(label: str, command: list[str], cwd: Path) -> subprocess.CompletedProce
 
 
 def main() -> int:
-    if find_spec("pictovap") is None:
+    if find_spec("actovisio_framework") is None:
         raise SystemExit(
-            "Pictovap is not importable in this Python environment. "
+            "ActoVisio Framework is not importable in this Python environment. "
             "Run `make install` inside your virtual environment first."
         )
 
@@ -39,19 +39,19 @@ def main() -> int:
 
         version = _run(
             "version check",
-            [sys.executable, "-m", "pictovap", "--version"],
+            [sys.executable, "-m", "actovisio_framework", "--version"],
             cwd=workspace,
         )
-        if not version.stdout.strip().startswith("pictovap "):
+        if not version.stdout.strip().startswith("actovisio-framework "):
             raise SystemExit(f"version check returned unexpected output: {version.stdout!r}")
 
         demo = _run(
             "credential-free demo",
-            [sys.executable, "-m", "pictovap", "demo"],
+            [sys.executable, "-m", "actovisio_framework", "demo"],
             cwd=workspace,
         )
-        if "Pictovap Local Demo" not in demo.stdout:
-            raise SystemExit("demo did not print the expected Pictovap banner")
+        if "ActoVisio Framework Local Demo" not in demo.stdout:
+            raise SystemExit("demo did not print the expected ActoVisio Framework banner")
 
         plan_path = workspace / "sample-output.json"
         if not plan_path.exists():
@@ -62,7 +62,7 @@ def main() -> int:
             [
                 sys.executable,
                 "-m",
-                "pictovap",
+                "actovisio_framework",
                 "feedback",
                 "--plan",
                 str(plan_path),
@@ -71,7 +71,7 @@ def main() -> int:
             ],
             cwd=workspace,
         )
-        if "Pictovap External Validation" not in feedback.stdout:
+        if "ActoVisio Framework External Validation" not in feedback.stdout:
             raise SystemExit("feedback command did not print the expected Markdown summary")
 
     print("Contributor smoke check passed.")

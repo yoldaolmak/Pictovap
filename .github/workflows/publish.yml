@@ -45,9 +45,11 @@ jobs:
           import tomllib
           from pathlib import Path
 
-          version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
+          project = tomllib.loads(Path("pyproject.toml").read_text())["project"]
+          assert project["name"] == "actovisio-framework"
+          version = project["version"]
           assert re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version)
-          module = ast.parse(Path("src/pictovap/__init__.py").read_text())
+          module = ast.parse(Path("src/actovisio_framework/__init__.py").read_text())
           declared = [ast.literal_eval(node.value) for node in module.body
                       if isinstance(node, ast.Assign)
                       and any(isinstance(target, ast.Name) and target.id == "__version__"
@@ -102,7 +104,7 @@ jobs:
           python -m venv "$RUNNER_TEMP/release-smoke"
           "$RUNNER_TEMP/release-smoke/bin/python" -m pip install dist/*.whl
           cd "$RUNNER_TEMP"
-          "$RUNNER_TEMP/release-smoke/bin/python" -c 'import os; from importlib.metadata import version; from pictovap import sample_visual_plan, build_decision_pack, validate_decision_pack; assert version("pictovap") == os.environ["RELEASE_VERSION"]; assert validate_decision_pack(build_decision_pack(sample_visual_plan()))["status"] == "passed"'
+          "$RUNNER_TEMP/release-smoke/bin/python" -c 'import os; from importlib.metadata import version; from actovisio_framework import sample_visual_plan, build_decision_pack, validate_decision_pack; assert version("actovisio-framework") == os.environ["RELEASE_VERSION"]; assert validate_decision_pack(build_decision_pack(sample_visual_plan()))["status"] == "passed"'
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
@@ -133,8 +135,8 @@ jobs:
               exit 0
             fi
             gh release create "$tag" --repo "$GITHUB_REPOSITORY" --verify-tag \
-              --title "Pictovap $tag" --notes-file "docs/release-notes/$tag.md"
+              --title "ActoVisio Framework $tag" --notes-file "docs/release-notes/$tag.md"
           else
             gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-              --title "Pictovap $tag" --notes-file "docs/release-notes/$tag.md"
+              --title "ActoVisio Framework $tag" --notes-file "docs/release-notes/$tag.md"
           fi
