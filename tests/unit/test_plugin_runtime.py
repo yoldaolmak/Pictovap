@@ -5,13 +5,13 @@ from dataclasses import dataclass
 
 import pytest
 
-from pictovap import __version__
-from pictovap.app.runtime import (
+from actovisio_framework import __version__
+from actovisio_framework.app.runtime import (
     AdapterConstructionError,
     PipelineRunner,
     parse_adapter_options,
 )
-from pictovap.app.cli import main
+from actovisio_framework.app.cli import main
 
 
 def _candidate():
@@ -84,10 +84,10 @@ def _install(monkeypatch, provider=ExternalProvider, cms=ExternalCMS):
         FakeEntryPoint("external", "external:Provider", "pictovap.image_sources", provider),
         FakeEntryPoint("external", "external:CMS", "pictovap.cms", cms),
     ]
-    monkeypatch.setattr("pictovap.plugins.metadata.entry_points", lambda: FakeEntryPoints(points))
+    monkeypatch.setattr("actovisio_framework.plugins.metadata.entry_points", lambda: FakeEntryPoints(points))
 
 
-from pictovap.testing.contracts import sample_visual_plan
+from actovisio_framework.testing.contracts import sample_visual_plan
 
 
 def _write_plan(path):

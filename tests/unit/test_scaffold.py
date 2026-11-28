@@ -5,7 +5,7 @@ import sys
 
 import pytest
 
-from pictovap.scaffold import ScaffoldError, scaffold_adapter
+from actovisio_framework.scaffold import ScaffoldError, scaffold_adapter
 
 
 @pytest.mark.parametrize("kind,group,class_name", [
@@ -17,11 +17,11 @@ def test_scaffold_generates_installable_src_layout(tmp_path, kind, group, class_
 
     root = scaffold_adapter(kind, name, output=tmp_path)
 
-    assert root == tmp_path / f"pictovap-{name}"
+    assert root == tmp_path / f"actovisio-framework-{name}"
     pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
     source = next((root / "src").glob("*/__init__.py")).read_text(encoding="utf-8")
     assert group in pyproject
-    assert "pictovap>=0.11.0" in pyproject
+    assert "actovisio-framework>=0.14,<0.15" in pyproject
     assert class_name in source
     assert "__test__ = False" in source
     if kind == "provider":
@@ -51,7 +51,7 @@ def test_scaffold_force_updates_owned_files(tmp_path):
 
     scaffold_adapter("provider", "wikimedia", output=tmp_path, force=True)
 
-    assert readme.read_text(encoding="utf-8").startswith("# pictovap-wikimedia")
+    assert readme.read_text(encoding="utf-8").startswith("# actovisio-framework-wikimedia")
 
 
 @pytest.mark.parametrize(
@@ -90,7 +90,7 @@ def test_scaffold_cli_prints_created_directory(tmp_path):
         [
             sys.executable,
             "-m",
-            "pictovap.app.cli",
+            "actovisio_framework.app.cli",
             "scaffold",
             "provider",
             "wikimedia",
@@ -103,12 +103,12 @@ def test_scaffold_cli_prints_created_directory(tmp_path):
     )
 
     assert result.returncode == 0
-    assert result.stdout.strip() == str(tmp_path / "pictovap-wikimedia")
+    assert result.stdout.strip() == str(tmp_path / "actovisio-framework-wikimedia")
 
 
 def test_plugins_cli_returns_machine_readable_json():
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap.app.cli", "plugins", "--kind", "provider"],
+        [sys.executable, "-m", "actovisio_framework.app.cli", "plugins", "--kind", "provider"],
         capture_output=True,
         text=True,
         check=False,

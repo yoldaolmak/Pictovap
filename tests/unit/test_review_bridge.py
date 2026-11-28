@@ -4,8 +4,8 @@ import hashlib
 import json
 from copy import deepcopy
 
-from pictovap import sample_visual_plan, validate_decision_pack
-from pictovap.app import cli
+from actovisio_framework import sample_visual_plan, validate_decision_pack
+from actovisio_framework.app import cli
 
 
 def _prepare(tmp_path):
@@ -23,7 +23,7 @@ def _prepare(tmp_path):
 def _draft(pack_path, action="accept", actor="editor"):
     pack = json.loads(pack_path.read_text(encoding="utf-8"))
     return {
-        "kind": "pictovap.review-decisions",
+        "kind": "actovisio_framework.review-decisions",
         "schema_version": "1",
         "article_id": str(pack["article"]["id"]),
         "source_sha256": hashlib.sha256(pack_path.read_bytes()).hexdigest(),

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from pictovap.renderers import HTMLReportRenderer, MarkdownReportRenderer
-from pictovap.testing import ContractViolation, assert_report_renderer_contract
+from actovisio_framework.renderers import HTMLReportRenderer, MarkdownReportRenderer
+from actovisio_framework.testing import ContractViolation, assert_report_renderer_contract
 
 
 def _plan():

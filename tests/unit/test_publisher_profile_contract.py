@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from pictovap.core.profile import PROFILE_SCHEMA_VERSION, PublisherProfile, PublisherProfileError
+from actovisio_framework.core.profile import PROFILE_SCHEMA_VERSION, PublisherProfile, PublisherProfileError
 
 
 def test_all_shipped_profiles_satisfy_the_v1_contract():

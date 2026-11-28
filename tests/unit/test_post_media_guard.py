@@ -1,13 +1,13 @@
 import json
 from unittest.mock import MagicMock
 
-from pictovap.services.post_media_guard import (
+from actovisio_framework.services.post_media_guard import (
     assess_post_media,
     load_post_media_manifest,
     media_items_from_content,
     save_post_media_manifest,
 )
-from pictovap.services.wordpress import WordPressUploader
+from actovisio_framework.services.wordpress import WordPressUploader
 
 
 def test_media_items_from_content_keeps_nearest_heading():
