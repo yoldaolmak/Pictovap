@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from pictovap.core.primitives import CMSPlacement, PlacementInstruction
-from pictovap.testing import assert_cms_adapter_contract
+from actovisio_framework.core.primitives import CMSPlacement, PlacementInstruction
+from actovisio_framework.testing import assert_cms_adapter_contract
 from pictovap_hugo import HugoAdapter
 
 

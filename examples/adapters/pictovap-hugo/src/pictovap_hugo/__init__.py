@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-from pictovap.core.primitives import CMSPlacement, PlacementInstruction
+from actovisio_framework.core.primitives import CMSPlacement, PlacementInstruction
 
 
 @dataclass(frozen=True)
