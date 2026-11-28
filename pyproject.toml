@@ -52,11 +52,11 @@ typecheck = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yoldaolmak/Pictovap"
-Documentation = "https://github.com/yoldaolmak/Pictovap/blob/main/docs/README.md"
-Repository = "https://github.com/yoldaolmak/Pictovap.git"
-Issues = "https://github.com/yoldaolmak/Pictovap/issues"
-Changelog = "https://github.com/yoldaolmak/Pictovap/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/yoldaolmak/ActoVisio-Framework"
+Documentation = "https://github.com/yoldaolmak/ActoVisio-Framework/blob/main/docs/README.md"
+Repository = "https://github.com/yoldaolmak/ActoVisio-Framework.git"
+Issues = "https://github.com/yoldaolmak/ActoVisio-Framework/issues"
+Changelog = "https://github.com/yoldaolmak/ActoVisio-Framework/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pictovap = "pictovap.app.cli:main"

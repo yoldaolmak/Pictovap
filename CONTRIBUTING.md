@@ -28,7 +28,7 @@ of the `contribution: no-claim` issues and open a focused PR directly:
 ### Recommended starting point
 
 Start with [#65, the realistic article fixture for image
-placement](https://github.com/yoldaolmak/Pictovap/issues/65), unless you already
+placement](https://github.com/yoldaolmak/ActoVisio-Framework/issues/65), unless you already
 know that a different kit matches your work better. It is the shortest path to
 a useful contribution:
 
@@ -43,17 +43,17 @@ the whole repository before starting.
 
 | Issue | Best first contribution | Good fit |
 | --- | --- | --- |
-| [#65 Realistic article fixture for image placement](https://github.com/yoldaolmak/Pictovap/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | Docs/fixtures |
-| [#66 Editor-report terminology for CMS image placement](https://github.com/yoldaolmak/Pictovap/issues/66) | Plain-English explanation of CMS/image-placement terms for editors | Docs |
-| [#41 Gutenberg image-block insertion regression fixture](https://github.com/yoldaolmak/Pictovap/issues/41) | One synthetic fixture proving heading-based image placement, alt text, captions, and idempotency | WordPress/Gutenberg tests |
-| [#40 WordPress media-library upload response fixture](https://github.com/yoldaolmak/Pictovap/issues/40) | Mocked media-library response preserving ID, URL, alt text, caption, and safe metadata | WordPress REST tests |
-| [#42 Editor-report example for WordPress image placement review](https://github.com/yoldaolmak/Pictovap/issues/42) | Copyable Markdown example showing what an editor reviews before CMS publishing | Docs/examples |
-| [#24 Realistic Gutenberg blocks fixture](https://github.com/yoldaolmak/Pictovap/issues/24) | A readable Gutenberg input fixture for VisualBrief regression coverage | Article parsing fixtures |
-| [#26 WordPress planning behavior for posts without H2 headings](https://github.com/yoldaolmak/Pictovap/issues/26) | Expected fallback behavior when an article has no clear section headings | Planning rules |
-| [#28 WordPress Gutenberg planning example profile and walkthrough](https://github.com/yoldaolmak/Pictovap/issues/28) | A realistic profile plus walkthrough for the WordPress planning path | Docs/profiles |
+| [#65 Realistic article fixture for image placement](https://github.com/yoldaolmak/ActoVisio-Framework/issues/65) | One synthetic Markdown article that creates useful image-placement decisions | Docs/fixtures |
+| [#66 Editor-report terminology for CMS image placement](https://github.com/yoldaolmak/ActoVisio-Framework/issues/66) | Plain-English explanation of CMS/image-placement terms for editors | Docs |
+| [#41 Gutenberg image-block insertion regression fixture](https://github.com/yoldaolmak/ActoVisio-Framework/issues/41) | One synthetic fixture proving heading-based image placement, alt text, captions, and idempotency | WordPress/Gutenberg tests |
+| [#40 WordPress media-library upload response fixture](https://github.com/yoldaolmak/ActoVisio-Framework/issues/40) | Mocked media-library response preserving ID, URL, alt text, caption, and safe metadata | WordPress REST tests |
+| [#42 Editor-report example for WordPress image placement review](https://github.com/yoldaolmak/ActoVisio-Framework/issues/42) | Copyable Markdown example showing what an editor reviews before CMS publishing | Docs/examples |
+| [#24 Realistic Gutenberg blocks fixture](https://github.com/yoldaolmak/ActoVisio-Framework/issues/24) | A readable Gutenberg input fixture for VisualBrief regression coverage | Article parsing fixtures |
+| [#26 WordPress planning behavior for posts without H2 headings](https://github.com/yoldaolmak/ActoVisio-Framework/issues/26) | Expected fallback behavior when an article has no clear section headings | Planning rules |
+| [#28 WordPress Gutenberg planning example profile and walkthrough](https://github.com/yoldaolmak/ActoVisio-Framework/issues/28) | A realistic profile plus walkthrough for the WordPress planning path | Docs/profiles |
 
 See the live queue:
-[`contribution: no-claim`](https://github.com/yoldaolmak/Pictovap/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22contribution%3A%20no-claim%22).
+[`contribution: no-claim`](https://github.com/yoldaolmak/ActoVisio-Framework/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22contribution%3A%20no-claim%22).
 
 For the shortest copy-paste path, use
 [First PR Kits](docs/contributing/first-pr-kits.md). The kits name the exact
@@ -70,7 +70,7 @@ make contributor-smoke
 Run `make contribution-check` before opening the pull request.
 
 If local setup is slow, start from
-[GitHub Codespaces](https://codespaces.new/yoldaolmak/Pictovap). The
+[GitHub Codespaces](https://codespaces.new/yoldaolmak/ActoVisio-Framework). The
 development container installs the same test, lint, and type-check extras used
 by `make contribution-check`.
 
@@ -79,7 +79,7 @@ by `make contribution-check`.
 ## 🚀 How Can I Contribute?
 
 ### 1. Reporting Bugs
-If you find a bug, please open an [issue](https://github.com/yoldaolmak/Pictovap/issues) and include:
+If you find a bug, please open an [issue](https://github.com/yoldaolmak/ActoVisio-Framework/issues) and include:
 - A clear, descriptive title.
 - Steps to reproduce the behavior.
 - Expected behavior versus actual behavior.
@@ -88,7 +88,7 @@ If you find a bug, please open an [issue](https://github.com/yoldaolmak/Pictovap
   paths, image URLs, profile names, or credentials.
 
 ### 2. Suggesting Enhancements
-Have an idea that would make Pictovap better? Open a [discussion](https://github.com/yoldaolmak/Pictovap/discussions) describing:
+Have an idea that would make Pictovap better? Open a [discussion](https://github.com/yoldaolmak/ActoVisio-Framework/discussions) describing:
 - The specific problem you are trying to solve.
 - Your proposed solution.
 - Any alternative solutions you have considered.

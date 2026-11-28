@@ -2,7 +2,7 @@
 
 ## Product Name
 
-**ActoVisio Framework** (formerly Pictovap Framework/Core) is the public MIT framework. Its display brand is ActoVisio Framework in README, documentation and user-facing descriptions; the technical GitHub repository, PyPI distribution and CLI retain `pictovap`. ActoVisio is the separate private enterprise application; Pictova remains a separate public tool.
+**ActoVisio Framework** (formerly Pictovap Framework/Core) is the public MIT framework. Its display brand is ActoVisio Framework in README, documentation and user-facing descriptions; the same public GitHub repository was renamed to `ActoVisio-Framework` on 28 November 2026. The PyPI distribution, Python import and CLI retain `pictovap`. ActoVisio is the separate private enterprise application; Pictova remains a separate public tool.
 
 ## Canonical Package Name
 
@@ -16,7 +16,7 @@ identity.
 | Display brand | ActoVisio Framework | Public brand identity |
 | Python package | `pictovap` | Matches the public distribution |
 | CLI command | `pictovap` | One canonical automation entry point |
-| Repository | `Pictovap` | GitHub repository name |
+| Repository | `ActoVisio-Framework` | Same GitHub repository, ID 1294864094 |
 | PyPI package | `pictovap` | Published package name |
 
 ## Compatibility
