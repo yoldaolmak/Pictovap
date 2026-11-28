@@ -2,8 +2,8 @@
 
 from PIL import Image
 
-from pictovap import compute_visual_fingerprint, visual_similarity
-from pictovap.core.visual_similarity import collect_candidate_fingerprints
+from actovisio_framework import compute_visual_fingerprint, visual_similarity
+from actovisio_framework.core.visual_similarity import collect_candidate_fingerprints
 
 
 def test_near_duplicate_images_have_high_similarity(tmp_path):

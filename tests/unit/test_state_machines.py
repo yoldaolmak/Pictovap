@@ -6,17 +6,17 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from pictovap.app.runtime import PipelineRunner
-from pictovap.core.primitives import FitScore, VisualBrief
-from pictovap.core.profile import PublisherProfile
-from pictovap.core.selection import SelectionPolicy, select_assignments
-from pictovap.core.sources import (
+from actovisio_framework.app.runtime import PipelineRunner
+from actovisio_framework.core.primitives import FitScore, VisualBrief
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.core.selection import SelectionPolicy, select_assignments
+from actovisio_framework.core.sources import (
     NOT_EVALUABLE,
     OBSERVED,
     UNKNOWN,
     SourceAttempt,
 )
-from pictovap.core.states import (
+from actovisio_framework.core.states import (
     CandidateDecision,
     DoctorStatus,
     MediaGuardStatus,
@@ -30,13 +30,13 @@ from pictovap.core.states import (
     guard_status_for_state,
     resolve_publish_status,
 )
-from pictovap.decision_pack import transition_decision_pack_review
-from pictovap.intent import compile_intent_proof
-from pictovap.intent_validation import validate_intent_proof
-from pictovap.services.wordpress import WordPressUploader
-from pictovap.testing import sample_decision_pack, sample_visual_plan
-from pictovap.utils.config import load_project_env, reset_project_env
-from pictovap.validation import validate_visual_plan
+from actovisio_framework.decision_pack import transition_decision_pack_review
+from actovisio_framework.intent import compile_intent_proof
+from actovisio_framework.intent_validation import validate_intent_proof
+from actovisio_framework.services.wordpress import WordPressUploader
+from actovisio_framework.testing import sample_decision_pack, sample_visual_plan
+from actovisio_framework.utils.config import load_project_env, reset_project_env
+from actovisio_framework.validation import validate_visual_plan
 
 
 # ---------------------------------------------------------------------------
@@ -241,7 +241,7 @@ def test_pipeline_runner_publish_states(tmp_path: Path) -> None:
     runner = PipelineRunner()
 
     with pytest.MonkeyPatch.context() as mp:
-        mp.setattr("pictovap.app.runtime.construct_plugin", lambda *args, **kwargs: mock_adapter)
+        mp.setattr("actovisio_framework.app.runtime.construct_plugin", lambda *args, **kwargs: mock_adapter)
 
         # dry-run
         res_dry = runner.publish(plan=str(plan_file), cms="mock", dry_run=True)
@@ -334,7 +334,7 @@ def test_guard_post_media_returns_both_status_and_state(monkeypatch: pytest.Monk
 
     # 2. Untracked (no manifest)
     monkeypatch.setattr(uploader, "fetch_post_context", lambda pid: {"content_raw": "plain text"})
-    monkeypatch.setattr("pictovap.services.wordpress.load_post_media_manifest", lambda site, pid: None)
+    monkeypatch.setattr("actovisio_framework.services.wordpress.load_post_media_manifest", lambda site, pid: None)
     res_untracked = uploader.guard_post_media(101)
     assert res_untracked["status"] == MediaGuardStatus.UNTRACKED.value
     assert res_untracked["state"] == MediaIntegrityState.UNTRACKED.value
@@ -346,7 +346,7 @@ def test_guard_post_media_returns_both_status_and_state(monkeypatch: pytest.Monk
         "expected_media_ids": [42],
         "media_items": [{"media_id": 42}],
     }
-    monkeypatch.setattr("pictovap.services.wordpress.load_post_media_manifest", lambda site, pid: dummy_manifest)
+    monkeypatch.setattr("actovisio_framework.services.wordpress.load_post_media_manifest", lambda site, pid: dummy_manifest)
     monkeypatch.setattr(
         uploader,
         "fetch_post_context",
@@ -366,7 +366,7 @@ def test_guard_post_media_returns_both_status_and_state(monkeypatch: pytest.Monk
     def _raise(*args: object, **kwargs: object) -> None:
         raise OSError("Disk failure")
 
-    monkeypatch.setattr("pictovap.services.wordpress.load_post_media_manifest", _raise)
+    monkeypatch.setattr("actovisio_framework.services.wordpress.load_post_media_manifest", _raise)
     res_err = uploader.guard_post_media(101)
     assert res_err["status"] == MediaGuardStatus.FAILED.value
     assert res_err["state"] == MediaIntegrityState.INVALID.value

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from pictovap.vision_templates import (
+from actovisio_framework.vision_templates import (
     VisionTemplate,
     TRAVEL_BLOG,
     TECHNICAL,
@@ -73,7 +73,7 @@ def test_register_and_retrieve_custom_template():
 
 def test_custom_template_via_string_in_chain(monkeypatch):
     """analyze_image_vision_chain accepts a template name string."""
-    from pictovap.engine import vision_chain as vc
+    from actovisio_framework.engine import vision_chain as vc
 
     captured = {}
 
@@ -99,7 +99,7 @@ def test_custom_template_via_string_in_chain(monkeypatch):
 
 def test_builtin_template_via_object_in_chain(monkeypatch):
     """analyze_image_vision_chain accepts a VisionTemplate object."""
-    from pictovap.engine import vision_chain as vc
+    from actovisio_framework.engine import vision_chain as vc
 
     captured = {}
 

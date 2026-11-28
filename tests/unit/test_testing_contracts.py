@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from pictovap.providers.local import LocalFolderSource
-from pictovap.testing import (
+from actovisio_framework.providers.local import LocalFolderSource
+from actovisio_framework.testing import (
     ContractViolation,
     assert_cms_adapter_contract,
     assert_image_source_contract,

@@ -6,14 +6,14 @@ from unittest.mock import patch
 
 from PIL import Image
 
-from pictovap.core.adapters import ImageSourceAdapter
-from pictovap.core.profile import PublisherProfile
-from pictovap.core.sources import fetch_candidates, fetch_candidates_with_evidence
-from pictovap.providers.deposit import DepositPhotosSource
-from pictovap.providers.local import LocalFolderSource, _normalize_exif
-from pictovap.providers.openverse import OpenverseSource
-from pictovap.providers.pexels import PexelsSource
-from pictovap.providers.unsplash import UnsplashSource
+from actovisio_framework.core.adapters import ImageSourceAdapter
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.core.sources import fetch_candidates, fetch_candidates_with_evidence
+from actovisio_framework.providers.deposit import DepositPhotosSource
+from actovisio_framework.providers.local import LocalFolderSource, _normalize_exif
+from actovisio_framework.providers.openverse import OpenverseSource
+from actovisio_framework.providers.pexels import PexelsSource
+from actovisio_framework.providers.unsplash import UnsplashSource
 
 
 def test_all_source_adapters_conform_to_protocol():
@@ -169,7 +169,7 @@ def test_fetch_candidates_uses_openverse_when_configured():
         brand_name="Test Publisher",
         image_sources=["openverse"],
     )
-    with patch("pictovap.providers.openverse.urllib.request.urlopen", return_value=mock_resp):
+    with patch("actovisio_framework.providers.openverse.urllib.request.urlopen", return_value=mock_resp):
         candidates = fetch_candidates(profile, query="travel", count=5)
 
     assert len(candidates) == 1
@@ -236,7 +236,7 @@ def test_source_evidence_marks_sources_that_were_never_queried(tmp_path, monkeyp
 
 def test_depositphotos_search_is_not_licensed(monkeypatch):
     """Search metadata must not be mistaken for a licensed editorial asset."""
-    from pictovap.providers import deposit
+    from actovisio_framework.providers import deposit
 
     monkeypatch.setattr(deposit, "search", lambda query, count: [{
         "id": "12345", "title": "Actual workshop building",

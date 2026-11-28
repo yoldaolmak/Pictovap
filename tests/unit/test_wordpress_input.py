@@ -5,9 +5,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
-from pictovap.core.primitives import VisualBrief
-from pictovap.api import create_wordpress_visual_plan
-from pictovap.services.wordpress import WordPressPostReadError
+from actovisio_framework.core.primitives import VisualBrief
+from actovisio_framework.api import create_wordpress_visual_plan
+from actovisio_framework.services.wordpress import WordPressPostReadError
 
 
 GUTENBERG_CONTENT = """
@@ -68,7 +68,7 @@ def test_visual_brief_from_gutenberg_html_flattens_inline_heading_markup():
 
 def test_wordpress_plan_reads_post_without_writing(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        "pictovap.services.wordpress.fetch_post_context",
+        "actovisio_framework.services.wordpress.fetch_post_context",
         lambda post_id, site: {
             "id": post_id,
             "title": "A calmer weekend outdoors",
@@ -155,7 +155,7 @@ def _heading_block(text, level=2):
 
 def test_heading_insertion_prefers_the_exact_heading_over_an_earlier_superstring():
     """Targeting 'Tips' must not land under an earlier 'Tips for Packing'."""
-    from pictovap.services.wordpress import _insert_block_after_heading
+    from actovisio_framework.services.wordpress import _insert_block_after_heading
 
     content = _heading_block("Tips for Packing") + "\n" + _heading_block("Tips")
     updated = _insert_block_after_heading(
@@ -167,7 +167,7 @@ def test_heading_insertion_prefers_the_exact_heading_over_an_earlier_superstring
 
 
 def test_heading_insertion_still_falls_back_to_a_substring_match():
-    from pictovap.services.wordpress import _insert_block_after_heading
+    from actovisio_framework.services.wordpress import _insert_block_after_heading
 
     content = _heading_block("Packing Smart for Long Trips")
     updated = _insert_block_after_heading(
@@ -179,7 +179,7 @@ def test_heading_insertion_still_falls_back_to_a_substring_match():
 
 def test_heading_insertion_fails_closed_on_an_empty_target():
     """An empty target would otherwise match the first heading in a live post."""
-    from pictovap.services.wordpress import _insert_block_after_heading
+    from actovisio_framework.services.wordpress import _insert_block_after_heading
 
     content = _heading_block("Introduction") + "\n" + _heading_block("Conclusion")
     for empty in ("", "   ", "\n"):
@@ -190,7 +190,7 @@ def test_heading_insertion_fails_closed_on_an_empty_target():
 
 def test_upload_media_declares_the_file_s_own_content_type(monkeypatch, tmp_path):
     """A PNG must not be uploaded to the media library announced as WebP."""
-    from pictovap.services import wordpress
+    from actovisio_framework.services import wordpress
 
     monkeypatch.setenv("WP_URL", "https://example.test")
     monkeypatch.setenv("WP_USER", "editor")
