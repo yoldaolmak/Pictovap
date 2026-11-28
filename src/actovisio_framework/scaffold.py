@@ -1,0 +1,392 @@
+"""Generate standalone, testable ActoVisio Framework adapter plugin packages."""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+from textwrap import dedent
+from typing import Dict, Literal
+
+ScaffoldKind = Literal["provider", "cms"]
+
+
+class ScaffoldError(ValueError):
+    """Raised when a scaffold request is invalid or would overwrite files."""
+
+
+def _normalize_name(name: str) -> tuple[str, str, str]:
+    slug = name.strip().lower().replace("_", "-")
+    if not re.fullmatch(r"[a-z][a-z0-9-]*", slug):
+        raise ScaffoldError(
+            "Adapter name must start with a letter and contain only letters, numbers, or hyphens"
+        )
+    module = slug.replace("-", "_")
+    class_stem = "".join(part.capitalize() for part in module.split("_"))
+    return slug, module, class_stem
+
+
+def _adapter_class_name(class_stem: str, suffix: str) -> str:
+    """Add a contract suffix without producing names such as ``SourceSource``."""
+    if class_stem.lower().endswith(suffix.lower()):
+        return class_stem
+    return f"{class_stem}{suffix}"
+
+
+def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
+    package = f"actovisio_framework_{module}"
+    adapter_class = _adapter_class_name(class_stem, "Source")
+    return {
+        "pyproject.toml": dedent(f'''\
+            [build-system]
+            requires = ["setuptools>=77"]
+            build-backend = "setuptools.build_meta"
+
+            [project]
+            name = "actovisio-framework-{slug}"
+            version = "0.1.0"
+            description = "{class_stem} image-source adapter for ActoVisio Framework."
+            readme = "README.md"
+            requires-python = ">=3.10"
+            license = "MIT"
+            keywords = ["pictovap", "image adapter", "cms"]
+            dependencies = ["actovisio-framework>=0.14,<0.15"]
+
+            [project.entry-points."pictovap.image_sources"]
+            {slug} = "{package}:{adapter_class}"
+
+            [project.optional-dependencies]
+            test = ["pytest>=9.0.3"]
+
+            [tool.setuptools.packages.find]
+            where = ["src"]
+        '''),
+        f"src/{package}/__init__.py": dedent(f'''\
+            """{class_stem} image-source adapter for ActoVisio Framework."""
+
+            from __future__ import annotations
+
+            from typing import Any, Dict, List
+
+            from actovisio_framework import ImageSourceAdapter
+
+
+            class {adapter_class}(ImageSourceAdapter):
+                """Return image candidates from {class_stem}."""
+
+                # Avoid pytest collecting adapter names such as ``test-source``
+                # as test classes when imported by a fixture.
+                __test__ = False
+
+                def __init__(self, api_key: str | None = None) -> None:
+                    self.api_key = api_key
+
+                def search_candidates(
+                    self, query: str, count: int
+                ) -> List[Dict[str, Any]]:
+                    # Replace this empty result with the provider API integration.
+                    # Missing credentials must remain a safe empty-result path.
+                    if not self.api_key:
+                        return []
+                    return []
+
+
+            __all__ = ["{adapter_class}"]
+        '''),
+        "tests/test_adapter.py": dedent(f'''\
+            from {package} import {adapter_class}
+            from actovisio_framework.testing import (
+                assert_image_source_contract,
+                sample_candidate,
+                validate_candidates,
+            )
+
+
+            def test_sample_candidate_documents_provider_shape():
+                validate_candidates([sample_candidate()])
+
+
+            def test_adapter_contract_without_credentials():
+                adapter = {adapter_class}()
+                assert assert_image_source_contract(adapter) == []
+        '''),
+        "Makefile": dedent('''\
+            .PHONY: test check
+
+            test:
+            \tpython -m pytest -q
+
+            check: test
+        '''),
+        ".github/workflows/ci.yml": dedent('''\
+            name: Adapter CI
+
+            on:
+              push:
+              pull_request:
+
+            jobs:
+              test:
+                runs-on: ubuntu-latest
+                steps:
+                  - uses: actions/checkout@v4
+                  - uses: actions/setup-python@v5
+                    with:
+                      python-version: "3.12"
+                  - run: python -m pip install -e ".[test]"
+                  - run: make check
+        '''),
+        "README.md": dedent(f'''\
+            # actovisio-framework-{slug}
+
+            `{class_stem}` image-source adapter for ActoVisio Framework.
+
+            ## Development
+
+            ```bash
+            python -m venv .venv
+            source .venv/bin/activate
+            pip install -e ".[test]"
+            pytest
+            actovisio-framework plugins --kind provider
+            actovisio-framework doctor --provider {slug}
+            actovisio-framework adapter check --kind provider --name {slug} --exercise
+            make check
+            ```
+
+            Run the adapter in the real planning pipeline:
+
+            ```bash
+            export {module.upper()}_API_KEY="..."
+            actovisio-framework plan --article article.md --provider {slug} \\
+              --provider-option api_key=@{module.upper()}_API_KEY --output plan.json
+            ```
+
+            Implement the provider request in `{adapter_class}.search_candidates`,
+            mock all HTTP calls in tests, and preserve the credential-free empty-result path.
+        '''),
+        "CONTRIBUTING.md": dedent(f'''\
+            # Contributing to actovisio-framework-{slug}
+
+            This package is a standalone ActoVisio Framework provider plugin. Keep the
+            implementation boundary small: the adapter converts provider results into
+            ActoVisio Framework candidates, and ActoVisio Framework owns planning and publishing.
+
+            ## First successful loop
+
+            ```bash
+            python -m venv .venv
+            source .venv/bin/activate
+            pip install -e ".[test]"
+            pytest
+            actovisio-framework plugins --kind provider
+            actovisio-framework doctor --provider {slug}
+            ```
+
+            ## Definition of done
+
+            - Keep credentials in environment variables or explicit constructor arguments.
+            - Mock provider HTTP calls in tests.
+            - Validate the public boundary with `assert_image_source_contract`.
+            - Run `actovisio-framework plan` with this provider before releasing.
+            - Document license and attribution behavior for returned images.
+        '''),
+        ".gitignore": ".venv/\n__pycache__/\n*.egg-info/\n.pytest_cache/\n",
+    }
+
+
+def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
+    package = f"actovisio_framework_{module}"
+    adapter_class = _adapter_class_name(class_stem, "Adapter")
+    return {
+        "pyproject.toml": dedent(f'''\
+            [build-system]
+            requires = ["setuptools>=77"]
+            build-backend = "setuptools.build_meta"
+
+            [project]
+            name = "actovisio-framework-{slug}"
+            version = "0.1.0"
+            description = "{class_stem} CMS adapter for ActoVisio Framework."
+            readme = "README.md"
+            requires-python = ">=3.10"
+            license = "MIT"
+            keywords = ["pictovap", "cms adapter", "publishing"]
+            dependencies = ["actovisio-framework>=0.14,<0.15"]
+
+            [project.entry-points."pictovap.cms"]
+            {slug} = "{package}:{adapter_class}"
+
+            [project.optional-dependencies]
+            test = ["pytest>=9.0.3"]
+
+            [tool.setuptools.packages.find]
+            where = ["src"]
+        '''),
+        f"src/{package}/__init__.py": dedent(f'''\
+            """{class_stem} CMS adapter for ActoVisio Framework."""
+
+            from __future__ import annotations
+
+            from typing import Any, Dict
+
+            from actovisio_framework import CMSAdapter
+            from actovisio_framework.core.primitives import CMSPlacement
+
+
+            class {adapter_class}(CMSAdapter):
+                """Place ActoVisio Framework image instructions into {class_stem}."""
+
+                # Avoid pytest collecting adapter names such as ``test-cms``
+                # as test classes when imported by a fixture.
+                __test__ = False
+
+                def __init__(
+                    self, api_url: str | None = None, api_token: str | None = None
+                ) -> None:
+                    self.api_url = api_url
+                    self.api_token = api_token
+
+                def place(self, placement: CMSPlacement) -> Dict[str, Any]:
+                    # Replace this no-op result with the CMS API integration.
+                    warnings = ["Adapter scaffold has no transport implementation"]
+                    if not self.api_url or not self.api_token:
+                        warnings.append("CMS credentials are not configured")
+                    return {{
+                        "placed": [],
+                        "failed": [],
+                        "warnings": warnings,
+                    }}
+
+
+            __all__ = ["{adapter_class}"]
+        '''),
+        "tests/test_adapter.py": dedent(f'''\
+            from {package} import {adapter_class}
+            from actovisio_framework.testing import assert_cms_adapter_contract
+
+
+            def test_adapter_contract():
+                adapter = {adapter_class}("https://cms.example.com", "test-token")
+                result = assert_cms_adapter_contract(adapter)
+                assert result["warnings"]
+        '''),
+        "Makefile": dedent('''\
+            .PHONY: test check
+
+            test:
+            \tpython -m pytest -q
+
+            check: test
+        '''),
+        ".github/workflows/ci.yml": dedent('''\
+            name: Adapter CI
+
+            on:
+              push:
+              pull_request:
+
+            jobs:
+              test:
+                runs-on: ubuntu-latest
+                steps:
+                  - uses: actions/checkout@v4
+                  - uses: actions/setup-python@v5
+                    with:
+                      python-version: "3.12"
+                  - run: python -m pip install -e ".[test]"
+                  - run: make check
+        '''),
+        "README.md": dedent(f'''\
+            # actovisio-framework-{slug}
+
+            `{class_stem}` CMS adapter for ActoVisio Framework.
+
+            ## Development
+
+            ```bash
+            python -m venv .venv
+            source .venv/bin/activate
+            pip install -e ".[test]"
+            pytest
+            actovisio-framework plugins --kind cms
+            actovisio-framework adapter check --kind cms --name {slug}
+            make check
+            ```
+
+            Validate configuration, then preview a real plan without writes:
+
+            ```bash
+            export {module.upper()}_API_TOKEN="..."
+            actovisio-framework doctor --cms {slug} \\
+              --cms-option api_url=https://cms.example.com \\
+              --cms-option api_token=@{module.upper()}_API_TOKEN
+            actovisio-framework publish --plan plan.json --cms {slug} --dry-run \\
+              --cms-option api_url=https://cms.example.com \\
+              --cms-option api_token=@{module.upper()}_API_TOKEN
+            ```
+
+            Implement the CMS request in `{adapter_class}.place`, mock all HTTP calls
+            in tests, and keep the `placed`, `failed`, and `warnings` result fields.
+        '''),
+        "CONTRIBUTING.md": dedent(f'''\
+            # Contributing to actovisio-framework-{slug}
+
+            This package is a standalone ActoVisio Framework CMS plugin. Keep the
+            implementation boundary small: the adapter receives a typed placement and
+            returns `placed`, `failed`, and `warnings` without changing ActoVisio Framework core.
+
+            ## First successful loop
+
+            ```bash
+            python -m venv .venv
+            source .venv/bin/activate
+            pip install -e ".[test]"
+            pytest
+            actovisio-framework plugins --kind cms
+            actovisio-framework adapter check --kind cms --name {slug}
+            ```
+
+            ## Definition of done
+
+            - Keep credentials in environment variables or explicit constructor arguments.
+            - Mock CMS or filesystem calls in tests.
+            - Validate the public boundary with `assert_cms_adapter_contract`.
+            - Run `actovisio-framework doctor` and `actovisio-framework publish --dry-run` before releasing.
+            - Document idempotency and rollback limits for CMS writes.
+        '''),
+        ".gitignore": ".venv/\n__pycache__/\n*.egg-info/\n.pytest_cache/\n",
+    }
+
+
+def scaffold_adapter(
+    kind: ScaffoldKind,
+    name: str,
+    *,
+    output: str | Path = ".",
+    force: bool = False,
+) -> Path:
+    """Create a standalone adapter plugin project and return its root path."""
+    if kind not in {"provider", "cms"}:
+        raise ScaffoldError(f"Unknown adapter kind: {kind}")
+    slug, module, class_stem = _normalize_name(name)
+    root = Path(output).expanduser().resolve() / f"actovisio-framework-{slug}"
+    files = (
+        _provider_files(slug, module, class_stem)
+        if kind == "provider"
+        else _cms_files(slug, module, class_stem)
+    )
+
+    conflicts = [str(root / relative) for relative in files if (root / relative).exists()]
+    if conflicts and not force:
+        raise ScaffoldError(
+            "Refusing to overwrite existing scaffold files: " + ", ".join(conflicts)
+        )
+
+    for relative, content in files.items():
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(content, encoding="utf-8")
+    return root
+
+
+__all__ = ["ScaffoldError", "ScaffoldKind", "scaffold_adapter"]

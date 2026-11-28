@@ -13,10 +13,10 @@ from pathlib import Path
 
 import pytest
 
-from pictovap import api, demo
-from pictovap.core.profile import PublisherProfile
-from pictovap.data.demo_candidates import MOCK_CANDIDATES
-from pictovap.engine.planner import PLAN_LABEL, build_visual_plan
+from actovisio_framework import api, demo
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.data.demo_candidates import MOCK_CANDIDATES
+from actovisio_framework.engine.planner import PLAN_LABEL, build_visual_plan
 
 
 ARTICLE = Path(__file__).resolve().parents[2] / "examples" / "articles" / "travel-guide.md"
@@ -85,7 +85,7 @@ def test_console_view_reports_the_licenses_the_artifact_records(plan):
 
 
 def test_demo_module_exposes_no_second_public_api():
-    """The stable planning API lives in `pictovap.api` and nowhere else."""
+    """The stable planning API lives in `actovisio_framework.api` and nowhere else."""
     assert not hasattr(demo, "create_visual_plan")
     assert not hasattr(demo, "create_wordpress_visual_plan")
     assert callable(api.create_visual_plan)

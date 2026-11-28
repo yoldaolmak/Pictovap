@@ -1,6 +1,6 @@
 # ActoVisio Framework Documentation
 
-ActoVisio Framework (package and CLI `pictovap`) prepares explainable visual plans for individual articles.
+ActoVisio Framework (candidate package and CLI `actovisio-framework`, import `actovisio_framework`) prepares explainable visual plans for individual articles.
 Choose the path matching your task; the [README](../README.md) explains
 current capabilities and runnable commands.
 
@@ -14,7 +14,7 @@ current capabilities and runnable commands.
 
 ## Use it for publishing
 
-- [Quickstart](quickstart.md) and [Using Pictovap](guides/using-pictovap.md)
+- [Quickstart](quickstart.md) and [Using ActoVisio Framework](guides/using-pictovap.md)
 - [Image Sources](guides/image-sources.md) and
   [WordPress Setup](guides/wordpress-setup.md)
 - [CLI Reference](reference/cli.md),

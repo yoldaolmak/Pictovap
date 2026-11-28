@@ -4,8 +4,8 @@ import hashlib
 import json
 from copy import deepcopy
 
-from pictovap import sample_visual_plan, validate_decision_pack
-from pictovap.app import cli
+from actovisio_framework import sample_visual_plan, validate_decision_pack
+from actovisio_framework.app import cli
 
 
 def _prepare(tmp_path):

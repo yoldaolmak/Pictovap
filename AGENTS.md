@@ -33,7 +33,7 @@ reviewable examples and meaningful alternatives, not planner scores alone.
 ## Engineering invariants
 
 - The planner returns data without printing or writing files. Render
-  human-facing output from the same plan; `pictovap.api` is the public
+  human-facing output from the same plan; `actovisio_framework.api` is the public
   planning entry point.
 - Provider failures and unavailable credentials are explicit source evidence,
   not successful observations. Preserve provenance, license uncertainty,

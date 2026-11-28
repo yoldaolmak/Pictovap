@@ -13,8 +13,8 @@ widely useful integrations maintained with the core project.
 Create a provider plugin:
 
 ```bash
-pictovap scaffold provider wikimedia
-cd pictovap-wikimedia
+actovisio-framework scaffold provider wikimedia
+cd actovisio-framework-wikimedia
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[test]"
@@ -24,15 +24,15 @@ pytest
 Create a CMS plugin:
 
 ```bash
-pictovap scaffold cms hugo
+actovisio-framework scaffold cms hugo
 ```
 
 `--output` is a parent directory, not the package directory itself. For
-example, this creates `adapters/pictovap-hugo`:
+example, this creates `adapters/actovisio-framework-hugo`:
 
 ```bash
-pictovap scaffold cms hugo --output adapters
-cd adapters/pictovap-hugo
+actovisio-framework scaffold cms hugo --output adapters
+cd adapters/actovisio-framework-hugo
 ```
 
 The generated project includes a `src/` package, entry-point metadata, a
@@ -71,10 +71,10 @@ duplicate names and classes that do not satisfy the selected protocol.
 Inspect installed plugins with:
 
 ```bash
-pictovap plugins
-pictovap plugins --kind provider
-pictovap plugins --kind cms
-pictovap plugins --kind renderer
+actovisio-framework plugins
+actovisio-framework plugins --kind provider
+actovisio-framework plugins --kind cms
+actovisio-framework plugins --kind renderer
 ```
 
 The output is JSON so CI and other tools can consume it.
@@ -88,9 +88,9 @@ in-tree adapter issues remain available for contribution.
 Validate one installed adapter without writes:
 
 ```bash
-pictovap adapter check --kind provider --name wikimedia
-pictovap adapter check --kind cms --name hugo
-pictovap adapter check --kind renderer --name html-review
+actovisio-framework adapter check --kind provider --name wikimedia
+actovisio-framework adapter check --kind cms --name hugo
+actovisio-framework adapter check --kind renderer --name html-review
 ```
 
 Provider result fields are checked only when `--exercise` is explicitly passed;
@@ -102,7 +102,7 @@ Discovery is only the first gate. Check constructor configuration without CMS
 writes, then run the provider through the real planning pipeline:
 
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --article article.md \
   --provider wikimedia \
   --output plan.json \
@@ -117,8 +117,8 @@ For a CMS plugin, inspect the operations before allowing writes:
 
 ```bash
 export HUGO_OUTPUT_DIR="/srv/site/content"
-pictovap doctor --cms hugo --cms-option output_directory=@HUGO_OUTPUT_DIR
-pictovap publish --plan plan.json --cms hugo --dry-run \
+actovisio-framework doctor --cms hugo --cms-option output_directory=@HUGO_OUTPUT_DIR
+actovisio-framework publish --plan plan.json --cms hugo --dry-run \
   --cms-option output_directory=@HUGO_OUTPUT_DIR
 ```
 
@@ -133,11 +133,11 @@ names, never their values.
 ## Contract Test Kit
 
 Third-party packages should test their public boundary with the helpers shipped
-in `pictovap.testing`:
+in `actovisio_framework.testing`:
 
 ```python
 from pictovap_wikimedia import WikimediaSource
-from pictovap.testing import assert_image_source_contract, sample_candidate, validate_candidates
+from actovisio_framework.testing import assert_image_source_contract, sample_candidate, validate_candidates
 
 
 def test_candidate_fixture_documents_the_required_shape():
@@ -155,7 +155,7 @@ For a CMS adapter:
 
 ```python
 from pictovap_hugo import HugoAdapter
-from pictovap.testing import assert_cms_adapter_contract
+from actovisio_framework.testing import assert_cms_adapter_contract
 
 
 def test_contract(tmp_path):

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=83.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pictovap"
+version = "0.14.0"
+description = "Compatibility distribution for ActoVisio Framework (formerly Pictovap)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}]
+dependencies = ["actovisio-framework==0.14.0"]
+
+[project.optional-dependencies]
+test = ["actovisio-framework[test]==0.14.0"]
+lint = ["actovisio-framework[lint]==0.14.0"]
+typecheck = ["actovisio-framework[typecheck]==0.14.0"]
+
+[project.urls]
+Homepage = "https://github.com/yoldaolmak/ActoVisio-Framework"
+
+[project.scripts]
+pictovap = "actovisio_framework.app.cli:legacy_main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"pictovap.data" = ["*.md"]
+"pictovap.schemas" = ["*.json"]

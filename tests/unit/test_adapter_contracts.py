@@ -20,15 +20,15 @@ from unittest.mock import patch
 
 import pytest
 
-from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter
-from pictovap.core.primitives import CMSPlacement, PlacementInstruction
-from pictovap.providers.deposit import DepositPhotosSource
-from pictovap.providers.local import LocalFolderSource
-from pictovap.providers.openverse import OpenverseSource
-from pictovap.providers.pexels import PexelsSource
-from pictovap.providers.unsplash import UnsplashSource
-from pictovap.publishers.ghost import GhostPublisher
-from pictovap.publishers.strapi import StrapiPublisher
+from actovisio_framework.core.adapters import CMSAdapter, ImageSourceAdapter
+from actovisio_framework.core.primitives import CMSPlacement, PlacementInstruction
+from actovisio_framework.providers.deposit import DepositPhotosSource
+from actovisio_framework.providers.local import LocalFolderSource
+from actovisio_framework.providers.openverse import OpenverseSource
+from actovisio_framework.providers.pexels import PexelsSource
+from actovisio_framework.providers.unsplash import UnsplashSource
+from actovisio_framework.publishers.ghost import GhostPublisher
+from actovisio_framework.publishers.strapi import StrapiPublisher
 
 REQUIRED_CANDIDATE_FIELDS = {
     "id", "filename", "provider", "source_type", "local_path", "source_url",
@@ -104,7 +104,7 @@ def test_cms_adapter_conforms_to_protocol(adapter_cls):
 
 
 def test_wordpress_conforms_to_cms_adapter_protocol():
-    from pictovap.services.wordpress import WordPressUploader
+    from actovisio_framework.services.wordpress import WordPressUploader
     assert issubclass(WordPressUploader, CMSAdapter)
 
 
@@ -123,7 +123,7 @@ def test_cms_adapter_raises_clear_error_without_credentials(adapter_cls, env_key
 
 
 def test_wordpress_raises_clear_error_without_credentials(monkeypatch):
-    from pictovap.services.wordpress import WordPressUploader
+    from actovisio_framework.services.wordpress import WordPressUploader
     for key in ("WP_URL", "WP_USER", "WP_APP_PASSWORD"):
         monkeypatch.delenv(key, raising=False)
     with pytest.raises(ValueError, match="Missing WordPress credentials"):

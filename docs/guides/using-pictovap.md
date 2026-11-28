@@ -1,12 +1,12 @@
-# Using Pictovap
+# Using ActoVisio Framework
 
-Pictovap is an open-source image-planning and CMS placement framework for publishers.
+ActoVisio Framework is an open-source image-planning and CMS placement framework for publishers.
 It turns WordPress Gutenberg or Markdown articles into rights-aware visual plans.
 It reads article structure, creates a Visual Brief, evaluates candidate images with Fit Scores, records Provenance Packs, generates metadata, and prepares CMS Placement instructions.
 
-## The Pictovap Lifecycle
+## The ActoVisio Framework Lifecycle
 
-Pictovap automates the visual workflow through this lifecycle:
+ActoVisio Framework automates the visual workflow through this lifecycle:
 
 `Configure → Plan → Review → Publish`
 
@@ -14,21 +14,21 @@ Pictovap automates the visual workflow through this lifecycle:
 A publisher profile defines site name, CMS type, language, output rules, filename rules, alt text rules, caption rules, and image source adapters. (See [Publisher Profile](publisher-profile.md)).
 
 ### 2. Plan
-Pictovap reads an article and creates a machine-readable visual plan. The planning process includes:
-- **Deterministic Language Detection**: Pictovap detects Turkish or English articles using simple local word-markers and falls back to the publisher profile language when the text is short or ambiguous. The local metadata templates currently generate Turkish and English alt texts and captions; other languages require an external metadata provider or a contributed language pack.
-- **Section Context Extraction**: Pictovap extracts the first few sentences from each section as context (`section_excerpt`). This context is used to select relevant images, score candidates, and generate non-generic localized alt texts and captions.
+ActoVisio Framework reads an article and creates a machine-readable visual plan. The planning process includes:
+- **Deterministic Language Detection**: ActoVisio Framework detects Turkish or English articles using simple local word-markers and falls back to the publisher profile language when the text is short or ambiguous. The local metadata templates currently generate Turkish and English alt texts and captions; other languages require an external metadata provider or a contributed language pack.
+- **Section Context Extraction**: ActoVisio Framework extracts the first few sentences from each section as context (`section_excerpt`). This context is used to select relevant images, score candidates, and generate non-generic localized alt texts and captions.
 
 You do not need WordPress credentials to run the local demo. You do not need image provider credentials to run the local demo.
 
 To run the local credential-free demo:
 ```bash
-pictovap demo
+actovisio-framework demo
 ```
 
 To plan a file-based article (Markdown is the portable developer and
 static-site input, not a requirement for editors):
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --article path/to/article.md \
   --profile examples/profiles/sample-publisher.yaml \
   --output my-plan.json \
@@ -38,7 +38,7 @@ pictovap plan \
 To plan a draft or published WordPress Gutenberg post without changing it:
 
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --wordpress-post 42 \
   --wordpress-site publisher \
   --output my-plan.json \
@@ -55,7 +55,7 @@ Editors review the visual plan through a Markdown report, not raw JSON.
 - **JSON output** = canonical machine-readable artifact for adapters and automation.
 - **Markdown report** = editor-readable preview for humans.
 
-Pictovap currently has no graphical user interface. It is a CLI-first open-source core. The intended review surface is an editor-readable report, while CMS adapters consume the JSON plan.
+ActoVisio Framework currently has no graphical user interface. It is a CLI-first open-source core. The intended review surface is an editor-readable report, while CMS adapters consume the JSON plan.
 
 ### 4. Publish
 CMS adapters can use the plan to place selected images into WordPress or other CMS platforms. Live publishing is adapter-dependent and must be configured explicitly.

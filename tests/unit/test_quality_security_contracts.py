@@ -9,26 +9,26 @@ from copy import deepcopy
 import pytest
 from PIL import Image
 
-from pictovap import (
+from actovisio_framework import (
     build_decision_pack,
     validate_decision_pack,
     validate_visual_plan,
 )
-from pictovap.app.runtime import PipelineRunner, _validate_safe_output_path
-from pictovap.core.primitives import CMSPlacement, PlacementInstruction, VisualBrief
-from pictovap.engine.scoring import score_candidate
-from pictovap.engine.vision_chain import _analyze_gemini_flash
-from pictovap.providers.deposit import DepositPhotosSource
-from pictovap.providers.unsplash import UnsplashSource
-from pictovap.publishers.ghost import GhostPublisher
-from pictovap.publishers.strapi import StrapiPublisher
-from pictovap.services.wordpress import WordPressUploader
-from pictovap.testing import (
+from actovisio_framework.app.runtime import PipelineRunner, _validate_safe_output_path
+from actovisio_framework.core.primitives import CMSPlacement, PlacementInstruction, VisualBrief
+from actovisio_framework.engine.scoring import score_candidate
+from actovisio_framework.engine.vision_chain import _analyze_gemini_flash
+from actovisio_framework.providers.deposit import DepositPhotosSource
+from actovisio_framework.providers.unsplash import UnsplashSource
+from actovisio_framework.publishers.ghost import GhostPublisher
+from actovisio_framework.publishers.strapi import StrapiPublisher
+from actovisio_framework.services.wordpress import WordPressUploader
+from actovisio_framework.testing import (
     sample_decision_pack,
     sample_visual_plan,
     validate_candidates,
 )
-from pictovap.utils import config
+from actovisio_framework.utils import config
 
 
 # 1. DepositPhotos adapter tests
@@ -47,7 +47,7 @@ def test_depositphotos_search_candidates_passes_validate_candidates(monkeypatch)
             }
         ],
     }
-    monkeypatch.setattr("pictovap.providers.deposit._post", lambda payload: mock_resp)
+    monkeypatch.setattr("actovisio_framework.providers.deposit._post", lambda payload: mock_resp)
 
     candidates = DepositPhotosSource().search_candidates("mountain", count=1)
     assert len(candidates) == 1
@@ -267,7 +267,7 @@ def test_wordpress_place_reuses_uploader_instance(monkeypatch):
         captured_uploader = uploader
         return {"uploaded": [], "failed": []}
 
-    monkeypatch.setattr("pictovap.services.wordpress.upload_images_batch", mock_upload_images_batch)
+    monkeypatch.setattr("actovisio_framework.services.wordpress.upload_images_batch", mock_upload_images_batch)
 
     placement = CMSPlacement(
         article_id="123",

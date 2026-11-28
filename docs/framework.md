@@ -53,7 +53,7 @@ return a non-empty string.
 ## 3. Run the Contract Test
 
 ```python
-from pictovap.testing import assert_image_source_contract
+from actovisio_framework.testing import assert_image_source_contract
 
 adapter = HarborImageSource()
 assert_image_source_contract(adapter, query="harbor", count=3)
@@ -65,7 +65,7 @@ candidate limit. Add the equivalent helper to your plugin's own test suite.
 ## 4. Call the Planning API
 
 ```python
-from pictovap import create_visual_plan
+from actovisio_framework import create_visual_plan
 
 plan = create_visual_plan(
     article="article.md",
@@ -82,15 +82,15 @@ Use `CMSPlacement` from the plan only after an editor has approved it.
 ## 5. Generate an Editor Report
 
 ```bash
-pictovap report --plan plan.json --output review.md
+actovisio-framework report --plan plan.json --output review.md
 ```
 
 For a separate renderer package, register an entry point under
 `pictovap.report_renderers`, then run:
 
 ```bash
-pictovap report --plan plan.json --output review.html --renderer your-renderer
-pictovap adapter check --kind renderer --name your-renderer
+actovisio-framework report --plan plan.json --output review.html --renderer your-renderer
+actovisio-framework adapter check --kind renderer --name your-renderer
 ```
 
 The complete [external renderer package example](../examples/external-renderer-package/README.md)
@@ -100,6 +100,6 @@ shows package metadata, discovery, contract testing, and CLI execution.
 
 1. Keep adapter imports and construction credential-free.
 2. Mock network and CMS writes in your tests.
-3. Run `pictovap adapter check` and preserve its JSON report in CI output.
+3. Run `actovisio-framework adapter check` and preserve its JSON report in CI output.
 4. Review [API Stability Policy](../API_STABILITY.md) and depend only on
    stable contracts.

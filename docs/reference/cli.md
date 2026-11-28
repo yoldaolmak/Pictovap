@@ -1,6 +1,6 @@
 # CLI Reference
 
-Pictovap is a CLI-first tool. Commands emit JSON artifacts or diagnostics so
+ActoVisio Framework is a CLI-first tool. This reference targets the 0.14.0 candidate; the published legacy CLI remains `pictovap`. Commands emit JSON artifacts or diagnostics so
 the same workflow can be reviewed by a person and composed in automation.
 
 ## Current Commands
@@ -11,20 +11,20 @@ Print the exact package version when filing an issue, reproducing a plugin
 problem, or recording a release check:
 
 ```bash
-pictovap --version
+actovisio-framework --version
 ```
 
 ### Run the Default Demo
 Runs the local credential-free demo using the sample article and mock candidates.
 ```bash
-pictovap demo
+actovisio-framework demo
 ```
-*(Also available via `python -m pictovap.demo` for backward compatibility).*
+*(Also available via `python -m actovisio_framework.demo` for backward compatibility).*
 
 ### Run with a File-Based Article
 Executes the visual finishing pipeline on a specific Markdown article and outputs the canonical JSON plan. Markdown is the portable developer and static-site input; it is not required for WordPress editors.
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --article path/to/article.md \
   --profile examples/profiles/sample-publisher.yaml \
   --output output/plan.json
@@ -37,7 +37,7 @@ headings and surrounding text, and writes a visual plan. This command does not
 modify the post, upload media, or publish anything.
 
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --wordpress-post 42 \
   --wordpress-site publisher \
   --output output/plan.json \
@@ -52,12 +52,12 @@ Generates an editor-readable Markdown report from an existing JSON plan.
 An installed `pictovap.report_renderers` plugin can produce HTML or another
 review format:
 ```bash
-pictovap report \
+actovisio-framework report \
   --plan output/plan.json \
   --output output/report.md
 
 # Example third-party renderer
-pictovap report --plan output/plan.json --output output/report.html --renderer html-review
+actovisio-framework report --plan output/plan.json --output output/report.html --renderer html-review
 ```
 
 ### Complete an interactive editorial review
@@ -66,7 +66,7 @@ Review one planned article's image slots without editing the Decision Pack
 directly or contacting providers and CMSs:
 
 ```bash
-pictovap review --plan plan.json --actor editor@example.test \
+actovisio-framework review --plan plan.json --actor editor@example.test \
   --output reviewed.json --preview preview.md
 ```
 
@@ -84,8 +84,8 @@ rebuilding from a Visual Plan, use `--pack pending.json` instead of `--plan`.
 A reviewed pack can be reloaded and compared against the original source:
 
 ```bash
-pictovap review-preview --plan plan.json --reviewed reviewed.json
-pictovap review-preview --plan plan.json --reviewed reviewed.json --format json
+actovisio-framework review-preview --plan plan.json --reviewed reviewed.json
+actovisio-framework review-preview --plan plan.json --reviewed reviewed.json --format json
 ```
 
 The preview rejects changed source evidence, fake application receipts, and
@@ -95,11 +95,11 @@ This is a local terminal editor flow, not a WordPress user interface.
 ### Review an existing WordPress post in Gutenberg (reference)
 
 For an existing Gutenberg post, first create a visual plan with
-`pictovap plan --wordpress-post 42 --wordpress-site publisher`.
+`actovisio-framework plan --wordpress-post 42 --wordpress-site publisher`.
 Export the portable pending Decision Pack:
 
 ```bash
-pictovap review-pack --plan plan.json --output pending-pack.json
+actovisio-framework review-pack --plan plan.json --output pending-pack.json
 ```
 
 The [reference sidebar](../../examples/wordpress-review-sidebar/README.md)
@@ -111,7 +111,7 @@ write WordPress metadata or publish anything. Import the downloaded draft
 using **the same exact pending pack bytes**:
 
 ```bash
-pictovap review-import --pack pending-pack.json \
+actovisio-framework review-import --pack pending-pack.json \
   --decisions review-decisions.json \
   --output reviewed.json --preview reviewed.md
 ```
@@ -130,19 +130,19 @@ contains only counts and runtime versions. It excludes article text, titles,
 paths, URLs, profile names, and credentials:
 
 ```bash
-pictovap feedback \
+actovisio-framework feedback \
   --plan output/plan.json \
   --output output/feedback.json
 ```
 
 The summary is also printed to stdout so it can be pasted directly into a
-[new external validation issue](https://github.com/yoldaolmak/Pictovap/issues/new?template=external_validation.md).
+[new external validation issue](https://github.com/yoldaolmak/ActoVisio-Framework/issues/new?template=external_validation.md).
 Use it when you want to share diagnostics without sharing your article.
 
 For GitHub issue comments, render the same anonymous summary as Markdown:
 
 ```bash
-pictovap feedback \
+actovisio-framework feedback \
   --plan output/plan.json \
   --format markdown \
   --output output/feedback.md
@@ -150,20 +150,20 @@ pictovap feedback \
 
 ### Check an Installed Adapter
 
-`pictovap adapter check` produces a machine-readable conformance report. The
+`actovisio-framework adapter check` produces a machine-readable conformance report. The
 default check constructs the adapter without calling a provider search or CMS
 write, captures constructor diagnostics, and verifies that credential option
 values were not emitted.
 
 ```bash
-pictovap adapter check --kind renderer --name external-html-review
+actovisio-framework adapter check --kind renderer --name external-html-review
 ```
 
 For a provider with a safe, bounded query, opt into candidate and provenance
 field validation explicitly:
 
 ```bash
-pictovap adapter check --kind provider --name local --exercise --count 3
+actovisio-framework adapter check --kind provider --name local --exercise --count 3
 ```
 
 ## Validate a visual plan
@@ -171,7 +171,7 @@ pictovap adapter check --kind provider --name local --exercise --count 3
 Validate a serialized plan without network access, credentials, or a live CMS:
 
 ```console
-pictovap validate --plan output/visual-plan.json
+actovisio-framework validate --plan output/visual-plan.json
 ```
 
 Use `--strict` when CI should reject recommended audit gaps as well as broken
@@ -191,8 +191,8 @@ The JSON report names each check and distinguishes `passed`, `not_run`, and
 Use the audit command for a final read-only editorial and integration review:
 
 ```console
-pictovap audit --plan output/visual-plan.json --format markdown
-pictovap audit --plan output/visual-plan.json --strict
+actovisio-framework audit --plan output/visual-plan.json --format markdown
+actovisio-framework audit --plan output/visual-plan.json --strict
 ```
 
 The report includes coverage, provenance/license, alt-text, human-review, and
@@ -205,8 +205,8 @@ Run the offline regression corpus that exercises parsing, scoring, provenance,
 localized metadata, placement, and strict plan validation:
 
 ```bash
-pictovap benchmark --corpus tests/corpus
-pictovap benchmark --corpus tests/corpus --format markdown --output output/benchmark.md
+actovisio-framework benchmark --corpus tests/corpus
+actovisio-framework benchmark --corpus tests/corpus --format markdown --output output/benchmark.md
 ```
 
 The command uses synthetic candidates and never calls a provider, reads
@@ -219,8 +219,8 @@ List built-in adapters and installed third-party plugins without constructing
 them or contacting external services:
 
 ```bash
-pictovap registry list
-pictovap registry list --kind provider --format markdown
+actovisio-framework registry list
+actovisio-framework registry list --kind provider --format markdown
 ```
 
 The registry is intentionally read-only. It does not install packages, resolve
@@ -231,8 +231,8 @@ credentials, or claim that a configured provider is reachable.
 Render the intent graph and candidate decision ledger embedded in a plan:
 
 ```bash
-pictovap explain --plan output/plan.json --format markdown
-pictovap explain --plan output/plan.json --format json --output output/intent-proof.json
+actovisio-framework explain --plan output/plan.json --format markdown
+actovisio-framework explain --plan output/plan.json --format json --output output/intent-proof.json
 ```
 
 This is a read-only explanation surface. It does not rerun providers or
@@ -244,7 +244,7 @@ Attribute changes to article identity or structure, publisher profile, candidate
 compiled policy, or CMS placement without rerunning either plan:
 
 ```bash
-pictovap diff \
+actovisio-framework diff \
   --before output/plan-before.json \
   --after output/plan-after.json \
   --format markdown \
@@ -262,7 +262,7 @@ boundary.
 
 You can also generate an editor report inline while planning:
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --article path/to/article.md \
   --profile examples/profiles/sample-publisher.yaml \
   --output output/plan.json \
@@ -274,9 +274,9 @@ pictovap plan \
 Returns JSON metadata for independently installed adapter packages:
 
 ```bash
-pictovap plugins
-pictovap plugins --kind provider
-pictovap plugins --kind cms
+actovisio-framework plugins
+actovisio-framework plugins --kind provider
+actovisio-framework plugins --kind cms
 ```
 
 ### Check Adapter Readiness
@@ -285,8 +285,8 @@ Loads every installed entry point and constructs adapters named explicitly.
 It never calls `CMSAdapter.place`, so the command has no publishing effects:
 
 ```bash
-pictovap doctor
-pictovap doctor \
+actovisio-framework doctor
+actovisio-framework doctor \
   --provider acme-images \
   --provider-option api_key=@ACME_IMAGES_API_KEY \
   --cms acme-cms \
@@ -301,7 +301,7 @@ versions so a contributor can attach one safe diagnostic artifact to an issue.
 ### Plan with an Installed Provider
 
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --article path/to/article.md \
   --provider acme-images \
   --provider-option api_key=@ACME_IMAGES_API_KEY \
@@ -317,7 +317,7 @@ candidate set; Pictovap does not hide the result by falling back to demo data.
 Start with a side-effect-free preview:
 
 ```bash
-pictovap publish \
+actovisio-framework publish \
   --plan output/plan.json \
   --cms acme-cms \
   --cms-option base_url=https://cms.example.com \
@@ -336,8 +336,8 @@ Creates a standalone `src/`-layout Python project with entry-point metadata
 and a passing contract test:
 
 ```bash
-pictovap scaffold provider wikimedia
-pictovap scaffold cms hugo --output path/to/projects
+actovisio-framework scaffold provider wikimedia
+actovisio-framework scaffold cms hugo --output path/to/projects
 ```
 
 `--output` names the parent directory. The second command creates
@@ -352,7 +352,7 @@ GitHub Actions workflow. Provider packages can run a bounded, credential-safe
 exercise immediately:
 
 ```console
-pictovap adapter check --kind provider --name example-source --exercise
+actovisio-framework adapter check --kind provider --name example-source --exercise
 ```
 
 ### Generate an Ecosystem Integration Packet
@@ -362,7 +362,7 @@ Gutenberg, CMS automation, or static-site migration project, generate a
 target-specific packet instead of pasting a generic Pictovap link:
 
 ```bash
-pictovap ecosystem match \
+actovisio-framework ecosystem match \
   --tool markdown-to-wordpress \
   --project-name md2wp \
   --repository-url https://github.com/example/md2wp \
@@ -380,11 +380,11 @@ The packet includes:
 List supported tool kinds:
 
 ```bash
-pictovap ecosystem explain --format markdown
+actovisio-framework ecosystem explain --format markdown
 ```
 
 The JSON form is machine-readable and suitable for automation:
 
 ```bash
-pictovap ecosystem match --tool ai-draft --project-name DraftPress
+actovisio-framework ecosystem match --tool ai-draft --project-name DraftPress
 ```

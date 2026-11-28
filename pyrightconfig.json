@@ -1,5 +1,5 @@
 {
-  "include": ["src/pictovap"],
+  "include": ["src/actovisio_framework"],
   "pythonVersion": "3.10",
   "typeCheckingMode": "standard"
 }

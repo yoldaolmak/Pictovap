@@ -7,8 +7,8 @@ import sys
 
 import pytest
 
-from pictovap import diff_visual_plans
-from pictovap.plan_diff import plan_diff_to_json, render_plan_diff_markdown
+from actovisio_framework import diff_visual_plans
+from actovisio_framework.plan_diff import plan_diff_to_json, render_plan_diff_markdown
 
 
 def sample_plan() -> dict:
@@ -252,7 +252,7 @@ def test_cli_supports_markdown_output_and_ci_fail_on_change(tmp_path):
         [
             sys.executable,
             "-m",
-            "pictovap",
+            "actovisio_framework",
             "diff",
             "--before",
             str(before_path),
@@ -283,7 +283,7 @@ def test_cli_returns_zero_for_change_without_ci_gate(tmp_path):
         [
             sys.executable,
             "-m",
-            "pictovap",
+            "actovisio_framework",
             "diff",
             "--before",
             str(before_path),

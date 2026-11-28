@@ -4,7 +4,7 @@ import json
 import subprocess
 import sys
 
-from pictovap.audit import audit_visual_plan, render_audit_markdown
+from actovisio_framework.audit import audit_visual_plan, render_audit_markdown
 
 
 def valid_plan() -> dict:
@@ -74,7 +74,7 @@ def test_audit_cli_emits_json_and_allows_warning_without_strict_mode(tmp_path):
     plan_path.write_text(json.dumps(plan), encoding="utf-8")
 
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap", "audit", "--plan", str(plan_path)],
+        [sys.executable, "-m", "actovisio_framework", "audit", "--plan", str(plan_path)],
         capture_output=True,
         text=True,
         check=False,
@@ -84,7 +84,7 @@ def test_audit_cli_emits_json_and_allows_warning_without_strict_mode(tmp_path):
     assert json.loads(result.stdout)["checks"]["accessibility"]["status"] == "warning"
 
     strict_result = subprocess.run(
-        [sys.executable, "-m", "pictovap", "audit", "--plan", str(plan_path), "--strict"],
+        [sys.executable, "-m", "actovisio_framework", "audit", "--plan", str(plan_path), "--strict"],
         capture_output=True,
         text=True,
         check=False,

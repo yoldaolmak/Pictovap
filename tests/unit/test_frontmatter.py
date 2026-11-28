@@ -2,10 +2,10 @@
 
 import json
 
-from pictovap.core.primitives import VisualBrief
-from pictovap.api import create_visual_plan
-from pictovap.engine.reporting import generate_markdown_report
-from pictovap.engine.scoring import score_candidate
+from actovisio_framework.core.primitives import VisualBrief
+from actovisio_framework.api import create_visual_plan
+from actovisio_framework.engine.reporting import generate_markdown_report
+from actovisio_framework.engine.scoring import score_candidate
 
 
 def test_markdown_frontmatter_populates_brief_and_serializes(tmp_path):

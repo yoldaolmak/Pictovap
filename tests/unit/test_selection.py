@@ -1,7 +1,7 @@
 """Tests for the global, constraint-aware image assignment engine."""
 
-from pictovap.core.primitives import FitScore
-from pictovap.core.selection import SelectionPolicy, select_assignments
+from actovisio_framework.core.primitives import FitScore
+from actovisio_framework.core.selection import SelectionPolicy, select_assignments
 
 
 def _score(slot_id: str, candidate_id: str, value: float) -> FitScore:

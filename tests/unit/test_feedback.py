@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from pictovap.feedback import (
+from actovisio_framework.feedback import (
     EXTERNAL_VALIDATION_ISSUE_URL,
     render_feedback_markdown,
     summarize_plan,
@@ -64,7 +64,7 @@ def test_markdown_feedback_contains_only_anonymous_plan_statistics():
 
     rendered = render_feedback_markdown(summarize_plan(plan))
 
-    assert "Pictovap External Validation" in rendered
+    assert "ActoVisio Framework External Validation" in rendered
     assert EXTERNAL_VALIDATION_ISSUE_URL in rendered
     assert "Article language: `tr`" in rendered
     assert "Candidates evaluated: `3`" in rendered

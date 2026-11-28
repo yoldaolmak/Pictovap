@@ -3,9 +3,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pictovap.api import create_visual_plan
-from pictovap import validate_intent_proof, validate_visual_plan
-from pictovap.testing.contracts import sample_candidate
+from actovisio_framework.api import create_visual_plan
+from actovisio_framework import validate_intent_proof, validate_visual_plan
+from actovisio_framework.testing.contracts import sample_candidate
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -73,7 +73,7 @@ def test_explain_cli_renders_intent_proof(tmp_path):
     plan_path.write_text(json.dumps(plan), encoding="utf-8")
 
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap", "explain", "--plan", str(plan_path)],
+        [sys.executable, "-m", "actovisio_framework", "explain", "--plan", str(plan_path)],
         cwd=tmp_path,
         capture_output=True,
         text=True,

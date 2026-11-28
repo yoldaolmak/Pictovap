@@ -4,11 +4,11 @@ from importlib.metadata import metadata, requires
 
 
 def test_supported_python_floor_matches_security_baseline():
-    assert metadata("pictovap")["Requires-Python"] == ">=3.10"
+    assert metadata("actovisio-framework")["Requires-Python"] == ">=3.10"
 
 
 def test_runtime_dependencies_are_minimal_and_security_fixed():
-    declared = requires("pictovap") or []
+    declared = requires("actovisio-framework") or []
     runtime = {requirement.lower() for requirement in declared if "extra ==" not in requirement}
 
     assert runtime == {

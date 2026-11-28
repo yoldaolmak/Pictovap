@@ -1,4 +1,4 @@
-from pictovap.core.media_quality import validate_metadata
+from actovisio_framework.core.media_quality import validate_metadata
 
 
 def _metadata(source: str):

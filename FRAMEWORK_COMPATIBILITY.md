@@ -1,6 +1,6 @@
 # Framework Compatibility
 
-Pictovap publishes a small compatibility contract for people building image
+ActoVisio Framework publishes a small compatibility contract for people building image
 sources, CMS integrations, renderers, and publisher profiles outside this
 repository. The detailed policy lives in [API Stability](API_STABILITY.md).
 
@@ -8,19 +8,19 @@ repository. The detailed policy lives in [API Stability](API_STABILITY.md).
 
 The following surfaces are stable for the current pre-1.0 framework line:
 
-- `pictovap.api.create_visual_plan()` and `create_wordpress_visual_plan()`
+- `actovisio_framework.api.create_visual_plan()` and `create_wordpress_visual_plan()`
 - `ImageSourceAdapter`, `CMSAdapter`, and `ReportRenderer` protocols
-- `pictovap.testing.contracts` assertions and complete candidate fields
-- visual-plan JSON sections required by `pictovap.validate_visual_plan()`
+- `actovisio_framework.testing.contracts` assertions and complete candidate fields
+- visual-plan JSON sections required by `actovisio_framework.validate_visual_plan()`
 - Publisher Profile YAML schema version 1
-- installed adapter entry-point groups (`pictovap.providers`,
-  `pictovap.cms`, and `pictovap.renderers`)
+- installed adapter entry-point groups (`pictovap.image_sources`,
+  `pictovap.cms`, and `pictovap.report_renderers`)
 
 The golden corpus benchmark and its CLI are integration tooling. They are
 stable for this repository's contributor and CI workflow, but the benchmark
 module is not yet a versioned third-party ABI.
 
-The read-only `pictovap registry list` command is also discovery tooling. Its
+The read-only `actovisio-framework registry list` command is also discovery tooling. Its
 JSON shape is versioned as schema 1 for this release line, but adapter authors
 should continue to depend on the adapter protocols and entry-point groups,
 not on registry presentation details.
@@ -52,15 +52,15 @@ execution authority is exposed by them.
   in the changelog before release.
 - Additive JSON and YAML fields must not invalidate an older consumer.
 - A stable adapter should pin a compatible minor line, for example
-  `pictovap>=0.13,<0.14`, and run the contract tests in its own CI.
+  `actovisio-framework>=0.14,<0.15` after verified publication, and run the contract tests in its own CI.
 
 ## Adapter author checklist
 
 Before publishing an adapter, run the following locally:
 
 ```bash
-pip install pictovap
-pictovap adapter check --kind provider --name your-provider --exercise
+pip install .  # development checkout; PyPI name is not yet published
+actovisio-framework adapter check --kind provider --name your-provider --exercise
 python -m pytest tests -q
 ```
 
@@ -71,8 +71,8 @@ line it supports and the exact contract-test version used.
 
 ## What is not a compatibility promise
 
-Implementation modules under `pictovap.demo`, `pictovap.services`,
-`pictovap.providers`, and `pictovap.publishers` may evolve behind the stable
+Implementation modules under `actovisio_framework.demo`, `actovisio_framework.services`,
+`pictovap.providers`, and `actovisio_framework.publishers` may evolve behind the stable
 interfaces. Internal helper functions, CLI wording, and diagnostic detail are
 not an ABI. Use the public API and adapter protocols rather than importing
 pipeline internals.

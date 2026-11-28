@@ -284,7 +284,7 @@ def test_library_code_does_not_write_to_stdout():
 
     presentation = {"app/cli.py", "demo.py"}
     offenders = []
-    source_root = Path(__file__).resolve().parents[2] / "src" / "pictovap"
+    source_root = Path(__file__).resolve().parents[2] / "src" / "actovisio_framework"
 
     for module in sorted(source_root.rglob("*.py")):
         relative = module.relative_to(source_root).as_posix()

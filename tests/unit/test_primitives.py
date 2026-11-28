@@ -5,14 +5,14 @@ Ensures that the models can be instantiated and serialized correctly.
 
 from datetime import datetime, timezone
 
-from pictovap.core.primitives import (
+from actovisio_framework.core.primitives import (
     VisualBrief,
     FitScore,
     ProvenancePack,
     CMSPlacement,
     PlacementInstruction
 )
-from pictovap.core.profile import PublisherProfile
+from actovisio_framework.core.profile import PublisherProfile
 
 
 def test_visual_brief_serialization():

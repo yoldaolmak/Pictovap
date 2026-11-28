@@ -4,7 +4,7 @@ import json
 import subprocess
 import sys
 
-from pictovap import validate_visual_plan
+from actovisio_framework import validate_visual_plan
 
 
 def valid_plan() -> dict:
@@ -75,7 +75,7 @@ def test_validate_cli_returns_json_and_nonzero_for_invalid_plan(tmp_path):
     plan_path.write_text(json.dumps({"visual_brief": {"article_title": ""}}), encoding="utf-8")
 
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap", "validate", "--plan", str(plan_path)],
+        [sys.executable, "-m", "actovisio_framework", "validate", "--plan", str(plan_path)],
         capture_output=True,
         text=True,
         check=False,

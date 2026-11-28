@@ -1,6 +1,6 @@
 import pytest
 
-from pictovap.core.primitives import LicenseType, ProvenancePack
+from actovisio_framework.core.primitives import LicenseType, ProvenancePack
 
 
 def test_common_license_aliases_are_normalized():

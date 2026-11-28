@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from pictovap.plugins import (
+from actovisio_framework.plugins import (
     DuplicatePluginError,
     PluginContractError,
     PluginLoadError,
@@ -51,7 +51,7 @@ class FakeEntryPoints(list):
 
 
 def _install_entry_points(monkeypatch, *entry_points):
-    monkeypatch.setattr("pictovap.plugins.metadata.entry_points", lambda: FakeEntryPoints(entry_points))
+    monkeypatch.setattr("actovisio_framework.plugins.metadata.entry_points", lambda: FakeEntryPoints(entry_points))
 
 
 def test_iter_plugins_discovers_all_contract_groups(monkeypatch):

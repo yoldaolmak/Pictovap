@@ -3,13 +3,13 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pictovap import __version__
-from pictovap.app import cli
-from pictovap.feedback import EXTERNAL_VALIDATION_ISSUE_URL
-from pictovap.services.wordpress import WordPressPostReadError
+from actovisio_framework import __version__
+from actovisio_framework.app import cli
+from actovisio_framework.feedback import EXTERNAL_VALIDATION_ISSUE_URL
+from actovisio_framework.services.wordpress import WordPressPostReadError
 
 
-PICTOVAP = str(Path(sys.executable).with_name("pictovap"))
+PICTOVAP = str(Path(sys.executable).with_name("actovisio-framework"))
 
 
 def test_pictovap_demo(tmp_path):
@@ -17,33 +17,33 @@ def test_pictovap_demo(tmp_path):
         [PICTOVAP, "demo"], cwd=tmp_path, capture_output=True, text=True
     )
     assert result.returncode == 0
-    assert "Pictovap Local Demo" in result.stdout
+    assert "ActoVisio Framework Local Demo" in result.stdout
 
 
 def test_pictovap_version_matches_installed_package_version():
     result = subprocess.run([PICTOVAP, "--version"], capture_output=True, text=True)
 
     assert result.returncode == 0
-    assert result.stdout.strip() == f"pictovap {__version__}"
+    assert result.stdout.strip() == f"actovisio-framework {__version__}"
 
 
 def test_python_m_pictovap_version_matches_installed_package_version():
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap", "--version"],
+        [sys.executable, "-m", "actovisio_framework", "--version"],
         capture_output=True,
         text=True,
     )
 
     assert result.returncode == 0
-    assert result.stdout.strip() == f"pictovap {__version__}"
+    assert result.stdout.strip() == f"actovisio-framework {__version__}"
 
 
 def test_python_m_pictovap_demo(tmp_path):
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap.demo"], cwd=tmp_path, capture_output=True, text=True
+        [sys.executable, "-m", "actovisio_framework.demo"], cwd=tmp_path, capture_output=True, text=True
     )
     assert result.returncode == 0
-    assert "Pictovap Local Demo" in result.stdout
+    assert "ActoVisio Framework Local Demo" in result.stdout
     assert "found in sys.modules" not in result.stderr
 
 
@@ -245,7 +245,7 @@ def test_pictovap_feedback_can_render_markdown_issue_body(tmp_path):
     assert result.returncode == 0
     assert summary_path.exists()
     rendered = summary_path.read_text(encoding="utf-8")
-    assert "## Pictovap External Validation" in rendered
+    assert "## ActoVisio Framework External Validation" in rendered
     assert EXTERNAL_VALIDATION_ISSUE_URL in rendered
     assert "- OS: `" in rendered
     assert "<!-- macOS" not in rendered
@@ -326,7 +326,7 @@ def test_ecosystem_match_prints_machine_readable_packet(capsys):
     assert payload["tool_kind"] == "ai-draft"
     assert payload["project_name"] == "DraftPress"
     assert "DraftPress creates review-ready drafts" in payload["readme_section"]
-    assert payload["readme_section"].count("https://github.com/yoldaolmak/Pictovap") == 1
+    assert payload["readme_section"].count("https://github.com/yoldaolmak/ActoVisio-Framework") == 1
 
 
 def test_ecosystem_match_can_write_markdown_output(tmp_path, capsys):
@@ -341,7 +341,7 @@ def test_ecosystem_match_can_write_markdown_output(tmp_path, capsys):
     ]) == 0
 
     rendered = output.read_text(encoding="utf-8")
-    assert "# Pictovap Ecosystem Integration" in rendered
+    assert "# ActoVisio Framework Ecosystem Integration" in rendered
     assert "Media Push uploads media" in rendered
     assert capsys.readouterr().out == rendered
 

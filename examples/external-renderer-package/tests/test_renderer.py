@@ -1,4 +1,4 @@
-from pictovap.testing import assert_report_renderer_contract
+from actovisio_framework.testing import assert_report_renderer_contract
 from pictovap_external_html_review import ExternalHTMLReviewRenderer
 
 

@@ -1,4 +1,4 @@
-# Pictovap Core Roadmap
+# ActoVisio Framework Roadmap
 
 **Direction:** A proof-carrying visual decision compiler for publishers:
 article intent, candidate evidence, publisher policy, and CMS placement become
@@ -21,7 +21,7 @@ change**. A separate authorized integration can later consume the result.
   validation. Missing source observations are recorded explicitly.
 - Decision Pack schema 1 builder, validator, and pure review-state transition
   helper with actor/time and accept/replace/reject validation.
-- Development CLI: interactive `pictovap review` and read-only
+- Development CLI: interactive `actovisio-framework review` and read-only
   `review-preview`. The source plan stays unchanged, decisions are stored,
   rejected candidates cannot be replacements, and license uncertainty remains
   visible. No provider or CMS call occurs in the review.

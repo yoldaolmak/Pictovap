@@ -3,7 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pictovap.benchmark import render_benchmark_markdown, run_corpus_benchmark
+from actovisio_framework.benchmark import render_benchmark_markdown, run_corpus_benchmark
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -44,7 +44,7 @@ def test_benchmark_reports_invalid_case_without_aborting(tmp_path):
 
 def test_benchmark_cli_emits_json_and_exit_success(tmp_path):
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap", "benchmark", "--corpus", str(CORPUS)],
+        [sys.executable, "-m", "actovisio_framework", "benchmark", "--corpus", str(CORPUS)],
         cwd=tmp_path,
         capture_output=True,
         text=True,

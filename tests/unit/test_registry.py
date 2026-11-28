@@ -2,7 +2,7 @@ import json
 import subprocess
 import sys
 
-from pictovap.registry import registry_payload, render_registry_markdown
+from actovisio_framework.registry import registry_payload, render_registry_markdown
 
 
 def test_registry_lists_builtin_adapters_without_constructing_them():
@@ -27,7 +27,7 @@ def test_registry_markdown_explains_safe_discovery():
 
 def test_registry_cli_emits_filtered_json(tmp_path):
     result = subprocess.run(
-        [sys.executable, "-m", "pictovap", "registry", "list", "--kind", "cms"],
+        [sys.executable, "-m", "actovisio_framework", "registry", "list", "--kind", "cms"],
         cwd=tmp_path,
         capture_output=True,
         text=True,

@@ -9,25 +9,27 @@ Full setup guide covering all Pictovap components.
 - A CMS with an available adapter (WordPress, Ghost, or Strapi) — only if you intend
   to publish for real. None of this is required to run the demo.
 
-## Install from PyPI (recommended)
+## Install the last published stable release
 
 For most users, one command installs the package and registers the `pictovap`
 CLI:
 
 ```bash
-pip install pictovap
+pip install pictovap==0.13.0
 pictovap demo
 ```
 
 That's it — the demo needs no credentials, no `.env`, and no network access.
 
-## Install from Source (for contributors)
+## Install the 0.14.0 candidate from source
+
+The new PyPI name is not yet published. The checkout uses the new CLI and import.
 
 If you plan to modify Pictovap, install from a checkout in editable mode:
 
 ```bash
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
+git clone https://github.com/yoldaolmak/ActoVisio-Framework.git
+cd ActoVisio-Framework
 python3 --version  # must be 3.10 or newer
 python3 -m venv .venv
 source .venv/bin/activate
@@ -51,7 +53,7 @@ through `npx`.
 ## Verify Installation
 
 ```bash
-pictovap demo
+actovisio-framework demo
 ```
 
 This runs the full pipeline against a built-in sample article and deterministic
@@ -79,14 +81,14 @@ available variable.
 Once configured, run the pipeline against a real article:
 
 ```bash
-pictovap plan --article path/to/article.md --profile examples/profiles/sample-publisher.yaml --output plan.json --report report.md
+actovisio-framework plan --article path/to/article.md --profile examples/profiles/sample-publisher.yaml --output plan.json --report report.md
 ```
 
 ## Troubleshooting
 
-**`pictovap: command not found`**
+**`actovisio-framework: command not found`**
 Make sure your virtualenv is active and the install completed
-(`pip install pictovap`, or `pip install -e .` from a source checkout).
+(`pip install -e .` from a source checkout; use the legacy command for 0.13.0).
 
 **`plan` returns empty candidates**
 Check that at least one entry in the profile's `image_sources` is actually configured
