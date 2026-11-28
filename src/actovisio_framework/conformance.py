@@ -6,9 +6,9 @@ import contextlib
 import io
 from typing import Any, Literal, cast
 
-from pictovap.app.runtime import construct_plugin
-from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
-from pictovap.testing import assert_image_source_contract, assert_report_renderer_contract
+from actovisio_framework.app.runtime import construct_plugin
+from actovisio_framework.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
+from actovisio_framework.testing import assert_image_source_contract, assert_report_renderer_contract
 
 AdapterKind = Literal["provider", "cms", "renderer"]
 _SENSITIVE_OPTION_MARKERS = ("key", "token", "password", "secret", "credential")

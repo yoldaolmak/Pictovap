@@ -13,9 +13,9 @@ from typing import Any, Mapping
 
 import yaml
 
-from pictovap.api import create_visual_plan
-from pictovap.testing.contracts import sample_candidate
-from pictovap.validation import validate_visual_plan
+from actovisio_framework.api import create_visual_plan
+from actovisio_framework.testing.contracts import sample_candidate
+from actovisio_framework.validation import validate_visual_plan
 
 
 class _GoldenCorpusProvider:

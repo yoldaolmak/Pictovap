@@ -28,39 +28,39 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Sequence
 
-from pictovap import __version__
-from pictovap.app.runtime import (
+from actovisio_framework import __version__
+from actovisio_framework.app.runtime import (
     AdapterConstructionError,
     PipelineRunner,
     RuntimeConfigurationError,
     construct_plugin,
     parse_adapter_options,
 )
-from pictovap.core.states import DoctorStatus, PublishStatus
-from pictovap.decision_pack import (
+from actovisio_framework.core.states import DoctorStatus, PublishStatus
+from actovisio_framework.decision_pack import (
     build_decision_pack,
     transition_decision_pack_review,
     validate_decision_pack,
 )
-from pictovap.review import preview_decision_pack, render_review_preview
-from pictovap.demo import run_demo
-from pictovap.engine.reporting import generate_report_from_file
-from pictovap.feedback import render_feedback_markdown, summarize_plan
-from pictovap.conformance import AdapterCheckError, check_adapter
-from pictovap.audit import audit_visual_plan, render_audit_markdown
-from pictovap.benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
-from pictovap.registry import registry_payload, registry_to_json, render_registry_markdown
-from pictovap.intent import intent_proof_to_json, render_intent_markdown
-from pictovap.plan_diff import diff_visual_plans, plan_diff_to_json, render_plan_diff_markdown
-from pictovap.ecosystem import (
+from actovisio_framework.review import preview_decision_pack, render_review_preview
+from actovisio_framework.demo import run_demo
+from actovisio_framework.engine.reporting import generate_report_from_file
+from actovisio_framework.feedback import render_feedback_markdown, summarize_plan
+from actovisio_framework.conformance import AdapterCheckError, check_adapter
+from actovisio_framework.audit import audit_visual_plan, render_audit_markdown
+from actovisio_framework.benchmark import benchmark_to_json, render_benchmark_markdown, run_corpus_benchmark
+from actovisio_framework.registry import registry_payload, registry_to_json, render_registry_markdown
+from actovisio_framework.intent import intent_proof_to_json, render_intent_markdown
+from actovisio_framework.plan_diff import diff_visual_plans, plan_diff_to_json, render_plan_diff_markdown
+from actovisio_framework.ecosystem import (
     SUPPORTED_TOOL_KINDS,
     build_ecosystem_match,
     ecosystem_tool_kinds,
     render_ecosystem_markdown,
     render_supported_tool_kinds,
 )
-from pictovap.plugins import PluginError, iter_plugins
-from pictovap.scaffold import ScaffoldError, scaffold_adapter
+from actovisio_framework.plugins import PluginError, iter_plugins
+from actovisio_framework.scaffold import ScaffoldError, scaffold_adapter
 
 
 def _print_json(payload: Dict[str, Any]) -> None:
@@ -139,7 +139,7 @@ def _collect_review_decisions(pack: dict[str, Any], actor: str) -> dict[str, Any
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="pictovap")
+    parser = argparse.ArgumentParser(prog="actovisio-framework")
     parser.add_argument(
         "--version",
         action="version",
@@ -633,7 +633,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         try:
             with open(args.plan, encoding="utf-8") as plan_file:
                 plan_payload = json.load(plan_file)
-            from pictovap.validation import validate_visual_plan
+            from actovisio_framework.validation import validate_visual_plan
 
             result = validate_visual_plan(plan_payload, strict=args.strict)
             _print_json(result)

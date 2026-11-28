@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Protocol, runtime_checkable
 
-from pictovap.core.primitives import CMSPlacement
+from actovisio_framework.core.primitives import CMSPlacement
 
 
 @runtime_checkable

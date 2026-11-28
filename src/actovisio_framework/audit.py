@@ -12,8 +12,8 @@ from collections import Counter
 from collections.abc import Mapping
 from typing import Any
 
-from pictovap.core.states import aggregate_check_status
-from pictovap.validation import validate_visual_plan
+from actovisio_framework.core.states import aggregate_check_status
+from actovisio_framework.validation import validate_visual_plan
 
 
 def _status(status: str, detail: str, **extra: Any) -> dict[str, Any]:

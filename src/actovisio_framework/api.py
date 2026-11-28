@@ -5,11 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from pictovap.core.primitives import VisualBrief
-from pictovap.core.profile import PublisherProfile
-from pictovap.data.demo_candidates import MOCK_CANDIDATES
-from pictovap.engine.planner import build_visual_plan
-from pictovap.engine.reporting import write_plan_artifacts
+from actovisio_framework.core.primitives import VisualBrief
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.data.demo_candidates import MOCK_CANDIDATES
+from actovisio_framework.engine.planner import build_visual_plan
+from actovisio_framework.engine.reporting import write_plan_artifacts
 
 
 def _load_profile(profile: str | None) -> PublisherProfile:
@@ -63,7 +63,7 @@ def create_visual_plan(
         FileNotFoundError: if ``article`` or ``profile`` doesn't exist.
 
     Example:
-        from pictovap import create_visual_plan
+        from actovisio_framework import create_visual_plan
 
         plan = create_visual_plan(article="article.md", profile="publisher.yaml")
     """
@@ -101,7 +101,7 @@ def create_wordpress_visual_plan(
     The post is read through the WordPress REST API edit context. No content or
     media is written; publishing remains a separate, explicit operation.
     """
-    from pictovap.services.wordpress import fetch_post_context
+    from actovisio_framework.services.wordpress import fetch_post_context
 
     post = fetch_post_context(post_id, site=site)
     if not post:

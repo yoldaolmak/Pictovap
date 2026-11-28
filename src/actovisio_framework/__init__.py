@@ -1,5 +1,5 @@
 """
-Pictovap — Open-source visual finishing engine for content publishers.
+ActoVisio Framework — Open-source visual finishing engine for content publishers.
 
 This package provides modules to select, process, generate metadata for, and
 publish images across various CMS platforms.
@@ -7,7 +7,7 @@ publish images across various CMS platforms.
 
 from typing import TYPE_CHECKING, Any
 
-__version__ = "0.13.0"
+__version__ = "0.14.0"
 
 if TYPE_CHECKING:
     from .api import create_visual_plan as create_visual_plan

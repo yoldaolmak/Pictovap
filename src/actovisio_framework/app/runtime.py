@@ -9,18 +9,18 @@ import platform
 from pathlib import Path
 from typing import Any, Iterable, cast
 
-from pictovap import __version__
-from pictovap.core.primitives import CMSPlacement
-from pictovap.api import create_visual_plan, create_wordpress_visual_plan
-from pictovap.core.states import (
+from actovisio_framework import __version__
+from actovisio_framework.core.primitives import CMSPlacement
+from actovisio_framework.api import create_visual_plan, create_wordpress_visual_plan
+from actovisio_framework.core.states import (
     DoctorStatus,
     PublishMode,
     PublishStatus,
     resolve_publish_status,
 )
-from pictovap.plugins import AdapterKind, iter_plugins, load_plugin
-from pictovap.testing.contracts import validate_placement_result
-from pictovap.validation import validate_visual_plan
+from actovisio_framework.plugins import AdapterKind, iter_plugins, load_plugin
+from actovisio_framework.testing.contracts import validate_placement_result
+from actovisio_framework.validation import validate_visual_plan
 
 
 class RuntimeConfigurationError(ValueError):
