@@ -36,14 +36,14 @@ Before tagging:
 Manual release steps:
 
 ```bash
-git tag -a vX.Y.Z -m "Pictovap vX.Y.Z"
+git tag -a vX.Y.Z -m "ActoVisio Framework vX.Y.Z"
 git push origin vX.Y.Z
 gh release create vX.Y.Z --verify-tag \
-  --title "Pictovap X.Y.Z" \
+  --title "ActoVisio Framework X.Y.Z" \
   --notes-file docs/release-notes/vX.Y.Z.md
 ```
 
-Use the same version in `pyproject.toml`, `src/pictovap/__init__.py`, the tag,
+Use the same version in `pyproject.toml`, `src/actovisio_framework/__init__.py`, the tag,
 the GitHub release, and the PyPI artifact. Do not create a release object for
 a tag whose package version or release notes disagree with it.
 

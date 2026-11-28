@@ -1,6 +1,6 @@
-# Pictovap Core Architecture
+# ActoVisio Framework Architecture
 
-This is the code and responsibility map for the public `pictovap` package.
+This is the code and responsibility map for the public `actovisio_framework` package.
 For product identity, scope, rights and authority rules see the
 [Core/Product Contract](architecture/core-product-boundary.md). For
 compatibility guarantees see [API Stability](../API_STABILITY.md).

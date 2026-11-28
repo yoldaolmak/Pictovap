@@ -55,7 +55,7 @@ until they are requested.
 ## The Core Engine Is Adapter-Free
 
 The four primitives (`VisualBrief`, `FitScore`, `ProvenancePack`, `CMSPlacement`)
-and the planning engine (`src/pictovap/engine/planner.py`) have no dependencies on
+and the planning engine (`src/actovisio_framework/engine/planner.py`) have no dependencies on
 any specific adapter. They can be tested and run in complete isolation.
 
 ## Adding a New Adapter

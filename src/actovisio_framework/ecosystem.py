@@ -38,7 +38,7 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Pre-publish image planning: visual brief, candidate scoring, provenance, "
             "alt/caption review, and CMS placement plan."
         ),
-        boundary= (
+        boundary=(
             "Run ActoVisio Framework before the importer; keep "
             "the importer responsible for the final WordPress write."
         ),
@@ -119,7 +119,7 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Migration-time visual review: inspect article sections, plan images, "
             "and preserve provenance before import."
         ),
-        boundary= (
+        boundary=(
             "Run ActoVisio Framework before migration import so "
             "visual decisions are not buried in the transport step."
         ),

@@ -35,7 +35,7 @@ a review decision does not grant image rights.
 
 Schema 1 supports `pending` and `reviewed` states, validates completed
 decisions and exposes a pure review transition helper in
-`pictovap.decision_pack`. It is experimental and side-effect-free.
+`actovisio_framework.decision_pack`. It is experimental and side-effect-free.
 New packs begin with:
 
 ```json
@@ -47,8 +47,8 @@ New packs begin with:
 
 Application remains `not_applied` with no execution receipts even after a
 review. The development CLI provides interactive
-`pictovap review --plan plan.json --actor editor --output reviewed.json`
-and read-only `pictovap review-preview` comparison. Editors can accept,
+`actovisio-framework review --plan plan.json --actor editor --output reviewed.json`
+and read-only `actovisio-framework review-preview` comparison. Editors can accept,
 reject, or load an existing replacement evidence record; no CMS is contacted.
 The [Gutenberg reference sidebar](../../examples/wordpress-review-sidebar/README.md)
 offers an in-editor review draft without CMS writes. Use `review-pack` to
@@ -60,7 +60,7 @@ does not establish a valid reviewed pack or a licensed asset. See the
 Build and validate a pack from an already validated Visual Plan:
 
 ```python
-from pictovap import build_decision_pack, validate_decision_pack
+from actovisio_framework import build_decision_pack, validate_decision_pack
 
 pack = build_decision_pack(plan)
 result = validate_decision_pack(pack)

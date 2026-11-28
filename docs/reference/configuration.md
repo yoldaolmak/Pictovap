@@ -1,8 +1,8 @@
 # Configuration Reference
 
 All configuration is via environment variables, loaded from `.env` in the repo root.
-None of them are required — `pictovap demo` runs with zero configuration, and
-`pictovap plan` runs against whichever sources/adapters you've actually configured.
+None of them are required — `actovisio-framework demo` runs with zero configuration, and
+`actovisio-framework plan` runs against whichever sources/adapters you've actually configured.
 
 ## Image Source Adapters
 
@@ -46,7 +46,7 @@ search path does not require `PICTOVAP_VIL_DIR`.
 | `GEMINI_VISION_MODEL` | No | Vision model name (default: `gemini-2.0-flash`) |
 
 If neither `GEMINI_API_KEY` nor a local LM Studio instance (`localhost:1234`) is
-available, `pictovap plan` falls back to the deterministic, dictionary-based
+available, `actovisio-framework plan` falls back to the deterministic, dictionary-based
 metadata generator — no vision key is required to run the pipeline.
 
 ## Example .env

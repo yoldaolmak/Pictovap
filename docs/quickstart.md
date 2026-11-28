@@ -1,10 +1,10 @@
 # Quickstart
 
-Get Pictovap running locally in under five minutes.
+Get ActoVisio Framework running locally in under five minutes.
 
-## 1. What is Pictovap?
+## 1. What is ActoVisio Framework?
 
-Pictovap is an open-source image-planning and CMS placement framework for publishers.
+ActoVisio Framework is an open-source image-planning and CMS placement framework for publishers.
 
 It turns WordPress Gutenberg or Markdown articles into rights-aware visual plans.
 
@@ -12,7 +12,7 @@ It reads article structure, creates a Visual Brief, evaluates candidate images w
 
 ## 2. Installation
 
-Pictovap requires Python 3.10 or newer. Check the interpreter before creating
+ActoVisio Framework requires Python 3.10 or newer. Check the interpreter before creating
 the environment, especially on systems where `python3` may still point to an
 older system Python.
 
@@ -20,7 +20,7 @@ older system Python.
 python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install pictovap
+python -m pip install .  # from the 0.14.0 candidate source checkout
 ```
 
 See the [installation guide](guides/installation.md) for the editable
@@ -34,13 +34,13 @@ You do not need image provider credentials to run the local demo.
 The demo requires no credentials, no external APIs, and no CMS connection. The demo uses deterministic local/mock candidates.
 
 ```bash
-pictovap demo
+actovisio-framework demo
 ```
 
 Or using the legacy module syntax:
 
 ```bash
-python -m pictovap.demo
+python -m actovisio_framework.demo
 ```
 
 This will:
@@ -52,5 +52,5 @@ This will:
 
 ## 4. Next Steps
 
-- Read [Using Pictovap](guides/using-pictovap.md) for the full user journey
+- Read [Using ActoVisio Framework](guides/using-pictovap.md) for the full user journey
 - See [CLI Reference](reference/cli.md) to run it against your own files
