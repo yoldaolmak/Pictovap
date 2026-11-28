@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from importlib import metadata
 from typing import Dict, Iterable, Literal, Type
 
-from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
+from actovisio_framework.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
 
 AdapterKind = Literal["provider", "cms", "renderer"]
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any, Mapping
 
-from pictovap.plugins import AdapterKind, PluginError, iter_plugins
+from actovisio_framework.plugins import AdapterKind, PluginError, iter_plugins
 
 
 _BUILT_INS: tuple[dict[str, Any], ...] = (

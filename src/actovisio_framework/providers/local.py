@@ -56,7 +56,7 @@ def _read_image_metadata(path: Path) -> dict[str, Any]:
 
 def _visual_fingerprint(path: Path) -> str | None:
     """Compute an optional local-only diversity signal without failing search."""
-    from pictovap.core.visual_similarity import compute_visual_fingerprint
+    from actovisio_framework.core.visual_similarity import compute_visual_fingerprint
 
     return compute_visual_fingerprint(path)
 

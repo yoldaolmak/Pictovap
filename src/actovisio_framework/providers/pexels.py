@@ -13,7 +13,7 @@ import urllib.parse
 import urllib.request
 from typing import Any, Dict, List
 
-from pictovap.utils.config import env_str, load_project_env
+from actovisio_framework.utils.config import env_str, load_project_env
 
 load_project_env()
 

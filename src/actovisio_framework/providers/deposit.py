@@ -12,7 +12,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from pictovap.utils.config import load_project_env
+from actovisio_framework.utils.config import load_project_env
 
 _LOGGER = logging.getLogger(__name__)
 

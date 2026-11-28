@@ -11,7 +11,7 @@ class MarkdownReportRenderer:
 
     def render(self, plan: dict[str, Any]) -> str:
         # The shared renderer used by the CLI, the library API, and this plugin surface.
-        from pictovap.engine.reporting import generate_markdown_report
+        from actovisio_framework.engine.reporting import generate_markdown_report
 
         return generate_markdown_report(plan)
 
