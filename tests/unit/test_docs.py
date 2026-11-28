@@ -37,7 +37,7 @@ def test_primary_document_links_resolve():
 def test_checkout_versions_agree():
     """Actual package and project metadata must publish the same version."""
     pyproject = (REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    package_init = (REPO_ROOT / "src/pictovap/__init__.py").read_text(
+    package_init = (REPO_ROOT / "src/actovisio_framework/__init__.py").read_text(
         encoding="utf-8"
     )
     project = re.search(r'^version = "([^"]+)"$', pyproject, re.MULTILINE)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pictovap.conformance import AdapterCheckError, check_adapter
+from actovisio_framework.conformance import AdapterCheckError, check_adapter
 
 
 class FixtureProvider:
@@ -27,7 +27,7 @@ class FixtureRenderer:
 
 
 def test_provider_check_exercises_contract_without_cms_writes(monkeypatch):
-    monkeypatch.setattr("pictovap.conformance.construct_plugin", lambda *args: FixtureProvider())
+    monkeypatch.setattr("actovisio_framework.conformance.construct_plugin", lambda *args: FixtureProvider())
 
     report = check_adapter(kind="provider", name="fixture", exercise=True)
 
@@ -39,7 +39,7 @@ def test_provider_check_exercises_contract_without_cms_writes(monkeypatch):
 
 def test_check_detects_constructor_credential_leakage(monkeypatch):
     monkeypatch.setattr(
-        "pictovap.conformance.construct_plugin", lambda *args: LeakingProvider("secret-value")
+        "actovisio_framework.conformance.construct_plugin", lambda *args: LeakingProvider("secret-value")
     )
 
     report = check_adapter(kind="provider", name="fixture", options={"api_key": "secret-value"})
@@ -49,7 +49,7 @@ def test_check_detects_constructor_credential_leakage(monkeypatch):
 
 
 def test_renderer_check_renders_without_writes(monkeypatch):
-    monkeypatch.setattr("pictovap.conformance.construct_plugin", lambda *args: FixtureRenderer())
+    monkeypatch.setattr("actovisio_framework.conformance.construct_plugin", lambda *args: FixtureRenderer())
 
     report = check_adapter(kind="renderer", name="fixture")
 

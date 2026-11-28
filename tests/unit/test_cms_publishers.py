@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from pictovap.publishers.ghost import GhostPublisher
-from pictovap.publishers.strapi import StrapiPublisher
+from actovisio_framework.publishers.ghost import GhostPublisher
+from actovisio_framework.publishers.strapi import StrapiPublisher
 
 
 # ── GhostPublisher ────────────────────────────────────────────────────────────
@@ -219,7 +219,7 @@ class TestStrapiPublisher:
 
 def test_strapi_upload_returns_a_result_when_the_response_list_is_empty(monkeypatch, tmp_path):
     """An empty upload list must not raise IndexError out of the adapter."""
-    from pictovap.publishers.strapi import StrapiPublisher
+    from actovisio_framework.publishers.strapi import StrapiPublisher
 
     image = tmp_path / "photo.webp"
     image.write_bytes(b"RIFF")
@@ -241,8 +241,8 @@ def test_strapi_upload_returns_a_result_when_the_response_list_is_empty(monkeypa
 
 def test_cms_adapters_declare_the_file_s_own_content_type(tmp_path):
     """A PNG must not be uploaded to Ghost or Strapi announced as WebP."""
-    from pictovap.publishers.ghost import _content_type as ghost_type
-    from pictovap.publishers.strapi import _content_type as strapi_type
+    from actovisio_framework.publishers.ghost import _content_type as ghost_type
+    from actovisio_framework.publishers.strapi import _content_type as strapi_type
 
     for guess in (ghost_type, strapi_type):
         assert guess("photo.png") == "image/png"

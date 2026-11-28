@@ -27,7 +27,7 @@ DOCS_README = REPO_ROOT / "docs" / "README.md"
 
 def test_demo_module_importable():
     """The demo module must import without errors."""
-    from pictovap import demo  # noqa: F401
+    from actovisio_framework import demo  # noqa: F401
     assert hasattr(demo, "run_demo"), "run_demo function must exist in demo module"
 
 
@@ -51,7 +51,7 @@ def test_demo_runs_without_env(tmp_path, monkeypatch):
     # Override output path so it writes to tmp_path and doesn't clobber examples/
     monkeypatch.chdir(tmp_path)
 
-    from pictovap.demo import run_demo
+    from actovisio_framework.demo import run_demo
     # Must not raise — if it does, the test fails with the actual exception
     run_demo()
 
@@ -67,7 +67,7 @@ def test_sample_output_produced(tmp_path, monkeypatch):
     """
     monkeypatch.chdir(tmp_path)
 
-    from pictovap.demo import run_demo
+    from actovisio_framework.demo import run_demo
     run_demo()
 
     output_path = tmp_path / "sample-output.json"
@@ -89,7 +89,7 @@ def test_sample_output_produced(tmp_path, monkeypatch):
 # ---------------------------------------------------------------------------
 
 def test_visual_brief_serializes():
-    from pictovap.core.primitives import VisualBrief
+    from actovisio_framework.core.primitives import VisualBrief
     brief = VisualBrief(
         article_title="Test Article",
         topic="testing",
@@ -104,7 +104,7 @@ def test_visual_brief_serializes():
 
 
 def test_fit_score_serializes():
-    from pictovap.core.primitives import FitScore
+    from actovisio_framework.core.primitives import FitScore
     score = FitScore(
         candidate_id="img-test",
         final_score=9.5,
@@ -118,7 +118,7 @@ def test_fit_score_serializes():
 
 
 def test_provenance_pack_serializes():
-    from pictovap.core.primitives import ProvenancePack
+    from actovisio_framework.core.primitives import ProvenancePack
     pack = ProvenancePack(
         image_id="img-001",
         provider="local",
@@ -138,7 +138,7 @@ def test_provenance_pack_serializes():
 
 
 def test_cms_placement_serializes():
-    from pictovap.core.primitives import CMSPlacement, PlacementInstruction
+    from actovisio_framework.core.primitives import CMSPlacement, PlacementInstruction
     placement = CMSPlacement(
         article_id="test-article",
         adapter_target="mock",
@@ -208,7 +208,7 @@ def test_docs_readme_links_resolve():
 
 def test_demo_with_custom_paths(tmp_path):
     """Demo should accept custom article and output paths."""
-    from pictovap.demo import run_demo
+    from actovisio_framework.demo import run_demo
     
     # Create a dummy article
     custom_article = tmp_path / "custom-article.md"
@@ -226,7 +226,7 @@ def test_demo_with_custom_paths(tmp_path):
 
 def test_demo_missing_article_exits(capsys):
     """Demo should exit clearly if custom article doesn't exist."""
-    from pictovap.demo import run_demo
+    from actovisio_framework.demo import run_demo
     
     with pytest.raises(SystemExit) as exc_info:
         run_demo(article_path_str="/path/that/does/not/exist.md")
@@ -238,7 +238,7 @@ def test_demo_missing_article_exits(capsys):
 
 def test_demo_with_markdown_report(tmp_path):
     """Demo should optionally write a Markdown report that meets formatting requirements."""
-    from pictovap.demo import run_demo
+    from actovisio_framework.demo import run_demo
     
     custom_article = tmp_path / "custom-article.md"
     custom_article.write_text("# Markdown Test\n\nTesting the report.", encoding="utf-8")

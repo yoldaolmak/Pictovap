@@ -4,7 +4,7 @@ from copy import deepcopy
 
 import pytest
 
-from pictovap import build_decision_pack, validate_decision_pack
+from actovisio_framework import build_decision_pack, validate_decision_pack
 
 
 def _plan() -> dict:
