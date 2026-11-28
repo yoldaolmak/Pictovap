@@ -10,9 +10,9 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from pictovap.core.sources import SourceAttempt
-from pictovap.core.states import ProviderRuntimeMode, SourceEpistemicState
-from pictovap.intent_validation import validate_intent_proof
+from actovisio_framework.core.sources import SourceAttempt
+from actovisio_framework.core.states import ProviderRuntimeMode, SourceEpistemicState
+from actovisio_framework.intent_validation import validate_intent_proof
 
 
 def _issue(code: str, path: str, message: str) -> dict[str, str]:
