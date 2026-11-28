@@ -15,12 +15,10 @@ Follow this final pre-release sequence before publishing a new ActoVisio Framewo
 - [ ] No secrets or credentials in committed files
 - [ ] No fake adoption claims (stars, forks, downloads, contributors)
 - [ ] CI pipeline is green on main branch
-- [ ] Stable version, Git tag, GitHub release, and PyPI version are identical
-- [ ] The next development version is clearly labeled unreleased in README and release docs
 
-## Final Manual Release
+## Canonical Release Request
 
-Before tagging:
+Before submitting the release-request PR:
 
 * clean git status
 * tests pass
@@ -70,6 +68,8 @@ Inspect the output in `dist/` to confirm the package name, version, and included
 
 ## Post-Release
 
+- [ ] Verify the package version, generated tag, GitHub Release, and PyPI version agree
+- [ ] Label the next development version unreleased in README and release docs
 - [ ] Verify the tag is visible on GitHub
 - [ ] Verify the release notes render correctly
 - [ ] Confirm planned issue links point to live GitHub issues; do not reopen the historical drafts in `docs/github-issue-plan.md`
