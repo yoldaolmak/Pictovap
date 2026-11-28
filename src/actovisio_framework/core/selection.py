@@ -13,8 +13,8 @@ from dataclasses import dataclass
 from functools import lru_cache
 from typing import Any, Mapping
 
-from pictovap.core.states import CandidateDecision
-from pictovap.core.visual_similarity import visual_similarity
+from actovisio_framework.core.states import CandidateDecision
+from actovisio_framework.core.visual_similarity import visual_similarity
 
 
 @dataclass(frozen=True)

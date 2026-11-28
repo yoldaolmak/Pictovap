@@ -20,7 +20,7 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
-from pictovap.core.states import CandidateDecision
+from actovisio_framework.core.states import CandidateDecision
 
 
 def _json_safe(value: Any) -> Any:
@@ -161,7 +161,7 @@ class VisualBrief:
         It extracts headings and builds image slots from the document structure.
         """
         from pathlib import Path
-        from pictovap.core.language import detect_language
+        from actovisio_framework.core.language import detect_language
         raw_text = Path(path).read_text(encoding="utf-8")
         frontmatter, text = _extract_frontmatter(raw_text)
 
@@ -270,7 +270,7 @@ class VisualBrief:
         visual planner needs headings and nearby text, not a Markdown export,
         so this parser deliberately reads the stable HTML boundary.
         """
-        from pictovap.core.language import detect_language
+        from actovisio_framework.core.language import detect_language
 
         class PlainTextParser(HTMLParser):
             block_tags = {

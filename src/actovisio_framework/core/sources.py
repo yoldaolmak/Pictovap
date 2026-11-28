@@ -21,8 +21,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
-from pictovap.core.profile import PublisherProfile
-from pictovap.core.states import SourceAttemptReason, SourceEpistemicState
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.core.states import SourceAttemptReason, SourceEpistemicState
 
 
 # Epistemic states, matching the vocabulary used across Pictovap contracts:
