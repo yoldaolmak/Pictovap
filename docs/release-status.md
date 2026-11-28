@@ -41,4 +41,6 @@ that published distribution.
 A reviewed change to `release-request.json` initiates the protected release
 workflow. The workflow validates version identity, tests the package, verifies
 a clean wheel, publishes to PyPI, and creates the matching GitHub Release.
-Tag-triggered releases retain the same identity and publication checks.
+Release tags alone do not trigger publication. The matching legacy distribution
+requires a separate publication gate and compatible trusted publisher after the
+repository rename.
