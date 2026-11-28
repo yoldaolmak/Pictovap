@@ -1,6 +1,6 @@
 # ActoVisio Framework
 
-[![PyPI](https://img.shields.io/pypi/v/pictovap.svg)](https://pypi.org/project/pictovap/)
+[![PyPI](https://img.shields.io/pypi/v/actovisio-framework.svg)](https://pypi.org/project/actovisio-framework/)
 [![CI](https://github.com/yoldaolmak/ActoVisio-Framework/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/ActoVisio-Framework/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -9,12 +9,12 @@ publishers. Given an article and image candidates, it explains which images
 fit each section, why, what source/license evidence is known, and how a CMS
 could place them. The output is reviewable; it is not publication approval.
 
-Formerly Pictovap Framework, the same MIT repository is developing the
-canonical `actovisio-framework` distribution, `actovisio_framework` import,
-and `actovisio-framework` CLI in 0.14.0. The published 0.13.0 `pictovap`
-release remains available. A separate compatibility wheel preserves the old
-import and CLI without duplicate implementation. See the
-[release status](docs/release-status.md) and [naming policy](docs/architecture/naming.md).
+Formerly Pictovap Framework, the same MIT repository publishes the canonical
+`actovisio-framework` distribution, `actovisio_framework` import, and
+`actovisio-framework` CLI starting in 0.14.0. The legacy 0.13.0 `pictovap`
+release remains available; a separate `pictovap` 0.14.0 compatibility wheel is
+not published by the canonical release workflow and requires its own gate. See
+the [release status](docs/release-status.md) and [naming policy](docs/architecture/naming.md).
 
 ActoVisio Framework is CMS-independent and does not require a hosted service.
 
@@ -43,21 +43,18 @@ under MIT. See the [Framework/Product boundary](docs/architecture/core-product-b
 
 ## Get started
 
-Requires Python 3.10+. The published stable release is **0.13.0**. See
-[Release Status](docs/release-status.md) for package and source identity.
+Requires Python 3.10+. The published canonical release is **0.14.0**. See
+[Release Status](docs/release-status.md) for package, legacy `pictovap==0.13.0`,
+and source identity.
 
-For the last published stable release (legacy identity):
+Install the published canonical package:
 
 ```bash
-python -m pip install pictovap==0.13.0
-pictovap demo
+python -m pip install actovisio-framework
+actovisio-framework demo
 ```
 
-The new distribution is a release candidate; do not run a PyPI install under
-the new name until [release status](docs/release-status.md) confirms publication.
-After that verification, new installations use `pip install actovisio-framework`.
-
-Use the 0.14.0 development checkout for the new command and import:
+Or use a source checkout:
 
 ```bash
 git clone https://github.com/yoldaolmak/ActoVisio-Framework.git
@@ -65,6 +62,9 @@ cd ActoVisio-Framework
 python -m pip install -e ".[test]"
 actovisio-framework demo
 ```
+
+The legacy `pictovap==0.13.0` release remains published on PyPI; the separate
+`pictovap` 0.14.0 compatibility wheel is not uploaded by the canonical release.
 
 The demo uses deterministic local data: no credentials or network access.
 For your own Markdown article, start with the

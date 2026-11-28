@@ -1,6 +1,6 @@
 # CLI Reference
 
-ActoVisio Framework is a CLI-first tool. This reference targets the 0.14.0 candidate; the published legacy CLI remains `pictovap`. Commands emit JSON artifacts or diagnostics so
+ActoVisio Framework is a CLI-first tool. This reference targets the canonical `actovisio-framework` CLI published from 0.14.0; the published legacy CLI remains `pictovap` (0.13.0). Commands emit JSON artifacts or diagnostics so
 the same workflow can be reviewed by a person and composed in automation.
 
 ## Current Commands

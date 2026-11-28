@@ -20,7 +20,7 @@ older system Python.
 python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install .  # from the 0.14.0 candidate source checkout
+python -m pip install actovisio-framework
 ```
 
 See the [installation guide](guides/installation.md) for the editable
