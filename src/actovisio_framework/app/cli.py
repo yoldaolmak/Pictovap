@@ -138,8 +138,8 @@ def _collect_review_decisions(pack: dict[str, Any], actor: str) -> dict[str, Any
     return transition_decision_pack_review(pack, decisions, complete=True)
 
 
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="actovisio-framework")
+def build_parser(*, prog: str = "actovisio-framework") -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog=prog)
     parser.add_argument(
         "--version",
         action="version",
@@ -372,8 +372,8 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    parser = build_parser()
+def main(argv: Sequence[str] | None = None, *, prog: str = "actovisio-framework") -> int:
+    parser = build_parser(prog=prog)
     args = parser.parse_args(argv)
     runner = PipelineRunner()
 
@@ -788,6 +788,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     parser.error(f"unknown command: {args.command}")
     return 2
+
+
+def legacy_main(argv: Sequence[str] | None = None) -> int:
+    """Keep the legacy CLI command spelling without duplicating execution."""
+    return main(argv, prog="pictovap")
 
 
 if __name__ == "__main__":

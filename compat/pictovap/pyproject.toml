@@ -17,7 +17,7 @@ dependencies = ["actovisio-framework==0.14.0"]
 Homepage = "https://github.com/yoldaolmak/ActoVisio-Framework"
 
 [project.scripts]
-pictovap = "actovisio_framework.app.cli:main"
+pictovap = "actovisio_framework.app.cli:legacy_main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

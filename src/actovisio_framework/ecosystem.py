@@ -201,7 +201,7 @@ def build_workflow_commands() -> List[str]:
         "actovisio-framework plan --article posts/example.md --profile profiles/publisher.yaml "
         "--output artifacts/pictovap-plan.json --report artifacts/pictovap-report.md",
         "actovisio-framework feedback --plan artifacts/pictovap-plan.json --format markdown",
-        "pictovap publish --plan artifacts/pictovap-plan.json --cms wordpress --dry-run",
+        "actovisio-framework publish --plan artifacts/pictovap-plan.json --cms wordpress --dry-run",
     ]
 
 

@@ -21,11 +21,11 @@ def test_build_ecosystem_match_returns_copyable_markdown_to_wordpress_packet():
     assert packet["repository_url"] == "https://github.com/example/md2wp"
     assert "WordPress authentication" in packet["owned_by_target"]
     assert "provenance" in packet["pictovap_role"]
-    assert "Pictovap" in packet["readme_section"]
+    assert "ActoVisio Framework" in packet["readme_section"]
     assert "https://github.com/yoldaolmak/ActoVisio-Framework" in packet["readme_section"]
     assert packet["readme_section"].count("https://github.com/yoldaolmak/ActoVisio-Framework") == 1
     assert "docs-only" in packet["pr_body"]
-    assert any("clicks the Pictovap link" in item for item in packet["anti_spam_checklist"])
+    assert any("clicks the ActoVisio Framework link" in item for item in packet["anti_spam_checklist"])
 
 
 def test_build_ecosystem_match_accepts_aliases():
