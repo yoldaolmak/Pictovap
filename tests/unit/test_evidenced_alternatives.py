@@ -7,16 +7,16 @@ from pathlib import Path
 
 import pytest
 
-from pictovap.core.profile import PublisherProfile
-from pictovap.data.demo_candidates import MOCK_CANDIDATES
-from pictovap.decision_pack import (
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.data.demo_candidates import MOCK_CANDIDATES
+from actovisio_framework.decision_pack import (
     build_decision_pack,
     transition_decision_pack_review,
     validate_decision_pack,
 )
-from pictovap.engine.planner import build_visual_plan
-from pictovap.review import preview_decision_pack
-from pictovap.validation import validate_visual_plan
+from actovisio_framework.engine.planner import build_visual_plan
+from actovisio_framework.review import preview_decision_pack
+from actovisio_framework.validation import validate_visual_plan
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -128,7 +128,7 @@ def test_hard_rejected_alternative_cannot_enter_review_inventory():
 
 
 def test_legacy_packs_without_alternatives_remain_compatible():
-    from pictovap.testing.contracts import sample_decision_pack
+    from actovisio_framework.testing.contracts import sample_decision_pack
 
     legacy = sample_decision_pack()
     assert "alternatives" not in legacy["slots"][0]
@@ -162,7 +162,7 @@ def test_explicit_credential_free_demo_is_valid_but_invented_modes_fail():
 
 
 def test_gutenberg_style_one_click_roundtrip_uses_existing_cli_bridge(tmp_path):
-    from pictovap.app import cli
+    from actovisio_framework.app import cli
 
     plan = _real_planning_slice()
     plan_path = tmp_path / "plan.json"
@@ -193,7 +193,7 @@ def test_gutenberg_style_one_click_roundtrip_uses_existing_cli_bridge(tmp_path):
         decisions.append(decision)
 
     draft = {
-        "kind": "pictovap.review-decisions",
+        "kind": "actovisio_framework.review-decisions",
         "schema_version": "1",
         "article_id": str(pack["article"]["id"]),
         "source_sha256": hashlib.sha256(pack_path.read_bytes()).hexdigest(),

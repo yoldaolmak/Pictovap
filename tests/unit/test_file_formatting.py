@@ -15,7 +15,7 @@ CRITICAL_FILES = (
     "docs/README.md",
     "docs/ROADMAP.md",
     "docs/ARCHITECTURE.md",
-    "src/pictovap/demo.py",
+    "src/actovisio_framework/demo.py",
     "tests/unit/test_demo.py",
     "pyproject.toml",
 )
@@ -36,8 +36,8 @@ def test_gitignore_packaged_data_exception_matches_current_package():
     """Repository ignore rules must not hide intended package resources."""
     text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
     assert chr(96) * 3 not in text
-    assert "!src/pictovap/data/" in text
-    assert "!src/pictovap/data/**" in text
+    assert "!src/actovisio_framework/data/" in text
+    assert "!src/actovisio_framework/data/**" in text
     assert ".pytest_cache/" in text
 
 
@@ -52,5 +52,5 @@ def test_distribution_has_one_canonical_package_and_console_script():
     scripts_section = pyproject.split("[project.scripts]", 1)[1].split("[", 1)[0]
     scripts = [line.strip() for line in scripts_section.splitlines() if line.strip()]
 
-    assert package_roots == ["pictovap"]
-    assert scripts == ['pictovap = "pictovap.app.cli:main"']
+    assert package_roots == ["actovisio_framework"]
+    assert scripts == ['actovisio-framework = "actovisio_framework.app.cli:main"']

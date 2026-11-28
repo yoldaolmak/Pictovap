@@ -7,8 +7,8 @@ import sys
 
 import pytest
 
-from pictovap import diff_visual_plans
-from pictovap.plan_diff import plan_diff_to_json, render_plan_diff_markdown
+from actovisio_framework import diff_visual_plans
+from actovisio_framework.plan_diff import plan_diff_to_json, render_plan_diff_markdown
 
 
 def sample_plan() -> dict:
