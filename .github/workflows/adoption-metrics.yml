@@ -16,7 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      PACKAGE: actovisio-framework
+      # Keep measuring the published package until the new PyPI project is verified.
+      PACKAGE: pictovap
       REPOSITORY: yoldaolmak/ActoVisio-Framework
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -88,7 +89,7 @@ jobs:
         run: |
           set -euo pipefail
           jq -e '
-            (.package == "actovisio-framework")
+            (.package == "pictovap")
             and (.pypi.version | type == "string")
             and (.pypistats.total_downloads | type == "number")
             and (.github.stars | type == "number")

@@ -855,7 +855,8 @@ def _insert_block_after_heading(
         before = content[: match.start()]
         after = content[match.end():]
         has_nearby_image_before = re.search(
-            r"<!-- wp:image\b.*?<!-- /wp:image -->\s*(?:<!-- wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?$",
+            r"<!-- wp:image\b.*?<!-- /wp:image -->\s*(?:<!-- "
+                "wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?$",
             before,
             flags=re.S | re.I,
         )
@@ -878,7 +879,8 @@ def _insert_block_after_heading(
 def _extract_available_headings(content: str) -> list[dict]:
     """Return H2/H3 Gutenberg headings that don't already have an image nearby."""
     heading_pattern = re.compile(
-        r"<!-- wp:heading(?:\s+\{.*?\})? -->\s*<h(?P<level>[2-3])\b[^>]*>(?P<inner>.*?)</h(?P=level)>\s*<!-- /wp:heading -->",
+        r"<!-- wp:heading(?:\s+\{.*?\})? "
+            "-->\s*<h(?P<level>[2-3])\b[^>]*>(?P<inner>.*?)</h(?P=level)>\s*<!-- /wp:heading -->",
         flags=re.S | re.I,
     )
     results = []
@@ -891,7 +893,8 @@ def _extract_available_headings(content: str) -> list[dict]:
         after = content[match.end():]
         # Reuse the same proximity guards used in _insert_block_after_heading
         has_image_before = re.search(
-            r"<!-- wp:image\b.*?<!-- /wp:image -->\s*(?:<!-- wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?$",
+            r"<!-- wp:image\b.*?<!-- /wp:image -->\s*(?:<!-- "
+                "wp:paragraph(?:\s+\{.*?\})? -->.*?<!-- /wp:paragraph -->\s*)?$",
             before,
             flags=re.S | re.I,
         )

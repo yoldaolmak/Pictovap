@@ -38,7 +38,10 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Pre-publish image planning: visual brief, candidate scoring, provenance, "
             "alt/caption review, and CMS placement plan."
         ),
-        boundary="Run ActoVisio Framework before the importer; keep the importer responsible for the final WordPress write.",
+        boundary= (
+            "Run ActoVisio Framework before the importer; keep "
+            "the importer responsible for the final WordPress write."
+        ),
         readme_heading="Optional image planning workflow",
         readme_intro=(
             "{project} handles Markdown-to-WordPress import. If the editorial workflow "
@@ -116,7 +119,10 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Migration-time visual review: inspect article sections, plan images, "
             "and preserve provenance before import."
         ),
-        boundary="Run ActoVisio Framework before migration import so visual decisions are not buried in the transport step.",
+        boundary= (
+            "Run ActoVisio Framework before migration import so "
+            "visual decisions are not buried in the transport step."
+        ),
         readme_heading="Image planning before migration",
         readme_intro=(
             "{project} moves prepared content into a publishing target. ActoVisio Framework can add "

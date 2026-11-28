@@ -193,7 +193,7 @@ def test_gutenberg_style_one_click_roundtrip_uses_existing_cli_bridge(tmp_path):
         decisions.append(decision)
 
     draft = {
-        "kind": "actovisio_framework.review-decisions",
+        "kind": "pictovap.review-decisions",
         "schema_version": "1",
         "article_id": str(pack["article"]["id"]),
         "source_sha256": hashlib.sha256(pack_path.read_bytes()).hexdigest(),

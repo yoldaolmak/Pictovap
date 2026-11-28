@@ -23,7 +23,7 @@ def _prepare(tmp_path):
 def _draft(pack_path, action="accept", actor="editor"):
     pack = json.loads(pack_path.read_text(encoding="utf-8"))
     return {
-        "kind": "actovisio_framework.review-decisions",
+        "kind": "pictovap.review-decisions",
         "schema_version": "1",
         "article_id": str(pack["article"]["id"]),
         "source_sha256": hashlib.sha256(pack_path.read_bytes()).hexdigest(),
