@@ -5,7 +5,7 @@ from copy import deepcopy
 
 import pytest
 
-from actovisio_framework import build_decision_pack, sample_decision_pack, sample_visual_plan
+from actovisio_framework import sample_decision_pack, sample_visual_plan
 from actovisio_framework.app import cli
 from actovisio_framework.decision_pack import transition_decision_pack_review, validate_decision_pack
 from actovisio_framework.review import preview_decision_pack, render_review_preview
