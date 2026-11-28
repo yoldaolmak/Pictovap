@@ -6,7 +6,7 @@ from collections.abc import Mapping
 import platform
 from typing import Any
 
-from pictovap import __version__
+from actovisio_framework import __version__
 
 EXTERNAL_VALIDATION_ISSUE_URL = (
     "https://github.com/yoldaolmak/Pictovap/issues/new"

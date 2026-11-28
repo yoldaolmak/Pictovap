@@ -22,10 +22,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from pictovap.core.profile import PublisherProfile
-from pictovap.data.demo_candidates import MOCK_CANDIDATES
-from pictovap.engine.planner import build_visual_plan
-from pictovap.engine.reporting import write_plan_artifacts
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.data.demo_candidates import MOCK_CANDIDATES
+from actovisio_framework.engine.planner import build_visual_plan
+from actovisio_framework.engine.reporting import write_plan_artifacts
 
 
 def _is_dev_install() -> bool:
@@ -63,7 +63,7 @@ def _resolve_sample_article() -> Path | None:
 
     try:
         import importlib.resources as resources
-        packaged = resources.files("pictovap.data").joinpath("sample-article.md")
+        packaged = resources.files("actovisio_framework.data").joinpath("sample-article.md")
         if packaged.is_file():
             return Path(str(packaged))
     except (ModuleNotFoundError, FileNotFoundError, TypeError):
@@ -236,7 +236,7 @@ if __name__ == "__main__":
     if args.article:
         # A real article was given: use the same real-adapter-aware path as
         # `pictovap plan`, not the always-fixture demo path.
-        from pictovap import api
+        from actovisio_framework import api
 
         plan = api.create_visual_plan(
             article=args.article,

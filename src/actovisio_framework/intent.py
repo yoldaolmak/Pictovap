@@ -13,11 +13,11 @@ import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterable, Mapping
 
-from pictovap.core.primitives import FitScore, VisualBrief
-from pictovap.core.profile import PublisherProfile
+from actovisio_framework.core.primitives import FitScore, VisualBrief
+from actovisio_framework.core.profile import PublisherProfile
 
 if TYPE_CHECKING:
-    from pictovap.core.selection import SelectionPolicy
+    from actovisio_framework.core.selection import SelectionPolicy
 
 
 INTENT_SCHEMA_VERSION = "1"

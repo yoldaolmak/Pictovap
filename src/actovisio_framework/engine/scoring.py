@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pictovap.core.primitives import FitScore, VisualBrief, _metadata_text
+from actovisio_framework.core.primitives import FitScore, VisualBrief, _metadata_text
 
 
 def score_candidate(candidate: dict[str, Any], slot: dict[str, Any], brief: VisualBrief) -> FitScore:

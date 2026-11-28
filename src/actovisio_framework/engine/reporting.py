@@ -147,7 +147,7 @@ def render_report(plan: dict[str, Any], renderer: object | None = None) -> str:
     """Render a plan with the built-in Markdown report or an installed renderer."""
     if renderer is None:
         return generate_markdown_report(plan)
-    from pictovap.testing.contracts import assert_report_renderer_contract
+    from actovisio_framework.testing.contracts import assert_report_renderer_contract
 
     return assert_report_renderer_contract(renderer, plan=plan)
 

@@ -12,24 +12,24 @@ import hashlib
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from pictovap.core.demo_metadata import generate_local_alt_text, generate_local_caption
-from pictovap.core.primitives import (
+from actovisio_framework.core.demo_metadata import generate_local_alt_text, generate_local_caption
+from actovisio_framework.core.primitives import (
     CMSPlacement,
     PlacementInstruction,
     ProvenancePack,
     VisualBrief,
 )
-from pictovap.core.profile import PublisherProfile
-from pictovap.core.selection import select_assignments
-from pictovap.core.sources import (
+from actovisio_framework.core.profile import PublisherProfile
+from actovisio_framework.core.selection import select_assignments
+from actovisio_framework.core.sources import (
     UNKNOWN,
     SourceAttempt,
     fetch_candidates_with_evidence,
 )
-from pictovap.core.visual_similarity import collect_candidate_fingerprints
-from pictovap.engine.scoring import score_candidate
-from pictovap.intent import compile_intent_proof
-from pictovap.testing.contracts import assert_image_source_contract
+from actovisio_framework.core.visual_similarity import collect_candidate_fingerprints
+from actovisio_framework.engine.scoring import score_candidate
+from actovisio_framework.intent import compile_intent_proof
+from actovisio_framework.testing.contracts import assert_image_source_contract
 
 
 PLAN_LABEL = "Pictovap Visual Plan"

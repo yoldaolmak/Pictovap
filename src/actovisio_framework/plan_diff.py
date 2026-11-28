@@ -6,8 +6,8 @@ import json
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from pictovap.core.states import PlanDiffStatus
-from pictovap.validation import validate_visual_plan
+from actovisio_framework.core.states import PlanDiffStatus
+from actovisio_framework.validation import validate_visual_plan
 
 
 PLAN_DIFF_SCHEMA_VERSION = "1"

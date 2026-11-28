@@ -11,8 +11,8 @@ from collections.abc import Iterable, Mapping
 import copy
 from typing import Any
 
-from pictovap.core.states import ApplicationStatus, ReviewAction, ReviewStatus
-from pictovap.validation import validate_visual_plan
+from actovisio_framework.core.states import ApplicationStatus, ReviewAction, ReviewStatus
+from actovisio_framework.validation import validate_visual_plan
 
 
 DECISION_PACK_SCHEMA_VERSION = "1"

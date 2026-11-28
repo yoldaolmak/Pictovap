@@ -25,8 +25,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
-from pictovap.utils.config import env_str, load_project_env
-from pictovap.vision_templates import TRAVEL_BLOG
+from actovisio_framework.utils.config import env_str, load_project_env
+from actovisio_framework.vision_templates import TRAVEL_BLOG
 
 load_project_env()
 
@@ -269,8 +269,8 @@ def analyze_image_vision_chain(
 
     Example::
 
-        from pictovap.engine.vision_chain import analyze_image_vision_chain
-        from pictovap.vision_templates import TECHNICAL
+        from actovisio_framework.engine.vision_chain import analyze_image_vision_chain
+        from actovisio_framework.vision_templates import TECHNICAL
 
         meta = analyze_image_vision_chain(
             "photo.webp",
@@ -279,7 +279,7 @@ def analyze_image_vision_chain(
         )
     """
     if isinstance(template, str):
-        from pictovap.vision_templates import get_template
+        from actovisio_framework.vision_templates import get_template
         template = get_template(template)
     post_context = post_context or {}
     errors: list[str] = []

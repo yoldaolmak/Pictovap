@@ -9,13 +9,13 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from typing import Any
 
-from pictovap.core.states import (
+from actovisio_framework.core.states import (
     AssignmentState,
     CandidateDecision,
     ConstraintKind,
     ConstraintStatus,
 )
-from pictovap.intent import INTENT_SCHEMA_VERSION
+from actovisio_framework.intent import INTENT_SCHEMA_VERSION
 
 
 _DECISIONS = {d.value for d in CandidateDecision}
