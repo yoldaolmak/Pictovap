@@ -19,6 +19,19 @@ The published wheel and source distribution passed release checks. The tag
 and GitHub Release bind the exact published source commit. Product integration
 has its own acceptance gate.
 
+## Development candidate (not published)
+
+- Version: **0.14.0**
+- Canonical distribution and CLI: `actovisio-framework`
+- Python namespace: `actovisio_framework`
+- Legacy compatibility distribution: `pictovap` 0.14.0, separate wheel
+
+The public name and Trusted Publishing authorization must be confirmed before
+publication. Both wheels need clean-environment verification, including upgrade
+from 0.13.0 and historical Decision Pack replay. Publish the canonical wheel first;
+the legacy distribution is never published by the canonical release job. Product
+#153 remains pinned to the existing released 0.13.0 until its independent gate.
+
 ## Release identity
 
 The declared package version, immutable Git tag, GitHub Release, and PyPI

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.0] - Unreleased
+
+- Adopt `actovisio-framework` distribution and CLI and `actovisio_framework` imports.
+- Deprecated: legacy package/import/CLI names remain available through a separate
+  compatibility distribution pinned to the matching canonical release.
+- Retain schema-1 Decision Packs, plugin entry-point groups, configuration and
+  historic release identity. No publication or Product integration is claimed.
+
 ## [0.13.0] - 2026-11-24
 
 ### Added

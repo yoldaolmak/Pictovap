@@ -9,10 +9,12 @@ publishers. Given an article and image candidates, it explains which images
 fit each section, why, what source/license evidence is known, and how a CMS
 could place them. The output is reviewable; it is not publication approval.
 
-Formerly Pictovap Framework, it retains the `pictovap` Python package, CLI,
-and existing public contracts. The same public repository was renamed to
-`ActoVisio-Framework` on 28 November 2026. This identity change does not
-alter MIT rights or require the separate enterprise application.
+Formerly Pictovap Framework, the same MIT repository is developing the
+canonical `actovisio-framework` distribution, `actovisio_framework` import,
+and `actovisio-framework` CLI in 0.14.0. The published 0.13.0 `pictovap`
+release remains available. A separate compatibility wheel preserves the old
+import and CLI without duplicate implementation. See the
+[release status](docs/release-status.md) and [naming policy](docs/architecture/naming.md).
 
 ActoVisio Framework is CMS-independent and does not require a hosted service.
 
@@ -44,20 +46,24 @@ under MIT. See the [Framework/Product boundary](docs/architecture/core-product-b
 Requires Python 3.10+. The published stable release is **0.13.0**. See
 [Release Status](docs/release-status.md) for package and source identity.
 
-Install the published package:
+For the last published stable release (legacy identity):
 
 ```bash
-python -m pip install pictovap
+python -m pip install pictovap==0.13.0
 pictovap demo
 ```
 
-Or use a development checkout:
+The new distribution is a release candidate; do not run a PyPI install under
+the new name until [release status](docs/release-status.md) confirms publication.
+After that verification, new installations use `pip install actovisio-framework`.
+
+Use the 0.14.0 development checkout for the new command and import:
 
 ```bash
 git clone https://github.com/yoldaolmak/ActoVisio-Framework.git
 cd ActoVisio-Framework
 python -m pip install -e ".[test]"
-pictovap demo
+actovisio-framework demo
 ```
 
 The demo uses deterministic local data: no credentials or network access.
@@ -65,30 +71,30 @@ For your own Markdown article, start with the
 [sample publisher profile](examples/profiles/sample-publisher.yaml):
 
 ```bash
-pictovap plan \
+actovisio-framework plan \
   --article article.md \
   --profile examples/profiles/sample-publisher.yaml \
   --output plan.json \
   --report editor-report.md
 
-pictovap validate --plan plan.json
-pictovap explain --plan plan.json --format markdown
-pictovap audit --plan plan.json --format markdown
+actovisio-framework validate --plan plan.json
+actovisio-framework explain --plan plan.json --format markdown
+actovisio-framework audit --plan plan.json --format markdown
 ```
 
 The JSON plan is a machine-readable proposal. The report and explanation
-provide a reviewable editor view. Use `pictovap diff` to compare existing
+provide a reviewable editor view. Use `actovisio-framework diff` to compare existing
 plans without contacting providers or the CMS:
 
 ```bash
-pictovap diff --before plan-old.json --after plan.json --format markdown
-pictovap benchmark --corpus tests/corpus
+actovisio-framework diff --before plan-old.json --after plan.json --format markdown
+actovisio-framework benchmark --corpus tests/corpus
 ```
 
 A Python integration can build a Decision Pack from a validated plan:
 
 ```python
-from pictovap import build_decision_pack, validate_decision_pack
+from actovisio_framework import build_decision_pack, validate_decision_pack
 
 pack = build_decision_pack(plan)
 assert validate_decision_pack(pack)["status"] == "passed"
@@ -98,10 +104,10 @@ To complete an editor review without hand-editing the Decision Pack JSON,
 run the interactive, offline command on the **development checkout**:
 
 ```bash
-pictovap review --plan plan.json --actor editor@example.test \
+actovisio-framework review --plan plan.json --actor editor@example.test \
   --output reviewed-pack.json --preview review-preview.md
 
-pictovap review-preview --plan plan.json \
+actovisio-framework review-preview --plan plan.json \
   --reviewed reviewed-pack.json --format markdown
 ```
 
