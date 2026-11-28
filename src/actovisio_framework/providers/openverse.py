@@ -15,7 +15,7 @@ import urllib.request
 from typing import Any, Dict, List
 
 _API_URL = "https://api.openverse.org/v1/images/"
-_USER_AGENT = "Pictovap/0.2 (+https://github.com/yoldaolmak/Pictovap)"
+_USER_AGENT = "Pictovap/0.2 (+https://github.com/yoldaolmak/ActoVisio-Framework)"
 
 
 def search_candidates(query: str, count: int) -> List[Dict[str, Any]]:

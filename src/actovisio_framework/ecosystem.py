@@ -18,7 +18,7 @@ SUPPORTED_TOOL_KINDS = (
 
 @dataclass(frozen=True)
 class EcosystemPattern:
-    """Describes how Pictovap fits beside an adjacent publishing tool."""
+    """Describes how ActoVisio Framework fits beside an adjacent publishing tool."""
 
     tool_kind: str
     label: str
@@ -38,7 +38,7 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Pre-publish image planning: visual brief, candidate scoring, provenance, "
             "alt/caption review, and CMS placement plan."
         ),
-        boundary="Run Pictovap before the importer; keep the importer responsible for the final WordPress write.",
+        boundary="Run ActoVisio Framework before the importer; keep the importer responsible for the final WordPress write.",
         readme_heading="Optional image planning workflow",
         readme_intro=(
             "{project} handles Markdown-to-WordPress import. If the editorial workflow "
@@ -54,7 +54,7 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Post-draft visual finishing: section-level image intent, candidate evaluation, "
             "license provenance, editor report, and placement instructions."
         ),
-        boundary="Run Pictovap after a draft exists and before the editor approves media for publishing.",
+        boundary="Run ActoVisio Framework after a draft exists and before the editor approves media for publishing.",
         readme_heading="Optional image workflow",
         readme_intro=(
             "{project} creates review-ready drafts. Image sourcing, license provenance, "
@@ -70,7 +70,7 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Before-upload planning: decide which image belongs where, record source and "
             "license data, and prepare editor-approved metadata."
         ),
-        boundary="Use Pictovap before upload; use the uploader only after media choices are approved.",
+        boundary="Use ActoVisio Framework before upload; use the uploader only after media choices are approved.",
         readme_heading="Pre-upload image planning",
         readme_intro=(
             "{project} uploads media that is already referenced or selected. If editors "
@@ -86,12 +86,12 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Placement intent and review data: target heading, image role, alt text, "
             "caption, source, license, and attribution."
         ),
-        boundary="Use Pictovap to decide placement intent; let the Gutenberg tool own block execution.",
+        boundary="Use ActoVisio Framework to decide placement intent; let the Gutenberg tool own block execution.",
         readme_heading="Image placement planning",
         readme_intro=(
             "{project} works at the Gutenberg block boundary. If the workflow needs a "
             "reviewable decision about where images belong before blocks are written, "
-            "Pictovap can provide that placement plan."
+            "ActoVisio Framework can provide that placement plan."
         ),
     ),
     "cms-automation": EcosystemPattern(
@@ -101,10 +101,10 @@ PATTERNS: Dict[str, EcosystemPattern] = {
         pictovap_role=(
             "CMS-neutral visual plan and editor report before a CMS-specific automation writes anything."
         ),
-        boundary="Keep Pictovap as the reviewable planning layer before the CMS automation step.",
+        boundary="Keep ActoVisio Framework as the reviewable planning layer before the CMS automation step.",
         readme_heading="Visual planning before CMS automation",
         readme_intro=(
-            "{project} owns CMS automation. Pictovap can sit before that step when editors "
+            "{project} owns CMS automation. ActoVisio Framework can sit before that step when editors "
             "need image selection, provenance, alt/caption review, and placement intent."
         ),
     ),
@@ -116,10 +116,10 @@ PATTERNS: Dict[str, EcosystemPattern] = {
             "Migration-time visual review: inspect article sections, plan images, "
             "and preserve provenance before import."
         ),
-        boundary="Run Pictovap before migration import so visual decisions are not buried in the transport step.",
+        boundary="Run ActoVisio Framework before migration import so visual decisions are not buried in the transport step.",
         readme_heading="Image planning before migration",
         readme_intro=(
-            "{project} moves prepared content into a publishing target. Pictovap can add "
+            "{project} moves prepared content into a publishing target. ActoVisio Framework can add "
             "a reviewable image plan before the migration writes to a CMS."
         ),
     ),
@@ -168,7 +168,7 @@ def build_readme_section(pattern: EcosystemPattern, project_name: str) -> str:
         intro,
         "",
         (
-            "[Pictovap](https://github.com/yoldaolmak/Pictovap) is a CLI-first "
+            "[ActoVisio Framework](https://github.com/yoldaolmak/ActoVisio-Framework) is a CLI-first "
             "companion workflow for this boundary: Markdown article -> visual brief "
             "-> candidate scoring -> provenance pack -> editor report -> CMS "
             "placement plan."
@@ -187,7 +187,7 @@ def build_pr_body(pattern: EcosystemPattern, project_name: str, repository_url: 
         "Adds a small documentation section for the adjacent image-planning workflow.",
         "",
         f"{project_name} owns: {pattern.owned_by_tool}",
-        f"Pictovap can add: {pattern.pictovap_role}",
+        f"ActoVisio Framework can add: {pattern.pictovap_role}",
         "",
         "This is docs-only and does not change runtime behavior.",
         repo_line.strip(),
@@ -198,9 +198,9 @@ def build_workflow_commands() -> List[str]:
     """Return the standard pre-publish workflow commands."""
 
     return [
-        "pictovap plan --article posts/example.md --profile profiles/publisher.yaml "
+        "actovisio-framework plan --article posts/example.md --profile profiles/publisher.yaml "
         "--output artifacts/pictovap-plan.json --report artifacts/pictovap-report.md",
-        "pictovap feedback --plan artifacts/pictovap-plan.json --format markdown",
+        "actovisio-framework feedback --plan artifacts/pictovap-plan.json --format markdown",
         "pictovap publish --plan artifacts/pictovap-plan.json --cms wordpress --dry-run",
     ]
 
@@ -228,7 +228,7 @@ def build_ecosystem_match(
         "boundary": pattern.boundary,
         "workflow": [
             "Draft or Markdown article",
-            "Pictovap visual plan and editor report",
+            "ActoVisio Framework visual plan and editor report",
             "Editor approval",
             "CMS import, media upload, or publish workflow",
         ],
@@ -236,10 +236,10 @@ def build_ecosystem_match(
         "readme_section": build_readme_section(pattern, clean_project),
         "pr_body": build_pr_body(pattern, clean_project, clean_repo),
         "anti_spam_checklist": [
-            "The target repository benefits even if no one clicks the Pictovap link.",
-            "Pictovap is framed as a companion workflow, not a replacement.",
+            "The target repository benefits even if no one clicks the ActoVisio Framework link.",
+            "ActoVisio Framework is framed as a companion workflow, not a replacement.",
             "The wording is specific to the target project's actual publishing boundary.",
-            "The Pictovap link appears once.",
+            "The ActoVisio Framework link appears once.",
             "No SEO, traffic, or complete-automation claims are made.",
         ],
     }
@@ -249,7 +249,7 @@ def render_ecosystem_markdown(packet: Dict[str, Any]) -> str:
     """Render an ecosystem integration packet as copyable Markdown."""
 
     lines: List[str] = [
-        "# Pictovap Ecosystem Integration",
+        "# ActoVisio Framework Ecosystem Integration",
         "",
         f"- Target: {packet['project_name']}",
         f"- Tool kind: {packet['tool_kind']}",

@@ -1,8 +1,8 @@
-"""Pictovap CLI entrypoint.
+"""ActoVisio Framework CLI entrypoint.
 
 Commands matching the public library API:
     demo    - run the credential-free example pipeline
-    plan    - create a visual plan for a real article (pictovap.create_visual_plan)
+    plan    - create a visual plan for a real article (actovisio_framework.create_visual_plan)
     report  - render an existing JSON plan as a Markdown editor report
     plugins - list installed third-party adapter plugins
     scaffold - generate a standalone adapter plugin package
@@ -144,7 +144,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--version",
         action="version",
         version=f"%(prog)s {__version__}",
-        help="Show the installed Pictovap version and exit",
+        help="Show the installed ActoVisio Framework version and exit",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

@@ -34,9 +34,9 @@ load_project_env()
 try:
     from importlib.metadata import version as _dist_version
 
-    _USER_AGENT = f"Pictovap-Media-Uploader/{_dist_version('pictovap')}"
+    _USER_AGENT = f"ActoVisio-Framework-Media-Uploader/{_dist_version('actovisio-framework')}"
 except Exception:  # pragma: no cover - package metadata unavailable (source tree)
-    _USER_AGENT = "Pictovap-Media-Uploader/dev"
+    _USER_AGENT = "ActoVisio-Framework-Media-Uploader/dev"
 
 AUTO_MEDIA_START = "<!-- yo:auto-media:start -->"
 AUTO_MEDIA_END = "<!-- yo:auto-media:end -->"

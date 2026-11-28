@@ -9,7 +9,7 @@ from typing import Any
 from actovisio_framework import __version__
 
 EXTERNAL_VALIDATION_ISSUE_URL = (
-    "https://github.com/yoldaolmak/Pictovap/issues/new"
+    "https://github.com/yoldaolmak/ActoVisio-Framework/issues/new"
     "?template=external_validation.md"
 )
 
@@ -88,11 +88,11 @@ def render_feedback_markdown(summary: Mapping[str, Any]) -> str:
     provider_mode = "unknown" if provider_mode is None else provider_mode
 
     return "\n".join([
-        "## Pictovap External Validation",
+        "## ActoVisio Framework External Validation",
         "",
         "### Environment",
         "",
-        f"- Pictovap version: `{summary.get('pictovap_version', 'unknown')}`",
+        f"- ActoVisio Framework version: `{summary.get('pictovap_version', 'unknown')}`",
         f"- Python version: `{summary.get('python_version', 'unknown')}`",
         f"- OS: `{summary.get('os', 'unknown')}`",
         "",

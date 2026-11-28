@@ -3,8 +3,8 @@ requires = ["setuptools>=83.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pictovap"
-version = "0.13.0"
+name = "actovisio-framework"
+version = "0.14.0"
 description = "Image workflow for content publishers who spend hours finding free images and placing them in articles."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -59,12 +59,12 @@ Issues = "https://github.com/yoldaolmak/ActoVisio-Framework/issues"
 Changelog = "https://github.com/yoldaolmak/ActoVisio-Framework/blob/main/CHANGELOG.md"
 
 [project.scripts]
-pictovap = "pictovap.app.cli:main"
+actovisio-framework = "actovisio_framework.app.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 namespaces = false
 
 [tool.setuptools.package-data]
-"pictovap.data" = ["*.md"]
-"pictovap.schemas" = ["*.json"]
+"actovisio_framework.data" = ["*.md"]
+"actovisio_framework.schemas" = ["*.json"]

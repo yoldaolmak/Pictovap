@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pictovap Local Demo
+ActoVisio Framework Local Demo
 -------------------
 Runs the full visual finishing pipeline with no external credentials.
 
@@ -10,7 +10,7 @@ what a contributor reads on screen is always the artifact, never a parallel
 narration of it.
 
 Usage:
-    python -m pictovap.demo
+    python -m actovisio_framework.demo
     make demo
 """
 
@@ -46,10 +46,10 @@ def _resolve_sample_article() -> Path | None:
        contributors actually edit when iterating on the example in a source
        checkout (plain clone or ``pip install -e .``); preferring it means
        their edits are picked up immediately, with no reinstall/resync step.
-    2. The packaged copy at ``pictovap/data/sample-article.md``, shipped as
+    2. The packaged copy at ``actovisio_framework/data/sample-article.md``, shipped as
        real package data (see ``[tool.setuptools.package-data]`` in
-       pyproject.toml). This is what makes ``pictovap demo`` work for a
-       genuine ``pip install pictovap`` from PyPI: ``examples/`` is a
+       pyproject.toml). This is what makes ``actovisio-framework demo`` work for a
+       genuine ``pip install actovisio-framework`` from PyPI: ``examples/`` is a
        top-level repo directory that is never installed alongside the
        package, so it doesn't exist relative to site-packages — only the
        packaged copy does.
@@ -167,10 +167,10 @@ def run_demo(
 
     This is the terminal-facing wrapper: it exits with code 1 on bad input and
     always writes the JSON plan (and optionally a Markdown report) to disk.
-    Library callers should use `pictovap.api.create_visual_plan()` instead.
+    Library callers should use `actovisio_framework.api.create_visual_plan()` instead.
     """
     print("=" * 60)
-    print("  Pictovap Local Demo")
+    print("  ActoVisio Framework Local Demo")
     print("  Visual finishing pipeline — no credentials required")
     print("=" * 60)
 
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     # writable path in the caller's workspace, alongside the JSON output.
     _bare_report_default = str(Path.cwd() / "sample-report.md")
 
-    parser = argparse.ArgumentParser(description="Pictovap Local Demo")
+    parser = argparse.ArgumentParser(description="ActoVisio Framework Local Demo")
     parser.add_argument("--article", help="Path to a custom Markdown article", default=None)
     parser.add_argument("--profile", help="Path to a custom Publisher Profile YAML", default=None)
     parser.add_argument("--output", help="Path to write the JSON output", default=None)
@@ -235,7 +235,7 @@ if __name__ == "__main__":
 
     if args.article:
         # A real article was given: use the same real-adapter-aware path as
-        # `pictovap plan`, not the always-fixture demo path.
+        # `actovisio-framework plan`, not the always-fixture demo path.
         from actovisio_framework import api
 
         plan = api.create_visual_plan(

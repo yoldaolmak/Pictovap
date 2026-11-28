@@ -6,7 +6,7 @@ or every configured source has been tried.
 
 Every adapter call is wrapped so a missing credential, network error, or
 misconfiguration never raises here — it just yields zero candidates from
-that source. This keeps `pictovap demo` credential-free and keeps `plan`
+that source. This keeps `actovisio-framework demo` credential-free and keeps `plan`
 usable even when only some of a profile's sources are configured.
 
 Degrading quietly is not the same as degrading silently. Each attempt is
@@ -128,12 +128,12 @@ def fetch_candidates_with_evidence(
 
 
 _ADAPTERS = {
-    "local": ("pictovap.providers.local", "LocalFolderSource"),
-    "unsplash": ("pictovap.providers.unsplash", "UnsplashSource"),
-    "deposit": ("pictovap.providers.deposit", "DepositPhotosSource"),
-    "depositphotos": ("pictovap.providers.deposit", "DepositPhotosSource"),
-    "openverse": ("pictovap.providers.openverse", "OpenverseSource"),
-    "pexels": ("pictovap.providers.pexels", "PexelsSource"),
+    "local": ("actovisio_framework.providers.local", "LocalFolderSource"),
+    "unsplash": ("actovisio_framework.providers.unsplash", "UnsplashSource"),
+    "deposit": ("actovisio_framework.providers.deposit", "DepositPhotosSource"),
+    "depositphotos": ("actovisio_framework.providers.deposit", "DepositPhotosSource"),
+    "openverse": ("actovisio_framework.providers.openverse", "OpenverseSource"),
+    "pexels": ("actovisio_framework.providers.pexels", "PexelsSource"),
 }
 
 

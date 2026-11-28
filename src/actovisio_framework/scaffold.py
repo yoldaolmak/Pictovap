@@ -1,4 +1,4 @@
-"""Generate standalone, testable Pictovap adapter plugin packages."""
+"""Generate standalone, testable ActoVisio Framework adapter plugin packages."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ def _adapter_class_name(class_stem: str, suffix: str) -> str:
 
 
 def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
-    package = f"pictovap_{module}"
+    package = f"actovisio_framework_{module}"
     adapter_class = _adapter_class_name(class_stem, "Source")
     return {
         "pyproject.toml": dedent(f'''\
@@ -42,14 +42,14 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             build-backend = "setuptools.build_meta"
 
             [project]
-            name = "pictovap-{slug}"
+            name = "actovisio-framework-{slug}"
             version = "0.1.0"
-            description = "{class_stem} image-source adapter for Pictovap."
+            description = "{class_stem} image-source adapter for ActoVisio Framework."
             readme = "README.md"
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "image adapter", "cms"]
-            dependencies = ["pictovap>=0.11.0"]
+            dependencies = ["actovisio-framework>=0.14,<0.15"]
 
             [project.entry-points."pictovap.image_sources"]
             {slug} = "{package}:{adapter_class}"
@@ -61,7 +61,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             where = ["src"]
         '''),
         f"src/{package}/__init__.py": dedent(f'''\
-            """{class_stem} image-source adapter for Pictovap."""
+            """{class_stem} image-source adapter for ActoVisio Framework."""
 
             from __future__ import annotations
 
@@ -136,9 +136,9 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
                   - run: make check
         '''),
         "README.md": dedent(f'''\
-            # pictovap-{slug}
+            # actovisio-framework-{slug}
 
-            `{class_stem}` image-source adapter for Pictovap.
+            `{class_stem}` image-source adapter for ActoVisio Framework.
 
             ## Development
 
@@ -147,9 +147,9 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             source .venv/bin/activate
             pip install -e ".[test]"
             pytest
-            pictovap plugins --kind provider
-            pictovap doctor --provider {slug}
-            pictovap adapter check --kind provider --name {slug} --exercise
+            actovisio-framework plugins --kind provider
+            actovisio-framework doctor --provider {slug}
+            actovisio-framework adapter check --kind provider --name {slug} --exercise
             make check
             ```
 
@@ -157,7 +157,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
             ```bash
             export {module.upper()}_API_KEY="..."
-            pictovap plan --article article.md --provider {slug} \\
+            actovisio-framework plan --article article.md --provider {slug} \\
               --provider-option api_key=@{module.upper()}_API_KEY --output plan.json
             ```
 
@@ -165,11 +165,11 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             mock all HTTP calls in tests, and preserve the credential-free empty-result path.
         '''),
         "CONTRIBUTING.md": dedent(f'''\
-            # Contributing to pictovap-{slug}
+            # Contributing to actovisio-framework-{slug}
 
-            This package is a standalone Pictovap provider plugin. Keep the
+            This package is a standalone ActoVisio Framework provider plugin. Keep the
             implementation boundary small: the adapter converts provider results into
-            Pictovap candidates, and Pictovap owns planning and publishing.
+            ActoVisio Framework candidates, and ActoVisio Framework owns planning and publishing.
 
             ## First successful loop
 
@@ -178,8 +178,8 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             source .venv/bin/activate
             pip install -e ".[test]"
             pytest
-            pictovap plugins --kind provider
-            pictovap doctor --provider {slug}
+            actovisio-framework plugins --kind provider
+            actovisio-framework doctor --provider {slug}
             ```
 
             ## Definition of done
@@ -187,7 +187,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             - Keep credentials in environment variables or explicit constructor arguments.
             - Mock provider HTTP calls in tests.
             - Validate the public boundary with `assert_image_source_contract`.
-            - Run `pictovap plan` with this provider before releasing.
+            - Run `actovisio-framework plan` with this provider before releasing.
             - Document license and attribution behavior for returned images.
         '''),
         ".gitignore": ".venv/\n__pycache__/\n*.egg-info/\n.pytest_cache/\n",
@@ -195,7 +195,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
 
 def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
-    package = f"pictovap_{module}"
+    package = f"actovisio_framework_{module}"
     adapter_class = _adapter_class_name(class_stem, "Adapter")
     return {
         "pyproject.toml": dedent(f'''\
@@ -204,14 +204,14 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             build-backend = "setuptools.build_meta"
 
             [project]
-            name = "pictovap-{slug}"
+            name = "actovisio-framework-{slug}"
             version = "0.1.0"
-            description = "{class_stem} CMS adapter for Pictovap."
+            description = "{class_stem} CMS adapter for ActoVisio Framework."
             readme = "README.md"
             requires-python = ">=3.10"
             license = "MIT"
             keywords = ["pictovap", "cms adapter", "publishing"]
-            dependencies = ["pictovap>=0.11.0"]
+            dependencies = ["actovisio-framework>=0.14,<0.15"]
 
             [project.entry-points."pictovap.cms"]
             {slug} = "{package}:{adapter_class}"
@@ -223,7 +223,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             where = ["src"]
         '''),
         f"src/{package}/__init__.py": dedent(f'''\
-            """{class_stem} CMS adapter for Pictovap."""
+            """{class_stem} CMS adapter for ActoVisio Framework."""
 
             from __future__ import annotations
 
@@ -234,7 +234,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
 
             class {adapter_class}(CMSAdapter):
-                """Place Pictovap image instructions into {class_stem}."""
+                """Place ActoVisio Framework image instructions into {class_stem}."""
 
                 # Avoid pytest collecting adapter names such as ``test-cms``
                 # as test classes when imported by a fixture.
@@ -297,9 +297,9 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
                   - run: make check
         '''),
         "README.md": dedent(f'''\
-            # pictovap-{slug}
+            # actovisio-framework-{slug}
 
-            `{class_stem}` CMS adapter for Pictovap.
+            `{class_stem}` CMS adapter for ActoVisio Framework.
 
             ## Development
 
@@ -308,8 +308,8 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             source .venv/bin/activate
             pip install -e ".[test]"
             pytest
-            pictovap plugins --kind cms
-            pictovap adapter check --kind cms --name {slug}
+            actovisio-framework plugins --kind cms
+            actovisio-framework adapter check --kind cms --name {slug}
             make check
             ```
 
@@ -317,10 +317,10 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
             ```bash
             export {module.upper()}_API_TOKEN="..."
-            pictovap doctor --cms {slug} \\
+            actovisio-framework doctor --cms {slug} \\
               --cms-option api_url=https://cms.example.com \\
               --cms-option api_token=@{module.upper()}_API_TOKEN
-            pictovap publish --plan plan.json --cms {slug} --dry-run \\
+            actovisio-framework publish --plan plan.json --cms {slug} --dry-run \\
               --cms-option api_url=https://cms.example.com \\
               --cms-option api_token=@{module.upper()}_API_TOKEN
             ```
@@ -329,11 +329,11 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             in tests, and keep the `placed`, `failed`, and `warnings` result fields.
         '''),
         "CONTRIBUTING.md": dedent(f'''\
-            # Contributing to pictovap-{slug}
+            # Contributing to actovisio-framework-{slug}
 
-            This package is a standalone Pictovap CMS plugin. Keep the
+            This package is a standalone ActoVisio Framework CMS plugin. Keep the
             implementation boundary small: the adapter receives a typed placement and
-            returns `placed`, `failed`, and `warnings` without changing Pictovap core.
+            returns `placed`, `failed`, and `warnings` without changing ActoVisio Framework core.
 
             ## First successful loop
 
@@ -342,8 +342,8 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             source .venv/bin/activate
             pip install -e ".[test]"
             pytest
-            pictovap plugins --kind cms
-            pictovap adapter check --kind cms --name {slug}
+            actovisio-framework plugins --kind cms
+            actovisio-framework adapter check --kind cms --name {slug}
             ```
 
             ## Definition of done
@@ -351,7 +351,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
             - Keep credentials in environment variables or explicit constructor arguments.
             - Mock CMS or filesystem calls in tests.
             - Validate the public boundary with `assert_cms_adapter_contract`.
-            - Run `pictovap doctor` and `pictovap publish --dry-run` before releasing.
+            - Run `actovisio-framework doctor` and `actovisio-framework publish --dry-run` before releasing.
             - Document idempotency and rollback limits for CMS writes.
         '''),
         ".gitignore": ".venv/\n__pycache__/\n*.egg-info/\n.pytest_cache/\n",
@@ -369,7 +369,7 @@ def scaffold_adapter(
     if kind not in {"provider", "cms"}:
         raise ScaffoldError(f"Unknown adapter kind: {kind}")
     slug, module, class_stem = _normalize_name(name)
-    root = Path(output).expanduser().resolve() / f"pictovap-{slug}"
+    root = Path(output).expanduser().resolve() / f"actovisio-framework-{slug}"
     files = (
         _provider_files(slug, module, class_stem)
         if kind == "provider"
