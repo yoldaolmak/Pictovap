@@ -13,6 +13,11 @@ license-files = ["LICENSE"]
 authors = [{name = "Pictovap Contributors", email = "hello@yoldaolmak.com"}]
 dependencies = ["actovisio-framework==0.14.0"]
 
+[project.optional-dependencies]
+test = ["actovisio-framework[test]==0.14.0"]
+lint = ["actovisio-framework[lint]==0.14.0"]
+typecheck = ["actovisio-framework[typecheck]==0.14.0"]
+
 [project.urls]
 Homepage = "https://github.com/yoldaolmak/ActoVisio-Framework"
 

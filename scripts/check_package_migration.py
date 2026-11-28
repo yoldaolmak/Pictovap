@@ -29,6 +29,10 @@ def main():
         assert any(n.endswith("/licenses/LICENSE") for n in names)
     with zipfile.ZipFile(legacy) as wheel:
         names = wheel.namelist()
+        metadata = wheel.read(next(n for n in names if n.endswith('.dist-info/METADATA'))).decode()
+        for extra in ('test', 'lint', 'typecheck'):
+            assert f'Provides-Extra: {extra}' in metadata
+            assert f'actovisio-framework[{extra}]==0.14.0' in metadata
         assert any(n.startswith("pictovap/") for n in names)
         assert not any(n.startswith("actovisio_framework/") for n in names)
         assert any(n.endswith("/licenses/LICENSE") for n in names)
