@@ -5,8 +5,6 @@ permissions:
 
 on:
   push:
-    tags:
-      - 'v*'
     branches:
       - main
     paths:
@@ -56,11 +54,9 @@ jobs:
                               for target in node.targets)]
           assert declared == [version], "Package version mismatch"
           ref = os.environ["RELEASE_REF"]
-          if ref == "refs/heads/main":
-              request = json.loads(Path("release-request.json").read_text())
-              assert request == {"version": version}, "Explicit release request mismatch"
-          else:
-              assert ref == "refs/tags/v" + version, "Tag version mismatch"
+          assert ref == "refs/heads/main", "Release request must run on main"
+          request = json.loads(Path("release-request.json").read_text())
+          assert request == {"version": version}, "Explicit release request mismatch"
           assert Path("docs/release-notes/v" + version + ".md").is_file()
           with open(os.environ["GITHUB_OUTPUT"], "a") as output:
               output.write("version=" + version + "\n")
