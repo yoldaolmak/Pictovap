@@ -67,7 +67,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
             from typing import Any, Dict, List
 
-            from pictovap import ImageSourceAdapter
+            from actovisio_framework import ImageSourceAdapter
 
 
             class {adapter_class}(ImageSourceAdapter):
@@ -94,7 +94,7 @@ def _provider_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
         '''),
         "tests/test_adapter.py": dedent(f'''\
             from {package} import {adapter_class}
-            from pictovap.testing import (
+            from actovisio_framework.testing import (
                 assert_image_source_contract,
                 sample_candidate,
                 validate_candidates,
@@ -229,8 +229,8 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
 
             from typing import Any, Dict
 
-            from pictovap import CMSAdapter
-            from pictovap.core.primitives import CMSPlacement
+            from actovisio_framework import CMSAdapter
+            from actovisio_framework.core.primitives import CMSPlacement
 
 
             class {adapter_class}(CMSAdapter):
@@ -262,7 +262,7 @@ def _cms_files(slug: str, module: str, class_stem: str) -> Dict[str, str]:
         '''),
         "tests/test_adapter.py": dedent(f'''\
             from {package} import {adapter_class}
-            from pictovap.testing import assert_cms_adapter_contract
+            from actovisio_framework.testing import assert_cms_adapter_contract
 
 
             def test_adapter_contract():

@@ -14,20 +14,20 @@ import urllib.parse
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from pictovap.core.primitives import CMSPlacement
-from pictovap.core.states import (
+from actovisio_framework.core.primitives import CMSPlacement
+from actovisio_framework.core.states import (
     MediaGuardStatus,
     MediaIntegrityState,
     guard_status_for_state,
 )
-from pictovap.services.post_media_guard import (
+from actovisio_framework.services.post_media_guard import (
     assess_post_media,
     load_post_media_manifest,
     manifest_path as post_media_manifest_path,
     media_items_from_content,
     save_post_media_manifest,
 )
-from pictovap.utils.config import env_str, load_project_env
+from actovisio_framework.utils.config import env_str, load_project_env
 
 load_project_env()
 

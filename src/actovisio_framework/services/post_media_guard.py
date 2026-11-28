@@ -12,8 +12,8 @@ import re
 import tempfile
 from typing import Any, Dict, Iterable, List, Optional
 
-from pictovap.core.states import MediaIntegrityState
-from pictovap.utils.config import env_str, get_workspace_root
+from actovisio_framework.core.states import MediaIntegrityState
+from actovisio_framework.utils.config import env_str, get_workspace_root
 
 
 MANIFEST_VERSION = 1

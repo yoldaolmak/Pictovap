@@ -6,8 +6,8 @@ import json
 from collections.abc import Mapping
 from typing import Any, cast
 
-from pictovap.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
-from pictovap.core.primitives import CMSPlacement, PlacementInstruction
+from actovisio_framework.core.adapters import CMSAdapter, ImageSourceAdapter, ReportRenderer
+from actovisio_framework.core.primitives import CMSPlacement, PlacementInstruction
 
 REQUIRED_CANDIDATE_FIELDS = frozenset({
     "id",
@@ -156,7 +156,7 @@ def sample_visual_plan(article_id: str = "contract-test") -> dict[str, Any]:
 
 def sample_decision_pack(article_id: str = "contract-test") -> dict[str, Any]:
     """Return a minimal deterministic Decision Pack fixture for contract testing."""
-    from pictovap.decision_pack import build_decision_pack
+    from actovisio_framework.decision_pack import build_decision_pack
 
     return build_decision_pack(sample_visual_plan(article_id=article_id))
 

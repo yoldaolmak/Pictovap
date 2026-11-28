@@ -1,6 +1,6 @@
 """Public helpers for testing third-party Pictovap adapters."""
 
-from pictovap.testing.contracts import (
+from actovisio_framework.testing.contracts import (
     ContractViolation,
     assert_cms_adapter_contract,
     assert_image_source_contract,

@@ -10,7 +10,7 @@ from collections.abc import Mapping
 from copy import deepcopy
 from typing import Any
 
-from pictovap.decision_pack import validate_decision_pack
+from actovisio_framework.decision_pack import validate_decision_pack
 
 
 def _validated(pack: Mapping[str, Any], label: str) -> None:
