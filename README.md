@@ -1,7 +1,7 @@
 # ActoVisio Framework
 
 [![PyPI](https://img.shields.io/pypi/v/pictovap.svg)](https://pypi.org/project/pictovap/)
-[![CI](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/Pictovap/actions/workflows/ci.yml)
+[![CI](https://github.com/yoldaolmak/ActoVisio-Framework/actions/workflows/ci.yml/badge.svg)](https://github.com/yoldaolmak/ActoVisio-Framework/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **ActoVisio Framework** is an open-source, CLI-first visual-decision framework for
@@ -10,7 +10,8 @@ fit each section, why, what source/license evidence is known, and how a CMS
 could place them. The output is reviewable; it is not publication approval.
 
 Formerly Pictovap Framework, it retains the `pictovap` Python package, CLI,
-repository and existing public contracts. The display-name change does not
+and existing public contracts. The same public repository was renamed to
+`ActoVisio-Framework` on 28 November 2026. This identity change does not
 alter MIT rights or require the separate enterprise application.
 
 ActoVisio Framework is CMS-independent and does not require a hosted service.
@@ -53,8 +54,8 @@ pictovap demo
 Or use a development checkout:
 
 ```bash
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
+git clone https://github.com/yoldaolmak/ActoVisio-Framework.git
+cd ActoVisio-Framework
 python -m pip install -e ".[test]"
 pictovap demo
 ```

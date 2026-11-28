@@ -18,8 +18,8 @@ as `python3.11`.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yoldaolmak/Pictovap.git
-cd Pictovap
+git clone https://github.com/yoldaolmak/ActoVisio-Framework.git
+cd ActoVisio-Framework
 
 # Initialize a clean virtual environment
 python3 --version
